@@ -1,0 +1,3136 @@
+<!DOCTYPE html>
+<!--
+GB Maps ギビマップ - © Karya IT (http://www.karyait.net.my/) 2012-2013. All rights reserved. 
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+GB Maps ギビマップ by Karya IT (http://www.karyait.net.my/) is licensed under a 
+Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. 
+http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US 
+
+Based on a work at Google Developers (https://developers.google.com/maps/). Permissions beyond 
+the scope of this license may be available at https://developers.google.com/readme/terms. 
+
+Google Maps - ©2012-2013 Google.
+
+Main GB Maps ギビマップ Website : http://gbmaps.karyait.net.my/ or http://gbmaps.blogspot.com
+
+Development site (programming) : https://github.com/karyait/gbmaps
+Personal blog for GB Maps ギビマップ (design algorithm) : http://blogkaryait.wordpress.com/tag/gbmaps/
+
+File : gb maps - p3d1.html
+type : prototype system (experimental Or still under R&D)
+version : prototype 3
+build : 120+
+last update : 3 April 2013 11:00am (GMT 8+)
+
+-->
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  <title>GB Maps - ギビマップ</title>
+  <script type="text/javascript" src="https://maps.google.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry"></script>
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.2/themes/redmond/jquery-ui.css" />
+	<!-- <link rel="stylesheet" type="text/css" href="css/ui.spinner.css" /> -->
+	<link rel="stylesheet" href="css/gb maps.css" type='text/css' />  
+
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+	<!-- <script type="text/javascript" src="script/ui.spinner.js"></script> -->
+	<script type="text/javascript" src="script/gbm-jq-p3d1.js"></script>
+	<script type="text/javascript" src="script/gbm-base-p3d1.js"></script>
+	<script type="text/javascript" src="script/gbm-func-p3d1.js"></script>
+	<script type="text/javascript" src="script/gbm-conv-openbve-p3d1.js"></script>
+	<script type="text/javascript" src="script/bveobjects.js"></script>
+	
+	<script type="text/javascript">
+ 	function hoverButton(divID,efek) {
+ 		var item=document.getElementById(divID);
+ 		if (efek == 'hover') {
+ 			if (item.className!='selected') {item.className=efek};
+		} else if (efek == '') {
+			if (item.className=='hover') {item.className='unselected'};
+		}
+ 	}
+	</script>
+ 
+</head>
+<body>
+<!-- The frame used to measure the screen size -->
+<!-- <div id="frame"></div>  -->
+<div id="map"></div>
+	
+<div id="map_lokasi">&nbsp;</div>
+
+
+<div id="sidemenu">
+<ul class="menubar">
+  <li lang="en">Maps
+    <ul>
+    <li id="mMnewMap" lang="en">New</li>
+    <li id="mMdefaultLocation" lang="en">Default location</li>
+    <li id="mMopenFile" lang="en">Open File...</li>
+    <li id="mMexportMapData" lang="en">Export ...</li>
+    <li id="mMimportMapData" lang="en">Import ...</li>
+    <li id="mMGFinder" lang="en">Find Place</li>
+    <li id="mTOptions" lang="en">Options</li>
+    </ul>
+  </li> 
+  <li lang="en">Draws
+    <ul>
+	  	<li id="mMaddPoints" lang="en">Add Point ...</li>
+	    <!--<li id="mOImports">Imports ...</li>-->
+    </ul>
+  </li><!--
+  <li>Options
+    <ul>    
+    <li id="mTImports">Import ...</li>
+    <li id="mTExports">Export ...</li>
+    </ul>
+  </li>  -->
+  <li>BVE
+    <ul>
+    <li id="mMbuildBVE" lang="en">Build Route...</li>
+    <li id="mMobjBVE" lang="en">Object builder</li>
+    <li id="mMtimetableBVE" lang="en">Add Ons</li>
+    <li id="mMaddOnBVE" lang="en">BVE Options</li>
+    </ul>
+  </li> 
+  <li lang="en">English
+    <ul>
+    <li><img src="images/united_kingdom_great_britain.png" width="16" height="16" title="english" hspace="0" vspace="0"></li>
+    <li><img src="images/japan.png" width="16" height="16" title="日本語" hspace="0" vspace="0"></li>
+    <li><img src="images/malaysia.png" width="16" height="16" title="bahasa melayu" hspace="0" vspace="0"></li>
+    <!--<li><img src="images/indonesia.png" width="16" height="16" title="indonesia" hspace="0" vspace="0"></li>-->
+    <!--<li><img src="images/france.png" width="16" height="16" title="Français" hspace="0" vspace="0"></li>-->
+    <!--<li><img src="images/germany.png" width="16" height="16" title="Deutsch" hspace="0" vspace="0"></li>-->
+    </ul>
+  </li> 
+  <li lang="en">Help
+    <ul>
+    <li id="mMmanual" lang="en">Manual</li>
+    <li id="mMtroubleShooting" lang="en">Troubleshooting</li>
+    <li id="mMsystemRequirents" lang="en">Sys. Requirements</li>
+    <li id="mMCredits" lang="en">Credits</li>
+    <li id="mMAbout" lang="en">About</li>
+    </ul> 	
+  </li>
+</ul>
+<!--<img src="images/united_kingdom_great_britain.png" width="16" height="16" title="english" id="currLang" hspace="2" vspace="3">-->
+<br style="clear:both;" />
+<div style="margin-left: 5px; white-space: nowrap; margin-top: 3px; margin-bottom: 3px;">
+<table border="0" cellspacing="1" cellpadding="0"><tr>
+<td><div id="hand_b" lang="en" title="Click to stop line or shape editing, OR to move the map." onclick="MapToolbar.stopEditing()" onmouseover="hoverButton('hand_b','hover');" onmouseout="hoverButton('hand_b','');" /></td>
+<td>&nbsp;&nbsp;&nbsp;</td>
+<td><div id="line_b" lang="en" title="Draw line (polyline).&#xA;Click this button and click anywhere on the map.&#xA;Click on the 'hand' icon to stop drawing.&#xA;Right click on any point to remove it." onclick="MapToolbar.initFeature('line')" onmouseover="hoverButton('line_b','hover');" onmouseout="hoverButton('line_b','');" /></td>
+<td><div id="shape_b" lang="en" title="Draw polygon shape.&#xA;Click this button and click anywhere on the map.&#xA;Click on the 'hand' icon to stop drawing.&#xA;Right click on any point to remove it." onclick="MapToolbar.initFeature('shape')" onmouseover="hoverButton('shape_b','hover');" onmouseout="hoverButton('shape_b','');" /></td>
+<td><div id="circle_b" lang="en" title="Draw circle.&#xA;Click this button and click anywhere on the map." onclick="MapToolbar.initFeature('circle')" onmouseover="hoverButton('circle_b','hover');" onmouseout="hoverButton('circle_b','');" /></td>
+<td>&nbsp;</td>
+<td><div id="dotMarker_b" lang="en" title="Draw a marker on the map." onclick="MapToolbar.initFeature('dotMarker')" onmouseover="hoverButton('dotMarker_b','hover');" onmouseout="hoverButton('dotMarker_b','');" /></td>
+</tr></table>
+</div>
+
+<div id="accordion">
+	<h3><a href="#" lang="en">Map Objects</a></h3>
+	<div>
+		<table width="100%" id ="featuretable" cellspacing="0" cellpadding="1">
+			<tbody id="featuretbody"></tbody>
+		</table>
+	</div>
+	<h3><a href="#" lang="en">Show/Hide Object Types</a></h3>
+	<div>
+  <label>
+    <input type="checkbox" name="cbotype" value="track" id="cbotype_track" lang="en">
+    Railway Tracks</label>
+  <br>
+  <label>
+    <input type="checkbox" name="cbotype_" value="road" id="cbotype_road" lang="en">
+    Road</label>
+  <br>
+  <label>
+    <input type="checkbox" name="cbotype_" value="house" id="cbotype_house" lang="en">
+    House / Building</label>
+  <br>
+  <label>
+    <input type="checkbox" name="cbotype_" value="station" id="cbotype_station" lang="en">
+    Station / Platform</label>
+  <br>
+  <label>
+    <input type="checkbox" name="cbotype_" value="plant" id="cbotype_plant" lang="en">
+    Plant</label>
+  <br>
+  <label>
+    <input type="checkbox" name="cbotype_" value="train" id="cbotype_train" lang="en">
+    Side train</label>
+  <br>
+  <label>
+    <input type="checkbox" name="cbotype_" value="allside" id="cbotype_allside" lang="en">
+    All side objects</label>
+  <br>
+  <label>
+    <input type="checkbox" name="cbotype_" value="allside" id="cbotype_allside" lang="en">
+    All objects</label>
+	</div>
+	<h3><a href="#" lang="en">Track Service</a></h3>
+	<div id="track_services">
+  <label>
+    <input type="checkbox" name="trackService" value="utaraline" id="trackService_0">
+    Utara Line</label>
+  <br>
+
+	</div>	
+	<h3><a href="#" lang="en">BVE Rail Type</a></h3>
+	<div>
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  	<tr>
+    	<td><img src="images/transparent.png" width="1" height="180"></td>
+    	<td><img src="" alt="" id="railobjpx" ></td>
+  	</tr>
+		</table>
+		<select name="railindex" id="railindex" size="5" onchange="changeImgSrc('railobj',this.options[this.selectedIndex].value);">
+      <option value="none" selected lang="en">- select -</option>
+    </select>
+<table width="100%" border="0" cellspacing="0" cellpadding="3">    
+      <tr>
+    <td>Pole</td>
+    <td><select name="poleindex" id="poleindex" onchange="changeImgSrc('railobj',this.options[this.selectedIndex].value);">
+      <option value="none" selected>- select -</option>
+    </select></td>
+  </tr>
+</table>
+	</div>
+	<h3><a href="#" lang="en">GB Maps Structure Objects</a></h3>
+	<div>
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  	<tr>
+    	<td><img src="images/transparent.png" width="1" height="140"></td>
+    	<td><img src="" alt="" id="strobjpx" ></td>
+  	</tr>
+		</table>
+		<div style="overflow: scroll;height: 180px;width: 160px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td><select name="strobjBridge" id="strobjBridge" onchange="changeImgSrc('strobj',this.options[this.selectedIndex].value);">
+      <option value="none" selected lang="en">- Bridge -</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td><select name="strobjTunnel" id="strobjTunnel" onchange="changeImgSrc('strobj',this.options[this.selectedIndex].value);">
+      <option value="none" selected lang="en">- Tunnel -</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td><select name="strobjDike" id="strobjDike" onchange="changeImgSrc('strobj',this.options[this.selectedIndex].value);">
+      <option value="none" selected lang="en">- Dike -</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td>
+    	<select name="strobjCut" id="strobjCut" onchange="changeImgSrc('strobj',this.options[this.selectedIndex].value);">
+       	<option value="none" selected lang="en">- Cut -</option>
+    </select>
+    </td>
+  </tr>
+  <tr>
+    <td><select name="strobjflyover" id="strobjflyover" onchange="changeImgSrc('strobj',this.options[this.selectedIndex].value);">
+    			<option value="none" selected lang="en">- Flyover -</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td><select name="strobjunderground" id="strobjunderground" onchange="changeImgSrc('strobj',this.options[this.selectedIndex].value);">
+    		<option value="none" selected lang="en">- U.ground -</option>    
+    </select></td>
+  </tr>
+  <tr>
+    <td><select name="strobjformbase" id="strobjformbase" onchange="changeImgSrc('strobj',this.options[this.selectedIndex].value);">
+    		<option value="none" selected lang="en">- Platform -</option>    
+    </select></td>
+  </tr>
+  <tr>
+    <td><select name="strobjroadcross" id="strobjroadcross" onchange="changeImgSrc('strobj',this.options[this.selectedIndex].value);">
+    		<option value="none" selected lang="en">- Road Crossing-</option>    
+    </select></td>
+  </tr>
+		</table>
+		</div>
+	</div>	
+	<h3><a href="#" lang="en">BVE Objects</a></h3>
+	<div>
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  	<tr>
+    	<td><img src="images/transparent.png" width="1" height="140"></td>
+    	<td><img src="" alt="" id="sideobjpx" ></td>
+  	</tr>
+		</table>
+		<div style="overflow: scroll;height: 180px;width: 160px;">
+		<table width="100%" border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td><select name="crackindex" id="crackindex" onchange="changeImgSrc('sideobj',this.options[this.selectedIndex].value);">
+ 	 		<option value="none" selected lang="en">- Crack-</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td><select name="formindex" id="formindex" onchange="changeImgSrc('sideobj',this.options[this.selectedIndex].value);">
+   		<option value="none" selected lang="en">- Form-</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td><select name="roofindex" id="roofindex" onchange="changeImgSrc('sideobj',this.options[this.selectedIndex].value);">
+			<option value="none" selected lang="en">- Roof-</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td><select name="wallindex" id="wallindex" onchange="changeImgSrc('sideobj',this.options[this.selectedIndex].value);">
+			<option value="none" selected lang="en">- Wall-</option>
+    </select></td>
+  </tr>  
+  <tr>
+    <td><select name="freeobjectid" id="freeobjectid" onchange="changeImgSrc('sideobj',this.options[this.selectedIndex].value);">
+    	 <option value="none" selected lang="en">- Free Object-</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td><select name="backgroundindex" id="backgroundindex" onchange="changeImgSrc('sideobj',this.options[this.selectedIndex].value);">
+    	 <option value="none" selected lang="en">- Background-</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td><select name="groundindex" id="groundindex" onchange="changeImgSrc('sideobj',this.options[this.selectedIndex].value);">
+ 			<option value="none" selected lang="en">- Ground-</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td><select name="beconindex" id="beconindex" onchange="changeImgSrc('sideobj',this.options[this.selectedIndex].value);">
+ 			<option value="none" selected lang="en">- Beacon-</option>
+    </select></td>
+  </tr>
+</table>
+</div>
+	</div>
+	<h3><a href="#" lang="en">Side Rolling Stock</a></h3>
+	<div>
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  	<tr>
+    	<td><img src="images/transparent.png" width="1" height="180"></td>
+    	<td><img src="" alt="" id="denshapx" ></td>
+  	</tr>
+		</table>
+	<p>
+  <select name="denshaobj" id="denshaobj" size="5" onchange="changeImgSrc('densha',this.options[this.selectedIndex].value);">
+    <option value="none" selected lang="en">- select -</option>
+  </select>
+	</p>
+	</div>
+	<h3><a href="#" lang="en">Sound Library</a></h3>
+	<div>
+<table width="100%" border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td><select name="melodyindex" id="melodyindex" onchange="playSound();">
+      <option value="none" selected lang="en">- Melody -</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td><select name="annouceindex" id="annouceindex">
+    <option value="none" selected lang="en">- Annouce -</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td><select name="doplerindex" id="doplerindex">
+      <option value="none" selected lang="en">- Dopler -</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td><select name="flangeindex" id="flangeindex">
+      <option value="none" selected lang="en">- Flange -</option>
+    </select></td>
+  </tr>
+</table>
+	</div>
+</div>
+</div>
+
+<!-- ************************ Application dialog windows ********************************* -->
+<div id="dialogOpenFile" title="Open File" lang="en">
+	<p lang="en">Data files must be located in sub folder named "data" relative to where this file is stored.<br /><br /><input type="file" id="fileOP" name="fileOP[]" accept="text/*" size="60" />
+	</p>
+</div>
+
+<div id="dialogExportData" title="Export Data to Text Editor">
+	<p lang="en">File saving is unsupported due to browser limitation, security issue and browser compatibility. Please copy this texts and save manually with your text editor (e.g : Notepad). <br /><br />Select &lt;Ctrl+A&gt; and copy &lt;Ctrl+C&gt; the following text to your text editor.<br /><br /><textarea name="exportData" cols="92" rows="16" id="exportData" readonly="readonly" ></textarea>
+	</p>
+</div>
+
+<div id="dialogImportData" title="Import Data from Text Editor">
+	<p lang="en">Paste &lt;Ctrl+V&gt; google maps data in the following text box.<br /><br /><textarea name="importDataText" cols="92" rows="16" id="importDataText" ></textarea><br /><div align="right"><button id="btnImportData">Import ...</button></div>
+	</p>
+</div>
+
+<div id="dialogGFinder" title="Find Place ...">
+	<p lang="en">Place to find (e.g : "Kanita, Japan" OR "Rawang"): <br /><input id="address" type="textbox" value="" size="60" />&nbsp;&nbsp;<button id="btnFinder">Find ...</button>
+	</p>
+</div>
+
+<div id="dialogAbout" title="GB Maps ギビマップ (Prototype 3 Build 120)">
+	<img src="images/about-bve255.jpg" width="580" height="326" alt=""/>
+	<p style="font-size: x-small;font-family: sans serif;" lang="en">GB Maps ギビマップ - &copy; Karya IT 2012-2013. All rights reserved. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.<br/><br/><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0; margin: 3px;" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" align="left" /></a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"> GB Maps ギビマップ </span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://www.karyait.net.my/" property="cc:attributionName" rel="cc:attributionURL">Karya IT</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>. Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://developers.google.com/maps/" rel="dct:source">Google Developers</a>. Permissions beyond the scope of this license may be available at <a xmlns:cc="http://creativecommons.org/ns#" href="https://developers.google.com/readme/terms" rel="cc:morePermissions">here</a>. Google Maps - &copy;2012 Google.</p>
+</div>
+
+<div id="dialogSysReq" title="System Requirement">
+<p lang="en">Common browser that support Google Maps, Javascript, CSS and HTML5. This in an online application, so your computer must have an internet connection and no firewall restriction to Google Maps.</p>
+
+<p lang="en">software based on<br />
+- Google Maps<br />
+- Google Maps JavaScript API v3<br />
+- jquery-1.7.2.min.js<br />
+- jQuery UI 1.8.2x (default theme : redmond)<br />
+- HTML5</p>
+
+<p lang="en">developement platform<br />
+- Mozilla Firefox 15.x<br />
+- Windows 7</p>
+
+<p lang="en">unsupported browser<br />
+- Microsoft Internet Explorer
+	</p>
+</div>
+
+<div id="dialogCredits" title="Credits" lang="en">
+<p lang="en">BVE Trainsim &copy; Takashi Kojima (Mackoy) : <a href="http://bvets.net/" target="_new">Bve trainsim</a></p>
+<p lang="en">Google Maps  © 2012 <a href="http://www.google.com" target="_new">Google</a></p>
+<p lang="en">OpenBVE &copy; openBVE Community : <a href="http://www.openbve.org/" target="_new">The openBVE Community Homepage</a></p>
+<p lang="en">jQuery © 2012 <a href="http://jquery.org/">jQuery Foundation</a></p>
+<p lang="en">ThemeUI © 2012 <a href="http://jquery.org/">jQuery Foundation</a> and the <a href="http://jqueryui.com/about">jQuery UI Team</a>.</p>
+</div>
+
+<div id="dialogTroubleshooting" title="Troubleshooting" lang="en">
+	<p>text text text text text text text </p>
+</div>
+
+<div id="dialogManual" title="Manual" lang="en">
+	<p>text text text text text text text </p>
+</div>
+
+<div id="dialogBuildBVERoute" title="Build route ..." lang="en">
+	<p style="font-size: x-small" lang="en">File saving is unsupported due to browser limitation, security issue and compatibility. Select &lt;Ctrl+A&gt; and copy &lt;Ctrl+C&gt; the following text to your text editor.</p><textarea name="buildBVE" cols="125" rows="14" id="buildBVE" readonly="readonly" ></textarea><div id="progressbarBuildBVE4O" style="height: 10px;"></div>
+</div>
+
+<div id="dialogRailtype" title="Railtype Objects" lang="en">
+	<p>text text text text text text text </p>
+</div>
+
+<div id="dialogStrObject" title="Structure Objects">
+	<p>text text text text text text text </p>
+</div>
+
+<div id="dialogLSObj" title="Landscape Objects">
+	<p>text text text text text text text </p>
+</div>
+
+<div id="dialogBuilObj" title="House / Building Objects">
+	<p>text text text text text text text </p>
+</div>
+
+<div id="dialogROObj" title="Rolling Stock">
+	<p>text text text text text text text </p>
+</div>
+
+<div id="dialogAudio" title="Sound@Melodies">
+	<p>text text text text text text text </p>
+</div>
+
+<div id="dialogOptions" title="Options">
+	<p>text text text text text text text </p>
+</div>
+
+<div id="dialogBVEOptions" title="BVE Options">
+	<p>text text text text text text text </p>
+</div>
+
+<div id="dialogBVETrains" title="BVE Trains">
+	<p>text text text text text text text </p>
+</div>
+
+<div id="dialogBVEAdd-on" title="BVE Add-on">
+	<p>text text text text text text text </p>
+</div>
+
+<div id="dialogImportSetting" title="Import Setting">
+	<p>text text text text text text text </p>
+</div>
+
+<div id="dialogExportSetting" title="Export Setting">
+	<p>text text text text text text text </p>
+</div>
+
+<div id="dialogSaveCookie" title="Save Cookie">
+	<p>text text text text text text text </p>
+</div>
+
+<div id="dialogLoadCookie" title="Load Cookie">
+	<p>text text text text text text text </p>
+</div>
+
+<div id="dialogImportObjects" title="Import Setting" lang="en">
+	<p lang="en">Open file gbmapstools.txt in the same directori as this file.<br /><br /><input type="fileGBMObj" id="fileGBMObj" name="fileGBMObj[]" accept="text/*" size="60" /> <strong>OR</strong>
+	</p>
+	<p lang="en">Copy all text from file gbmapstools.txt and paste &lt;Ctrl+V&gt; the data in the following text box.<br /><br /><textarea name="importGBMapObjDataText" cols="92" rows="16" id="importGBMapObjDataText" ></textarea><br /><div align="right"><button id="btnimportGBMapObjDataText">Import ...</button></div>
+	</p>
+</div>
+
+<!-- ********************************* drawing dialog ********************************* --> 
+<div id="dialogpreRailpitch" title="Rail pitch - path selection" lang="en">Select two point, distance should be less than 12.5 km. Maximum elevation samples along path in Google Maps is 512, and for BVE, we set the length of each sample in 25 m.<br />
+	<table border="0" cellspacing="0" cellpadding="2" id="tcombine_line" width="100%">
+  <tr>
+    <td>Point 1</td>
+    <td><input name="rpM1" type="text" id="rpM1" readonly="readonly" /></td>
+  </tr>
+  <tr>
+    <td>Point 2</td>
+    <td><input name="rpM2" type="text" id="rpM2" readonly="readonly" /></td>
+  </tr>
+  <tr>
+    <td colspan="2"><hr /></td>
+  </tr>
+  <tr>
+    <td><input type="hidden" id="RPbasePolyID" value=""></td>
+    <td align="right"><input type="button" name="btnpreRailpitch" id="btnpreRailpitch" value="View Elavation" /><input type="button" name="resetPitchMarker" id="resetPitchMarker" value="Reset" lang="en"></td>
+  </tr>  
+</table>
+</div>
+
+<div id="dialogRailpitch" title="Rail pitch" lang="en">
+	<div id="elevation_chart" style="width:770px; height:230px;overflow: scroll;"></div>
+	<div id="tabsRailPitchDialog">
+		<ul>
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-pitch" lang="en">Pitch</a></li>
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-height" lang="en">Height</a></li>
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-structure" lang="en">Structure</a></li>
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-details" lang="en">Details code</a></li>
+    </ul>
+    <div id="tabs-pitch">
+<table border="0" cellspacing="0" cellpadding="2" width="100%">
+  	<tr>
+  	  <td lang="en">calculate track pitch</td>
+  	  <td> <input name="cgsp" type="text" id="cgsp" size="10">
+      to 
+      <input name="cgep" type="text" id="cgep" size="10"> = 
+      <input name="txtCalculatedPitch" type="text" id="txtCalculatedPitch" size="10" readonly="readonly"> (1/1000)&nbsp;&nbsp;<input type="button" name="setPitchAuto" id="setPitchAuto" value="Set" lang="en">&nbsp;<input type="button" name="resetPitchAuto" id="resetPitchAuto" value="Reset" lang="en"></td>
+	  </tr>
+  	<tr>
+  	  <td></td>
+  	  <td></td>
+	  </tr>
+  	<tr>
+  	  <td lang="en">set pitch  : </td>
+  	  <td> <input type="text" id="sBtnpitchRatio" value="0" size="10"/> (1/1000) at <input name="setPPoint" type="text" id="setPPoint" size="10"> <input type="button" name="setPitch" id="setPitch" value="Set">&nbsp;<input type="button" name="resetPitch" id="resetPitch" value="Reset" lang="en"></td>
+	  </tr>
+  	<tr>
+  	  <td>&nbsp;</td>
+  	  <td lang="en">+  : uphill, - : downhill, 0 : level</td>
+	  </tr>
+	</table>
+    </div>
+    <div id="tabs-height">
+<table border="0" cellspacing="0" cellpadding="2" width="100%">
+  	<tr>
+  	  <td lang="en">from</td>
+  	  <td><input name="setPHeightSt" type="text" id="setPHeightSt" size="10">
+        to 
+        <input name="setPHeightEd" type="text" id="setPHeightEd" size="10" lang="en">
+      , set</td>
+	  </tr>
+  	<tr>
+  	  <td>&nbsp;</td>
+  	  <td>
+  	     &nbsp;&nbsp;&nbsp;<input type="radio" name="radio" id="LPfixedHeight" value="LPfixedHeight" lang="en">
+  	    Fixed track height : 
+        <input name="setPtHeight" type="text" id="setPtHeight" size="10"> m
+  	    <br></td>
+  </tr>
+  	<tr>
+  	  <td>&nbsp;</td>
+  	  <td>&nbsp;&nbsp;&nbsp;<input type="radio" name="radio" id="LPAutoHeight" value="LPAutoHeight" lang="en">
+Auto height (generate height per segment)</td>
+  </tr>
+  	<tr>
+  	  <td>&nbsp;</td>
+  	  <td><input type="button" name="setTHeight" id="setTHeight" value="Set" lang="en">
+&nbsp;
+<input type="button" name="resetTHeight" id="resetTHeight" value="Reset" lang="en"></td>
+  </tr>
+	</table>
+    </div>
+    <div id="tabs-structure">
+<table border="0" cellspacing="0" cellpadding="2" width="100%">
+  	<tr>
+    	<td valign="top" lang="en">type of structure</td>
+    	<td valign="top"><select name="railPitchStructure" id="railPitchStructure">
+    	  <option lang="en">- select -</option>
+    	  <option value="cut" lang="en">Hill cut</option>
+    	  <option value="dike" lang="en">Dike</option>
+    	  <option value="bridge" lang="en">Bridge</option>
+    	  <option value="tunnel" lang="en">Tunnel</option>
+    	  <option value="flyover" lang="en">Flyover</option>
+    	  <option value="underground" lang="en">Underground</option>
+    	  <option value="form" lang="en">Platform ????</option>
+        <option value="roadcross" lang="en">Road Crossing</option>
+  	    </select>
+
+   	  <select name="PLstrListIndex" id="PLstrListIndex">
+    	    <option selected>- select structure -</option>
+  	      </select></td>
+  	</tr>
+  	<tr>
+  	  <td valign="top">location</td>
+  	  <td valign="top"><input name="txtPitchStrP" type="text" id="txtPitchStrP" size="10">
+m</td>
+  </tr>
+  	<tr>
+  	  <td valign="top">start / end</td>
+  	  <td valign="top"><input type="radio" name="rpitchStr" id="pitchStr_Start" checked="checked" />Start
+  <input type="radio" name="rpitchStr" id="pitchStr_End" />End</td>
+  </tr>
+  	<tr>
+  	  <td valign="top">&nbsp;</td>
+  	  <td valign="top"><input type="button" name="setPitchStr" id="setPitchStr" value="Set">
+  	    &nbsp;
+      <input type="button" name="resetPitchStr" id="resetPitchStr" value="Reset"></td>
+  </tr>
+	</table>
+    </div>    
+    <div id="tabs-details">
+			<textarea name="txtPitchDetails" cols="80" rows="5" id="txtPitchDetails"></textarea>
+    </div>
+	</div>
+	<table border="0" cellspacing="0" cellpadding="2" width="100%">
+  	<tr valign="top">
+  		<td>Start point at : <input name="txtPitchStartPointAtM" type="text" id="txtPitchStartPointAtM" size="10" readonly="readonly" /> m</td>
+  		<td><img src="images/pitch_level_ground.jpg" width="16" height="16" alt="" align="bottom">&nbsp;Elevation&nbsp;&nbsp;&nbsp;<img src="images/pitch_level_track.jpg" width="16" height="16" alt="" align="bottom">&nbsp;Track</td>
+      <td>Suggestion : <img src="images/information_white.png" width="16" height="16" onclick="alert('Suggested value (Technical Standard for Japanese Railway):\nmaximum gradient for ordinary railways:\n-  on tracks traveled by trains pulled by locomotive : 25/1000\n- track used only by trains powered by linear induction motor trains : 60/1000\n- the maximum gradient in turnout areas shall be 25/1000\n- maximum gradient in the stopping areas shall be 5/1000. however, it may be 10/1000\nin the areas not used for parking or coupling/decoupling of the rolling stock\n\nmaximum gradient of Shinkansen railways\n- in the traveling areas : 25/1000\n- maximum gradient in the stopping areas shall be 3/1000');" title="click here"></td>
+  		<td align="right"><input type="hidden" id="LLmidxSt" value=""><input type="hidden" id="LLmidxEd" value=""><input type="hidden" id="LLlastpitch" value=""><input type="hidden" id="LLlastheight" value=""><input type="hidden" id="LLlastheightratio" value="">
+	    <input type="hidden" id="LLbasePolyID" value=""><input type="button" name="btnSetpitchOp" id="btnSetpitchOp" value="Apply Structure"  />
+	    <input type="button" name="resetPitchAll" id="resetPitchAll" value="Reset All"></td>
+  	</tr>
+	</table>
+</div>
+
+<div id="dialogRailCurve" title="Rail Curve">
+<table border="0" cellspacing="0" cellpadding="2" id="opcurve" width="100%">
+	<tr>
+    <td>Design Speed : </td>
+    <td><input type="text" id="sBtnRCDesignSpeed" value="80" size="10"/> kph<label><input type="checkbox" name="enforceSpeedLimit" id="enforceSpeedLimit"> enforce track speed limit</label></td>
+  </tr> 
+  <tr>
+    <td>Gauge : </td>
+    <td><input type="text" id="sBtnRCGauge" value="1067" size="10" /> mm</td>
+  </tr>
+  <tr>
+    <td>Cant : </td>
+    <td><input type="text" id="sBtnRCCant" value="100" size="10" /> mm&nbsp;&nbsp;<img src="images/information_white.png" width="16" height="16" onclick="alert('Suggested value:\nJapan - conventional lines (narrow gauge 1067mm) : 105mm\nJapan - Shinkansen (standard gauge 1435mm) : 200mm');" ></td>
+  </tr>
+  <tr>
+    <td>Suggested curve radius : </td>
+    <td><input type="text" id="sBtnCurveRadius" value="160" size="10"/> m&nbsp;&nbsp; <img title="hint" src="images/information_white.png" width="16" height="16" onclick="alert('any reasonable value OR roundup to common value based on speed limit.\n\nfor example : minimum curve radius 160 m for ordinary railways\n(Technical Standard for Japanese Railway)');"><img title="please refresh this value if you don't change any above values" src="images/gtk_refresh.png" width="16" height="16" onclick="curveCalculator('RC','');"></td>
+  </tr>
+  <tr>
+    <td>Rail index (type): </td>
+    <td><select name="ddc_railindex" id="ddc_railindex">
+	      <option value="none" selected>- select -</option>
+        </select><img  title="sort rail index..." src="images/gtk_refresh.png" width="16" height="16" onclick="curveRailRefresh();" ></td>
+  </tr> 
+  <tr>
+    <td colspan="2"><hr /></td>
+  </tr>
+  <tr>
+  	<td><input type="hidden" id="DCbasePolyID" value=""><input type="hidden" id="DCmarkerIndex" value=""></td>
+  	<td align="right"><input type="button" name="btnSetCurveOp" id="btnSetCurveOp" value="Draw" onclick="drawRailCurve();" /></td>
+  </tr>  
+</table>
+</div>
+
+<div id="dialogRailTransitionCurve" title="Tansition Curve">
+<table border="0" cellspacing="0" cellpadding="2" id="opcurve" width="100%">
+	<tr>
+    <td>Design Speed : </td>
+    <td><input type="text" id="sBtnRTCDesignSpeed" value="80" size="10"/> kph</td>
+  </tr> 
+  <tr>
+    <td>Gauge</td>
+    <td><input type="text" id="sRTCBtnGauge" value="1067" size="10" /> mm</td>
+  </tr>
+  <tr>
+    <td>Cant : </td>
+    <td><input type="text" id="sBtnRtCCant" value="100" size="10" /> mm&nbsp;&nbsp;<img src="images/information_white.png" width="16" height="16" onclick="alert('Suggested cant value:\nJapan - conventional lines (narrow gauge 1067mm) : 105mm\nJapan - Shinkansen (standard gauge 1435mm) : 200mm');" ></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr valign="top">
+    <td>Curve radius :</td>
+    <td><input type="text" id="sBtnRTCCircularRadius" value="160" size="10"/> m <img title="hint" src="images/information_white.png" width="16" height="16" onclick="alert('any reasonable value OR roundup to common value based on speed limit.\n\nfor example : minimum curve radius 160 m for ordinary railways\n(Technical Standard for Japanese Railway)');"><img title="please refresh this value if you don't change any above values" src="images/gtk_refresh.png" width="16" height="16" onclick="curveCalculator('TC','');"></td>
+  </tr>
+  <tr>
+    <td>Transition curve length</td>
+    <td><input type="text" id="sBtnTCLength" value="0" size="10" readonly="readonly" /> m (calculated) </td>
+  </tr>
+  <tr valign="top">
+    <td>Shift</td>
+    <td><input type="text" id="sBtnTCShift" value="0" size="10" readonly="readonly" /> m (calculated)<br /><strong>Note : </strong>Transition curve is not required if shift value is less than 0.25m.</td>
+  </tr>
+  <tr>
+    <td colspan="2"><hr /></td>
+  </tr>
+  <tr>
+    <td colspan="2"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr valign="top">
+      <td id="tdata">&nbsp;</td>
+      <td align="right"><input type="button" name="btnSetTCurveOp" id="btnSetTCurveOp" value="Draw" onclick="drawRailTransitionCurve();" /></td>
+    </tr>
+  </table></td>
+  </tr>
+</table>
+</div>
+<!--
+<div id="dialogRailSwitch" title="Rail Switch">
+<p>create switch point at <span id="switchlatlng"></span>.</p>
+	<table border="0" cellspacing="0" cellpadding="2" id="opSwitch" width="100%">
+  <tr>
+    <td>end of line</td>
+    <td><input type="text" name="railend_pid" id="railend_pid"></td>
+  </tr>
+  <tr>
+    <td>with index</td>
+    <td><input type="text" name="railend_mid" id="railend_mid"></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>switch point on line</td>
+    <td><input type="text" name="railbase_sw" id="railbase_sw"></td>
+  </tr>
+  <tr>
+    <td>rail type at switch point</td>
+    <td><select name="swrailtype" id="swrailtype">
+    	<option value="none" selected>- select -</option>
+    </select>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2"><hr /></td>
+  </tr>
+   <tr>
+    <td>&nbsp;</td>
+    <td align="right"><input type="button" name="btnSetSwitch" id="btnSetSwitch" value="Set Switch" onclick="railSwitch();" /></td>
+  </tr>
+</table>
+</div>
+-->
+
+<div id="dialogParalelLine" title="Paralel Line ..." >
+<p>Please set parallel line offset in meters and select which direction you want to create the new line. To the left / to the right.</p>
+	<table border="0" cellspacing="0" cellpadding="2" width="100%">
+  	<tr>
+    	<td>Parallel line offset :</td>
+    	<td> <input type="text" name="sBtnPLineOffset" id="sBtnPLineOffset" value="3.8"/> meter</td>
+  	</tr>
+  	<tr>
+    	<td>Position : </td>
+    	<td><label><input type="radio" name="PLineDir" id="Right2Line" /> (+) to the right </label><br />
+          <label><input type="radio" name="PLineDir" id="Left2Line" /> (-) to the left</label>
+      </td>
+  	</tr>
+  	<tr>
+    	<td colspan="2">(relative from starting point and move forward to the next point)<br /></td>
+  	</tr>
+		<tr>
+    	<td>Create new parallel line ...</td>
+    	<td>&nbsp;</td>
+    </tr>
+    <tr>
+    	<td valign="top">
+    	  <label>
+    	    <input name="PLCopyType" type="radio" id="PLCopyType_0" value="full_length" checked="checked" />
+    	    whole line</label>
+	  	</td>
+    	<td valign="top"><label>
+    	  <input type="radio" name="PLCopyType" value="partial" id="PLCopyType_1" />
+   	    between two point : <br />
+   	    <input type="text" name="m1" id="m1" readonly="readonly"/>
+    	to 
+    	<input type="text" name="m2" id="m2" readonly="readonly"/>
+    	</label><br />(click two markers to select)</td>
+    </tr>  
+    	
+  	<tr>
+    	<td colspan="2">
+    		<p><input type="checkbox" name="plswAtStart" id="plswAtStart"> turnout (switch) from main line at start (start distance = 0), <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch length (25/50/75...) : <input type="text" name="pLstSwLength" id="pLstSwLength" value="100"/> meter<br />
+    		<input type="checkbox" name="plswAtEnd" id="plswAtEnd"> turnout (switch) back to main lain at the end (end distance = 0), <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch length (25/50/75...) : <input type="text" name="pLedSwLength" id="pLedSwLength" value="100"/> meter</p>
+    	</td>
+  	</tr>
+  	<!--
+  	<tr>
+    	<td colspan="2">
+    		<p><input type="checkbox" name="plswMainLineTurnOut0" id="plswMainLineTurnOut0"> turnout main line at start, <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="plswmainTOst0" id="plswmainTOst0"> turnout equally, turnout length : <input type="text" name="pLmainTOlength0" id="pLmainTOlength1" value=""/> meter<br />
+    		<input type="checkbox" name="plswMainLineTurnOut1" id="plswMainLineTurnOut1"> turnout main line at end, <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="plswmainTOst1" id="plswmainTOst1"> turnout equally, turnout length : <input type="text" name="pLmainTOlength0" id="pLmainTOlength1" value=""/> meter</p><hr />
+    	</td>
+  	</tr>
+  	-->  	
+  	<tr>
+    	<td><input type="hidden" id="PLbasePolyID" value="">&nbsp;</td>
+    	<td align="right"><input type="button" name="createParallelLine" id="createParallelLine" value="Create" onclick="parallel_line()" /></td>
+  	</tr> 	
+ 	</table>		
+</div>
+
+<div id="dialogCombinePolyline" title="Combine two lines">
+<p>Combine two line at the two nearest points. Click another line and click Join button.</p>	
+	<table border="0" cellspacing="0" cellpadding="2" id="tcombine_line" width="100%">
+  <tr>
+    <td>line 1</td>
+    <td><input name="pline1name" type="text" id="pline1name" readonly="readonly" /></td>
+  </tr>
+  <tr>
+    <td>line 2</td>
+    <td><input name="pline1name2" type="text" id="pline2name" readonly="readonly" /></td>
+  </tr>
+  <tr>
+    <td colspan="2"><hr /></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right"><input type="button" name="btnCombineLine" id="btnCombineLine" value="Join" onclick="combine2polyline();" /></td>
+  </tr>  
+</table>
+</div>
+
+<div id="dialogInsertNoteAtMarker" title="Insert Note">
+Insert note or comment for selected point.<br />
+<textarea name="mnote" cols="70" id="mnote"></textarea><br /><br />
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right"><input type="button" name="btnMnoteSet" id="btnMnoteSet" value="Set" onClick="setMarkerNote();"><input type="hidden" id="mnotePID" value=""><input type="hidden" id="mnoteMID" value="">
+    <input type="button" name="btnMnoteReset" id="btnMnoteReset" value="Reset" onClick="resetMarkerNote();"></td>
+  </tr>
+</table>
+</div>
+
+<div id="dialogMarkerSetting" title="Marker Setting">
+		<div id="tabsMarkerSettingDialog">
+		<ul>
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-newmarkerdatails">Marker</a></li>
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-currentmarkerdatails">Raw Datas</a></li>
+    </ul>
+    <div id="tabs-newmarkerdatails">
+<table border="0" cellspacing="0" cellpadding="3">
+	  <tr>
+	    <td>line id</td>
+	    <td><input type="text" name="dms_lineid" id="dms_lineid"></td>
+	    <td>&nbsp;</td>
+	    <td>marker no</td>
+	    <td><strong>
+	      <input type="text" name="dms_markerindex" id="dms_markerindex">
+	    </strong></td>
+      </tr>
+	  <tr>
+	    <td>track service</td>
+	    <td><input type="text" name="dms_service" id="dms_service"></td>
+	    <td>&nbsp;</td>
+	    <td colspan="2"><input type="checkbox" name="lockedmarker" id="lockedmarker">
+        Locked</td>
+      </tr>
+	  <tr>
+	    <td>rail type</td>
+	    <td><select name="dms_railindex" id="dms_railindex">
+	      <option value="none" selected>- select -</option>
+        </select></td>
+	    <td>&nbsp;</td>
+	    <td>pole type</td>
+	    <td><select name="dms_poleindex" id="dms_poleindex">
+	      <option value="none" selected>- select -</option>
+        </select></td>
+      </tr>
+</table><br />
+<table border="0" cellspacing="0" cellpadding="2" id=width="100%">
+	  <tr>
+	    <td>structure OR</td>
+	    <td><select name="dms_GBstr" id="dms_GBstr">
+	      <option value="none" selected>- select -</option>
+</select></td>
+      </tr>
+	  <tr>
+	    <td>object type</td>
+	    <td><select name="dms_objtype" id="dms_objtype">
+	      <option value="none" selected>- select -</option>
+        </select></td>
+      </tr>
+	  <tr>
+	    <td>object index</td>
+	    <td><select name="dms_objindex" id="dms_objindex">
+	      <option value="none" selected>- select -</option>
+        </select></td>
+      </tr>
+	  <tr>
+	    <td>distance to the left (optional)</td>
+	    <td><input type="text" name="dms_leftX" id="dms_leftX"></td>
+      </tr>
+	  <tr>
+	    <td>distance to the right (optional)</td>
+	    <td><input type="text" name="dms_rightX" id="dms_rightX"></td>
+      </tr>
+	  <tr>
+	    <td>height difference  (optional)</td>
+	    <td><input type="text" name="dms_heightX" id="dms_heightX"></td>
+      </tr>
+	  <tr>
+	    <td valign="top">number of repeating  (optional)</td>
+	    <td valign="top"><input type="text" name="dms_repeatCount" id="dms_repeatCount">
+          <br>
+        + onward / - backward</td>
+      </tr>
+	  <tr>
+	    <td>distance between repeating object  (optional)</td>
+	    <td><input type="text" name="dms_repeatX" id="dms_repeatX"></td>
+      </tr>
+</table><br />
+<table width="100%" border="0" cellpadding="2" cellspacing="0" id=width="100%">
+	  <tr>
+	    <td>remarks</td>
+	    <td><textarea name="dms_note" cols="40" id="dms_note"></textarea></td>
+  </tr>
+	  <tr>
+	    <td colspan="2"><hr /></td>
+      </tr>
+	  <tr>
+	    <td>&nbsp;</td>
+	    <td align="right"><input type="button" name="btnUpdateMarkerSetting" id="btnUpdateMarkerSetting" value="Update"></td>
+      </tr>
+</table>    	
+    </div>
+    <div id="tabs-currentmarkerdatails">
+<img src="images/warning.png" width="16" height="16">Warning ! Please edit with caution. Improper editing will broke the data consistency and  program failure.
+	<table border="0" cellspacing="0" cellpadding="3">
+	  <tr>
+	    <td>.curve</td>
+	    <td><label for="m.curve"></label>
+        <textarea name="m.curve" cols="40" id="m.curve"></textarea>
+        <img src="images/information.png" alt="" width="16" height="16" align="top"></td>
+	    <td><input type="button" name="btnBuildRoute3" id="btnBuildRoute3" value="Update"></td>
+      </tr>
+	  <tr>
+	    <td>.tcurve</td>
+	    <td><textarea name="m.curve2" cols="40" id="m.curve2"></textarea>
+        <img src="images/information.png" alt="" width="16" height="16" align="top"></td>
+	    <td><input type="button" name="btnBuildRoute4" id="btnBuildRoute4" value="Update"></td>
+      </tr>
+	  <tr>
+	    <td>.pitch</td>
+	    <td><input name="m.curve3" type="text" id="m.curve3" value="" size="40">
+        <img src="images/information.png" alt="" width="16" height="16" align="top"></td>
+	    <td><input type="button" name="btnBuildRoute5" id="btnBuildRoute5" value="Update"></td>
+      </tr>
+	  <tr>
+	    <td>.bve</td>
+	    <td><textarea name="m.curve4" cols="40" id="m.curve4"></textarea>
+        <img src="images/information.png" alt="" width="16" height="16" align="top"></td>
+	    <td><input type="button" name="btnBuildRoute6" id="btnBuildRoute6" value="Update"></td>
+      </tr>
+      <!--
+	  <tr>
+	    <td>.lineX</td>
+	    <td><input name="m.curve5" type="text" id="m.curve5" value="" size="40">
+        <img src="images/information.png" alt="" width="16" height="16" align="top"></td>
+	    <td><input type="button" name="btnBuildRoute7" id="btnBuildRoute7" value="Update"></td>
+      </tr>
+	  <tr>
+	    <td>.turn</td>
+	    <td><input name="m.curve6" type="text" id="m.curve6" value="" size="40">
+        <img src="images/information.png" alt="" width="16" height="16" align="top"></td>
+	    <td><input type="button" name="btnBuildRoute8" id="btnBuildRoute8" value="Update"></td>
+      </tr> -->
+	  <tr>
+	    <td>.prln</td>
+	    <td><input name="m.curve7" type="text" id="m.curve7" value="" size="40">
+        <img src="images/information.png" alt="" width="16" height="16" align="top"></td>
+	    <td><input type="button" name="btnBuildRoute9" id="btnBuildRoute9" value="Update"></td>
+      </tr>
+	  <tr>
+	    <td>.kit</td>
+	    <td><textarea name="m.curve9" cols="40" id="m.curve9"></textarea>
+        <img src="images/information.png" alt="" width="16" height="16" align="top"></td>
+	    <td><input type="button" name="btnBuildRoute11" id="btnBuildRoute11" value="Update"></td>
+      </tr>
+	  <tr>
+	    <td>.note</td>
+	    <td><textarea name="m.curve8" cols="40" id="m.curve8"></textarea>
+        <img src="images/information.png" alt="" width="16" height="16" align="top"></td>
+	    <td><input type="button" name="btnBuildRoute10" id="btnBuildRoute10" value="Update"></td>
+      </tr>
+</table> 	
+    </div>
+	</div>    	
+
+</div>
+
+<div id="dialogTrackSetting" title="Track Setting">
+<table border="0" cellspacing="0" cellpadding="2" width="100%">
+  <tr>
+    <td>line id</td>
+    <td><input type="text" name="dtsv_lineid" id="dtsv_lineid"></td>
+  </tr>
+  <tr>
+    <td>track name</td>
+    <td><input type="text" name="dtsv_trackname" id="dtsv_trackname" size="30"></td>
+  </tr>
+  <tr>
+    <td>service</td>
+    <td><input type="text" name="dtsv_trackservice" id="dtsv_trackservice" size="50"></td>
+  </tr>
+  <tr>
+    <td>track number</td>
+    <td><input type="text" name="dtsv_tracknumber" id="dtsv_tracknumber"></td>
+  </tr>
+  <tr>
+    <td>track section</td>
+    <td><input type="text" name="dtsv_trackSection" id="dtsv_trackSection"></td>
+  </tr>
+  <tr>
+    <td>gauge</td>
+    <td><input type="text" name="dtsv_trackGauge" id="dtsv_trackGauge"></td>
+  </tr>
+  <tr>
+    <td>default rail type</td>
+    <td><select name="dtsv_railtypedefault" id="dtsv_railtypedefault">
+      <option value="none" selected>- select -</option>
+    </select></td>
+  </tr>  
+  <tr>
+    <td>train</td>
+    <td><select name="dtsv_runningTrain" id="dtsv_runningTrain">
+      <option value="none" selected>- select -</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td>developer id</td>
+    <td><input type="text" name="dtsv_devID" id="dtsv_devID" size="40"></td>
+  </tr>
+  <tr>
+    <td>remark</td>
+    <td><input name="dtsv_note" type="text" id="dtsv_note" value="" size="50"></td>
+  </tr>
+  <tr>
+    <td colspan="2"><hr /></td>
+  </tr>
+   <tr>
+    <td>&nbsp;</td>
+    <td align="right"><input type="button" name="btnUpdateTrackSetting" id="btnUpdateTrackSetting" value="Update"></td>
+  </tr>
+</table>
+</div>
+
+<div id="dialogBuildRoute" title="Build Route">
+	<table border="0" cellspacing="0" cellpadding="2" width="100%">
+	  <tr>
+	    <td>line id</td>
+	    <td><input name="dbr_lineid" type="text" id="dbr_lineid" readonly="readonly"><br />(please click the line that you want to build BVE route)</td>
+      </tr>
+	  <tr>
+	    <td>track name</td>
+	    <td><input name="dbr_trackname" type="text" id="dbr_trackname" readonly="readonly"></td>
+      </tr>
+	  <tr>
+	    <td> service</td>
+	    <td><input name="dbr_trackservice" type="text" id="dbr_trackservice" size="50"></td>
+      </tr>
+	  <tr>
+	    <td>starting station</td>
+	    <td><select name="dbr_stationStart" id="dbr_stationStart">
+	      <option value="none">- select -</option>
+	      </select></td>
+    </tr>
+	  <tr>
+	    <td>terminal station</td>
+	    <td><select name="dbr_stationEnd" id="dbr_stationEnd">
+	      <option value="none" selected>- select -</option>
+	      </select></td>
+    </tr>
+	  <tr>
+	    <td>track number</td>
+	    <td><input name="dbr_tracknumber" type="text" id="dbr_tracknumber" readonly="readonly"></td>
+    </tr>
+	  <tr>
+	    <td>gauge</td>
+	    <td><input name="dbr_trackGauge" type="text" id="dbr_trackGauge" readonly="readonly"> mm</td>
+    </tr>
+  	<tr>
+    	<td>default rail type</td>
+    	<td><select name="dbr_railtypedefault" id="dbr_railtypedefault">
+      	<option value="none" selected>- select -</option>
+    		</select></td>
+  	</tr>
+	  <tr>
+	    <td>train</td>
+	    <td><select name="dbr_runningTrain" id="dbr_runningTrain">
+	      <option value="none" selected>- select -</option>
+	      </select>
+	    </td>
+    </tr>
+	  <tr>
+	    <td>background</td>
+	    <td><select name="dbr_bg" id="dbr_bg">
+	      <option value="none" selected>- select -</option>
+	      </select>
+	    </td>
+    </tr>
+	  <tr>
+	    <td>developer id</td>
+	    <td><input name="dbr_devID" type="text" id="dbr_devID" size="50"></td>
+      </tr>
+	  <tr>
+	    <td>remark</td>
+	    <td><input name="dbr_note" type="text" id="dbr_note" value="" size="50"></td>
+      </tr>
+	  <tr>
+	    <td colspan="2"><hr /></td>
+      </tr>
+	  <tr>
+	    <td>&nbsp;</td>
+	    <td align="right"><input type="button" name="btnBuildRoute" id="btnBuildRoute" value="Build Route"></td>
+      </tr>
+</table>
+</div>
+
+<div id="dialogAddPoint" title="New Line ...">
+	<p>Add points to create new line. You can use this feature to continue previous works with this points.</p>
+		<table border="0" cellspacing="0" cellpadding="2" width="100%">
+	  <tr>
+	    <td>1st point latitud : </td>
+	    <td><input name="dap_1lat" type="text" id="dap_1lat"></td>
+   </tr>
+	  <tr>
+	    <td>1st point longitude : </td>
+	    <td><input name="dap_1lng" type="text" id="dap_1lng"></td>
+   </tr>
+	  <tr>
+	    <td>2nd point latitud : </td>
+	    <td><input name="dap_2lat" type="text" id="dap_2lat"></td>
+   </tr>
+	  <tr>
+	    <td>2nd point longitude : </td>
+	    <td><input name="dap_2lng" type="text" id="dap_2lng"></td>
+   </tr>
+	  <tr>
+	    <td colspan="2"><hr /></td>
+      </tr>
+	  <tr>
+	    <td>&nbsp;</td>
+	    <td align="right"><input type="button" name="btnAddPointsNDraw" id="btnAddPointsNDraw" value="Create line"></td>
+    </tr>
+	</table>
+</div>
+<!--
+<div id="dialogOptions" title="Options">
+	<p>text text text text text text text </p>
+</div> -->
+<div id="dialogInsertCrossing" title="Insert Crossing">
+<p>Insert crossing at the selected point or line.<br />
+</p>
+<table width="400" border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td>Crossing type</td>
+    <td><select name="dInsC_Crossing" id="dInsC_Crossing">
+      <option value="none">- select -</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td>Road</td>
+    <td><select name="dInsC_RoadAtCrossing" id="dInsC_RoadAtCrossing" title="(suggested feature, not available in this release)">
+      <option value="none">- select -</option>
+    </select></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td colspan="2"><hr /></td>
+  </tr> 
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right"><input type="button" name="dInsC_OK" id="dInsC_OK" value="Set">
+    	<input type="hidden" id="dInsC_PID" value=""><input type="hidden" id="dInsC_MID" value="">
+    <input type="button" name="dInsC_KO" id="dInsC_KO" value="Cancel"></td>
+  </tr>
+</table>
+</div>
+
+<div id="dialogInsertOverbridge" title="Insert overbridge">
+<p>Insert overbridge at the selected point or line.<br />
+</p>
+<table width="400" border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td>Overbridge</td>
+    <td><select name="dInsOb_overbridge" id="dInsOb_overbridge">
+      <option value="none">- select -</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><img id="overbridgeImg" src="" alt=""></td>
+  </tr>
+  <tr>
+    <td>Adjusment</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Distance from line</td>
+    <td><input type="text" name="dInsOb_Lm" id="dInsOb_Lm">
+      m</td>
+  </tr>
+  <tr>
+    <td> Angle</td>
+    <td><input type="text" name="dInsOb_RA" id="dInsOb_RA"> 
+      &deg; </td>
+  </tr>
+ 
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td colspan="2"><hr /></td>
+  </tr> 
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right"><input type="button" name="dInsOb_OK" id="dInsOb_OK" value="Insert">
+    	<input type="hidden" id="dInsOb_PID" value=""><input type="hidden" id="dInsOb_MID" value="">
+    <input type="button" name="dInsOb_KO" id="dInsOb_KO" value="Cancel"></td>
+  </tr>
+</table>
+</div>
+
+<div id="dialogInsertBridge" title="Insert Bridge">
+<p>Insert bridge at the selected point or line.<br />
+</p>
+<table width="400" border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td>type</td>
+    <td><input type="radio" name="radio" id="dInsB_start" value="dInsB_start">
+      Start
+        <input type="radio" name="radio" id="dInsB_end" value="dInsB_end">
+      End</td>
+  </tr>	
+  <tr>
+    <td>bridge</td>
+    <td><select name="dInsB_bridge" id="dInsB_bridge">
+      <option value="none">- select -</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td>selected bridge length :</td>
+    <td><input type="text" name="dInsB_BL" id="dInsB_BL" readonly="readonly"> m</td>
+  </tr>
+  <tr>  
+  <tr>
+    <td>&nbsp;</td>
+    <td><img id="bridgeImg" src="" alt=""></td>
+  </tr>
+  <tr>
+    <td><input type="checkbox" name="dInsB_incRiver" id="dInsB_incRiver">
+      river</td>
+    <td><select name="dInsB_river" id="dInsB_river">
+      <option value="none">- select -</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><img id="bridgeRiverImg" src="" alt=""></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><p>river distance correction<br>
+      <input type="text" name="dInsB_Lm" id="dInsB_Lm">
+m</p></td>
+  </tr>
+ 
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td colspan="2"><hr /></td>
+  </tr> 
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right"><input type="button" name="dInsB_OK" id="dInsB_OK" value="Insert">
+    	<input type="hidden" id="dInsB_PID" value=""><input type="hidden" id="dInsB_MID" value="">
+    <input type="button" name="dInsB_KO" id="dInsB_KO" value="Cancel"></td>
+  </tr>
+</table>
+</div>
+
+<div id="dialogInsertRiver" title="Insert River">
+<p>Insert river at the selected point or line.<br />
+</p>
+<table width="400" border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td>river</td>
+    <td><select name="dInsR_river" id="dInsR_river">
+      <option value="none">- select -</option>
+      </select></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><img id="dInsR_riverImg" src="" alt=""></td>
+  </tr>
+ 
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td colspan="2"><hr /></td>
+  </tr> 
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right"><input type="button" name="dInsR_OK" id="dInsR_OK" value="Insert">
+    	<input type="hidden" id="dInsR_PID" value=""><input type="hidden" id="dInsR_MID" value="">
+    <input type="button" name="dInsR_KO" id="dInsR_KO" value="Cancel"></td>
+  </tr>
+</table>
+</div>
+
+<div id="dialogUpdateGround" title="Update Ground">
+<p>Update ground object at the selected point or line.<br />
+</p>
+<table width="400" border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td>ground object</td>
+    <td><select name="dUpdG_object" id="dUpdG_object">
+      <option value="none">- select -</option>
+      </select></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><img src="" alt="" name="groundImg" id="groundImg"></td>
+  </tr>
+  
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td colspan="2"><hr /></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right"><input type="button" name="dUpdG_OK" id="dUpdG_OK" value="Update">
+    	<input type="hidden" id="dUpdG_PID" value=""><input type="hidden" id="dUpdG_MID" value="">
+    <input type="button" name="dUpdG_KO" id="dUpdG_KO" value="Cancel"></td>
+  </tr>
+</table>
+</div>
+
+<div id="dialogNonParallelTurnOut" title="Non Parallel Turnout">
+<p>Insert non parallel line turnout.<img src="images/nonpLline.png" width="143" height="54" align="right"><br />
+</p>
+<table width="400" border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td>turnout type</td>
+    <td><select name="dInsNpLTo_type" id="dInsNpLTo_type">
+      <option value="none" selected>- select -</option>
+      <option value="tL">to left</option>
+      <option value="tR">to right</option>
+      <option value="fL">from left</option>
+      <option value="fR">from right</option>
+      </select></td>
+  </tr>
+  <tr>
+    <td>turnout slope</td>
+    <td><input type="text" name="dInsNpLTo_Islope" id="dInsNpLTo_Islope"></td>
+  </tr>
+  <tr>
+    <td>curve start distance from turnout</td>
+    <td><input type="text" name="dInsNpLTo_CstX" id="dInsNpLTo_CstX">
+m</td>
+  </tr>
+  <tr>
+    <td>curve length</td>
+    <td><input type="text" name="dInsNpLTo_CvL" id="dInsNpLTo_CvL">
+m</td>
+  </tr>
+  <tr>
+    <td>curve radius</td>
+    <td><input type="text" name="dInsNpLTo_CvR" id="dInsNpLTo_CvR">
+m</td>
+  </tr>
+  <tr>
+    <td>after curve length</td>
+    <td><input type="text" name="dInsNpLTo_fL" id="dInsNpLTo_fL">
+m</td>
+  </tr> 
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td colspan="2"><hr /></td>
+  </tr> 
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right"><input type="button" name="dInsNpLTo_OK" id="dInsNpLTo_OK" value="Insert" onClick="alert('Update Ground 2 do');"><input type="hidden" id="dInsNpLTo_PID" value=""><input type="hidden" id="dInsNpLTo_MID" value="">
+    <input type="button" name="dInsNpLTo_KO" id="dInsNpLTo_KO" value="Cancel" onClick="alert('Update Ground 2 do');"></td>
+  </tr>
+</table>
+</div>
+
+<div id="dialogWidenParallelGap" title="Spacing between parallel tracks">
+<p>Widening the distance between two parallel track center.<img src="images/trackgapwiden.png" width="303" height="153" align="absmiddle"></p>
+<div style="height:220px; width:600px; overflow:scroll;">
+  <table width="90%" border="0" cellspacing="0" cellpadding="3">
+    <tr>
+      <td>track 1 (<em>T<sub>1</sub></em>)</td>
+      <td><input type="text" name="dpLTs_Line1" id="dpLTs_Line1" title="initially selected"></td>
+    </tr>
+    <tr>
+      <td valign="top">track 2 (<em>T<sub>2</sub></em>)</td>
+      <td><input type="text" name="dpLTs_Line2" id="dpLTs_Line2" title="click here and click line on map to select it"></td>
+    </tr>
+    <tr>
+      <td bgcolor="#F5EBFE" >point b</td>
+      <td bgcolor="#F5EBFE" ><input type="text" name="dpLTs_stIdx" id="dpLTs_stIdx" title="initially selected"> 
+        </td>
+    </tr>
+    <tr>
+      <td bgcolor="#F5EBFE" >point e</td>
+      <td bgcolor="#F5EBFE" ><input type="text" name="dpLTs_edIdx" id="dpLTs_edIdx" title="click here and click line on map to select it"> 
+        </td>
+    </tr>
+    <tr>
+      <td valign="top" bgcolor="#FFF2F9">point b' (if not exist, please select point a')</td>
+      <td bgcolor="#FFF2F9"><input type="text" name="dpLTs_stIdx2" id="dpLTs_stIdx2">
+        <br>point b' on track 2 must perpendicular to point b on track 1.</td>
+    </tr>
+    <tr>
+      <td valign="top" bgcolor="#FFF2F9">point e' (if not exist, please select point f')</td>
+      <td bgcolor="#FFF2F9"><input type="text" name="dpLTs_edIdx2" id="dpLTs_edIdx2">
+        <br>point e' on track 2 must perpendicular to point e on track 1.</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>initial turnout length (<em>t<sub>i1</sub></em>)</td>
+      <td><input type="text" name="dpLTs_iToL1" id="dpLTs_iToL1"> m</td>
+    </tr>
+    <tr>
+      <td>initial turnout end width (<em>w<sub>i1</sub></em>)</td>
+      <td><input type="text" name="dpLTs_iToW1" id="dpLTs_iToW1">
+m</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td bgcolor="#E0E0E0" colspan="2"><input type="checkbox" name="dpLTs_chkDifSlRatio1" id="dpLTs_chkDifSlRatio1">
+Different slope ratio for the second line. (optional)</td>
+    </tr>
+    <tr>
+      <td align="right" bgcolor="#E0E0E0">turnout length (<em>t<sub>i2</sub></em>) :</td>
+      <td bgcolor="#E0E0E0"><input type="text" name="dpLTs_iToL2" id="dpLTs_iToL2">
+m</td>
+    </tr>
+    <tr>
+      <td align="right" bgcolor="#E0E0E0">turnout end width (<em>w<sub>i2</sub></em>) : </td>
+      <td bgcolor="#E0E0E0"><input type="text" name="dpLTs_iToW2" id="dpLTs_iToW2">
+m</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>end turnout length (<em>t<sub>f</sub></em>)</td>
+      <td><input type="text" name="dpLTs_eToL1" id="dpLTs_eToL1">
+m</td>
+    </tr>
+    <tr>
+      <td>end turnout end width (<em>w<sub>f</sub></em>)</td>
+      <td><input type="text" name="dpLTs_eToW1" id="dpLTs_eToW1">
+m</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td bgcolor="#E0E0E0" colspan="2"><input type="checkbox" name="dpLTs_chkDifSlRatio2" id="dpLTs_chkDifSlRatio2">
+Different slope ratio for the second line.(optional)</td>
+    </tr>
+    <tr>
+      <td bgcolor="#E0E0E0">turnout length (<em>t<sub>f2</sub></em>) : </td>
+      <td bgcolor="#E0E0E0"><input type="text" name="dpLTs_eToL2" id="dpLTs_eToL2">
+m</td>
+    </tr>
+    <tr>
+      <td bgcolor="#E0E0E0">turnout end width (<em>w<sub>f2</sub></em>) :</td>
+      <td bgcolor="#E0E0E0"><input type="text" name="dpLTs_eToW2" id="dpLTs_eToW2">
+m</td>
+    </tr>
+</table>
+</div>
+<table width="100%" border="0" cellpadding="3" cellspacing="0">
+  <tr>
+    <td colspan="5"><hr size="1"></td>
+    </tr>
+  <tr>
+    <td align="right">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td align="right"><input type="button" name="dpLTs_OK" id="dpLTs_OK" value="Update" >
+      <input type="button" name="dpLTs_KO" id="dpLTs_KO" value="Cancel" ></td>
+    </tr>
+</table>
+</div>
+
+<div id="dialogInsertPlatform" title="Insert platform">
+<p>Please choose  platform type</p>
+<table width="600" border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td>track 1 (<em>T<sub>1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_Line3" id="dpLTgW_Line3"></td>
+  </tr>
+  <tr>
+    <td>track 2 (<em>T<sub>2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_Line3" id="dpLTgW_Line4">
+      <br>
+      (click line on the map to select it)</td>
+  </tr>
+</table>
+	<div id="tabsInsertPlatformDialog">
+		<ul>
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-form0" lang="en">Single Left</a></li>
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-form1" lang="en">Single Right</a></li>
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-form2" lang="en">Middle</a></li>
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-form3" lang="en">Middle with bypass -  stop</a></li>
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-form4" lang="en"> Middle with bypass - non stop</a></li>
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-form5" lang="en">Left-Right 4 side - 1</a></li>        
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-form6" lang="en">Left-Right 4 side - 2</a></li>
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-form7" lang="en">Left-Right 2 side - stop</a></li>
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-form8" lang="en">Left-Right 2 side - non stop</a></li>
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-form9" lang="en">Left-Right 4 side/with bypass - stop 1</a></li>
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-form10" lang="en">Left-Right 4 side/with bypass - stop 2</a></li>
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-form11" lang="en">Left-Right 4 side/with bypass - non stop</a></li> 
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-form12" lang="en">Middle - turnout at end only</a></li> 
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-form13" lang="en">Middle - turnout at start only</a></li> 
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-form14" lang="en">Left-Right 4 side/with bypass 2 - stop 1</a></li> 
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-form15" lang="en">Left-Right 4 side/with bypass 2 - stop</a> 2</li>
+        <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-form16" lang="en">Left-Right 4 side/with bypass 2 - non stop</a></li> 
+    </ul>
+    <div id="tabs-form0">
+<table width="600" border="0" cellspacing="0" cellpadding="3">  
+  <tr>
+    <td colspan="2"><img src="images/form-left.png" width="411" height="56"></td>
+    </tr>
+  <tr>
+    <td>platform length (<em>P<sub>i</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL1" id="dpLTgW_iToL1">
+m</td>
+  </tr>
+  <tr>
+    <td valign="top">&nbsp;</td>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+        <td align="right"><input type="button" name="dpLTgW_OK2" id="dpLTgW_OK2" value="Update" onClick="alert('Update Ground 2 do');"></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>    
+    </div>
+    <div id="tabs-form1">
+<table width="600" border="0" cellspacing="0" cellpadding="3">  
+  <tr>
+    <td colspan="2"><img src="images/form-right.png" width="411" height="66"></td>
+    </tr>
+  <tr>
+    <td>platform length (<em>P<sub>i</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL1" id="dpLTgW_iToL1">
+m</td>
+  </tr>
+  <tr>
+    <td valign="top">&nbsp;</td>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+        <td align="right"><input type="button" name="dpLTgW_OK2" id="dpLTgW_OK2" value="Update" onClick="alert('Update Ground 2 do');"></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>
+    </div>
+    <div id="tabs-form2">
+<table width="600" border="0" cellspacing="0" cellpadding="3">  
+  <tr>
+    <td colspan="2"><img src="images/form-middle.png" width="435" height="140"></td>
+    </tr>
+  <tr>
+    <td>platform length (<em>P<sub>i</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL1" id="dpLTgW_iToL1">
+m</td>
+  </tr>
+  <tr>
+    <td>platform width (<em>P<sub>w</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToW1" id="dpLTgW_iToW1">
+m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 1 initial turnout  length (<em>t<sub>i1</sub></em>)</td>
+    <td><input name="dpLTgW_iToL3" type="text" id="dpLTgW_iToL3" value="100">
+m</td>
+  </tr>
+  <tr>
+    <td>track 1 initial turnout   width (<em>w<sub>i1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL4" id="dpLTgW_iToL4">
+m</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout  length (<em>t<sub>i2</sub></em>)</td>
+    <td><input name="dpLTgW_iToL5" type="text" id="dpLTgW_iToL6" value="100">
+m</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout   width (<em>w<sub>i2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL6" id="dpLTgW_iToL7">
+m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout  length (<em>t<sub>f1</sub></em>)</td>
+    <td><input name="dpLTgW_eToL1" type="text" id="dpLTgW_eToL1" value="100">
+m</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout   width (<em>w<sub>f1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW1" id="dpLTgW_eToW1">
+m</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout  length (<em>t<sub>f2</sub></em>)</td>
+    <td><input name="dpLTgW_eToW3" type="text" id="dpLTgW_eToW2" value="100">
+m</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout   width (<em>w<sub>f2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW4" id="dpLTgW_eToW3">
+m</td>
+  </tr>
+  <tr>
+    <td valign="top">&nbsp;</td>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+        <td align="right"><input type="button" name="dpLTgW_OK2" id="dpLTgW_OK2" value="Update" onClick="alert('Update Ground 2 do');"></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>    
+    </div>
+    <div id="tabs-form3">
+<table width="600" border="0" cellspacing="0" cellpadding="3">  
+  <tr>
+    <td colspan="2"><img src="images/form-middle-wbypass.png" width="564" height="181"></td>
+    </tr>
+  <tr>
+<td>platform length (<em>P<sub>i</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL1" id="dpLTgW_iToL1">
+m</td>
+  </tr>
+  <tr>
+    <td>platform width (<em>P<sub>w</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToW1" id="dpLTgW_iToW1">
+m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 1 initial turnout  length (<em>t<sub>i1</sub></em>)</td>
+    <td><input name="dpLTgW_iToL7" type="text" id="dpLTgW_iToL8" value="100">
+m</td>
+  </tr>
+  <tr>
+    <td>track 1 initial turnout   width (<em>w<sub>i1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL8" id="dpLTgW_iToL9">
+m</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout  length (<em>t<sub>i2</sub></em>)</td>
+    <td><input name="dpLTgW_iToL10" type="text" id="dpLTgW_iToL11" value="100">
+m</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout   width (<em>w<sub>i2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL9" id="dpLTgW_iToL10">
+m</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout  length (<em>t<sub>i3</sub></em>)</td>
+    <td><input name="dpLTgW_iToL3" type="text" id="dpLTgW_iToL3" value="200">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout   width (<em>w<sub>i3</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL4" id="dpLTgW_iToL4">
+m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout  length (<em>t<sub>i4</sub></em>)</td>
+    <td><input name="dpLTgW_iToL5" type="text" id="dpLTgW_iToL6" value="200">
+m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout   width (<em>w<sub>i4</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL6" id="dpLTgW_iToL7">
+m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout  length (<em>t<sub>f1</sub></em>)</td>
+    <td><input name="dpLTgW_eToL1" type="text" id="dpLTgW_eToL1" value="100">
+m</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout   width (<em>w<sub>f1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW1" id="dpLTgW_eToW1">
+m</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout  length (<em>t<sub>f2</sub></em>)</td>
+    <td><input name="dpLTgW_eToW3" type="text" id="dpLTgW_eToW2" value="100">
+m</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout   width (<em>w<sub>f2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW4" id="dpLTgW_eToW3">
+m</td>
+  </tr>
+  <tr>
+    <td>track 3 end turnout  length (<em>t<sub>f3</sub></em>)</td>
+    <td><input name="dpLTgW_iToW1" type="text" id="dpLTgW_iToW1" value="200">
+m</td>
+  </tr>
+  <tr>
+    <td>track 3 end turnout   width (<em>w<sub>f3</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToL11" id="dpLTgW_eToL11">
+m</td>
+  </tr>
+  
+  <tr>
+    <td>track 4 end turnout  length (<em>t<sub>f4</sub></em>)</td>
+    <td><input name="dpLTgW_eToL1" type="text" id="dpLTgW_eToL1" value="200">
+m</td>
+  </tr>
+  <tr>
+    <td>track 4 end turnout   width (<em>w<sub>f4</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW1" id="dpLTgW_eToW1">
+m</td>
+  </tr>
+  <tr>
+    <td valign="top">&nbsp;</td>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+        <td align="right"><input type="button" name="dpLTgW_OK2" id="dpLTgW_OK2" value="Update" onClick="alert('Update Ground 2 do');"></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>    
+    </div>
+    <div id="tabs-form4">
+      <table width="600" border="0" cellspacing="0" cellpadding="3">
+        <tr>
+    <td colspan="2"><img src="images/form-middle-wbypass-bypass.png" alt="" width="564" height="140"></td>
+  </tr>
+  <tr>
+    <td>platform length (<em>P<sub>i</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL11" id="dpLTgW_iToL12">
+      m</td>
+  </tr>
+  <tr>
+    <td>platform width (<em>P<sub>w</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToW3" id="dpLTgW_iToW3">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+<td>track 1 initial turnout  length (<em>t<sub>i1</sub></em>)</td>
+    <td><input name="dpLTgW_iToL7" type="text" id="dpLTgW_iToL8" value="200">
+m</td>
+  </tr>
+  <tr>
+    <td>track 1 initial turnout   width (<em>w<sub>i1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL8" id="dpLTgW_iToL9">
+m</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout  length (<em>t<sub>i2</sub></em>)</td>
+    <td><input name="dpLTgW_iToL10" type="text" id="dpLTgW_iToL11" value="200">
+m</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout   width (<em>w<sub>i2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL9" id="dpLTgW_iToL10">
+m</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout  length (<em>t<sub>i3</sub></em>)</td>
+    <td><input name="dpLTgW_iToL3" type="text" id="dpLTgW_iToL3" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout   width (<em>w<sub>i3</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL4" id="dpLTgW_iToL4">
+m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout  length (<em>t<sub>i4</sub></em>)</td>
+    <td><input name="dpLTgW_iToL5" type="text" id="dpLTgW_iToL6" value="100">
+m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout   width (<em>w<sub>i4</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL6" id="dpLTgW_iToL7">
+m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout  length (<em>t<sub>f1</sub></em>)</td>
+    <td><input name="dpLTgW_eToL3" type="text" id="dpLTgW_eToL3" value="200">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout   width (<em>w<sub>f1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW5" id="dpLTgW_eToW4">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout  length (<em>t<sub>f2</sub></em>)</td>
+    <td><input name="dpLTgW_eToW5" type="text" id="dpLTgW_eToW5" value="200">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout   width (<em>w<sub>f2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW5" id="dpLTgW_eToW6">
+      m</td>
+  </tr>
+  <tr>
+<td>track 3 end turnout  length (<em>t<sub>f3</sub></em>)</td>
+    <td><input name="dpLTgW_iToW1" type="text" id="dpLTgW_iToW1" value="100">
+m</td>
+  </tr>
+  <tr>
+    <td>track 3 end turnout   width (<em>w<sub>f3</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToL11" id="dpLTgW_eToL11">
+m</td>
+  </tr>
+  
+  <tr>
+    <td>track 4 end turnout  length (<em>t<sub>f4</sub></em>)</td>
+    <td><input name="dpLTgW_eToL1" type="text" id="dpLTgW_eToL1" value="100">
+m</td>
+  </tr>
+  <tr>
+    <td>track 4 end turnout   width (<em>w<sub>f4</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW1" id="dpLTgW_eToW1">
+m</td>
+  </tr>
+  <tr>
+    <td valign="top">&nbsp;</td>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+        <td align="right"><input type="button" name="dpLTgW_OK3" id="dpLTgW_OK3" value="Update" onClick="alert('Update Ground 2 do');"></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+    </div>
+    <div id="tabs-form5">
+      <table width="600" border="0" cellspacing="0" cellpadding="3">
+        <tr>
+    <td colspan="2"><img src="images/form2-4side-stop.png" alt="" width="412" height="259"></td>
+  </tr>
+  <tr>
+    <td>platform length (<em>P<sub>i</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL12" id="dpLTgW_iToL21">
+      m</td>
+  </tr>
+  <tr>
+    <td>platform width (<em>P<sub>w</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToW4" id="dpLTgW_iToW4">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 1 initial turnout  length (<em>t<sub>i1</sub></em>)</td>
+    <td><input name="dpLTgW_iToL12" type="text" id="dpLTgW_iToL26" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 1 initial turnout   width (<em>w<sub>i1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL12" id="dpLTgW_iToL27">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout  length (<em>t<sub>i2</sub></em>)</td>
+    <td><input name="dpLTgW_iToL12" type="text" id="dpLTgW_iToL28" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout   width (<em>w<sub>i2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL12" id="dpLTgW_iToL29">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout  length (<em>t<sub>f1</sub></em>)</td>
+    <td><input name="dpLTgW_eToL4" type="text" id="dpLTgW_eToL4" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout   width (<em>w<sub>f1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW6" id="dpLTgW_eToW7">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout  length (<em>t<sub>f2</sub></em>)</td>
+    <td><input name="dpLTgW_eToW6" type="text" id="dpLTgW_eToW8" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout   width (<em>w<sub>f2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW6" id="dpLTgW_eToW9">
+      m</td>
+  </tr>
+  <tr>
+    <td valign="top">&nbsp;</td>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+        <td align="right"><input type="button" name="dpLTgW_OK4" id="dpLTgW_OK4" value="Update" onClick="alert('Update Ground 2 do');"></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>
+    </div>
+    <div id="tabs-form6">
+      <table width="600" border="0" cellspacing="0" cellpadding="3">
+        <tr>
+    <td colspan="2"><img src="images/form2-4side-bypass.png" width="413" height="259"></td>
+  </tr>
+  <tr>
+    <td>platform length (<em>P<sub>i</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL13" id="dpLTgW_iToL30">
+      m</td>
+  </tr>
+  <tr>
+    <td>platform width (<em>P<sub>w</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToW5" id="dpLTgW_iToW5">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout  length (<em>t<sub>i3</sub></em>)</td>
+    <td><input name="dpLTgW_iToL13" type="text" id="dpLTgW_iToL31" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout   width (<em>w<sub>i3</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL13" id="dpLTgW_iToL32">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout  length (<em>t<sub>i4</sub></em>)</td>
+    <td><input name="dpLTgW_iToL13" type="text" id="dpLTgW_iToL33" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout   width (<em>w<sub>i4</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL13" id="dpLTgW_iToL34">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+  <td>track 3 end turnout  length (<em>t<sub>f3</sub></em>)</td>
+    <td><input name="dpLTgW_iToW1" type="text" id="dpLTgW_iToW1" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 3 end turnout   width (<em>w<sub>f3</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToL11" id="dpLTgW_eToL11">
+m</td>
+  </tr>
+  
+  <tr>
+    <td>track 4 end turnout  length (<em>t<sub>f4</sub></em>)</td>
+    <td><input name="dpLTgW_eToL1" type="text" id="dpLTgW_eToL1" value="100">
+m</td>
+  </tr>
+  <tr>
+    <td>track 4 end turnout   width (<em>w<sub>f4</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW1" id="dpLTgW_eToW1">
+m</td>
+  </tr>
+  <tr>
+    <td valign="top">&nbsp;</td>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+        <td align="right"><input type="button" name="dpLTgW_OK5" id="dpLTgW_OK5" value="Update" onClick="alert('Update Ground 2 do');"></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+    </div>
+    <div id="tabs-form7">
+      <table width="600" border="0" cellspacing="0" cellpadding="3">
+        <tr>
+    <td colspan="2"><img src="images/form2-2side-stop.png" width="413" height="209"></td>
+  </tr>
+  <tr>
+    <td>platform length (<em>P<sub>i</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL14" id="dpLTgW_iToL39">
+      m</td>
+  </tr>
+  <tr>
+    <td>platform width (<em>P<sub>w</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToW6" id="dpLTgW_iToW6">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 1 initial turnout  length (<em>t<sub>i1</sub></em>)</td>
+    <td><input name="dpLTgW_iToL14" type="text" id="dpLTgW_iToL44" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 1 initial turnout   width (<em>w<sub>i1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL14" id="dpLTgW_iToL45">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout  length (<em>t<sub>i2</sub></em>)</td>
+    <td><input name="dpLTgW_iToL14" type="text" id="dpLTgW_iToL46" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout   width (<em>w<sub>i2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL14" id="dpLTgW_iToL47">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout  length (<em>t<sub>f1</sub></em>)</td>
+    <td><input name="dpLTgW_eToL6" type="text" id="dpLTgW_eToL6" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout   width (<em>w<sub>f1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW8" id="dpLTgW_eToW13">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout  length (<em>t<sub>f2</sub></em>)</td>
+    <td><input name="dpLTgW_eToW8" type="text" id="dpLTgW_eToW14" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout   width (<em>w<sub>f2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW8" id="dpLTgW_eToW15">
+      m</td>
+  </tr>
+  <tr>
+    <td valign="top">&nbsp;</td>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+        <td align="right"><input type="button" name="dpLTgW_OK6" id="dpLTgW_OK6" value="Update" onClick="alert('Update Ground 2 do');"></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>
+    </div>
+    <div id="tabs-form8">
+      <table width="600" border="0" cellspacing="0" cellpadding="3">
+        <tr>
+    <td colspan="2"><img src="images/form2-2side-bypass.png" width="413" height="209"></td>
+  </tr>
+  <tr>
+    <td>platform length (<em>P<sub>i</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL15" id="dpLTgW_iToL48">
+      m</td>
+  </tr>
+  <tr>
+    <td>platform width (<em>P<sub>w</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToW7" id="dpLTgW_iToW7">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout  length (<em>t<sub>i1</sub></em>)</td>
+    <td><input name="dpLTgW_iToL15" type="text" id="dpLTgW_iToL49" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout   width (<em>w<sub>i1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL15" id="dpLTgW_iToL50">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout  length (<em>t<sub>i1</sub></em>)</td>
+    <td><input name="dpLTgW_iToL15" type="text" id="dpLTgW_iToL51" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout   width (<em>w<sub>i1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL15" id="dpLTgW_iToL52">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+  <td>track 3 end turnout  length (<em>t<sub>f3</sub></em>)</td>
+    <td><input name="dpLTgW_iToW1" type="text" id="dpLTgW_iToW1" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 3 end turnout   width (<em>w<sub>f3</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToL11" id="dpLTgW_eToL11">
+m</td>
+  </tr>
+  
+  <tr>
+    <td>track 4 end turnout  length (<em>t<sub>f4</sub></em>)</td>
+    <td><input name="dpLTgW_eToL1" type="text" id="dpLTgW_eToL1" value="100">
+m</td>
+  </tr>
+  <tr>
+    <td>track 4 end turnout   width (<em>w<sub>f4</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW1" id="dpLTgW_eToW1">
+m</td>
+  </tr>
+  <tr>
+    <td valign="top">&nbsp;</td>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+        <td align="right"><input type="button" name="dpLTgW_OK7" id="dpLTgW_OK7" value="Update" onClick="alert('Update Ground 2 do');"></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+    </div>
+    <div id="tabs-form9">
+      <table width="600" border="0" cellspacing="0" cellpadding="3">
+        <tr>
+    <td colspan="2"><img src="images/form2f-4s-6t-st1.png" width="592" height="225"></td>
+  </tr>
+  <tr>
+    <td>platform length (<em>P<sub>i</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL16" id="dpLTgW_iToL57">
+      m</td>
+  </tr>
+  <tr>
+    <td>platform width (<em>P<sub>w</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToW8" id="dpLTgW_iToW8">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 1 initial turnout  length (<em>t<sub>i1</sub></em>)</td>
+    <td><input name="dpLTgW_iToL16" type="text" id="dpLTgW_iToL58" value="200">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 1 initial turnout   width (<em>w<sub>i1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL16" id="dpLTgW_iToL59">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout  length (<em>t<sub>i1</sub></em>)</td>
+    <td><input name="dpLTgW_iToL16" type="text" id="dpLTgW_iToL60" value="200">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout   width (<em>w<sub>i1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL16" id="dpLTgW_iToL61">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout  length (<em>t<sub>i1</sub></em>)</td>
+    <td><input name="dpLTgW_iToL16" type="text" id="dpLTgW_iToL62" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout   width (<em>w<sub>i1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL16" id="dpLTgW_iToL63">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout  length (<em>t<sub>i2</sub></em>)</td>
+    <td><input name="dpLTgW_iToL16" type="text" id="dpLTgW_iToL64" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout   width (<em>w<sub>i2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL16" id="dpLTgW_iToL65">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout  length (<em>t<sub>f1</sub></em>)</td>
+    <td><input name="dpLTgW_eToL8" type="text" id="dpLTgW_eToL8" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout   width (<em>w<sub>f1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW10" id="dpLTgW_eToW19">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout  length (<em>t<sub>f2</sub></em>)</td>
+    <td><input name="dpLTgW_eToW10" type="text" id="dpLTgW_eToW20" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout   width (<em>w<sub>f2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW10" id="dpLTgW_eToW21">
+      m</td>
+  </tr>
+  <tr>
+<td>track 3 end turnout  length (<em>t<sub>f3</sub></em>)</td>
+    <td><input name="dpLTgW_iToW1" type="text" id="dpLTgW_iToW1" value="200">
+m</td>
+  </tr>
+  <tr>
+    <td>track 3 end turnout   width (<em>w<sub>f3</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToL11" id="dpLTgW_eToL11">
+m</td>
+  </tr>
+  
+  <tr>
+    <td>track 4 end turnout  length (<em>t<sub>f4</sub></em>)</td>
+    <td><input name="dpLTgW_eToL1" type="text" id="dpLTgW_eToL1" value="200">
+m</td>
+  </tr>
+  <tr>
+    <td>track 4 end turnout   width (<em>w<sub>f4</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW1" id="dpLTgW_eToW1">
+m</td>
+  </tr>
+  <tr>
+    <td valign="top">&nbsp;</td>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+        <td align="right"><input type="button" name="dpLTgW_OK8" id="dpLTgW_OK8" value="Update" onClick="alert('Update Ground 2 do');"></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+    </div>
+    <div id="tabs-form10">
+      <table width="600" border="0" cellspacing="0" cellpadding="3">
+        <tr>
+    <td colspan="2"><img src="images/form2f-4s-6t-st2.png" width="592" height="268"></td>
+  </tr>
+  <tr>
+    <td>platform length (<em>P<sub>i</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL17" id="dpLTgW_iToL66">
+      m</td>
+  </tr>
+  <tr>
+    <td>platform width (<em>P<sub>w</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToW9" id="dpLTgW_iToW9">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 1 initial turnout  length (<em>t<sub>i1</sub></em>)</td>
+    <td><input name="dpLTgW_iToL17" type="text" id="dpLTgW_iToL67" value="200">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 1 initial turnout   width (<em>w<sub>i1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL17" id="dpLTgW_iToL68">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout  length (<em>t<sub>i1</sub></em>)</td>
+    <td><input name="dpLTgW_iToL17" type="text" id="dpLTgW_iToL69" value="200">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout   width (<em>w<sub>i1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL17" id="dpLTgW_iToL70">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout  length (<em>t<sub>i1</sub></em>)</td>
+    <td><input name="dpLTgW_iToL17" type="text" id="dpLTgW_iToL71" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout   width (<em>w<sub>i1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL17" id="dpLTgW_iToL72">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout  length (<em>t<sub>i2</sub></em>)</td>
+    <td><input name="dpLTgW_iToL17" type="text" id="dpLTgW_iToL73" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout   width (<em>w<sub>i2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL17" id="dpLTgW_iToL74">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout  length (<em>t<sub>f1</sub></em>)</td>
+    <td><input name="dpLTgW_eToL9" type="text" id="dpLTgW_eToL9" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout   width (<em>w<sub>f1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW11" id="dpLTgW_eToW22">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout  length (<em>t<sub>f2</sub></em>)</td>
+    <td><input name="dpLTgW_eToW11" type="text" id="dpLTgW_eToW23" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout   width (<em>w<sub>f2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW11" id="dpLTgW_eToW24">
+      m</td>
+  </tr>
+  <tr>
+<td>track 3 end turnout  length (<em>t<sub>f3</sub></em>)</td>
+    <td><input name="dpLTgW_iToW1" type="text" id="dpLTgW_iToW1" value="200">
+m</td>
+  </tr>
+  <tr>
+    <td>track 3 end turnout   width (<em>w<sub>f3</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToL11" id="dpLTgW_eToL11">
+m</td>
+  </tr>
+  
+  <tr>
+    <td>track 4 end turnout  length (<em>t<sub>f4</sub></em>)</td>
+    <td><input name="dpLTgW_eToL1" type="text" id="dpLTgW_eToL1" value="200">
+m</td>
+  </tr>
+  <tr>
+    <td>track 4 end turnout   width (<em>w<sub>f4</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW1" id="dpLTgW_eToW1">
+m</td>  </tr>
+  <tr>
+    <td valign="top">&nbsp;</td>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+        <td align="right"><input type="button" name="dpLTgW_OK9" id="dpLTgW_OK9" value="Update" onClick="alert('Update Ground 2 do');"></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+    </div>
+    <div id="tabs-form11">
+      <table width="600" border="0" cellspacing="0" cellpadding="3">
+        <tr>
+    <td colspan="2"><img src="images/form2f-4s-6t-bp.png" width="593" height="273"></td>
+  </tr>
+  <tr>
+    <td>platform length (<em>P<sub>i</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL75">
+      m</td>
+  </tr>
+  <tr>
+    <td>platform width (<em>P<sub>w</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToW10" id="dpLTgW_iToW10">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout  length (<em>t<sub>i1</sub></em>)</td>
+    <td><input name="dpLTgW_iToL18" type="text" id="dpLTgW_iToL76" value="200">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout   width (<em>w<sub>i1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL77">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout  length (<em>t<sub>i1</sub></em>)</td>
+    <td><input name="dpLTgW_iToL18" type="text" id="dpLTgW_iToL78" value="200">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout   width (<em>w<sub>i1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL79">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 5 initial turnout  length (<em>t<sub>i1</sub></em>)</td>
+    <td><input name="dpLTgW_iToL18" type="text" id="dpLTgW_iToL80" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 5 initial turnout   width (<em>w<sub>i1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL81">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 6 initial turnout  length (<em>t<sub>i2</sub></em>)</td>
+    <td><input name="dpLTgW_iToL18" type="text" id="dpLTgW_iToL82" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 6 initial turnout   width (<em>w<sub>i2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL83">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 3 end turnout  length (<em>t<sub>f1</sub></em>)</td>
+    <td><input name="dpLTgW_eToL10" type="text" id="dpLTgW_eToL10" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 3 end turnout   width (<em>w<sub>f1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW12" id="dpLTgW_eToW25">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 end turnout  length (<em>t<sub>f2</sub></em>)</td>
+    <td><input name="dpLTgW_eToW12" type="text" id="dpLTgW_eToW26" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 end turnout   width (<em>w<sub>f2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW12" id="dpLTgW_eToW27">
+      m</td>
+  </tr>
+  <tr>
+<td>track 5 end turnout  length (<em>t<sub>f3</sub></em>)</td>
+    <td><input name="dpLTgW_iToW1" type="text" id="dpLTgW_iToW1" value="200">
+m</td>
+  </tr>
+  <tr>
+    <td>track 5 end turnout   width (<em>w<sub>f3</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToL11" id="dpLTgW_eToL11">
+m</td>
+  </tr>
+  
+  <tr>
+    <td>track 6 end turnout  length (<em>t<sub>f4</sub></em>)</td>
+    <td><input name="dpLTgW_eToL1" type="text" id="dpLTgW_eToL1" value="200">
+m</td>
+  </tr>
+  <tr>
+    <td>track 6 end turnout   width (<em>w<sub>f4</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW1" id="dpLTgW_eToW1">
+m</td>
+  </tr>
+  <tr>
+    <td valign="top">&nbsp;</td>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+        <td align="right"><input type="button" name="dpLTgW_OK10" id="dpLTgW_OK10" value="Update" onClick="alert('Update Ground 2 do');"></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+    </div>  
+    <div id="tabs-form12">
+<table width="600" border="0" cellspacing="0" cellpadding="3">  
+  <tr>
+    <td colspan="2"><img src="images/form-middle-it2.png" width="454" height="98"></td>
+    </tr>
+  <tr>
+    <td>platform length (<em>P<sub>i</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL1" id="dpLTgW_iToL1">
+m</td>
+  </tr>
+  <tr>
+    <td>platform width (<em>P<sub>w</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToW1" id="dpLTgW_iToW1">
+m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout  length (<em>t<sub>i2</sub></em>)</td>
+    <td><input name="dpLTgW_iToL5" type="text" id="dpLTgW_iToL6" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout   width (<em>w<sub>i2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL6" id="dpLTgW_iToL7">
+m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout  length (<em>t<sub>f1</sub></em>)</td>
+    <td><input name="dpLTgW_eToL1" type="text" id="dpLTgW_eToL1" value="100">
+m</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout   width (<em>w<sub>f1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW1" id="dpLTgW_eToW1">
+m</td>
+  </tr>
+  <tr>
+    <td valign="top">&nbsp;</td>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+        <td align="right"><input type="button" name="dpLTgW_OK2" id="dpLTgW_OK2" value="Update" onClick="alert('Update Ground 2 do');"></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>    
+    </div>
+    <div id="tabs-form13">
+<table width="600" border="0" cellspacing="0" cellpadding="3">  
+  <tr>
+    <td colspan="2"><img src="images/form-middle-it1.png" width="455" height="101"></td>
+    </tr>
+  <tr>
+    <td>platform length (<em>P<sub>i</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL1" id="dpLTgW_iToL1">
+m</td>
+  </tr>
+  <tr>
+    <td>platform width (<em>P<sub>w</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToW1" id="dpLTgW_iToW1">
+m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 1 initial turnout  length (<em>t<sub>i1</sub></em>)</td>
+    <td><input name="dpLTgW_iToL3" type="text" id="dpLTgW_iToL3" value="100">
+m</td>
+  </tr>
+  <tr>
+    <td>track 1 initial turnout   width (<em>w<sub>i1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL4" id="dpLTgW_iToL4">
+m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout  length (<em>t<sub>f2</sub></em>)</td>
+    <td><input name="dpLTgW_eToW3" type="text" id="dpLTgW_eToW2" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout   width (<em>w<sub>f2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW4" id="dpLTgW_eToW3">
+m</td>
+  </tr>
+  <tr>
+    <td valign="top">&nbsp;</td>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+        <td align="right"><input type="button" name="dpLTgW_OK2" id="dpLTgW_OK2" value="Update" onClick="alert('Update Ground 2 do');"></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>    
+    </div> 
+    <div id="tabs-form14">
+      <table width="600" border="0" cellspacing="0" cellpadding="3">
+        <tr>
+    <td colspan="2"><img src="images/form2-4s-6t-st1B.png" width="594" height="254"></td>
+  </tr>
+  <tr>
+    <td>platform length (<em>P<sub>i</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL75">
+      m</td>
+  </tr>
+  <tr>
+    <td>platform width (<em>P<sub>w</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToW10" id="dpLTgW_iToW10">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 1 initial turnout  length (<em>t<sub>i1</sub></em>)</td>
+    <td><input name="dpLTgW_iToL18" type="text" id="dpLTgW_iToL76" value="200">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 1 initial turnout   width (<em>w<sub>i1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL77">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout  length (<em>t<sub>i2</sub></em>)</td>
+    <td><input name="dpLTgW_iToL18" type="text" id="dpLTgW_iToL78" value="200">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout   width (<em>w<sub>i2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL79">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout  length (<em>t<sub>i3</sub></em>)</td>
+    <td><input name="dpLTgW_iToL18" type="text" id="dpLTgW_iToL80" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout   width (<em>w<sub>i3</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL81">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout  length (<em>t<sub>i4</sub></em>)</td>
+    <td><input name="dpLTgW_iToL18" type="text" id="dpLTgW_iToL82" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout   width (<em>w<sub>i4</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL83">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout  length (<em>t<sub>f1</sub></em>)</td>
+    <td><input name="dpLTgW_eToL10" type="text" id="dpLTgW_eToL10" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout   width (<em>w<sub>f1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW12" id="dpLTgW_eToW25">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout  length (<em>t<sub>f2</sub></em>)</td>
+    <td><input name="dpLTgW_eToW12" type="text" id="dpLTgW_eToW26" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout   width (<em>w<sub>f2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW12" id="dpLTgW_eToW27">
+      m</td>
+  </tr>
+  <tr>
+<td>track 3 end turnout  length (<em>t<sub>f3</sub></em>)</td>
+    <td><input name="dpLTgW_iToW1" type="text" id="dpLTgW_iToW1" value="200">
+m</td>
+  </tr>
+  <tr>
+    <td>track 3 end turnout   width (<em>w<sub>f3</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToL11" id="dpLTgW_eToL11">
+m</td>
+  </tr>
+  
+  <tr>
+    <td>track 4 end turnout  length (<em>t<sub>f4</sub></em>)</td>
+    <td><input name="dpLTgW_eToL1" type="text" id="dpLTgW_eToL1" value="200">
+m</td>
+  </tr>
+  <tr>
+    <td>track 4 end turnout   width (<em>w<sub>f4</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW1" id="dpLTgW_eToW1">
+m</td>
+  </tr>
+  <tr>
+    <td valign="top">&nbsp;</td>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+        <td align="right"><input type="button" name="dpLTgW_OK10" id="dpLTgW_OK10" value="Update" onClick="alert('Update Ground 2 do');"></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+    </div>
+    <div id="tabs-form15">
+      <table width="600" border="0" cellspacing="0" cellpadding="3">
+        <tr>
+    <td colspan="2"><img src="images/form2-4s-6t-st2B.png" width="592" height="268"></td>
+  </tr>
+  <tr>
+    <td>platform length (<em>P<sub>i</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL75">
+      m</td>
+  </tr>
+  <tr>
+    <td>platform width (<em>P<sub>w</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToW10" id="dpLTgW_iToW10">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 1 initial turnout  length (<em>t<sub>i1</sub></em>)</td>
+    <td><input name="dpLTgW_iToL18" type="text" id="dpLTgW_iToL76" value="200">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 1 initial turnout   width (<em>w<sub>i1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL77">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout  length (<em>t<sub>i2</sub></em>)</td>
+    <td><input name="dpLTgW_iToL18" type="text" id="dpLTgW_iToL78" value="200">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 initial turnout   width (<em>w<sub>i2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL79">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout  length (<em>t<sub>i3</sub></em>)</td>
+    <td><input name="dpLTgW_iToL18" type="text" id="dpLTgW_iToL80" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout   width (<em>w<sub>i3</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL81">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout  length (<em>t<sub>i4</sub></em>)</td>
+    <td><input name="dpLTgW_iToL18" type="text" id="dpLTgW_iToL82" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout   width (<em>w<sub>i4</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL83">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout  length (<em>t<sub>f1</sub></em>)</td>
+    <td><input name="dpLTgW_eToL10" type="text" id="dpLTgW_eToL10" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 1 end turnout   width (<em>w<sub>f1</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW12" id="dpLTgW_eToW25">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout  length (<em>t<sub>f2</sub></em>)</td>
+    <td><input name="dpLTgW_eToW12" type="text" id="dpLTgW_eToW26" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 2 end turnout   width (<em>w<sub>f2</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW12" id="dpLTgW_eToW27">
+      m</td>
+  </tr>
+  <tr>
+<td>track 3 end turnout  length (<em>t<sub>f3</sub></em>)</td>
+    <td><input name="dpLTgW_iToW1" type="text" id="dpLTgW_iToW1" value="200">
+m</td>
+  </tr>
+  <tr>
+    <td>track 3 end turnout   width (<em>w<sub>f3</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToL11" id="dpLTgW_eToL11">
+m</td>
+  </tr>
+  
+  <tr>
+    <td>track 4 end turnout  length (<em>t<sub>f4</sub></em>)</td>
+    <td><input name="dpLTgW_eToL1" type="text" id="dpLTgW_eToL1" value="200">
+m</td>
+  </tr>
+  <tr>
+    <td>track 4 end turnout   width (<em>w<sub>f4</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW1" id="dpLTgW_eToW1">
+m</td>
+  </tr>
+  <tr>
+    <td valign="top">&nbsp;</td>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+        <td align="right"><input type="button" name="dpLTgW_OK10" id="dpLTgW_OK10" value="Update" onClick="alert('Update Ground 2 do');"></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+    </div>                         
+    <div id="tabs-form16">
+      <table width="600" border="0" cellspacing="0" cellpadding="3">
+        <tr>
+    <td colspan="2"><img src="images/form2-4s-6t-bypassB.png" width="593" height="271"></td>
+  </tr>
+  <tr>
+    <td>platform length (<em>P<sub>i</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL75">
+      m</td>
+  </tr>
+  <tr>
+    <td>platform width (<em>P<sub>w</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToW10" id="dpLTgW_iToW10">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout  length (<em>t<sub>i3</sub></em>)</td>
+    <td><input name="dpLTgW_iToL18" type="text" id="dpLTgW_iToL76" value="200">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 3 initial turnout   width (<em>w<sub>i3</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL77">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout  length (<em>t<sub>i4</sub></em>)</td>
+    <td><input name="dpLTgW_iToL18" type="text" id="dpLTgW_iToL78" value="200">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 initial turnout   width (<em>w<sub>i4</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL79">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 5 initial turnout  length (<em>t<sub>i5</sub></em>)</td>
+    <td><input name="dpLTgW_iToL18" type="text" id="dpLTgW_iToL80" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 5 initial turnout   width (<em>w<sub>i5</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL81">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 6 initial turnout  length (<em>t<sub>i6</sub></em>)</td>
+    <td><input name="dpLTgW_iToL18" type="text" id="dpLTgW_iToL82" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 6 initial turnout   width (<em>w<sub>i6</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_iToL18" id="dpLTgW_iToL83">
+      m</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>track 3 end turnout  length (<em>t<sub>f3</sub></em>)</td>
+    <td><input name="dpLTgW_eToL10" type="text" id="dpLTgW_eToL10" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 3 end turnout   width (<em>w<sub>f3</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW12" id="dpLTgW_eToW25">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 end turnout  length (<em>t<sub>f4</sub></em>)</td>
+    <td><input name="dpLTgW_eToW12" type="text" id="dpLTgW_eToW26" value="100">
+      m</td>
+  </tr>
+  <tr>
+    <td>track 4 end turnout   width (<em>w<sub>f4</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW12" id="dpLTgW_eToW27">
+      m</td>
+  </tr>
+  <tr>
+<td>track 5 end turnout  length (<em>t<sub>f5</sub></em>)</td>
+    <td><input name="dpLTgW_iToW1" type="text" id="dpLTgW_iToW1" value="200">
+m</td>
+  </tr>
+  <tr>
+    <td>track 5 end turnout   width (<em>w<sub>f5</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToL11" id="dpLTgW_eToL11">
+m</td>
+  </tr>
+  
+  <tr>
+    <td>track 6 end turnout  length (<em>t<sub>f6</sub></em>)</td>
+    <td><input name="dpLTgW_eToL1" type="text" id="dpLTgW_eToL1" value="200">
+m</td>
+  </tr>
+  <tr>
+    <td>track 6 end turnout   width (<em>w<sub>f6</sub></em>)</td>
+    <td><input type="text" name="dpLTgW_eToW1" id="dpLTgW_eToW1">
+m</td>
+  </tr>
+  <tr>
+    <td valign="top">&nbsp;</td>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>&nbsp;</td>
+        <td align="right"><input type="button" name="dpLTgW_OK10" id="dpLTgW_OK10" value="Update" onClick="alert('Update Ground 2 do');"></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+    </div>
+  </div>    
+</div>
+
+<div id="dialogSwitchTrack" title="Insert Switch Between Two Parallel Tracks">
+<p>Insert switch at the selected point or line.<br />
+</p>
+<table width="400" border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td>Track 1</td>
+    <td><input type="text" name="dInsSTC_T1" id="dInsSTC_T1"></td>
+  </tr>
+  <tr>
+    <td>Track 2</td>
+    <td><input type="text" name="dInsSTC_T2" id="dInsSTC_T2" title="click here and the other parallel line to select it"></td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>
+      <input type="radio" name="radio" id="swtype12-21" value="swtype12-21">
+      both (X crossing)
+      
+      <input type="radio" name="radio" id="swtype12" value="swtype12">
+      1 to 2 
+      <input type="radio" name="radio" id="swtype21" value="swtype21">
+      2 to 1</td>
+  </tr>
+  <tr>
+    <td>Switch length</td>
+    <td><input type="text" name="dInsSTC_swL" id="dInsSTC_swL">
+m</td>
+  </tr> 
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td colspan="2"><hr /></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right"><input type="button" name="dInsSTC_OK" id="dInsSTC_OK" value="Set">
+    	<input type="hidden" id="dInsSTC_t1mi" value="">
+    <input type="button" name="dInsSTC_K0" id="dInsSTC_K0" value="Cancel"></td>
+  </tr>
+</table>
+</div>
+
+<div id="dialogInsertFlyover" title="Insert flyover">
+<p>Insert flyover at the selected point or line.<br />
+</p>
+<table width="100%" border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td>type</td>
+    <td><input type="radio" name="radio" id="dInsFO_start" value="dInsFO_start">Start
+  <input type="radio" name="radio" id="dInsFO_end" value="dInsFO_end">End</td>
+  </tr>	
+  <tr>
+    <td>Flyover</td>
+    <td><select name="dInsFO_Fo" id="dInsFO_Fo">
+      <option value="none">- select -</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><img id="dInsFO_foimg" src="" alt=""></td>
+  </tr>
+  <tr>
+    <td colspan="2" bgcolor="#E0F1EA"><strong><em>Flyover start</em></strong></td>
+  </tr>
+  <tr>
+    <td valign="top" bgcolor="#E0F1EA">Target height</td>
+    <td bgcolor="#E0F1EA"><input type="text" name="dInsFO_Lm" id="dInsFO_Lm" value="5"> m</td>
+  </tr>
+  <tr>
+    <td bgcolor="#E0F1EA">Pitch</td>
+    <td bgcolor="#E0F1EA"><input type="text" name="dInsFO_P1" id="dInsFO_P1" value="0"> - slope length : <span id="dInsFO_sL1"></span> m</td>
+  </tr>
+  <tr>
+    <td colspan="2" bgcolor="#FFFFCE"><strong><em>Flyover end</em></strong></td>
+  </tr>
+  <tr>
+    <td bgcolor="#FFFFCE">End track height</td>
+    <td bgcolor="#FFFFCE"><input type="text" name="dInsFO_Lm2" id="dInsFO_Lm2" value="5"> m</td>
+  </tr>
+  <tr>
+    <td bgcolor="#FFFFCE">Pitch</td>
+    <td bgcolor="#FFFFCE"><input type="text" name="dInsFO_P2" id="dInsFO_P2" value="0"> - slope length : <span id="dInsFO_sL2"></span> m</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td colspan="2"><hr /></td>
+  </tr> 
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right"><input type="button" name="dInsFO_OK" id="dInsFO_OK" value="Insert">
+    	<input type="hidden" id="dInsFO_PID" value=""><input type="hidden" id="dInsFO_MID" value="">
+    <input type="button" name="dInsFO_KO" id="dInsFO_KO" value="Cancel"></td>
+  </tr>
+</table>
+</div>
+
+<div id="dialogInsertTunnel" title="Insert Tunnel">
+  <p>Insert/end tunnel at the selected point or line.<br />
+  </p>
+  <table width="400" border="0" cellspacing="0" cellpadding="3">
+    <tr>
+      <td>type</td>
+      <td><label>
+        <input type="radio" name="radio" id="dInsTun_tunStart" value="Start">
+      Tunnel Start
+      <input type="radio" name="radio" id="dInsTun_TunEnd" value="End">
+      Tunnel End</label></td>
+    </tr>
+    <tr>
+      <td> tunnel</td>
+      <td><select name="dInsTun_tun" id="dInsTun_tun">
+        <option value="none">- select -</option>
+      </select></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><img src="" alt="" name="dInsTun_tunImg" id="dInsTun_tunImg"></td>
+    </tr>
+
+  </table>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+    	<td colspan="2"><hr /></td>
+  	</tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td align="right"><input type="button" name="dInsTun_OK" id="dInsTun_OK" value="Insert">
+        <input type="hidden" id="dInsTun_PID" value="">
+        <input type="hidden" id="dInsTun_MID" value="">
+        <input type="button" name="dInsTun_KO" id="dInsTun_KO" value="Cancel"></td>
+    </tr>
+  </table>
+</div>
+
+<div id="dialogMakeItParallelBetween2Point" title="Make existing track parallel between two point">
+  <p>Make track 
+    <input type="text" name="dMkPl2p_L2" id="dMkPl2p_L2" title="initially selected"> 
+    (between point 
+    <input type="text" name="dMkPl2p_M20" id="dMkPl2p_M20" size="5" title="initially selected"> 
+    and 
+    <input type="text" name="dMkPl2p_M21" id="dMkPl2p_M21" size="5" title="click here and click point on the map to select it">
+    )  parallel to track
+  <input type="text" name="dMkPl2p_L1" id="dMkPl2p_L1" title="click here and click another line on the map to select it">
+    (between  point
+    <input type="text" name="dMkPl2p_M10" id="dMkPl2p_M10" size="5" title="click here and click point on the map to select it">
+    and 
+    <input type="text" name="dMkPl2p_M11" id="dMkPl2p_M11" size="5" title="click here and click point on the map to select it">
+    ).</p>
+  <p>Distance between track center : 
+    <input type="text" name="dMkPl2p_dtc" id="dMkPl2p_dtc">
+m<br />
+  </p>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td colspan="2"><hr /></td>
+  </tr>  	
+    <tr>
+      <td>&nbsp;</td>
+      <td align="right"><input type="button" name="dMkPl2p_OK" id="dMkPl2p_OK" value="Update" onClick="alert('Update track 2 do');">
+        <input type="button" name="dMkPl2p_KO" id="dMkPl2p_KO" value="Cancel" onClick="alert('Update track 2 do');"></td>
+    </tr>
+  </table>
+</div>
+
+<!-- ********************************* drawing dialog ********************************* --> 
+</body>
+</html>
