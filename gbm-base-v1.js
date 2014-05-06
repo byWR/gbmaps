@@ -102,34 +102,32 @@ reindex:function(markers){
 		marker.index = index;
 		marker.title = marker.pid + '(' + index + ')';
 		// 2 test (14/1/2013)
-		if (typeof marker.curve != 'undefined') {
-			if ((marker.curve != null) && (marker.curve != '')) {
-			    var cuvarr = marker.curve.split('§');
-				var cuvid =cuvarr[0].split(':')[1];
-				if (typeof MapToolbar.features['curveTab'][cuvid] != 'undefined') {MapToolbar.features['curveTab'][cuvid].mid = index; }
-			}
+		if (marker.bdata.curve != '') {
+			var cuvid = marker.bdata.curve;
+			if (typeof MapToolbar.features['curveTab'][cuvid] != 'undefined') {MapToolbar.features['curveTab'][cuvid].mid = index; }
+
 		}
-		if (typeof marker.tcurve != 'undefined') {
-			if ((marker.tcurve != null) && (marker.tcurve != '')) {
-			    var tcuvarr = marker.tcurve.split('§');
-					var tcuvid = tcuvarr[0].split(':')[1];
-					MapToolbar.features['tcurveTab'][tcuvid].mid = index;
-					if (typeof MapToolbar.features['tcurveTab'][tcuvid] != 'undefined') {MapToolbar.features['tcurveTab'][tcuvid].mid = index; }
-			}
+		if (marker.bdata.tcurve != '') {
+			var tcuvid = marker.bdata.tcurve;
+			if (typeof MapToolbar.features['tcurveTab'][tcuvid] != 'undefined') {MapToolbar.features['tcurveTab'][tcuvid].mid = index; }
 		}
-		if (typeof marker.prln != 'undefined') {
-			if ((marker.prln != null) && (marker.prln != '')) {
-				if (marker.prln.indexOf('§') == 0) { 
-  					marker.prln = marker.prln.substring(1,marker.prln.length);
-  				}
+		if (typeof marker.sline != 'undefined') {
+			if (marker.sline != '') {
+				/*
+				alert(marker.sline);
+				alert(typeof marker.sline);
+				if (marker.sline.indexOf(",") == 0) { 
+  					marker.sline = marker.sline.substring(1,marker.sline.length);
+  			}
+				*/
   					/*
-  						var arrLine = marker.prln.split('§');
+  						var arrLine = marker.sline.split('§');
   						for (p = 0; p < arrLine.length; p++) {
   							var subArrL = arrLine[p].split(':');
   							var lineName = subArrL[0];
-  							if (subArrL[2] == 'start') {
+  							if (subArrL[2] == '0') {
   							if (typeof MapToolbar.features["lineTab"][lineName] != 'undefined') { MapToolbar.features["lineTab"][lineName].markers.getAt(0).lineX = marker.pid + ':' + index; }
-  							} else if (subArrL[2] == 'end') {
+  							} else if (subArrL[2] == '1') {
   							if (typeof MapToolbar.features["lineTab"][lineName] != 'undefined') { MapToolbar.features["lineTab"][lineName].markers.getAt(MapToolbar.features["lineTab"][lineName].markers.length-1).turn = marker.pid + ':' + index; }
   							}
   						}
@@ -159,27 +157,23 @@ currentFeature: null,
     	if (ptype == 'line') {
 				var e = (typeof e.latLng != 'undefined')? e.latLng : e,
 			    image = new google.maps.MarkerImage('images/square.png',
-			    new google.maps.Size(7, 7),
-		  	  new google.maps.Point(0, 0),
-			    new google.maps.Point(3, 3)), 
-				  path = poly.getPath(),
-				  index = (typeof index != 'undefined')? index : path.length,
-				  markers = (poly.markers)? poly.markers : new google.maps.MVCArray, 
-		      marker = new google.maps.Marker({
+					new google.maps.Size(7, 7),
+					new google.maps.Point(0, 0),
+					new google.maps.Point(3, 3)), 
+					path = poly.getPath(),
+					index = (typeof index != 'undefined')? index : path.length,
+					markers = (poly.markers)? poly.markers : new google.maps.MVCArray, 
+				marker = new google.maps.Marker({
 					position: e,
 					title: poly.id + '(' + index + ')',
 					map: map,
 					draggable: true,
 					icon: image,
 					note: null, // any extra note 
-					curve: null,	// circullar curve
-					tcurve: null, // transition curve
-					pitch: null, // track pitch
-					bve: null, // various bve data
-					lineX:null, // non parallel line distance
-					turn:null, // main line non curve turning
-					prln:null, // parallel line with
-					kit:null, // others data (reserved) by Karya IT
+					bdata: {height:'',railindex:'',pitch:'',curve:'',tcurve:''},
+					kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:''}, // various bve data
+					sline: '',
+					lineX: '',
 					pid: poly.id
 		    });
 	  	  marker.index = index;    
@@ -238,22 +232,19 @@ currentFeature: null,
 				index = (typeof index != 'undefined')? index : path.length,
 				markers = (poly.markers)? poly.markers : new google.maps.MVCArray, 
 				marker = new google.maps.Marker({
-				position: e,
-				map: map,
-				title: poly.id + '(' + index + ')',
-				draggable: false,
-				icon: image,
-				note: null, // any extra note 
-				pitch: null, // track pitch
-				bve: null, // various bve data
-				lineX:null, // side line distance
-				turn:null, // main line non curve turning
-				kit:null, // others data (reserved) by Karya IT
-				ld1:null, // distance on circumference from curve start point l1, total arc length = ld1 + ld2
-				ld2:null, // distance on circumference from curve end point l2, total arc length = ld1 + ld2
-				arc:null,
-				pid: poly.id
-		    });
+					position: e,
+					map: map,
+					title: poly.id + '(' + index + ')',
+					draggable: false,
+					icon: image,
+					note: null, // any extra note 
+					bdata: {height:'',pitch:''},
+					kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:''}, // various bve data
+					sline: '',
+					lineX: '',
+					ld:null, // distance on circumference from curve start point 
+					pid:poly.id
+				});
 			
 			marker.index = index;    
 	    	path.insertAt(index, e);
@@ -262,30 +253,27 @@ currentFeature: null,
 		    	MapToolbar.reindex(markers);	
 	    	}
 
-	    	for (i=0; i < MapToolbar.features["lineTab"][poly.pid].markers.length; i++){
-	    		if ((MapToolbar.features["lineTab"][poly.pid].markers.getAt(i).curve) != null) {
-	    			var arr = MapToolbar.features["lineTab"][poly.pid].markers.getAt(i).curve.split('§');
+	    	//for (i=0; i < MapToolbar.features["lineTab"][poly.pid].markers.length; i++){
+	    		// if ((MapToolbar.features["lineTab"][poly.pid].markers.getAt(i).bdata.curve) != '') {
 	    			
-	    			if (arr[0].split(':')[1] == poly.id) {
-	    				/* 'curve:'+ curve.id + '§radius:' + preR * dir + '§cant:' + parseFloat($('#sBtnRCCant').val()) + '§limit:' + parseFloat($('#sBtnRCDesignSpeed').val()) + '§tlength:' + l2m1 + '§clength:' + arcL + '§center:' + Cc.lat() + '/' + Cc.lng() + '§start_point:' + extp[0].lat() + '/' + extp[0].lng() + '§end_point:' + extp[extp.length-1].lat() + '/' + extp[extp.length-1].lng()  + '§h1:' + h1 + '§h2:' + h2 + '§forceSL:' + enforceSL; */
+	    			
+	    			//if (MapToolbar.features["lineTab"][poly.pid].markers.getAt(i).bdata.curve == poly.id) {
 		
-						var rd = Math.abs(parseFloat(arr[1].split(':')[1])); // retrive curve radius
-						var Cc = new google.maps.LatLng( parseFloat(arr[6].split(':')[1].split('/')[0]) , parseFloat(arr[6].split(':')[1].split('/')[1]));  // retrive curve center coordinate
-						var arL = parseFloat(arr[5].split(':')[1]); // retrive arc length
-						var x1 = new google.maps.LatLng( parseFloat(arr[7].split(':')[1].split('/')[0]) , parseFloat(arr[7].split(':')[1].split('/')[1]));  // retrive curve start coordinate
-	 		   			var ch1 = google.maps.geometry.spherical.computeHeading(x1,Cc);
-						var ch2 = google.maps.geometry.spherical.computeHeading(Cc,e);
-	 		   			var anC = intersection_angle(ch1,ch2).angle;
+			var rd = poly.Rc;  // retrive curve radius
+			var Cc = poly.Cc;  // retrive curve center coordinate
+			var arL = poly.Lc; // retrive arc length
+			var x1 = poly.st;  // retrive curve start coordinate
+			var ch1 = google.maps.geometry.spherical.computeHeading(x1,Cc);
+			var ch2 = google.maps.geometry.spherical.computeHeading(Cc,e);
+			var anC = intersection_angle(ch1,ch2).angle;
 	 		   	
-	 		   			var xL = (anC/360) * 2 * Math.PI * rd; //anC.toRad() * Math.PI * rd;
-	 		   			marker.ld1 = xL;
-	 		   			marker.ld2 = arL - xL;
-	 		   			marker.arc = arL;
-	 		   			marker.kit = 'cmi:'+ index; // curve marker @ marker id on curve
-	    				break;
-	    			}
-	    		}
-	    	}
+	 		var xL = Math.abs((anC/360) * 2 * Math.PI * rd); //anC.toRad() * Math.PI * rd;
+	 		marker.ld = xL;
+	 		marker.note = 'cmi:'+ index; // curve marker @ marker id on curve
+	    				//break;
+	    			//}
+	    		//}
+	    	// }
 	    	
 		} else if (ptype == 'tcurve') {
 			var e = (typeof e.latLng != 'undefined')? e.latLng : e,
@@ -303,11 +291,10 @@ currentFeature: null,
 				icon: image,
 				title: poly.id + '(' + index + ')',
 				note: null, // any extra note 
-				pitch: null, // track pitch
-				bve: null, // various bve data
-				lineX:null, // side line distance , for non parallel line, side curve
-				turn:null, // main line non curve turning
-				kit:null, // others data (reserved) by Karya IT
+				bdata: {height:'',pitch:''},
+				kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:''}, // various bve data
+				sline: '',
+				lineX: '',
 				pid: poly.id
 		    });
 			marker.index = index;    
@@ -316,6 +303,83 @@ currentFeature: null,
 	    	if(arguments[2]){
 		    	MapToolbar.reindex(markers);	
 	    	}
+			//2do 4Feb2014************************************
+			var Rc = poly.Rc;  // retrive curve radius
+			var Cc = poly.Cc;  // retrive curve center coordinate
+			var Ls = poly.Ls;
+			var Lc = poly.Lc;
+			var K = poly.K;
+			var Lt = Lc + 2 * Ls; // retrive arc length
+			
+			var ts1 = poly.Ttst;  // retrive curve coordinate
+			var tc1 = poly.Tcst;  // retrive curve coordinate
+			var tc2 = poly.Tced;  // retrive curve coordinate
+			var ts2 = poly.Tted;  // retrive curve coordinate
+			var h1 = poly.h1;
+			var h2 = poly.h2;
+			
+			var kp1 = google.maps.geometry.spherical.computeOffset(ts1, K, h1);
+			var kp2 = google.maps.geometry.spherical.computeOffset(ts2, -K, h2);
+			
+			var delta0 = poly.delta;
+			var theta0 = poly.theta;
+			var deltaS0 = poly.deltaS;
+			var deltaC0 = poly.deltaC;
+			var tctype = poly.tctype;
+			var lineId = poly.pid;
+			var l_idx = poly.mid;
+			var TotalX = poly.TotalX;
+			var TotalY = poly.TotalY;
+			
+			var ch1 = google.maps.geometry.spherical.computeHeading(kp1,Cc);
+			var ch2 = google.maps.geometry.spherical.computeHeading(Cc,e);
+			var delta = intersection_angle(ch1,ch2).angle;
+			
+			var xL = 0;
+			
+			var biP = MapToolbar.features["lineTab"][lineId].markers.getAt(l_idx-1).position;
+			var isP = MapToolbar.features["lineTab"][lineId].markers.getAt(l_idx).position;
+			var aiP = MapToolbar.features["lineTab"][lineId].markers.getAt(l_idx+1).position;
+			
+			if (delta <= deltaS0) {
+				var h_ac = google.maps.geometry.spherical.computeHeading(e,ts1);
+				var h_ab = google.maps.geometry.spherical.computeHeading(ts1,isP);
+				var alfa = intersection_angle(h_ac,h_ab).angle;
+				var x_ac = google.maps.geometry.spherical.computeDistanceBetween(e,ts1);
+				
+				if (tctype == 'cubic') {
+					xL = x_ac * Math.cos(alfa.toRad()); //base on assumption x=l	
+				} else {
+				//base on assumption x/X = l/L
+					var x = x_ac * Math.cos(alfa.toRad()); 
+					xL = (x * Ls)/ TotalX;
+				}
+				marker.ld = xL;	
+				
+			} else if (delta <= deltaS0 + deltaC0) {
+			
+				var delta1 = delta - deltaS0;
+				xL = Math.abs((delta1/360) * 2 * Math.PI * Rc); //anC.toRad() * Math.PI * rd;
+				marker.ld = xL + Ls;
+				
+			} else {
+				var h_ac = google.maps.geometry.spherical.computeHeading(e,ts2);
+				var h_ab = google.maps.geometry.spherical.computeHeading(ts2,isP);
+				var alfa = intersection_angle(h_ac,h_ab).angle;
+				var x_ac = google.maps.geometry.spherical.computeDistanceBetween(e,ts2);				
+			
+				if (tctype == 'cubic') {
+					xL = x_ac * Math.cos(alfa.toRad()); //base on assumption x=l					
+				} else {
+					//base on assumption x/X = l/L
+					var x = x_ac * Math.cos(alfa.toRad()); 
+					xL = (x * Ls)/ TotalX;		
+				}
+				marker.ld = Lt - xL;
+			}
+
+	 		marker.note = 'cmi:'+ index; // curve marker @ marker id on curve
+			
 	    } else if (ptype == 'shape') {
 			var e = (typeof e.latLng != 'undefined')? e.latLng : e,
 			image = new google.maps.MarkerImage('images/square.png',
@@ -341,7 +405,7 @@ currentFeature: null,
 		    MapToolbar.reindex(markers);	
 	    }				
 	} else {
-		alert('no code defined on line 275 ... (rm-base-p2d1.js)');
+		alert('no code defined...');
 	}
 
 
@@ -356,14 +420,75 @@ currentFeature: null,
 			if(markers.getLength() == 0){
 				MapToolbar.removeFeature(poly.id); 
 				// cadangan store data parallelto line apa pada index x dan y
-				// gunakan data ini utk update attribut .prln pada polyline asal
+				// gunakan data ini utk update attribut .sline pada polyline asal
 			}	
 		}
 	});
 	    
 	    
 	google.maps.event.addListener(marker, 'click', function(mEvent) {
-	    if (marker.pid.split('_')[0] == 'line') {
+	   
+		if ((marker.pid.split('_')[0] == 'curve') || (marker.pid.split('_')[0] == 'tcurve')) {
+			//var distance = getTrackDistanceFromStart(marker.pid,marker.index);
+			//var length = distance.polyline;
+			//var actual = distance.line;
+   		
+			var infoWindowTxt = 'Line ID : ' + marker.pid + '    Marker index : ' + marker.index; // + '<br>Distance from start : ' + Math.round(length) + 'm (polyline) / ' + Math.round(actual) + ' m (actual).';
+			infoWindowTxt += (marker.pid.split('_')[0] == 'curve') ?'<br />arc length : ' + MapToolbar.features['curveTab'][marker.pid].Lc + '<br />x distance : ' + marker.ld + '\n' : '<br />arc length : ' + (MapToolbar.features['tcurveTab'][marker.pid].Lc + 2 * MapToolbar.features['tcurveTab'][marker.pid].Ls) + '<br />x distance : ' + marker.ld + '\n';
+				
+			var t_x = (marker.pid.split('_')[0] == 'curve') ? getTrackDistanceFromStart(MapToolbar.features['curveTab'][marker.pid].pid, MapToolbar.features['curveTab'][marker.pid].mid).line : getTrackDistanceFromStart(MapToolbar.features['tcurveTab'][marker.pid].pid, MapToolbar.features['tcurveTab'][marker.pid].mid).line;
+			var t_0 = (marker.pid.split('_')[0] == 'curve') ? t_x - MapToolbar.features['curveTab'][marker.pid].Lt : t_x - MapToolbar.features['tcurveTab'][marker.pid].TL;
+			var t_1 = Math.round((t_0 + marker.ld)*1000)/1000;
+				
+			//alert(t_x + '<br>' + t_0 + '<br' + t_1);
+			infoWindowTxt += '<br />total distance : ' + t_1 + ' m';
+				
+			var lat0 = mEvent.latLng.lat();
+			var lng0 = mEvent.latLng.lng();
+		
+			infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="3"><tr>';
+			//infoWindowTxt += '<td><img src="images/gbm-gradient.png" title="Rail pitch (uphill, downhill, level)" width="20" height="20" style="cursor: pointer;" onclick="prelinepitch(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td><img src="images/crossing-icon.png" title="Insert Crossing" width="20" height="20" style="cursor: pointer;" onclick="fI_RC(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td><img src="images/bridge.png" title="Insert Bridge" width="20" height="20" style="cursor: pointer;" onclick="fI_Br(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td><img src="images/bridge2.png" title="Insert Overbridge" width="20" height="20" style="cursor: pointer;" onclick="fI_Ov(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td><img src="images/platform-icon.png" title="Insert Platform@Station" width="20" height="20" style="cursor: pointer;" onclick="fI_Pform(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td><img src="images/tunnel.png" title="Insert Tunnel" width="20" height="20" style="cursor: pointer;" onclick="fI_Tu(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td><img src="images/flyover2.png" title="Insert Flyover" width="20" height="20" style="cursor: pointer;" onclick="fI_Fyo(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td><img src="images/river-icon.png" title="Insert River" width="20" height="20" style="cursor: pointer;" onclick="fI_Rv(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td><img src="images/ground.png" title="Update ground" width="20" height="20" style="cursor: pointer;" onclick="fu_Gd(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td>&nbsp;&nbsp;&nbsp;</td>';
+			infoWindowTxt += '<td><img src="images/sticky_note_pencil.png" title="Add Note" width="16" height="16" style="cursor: pointer;" onclick="presetMarkerNote(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td><img src="images/xfce4_settings.png" title="Setting" width="16" height="16" style="cursor: pointer;" onclick="markerSetting(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '</tr></table>';
+				
+				if (marker.note != null) { 
+					if (marker.note != '') {
+						infoWindowTxt += '<br />Note : ' + marker.note;
+					}
+				}
+					
+				
+				if (marker.bdata.pitch != '') { 
+					infoWindowTxt += '<br />Pitch : ' + marker.bdata.pitch;
+				} 
+				if (marker.bdata.height != '') { 
+						infoWindowTxt += '<br />Height : ' + marker.bdata.height;
+				}
+
+				$.each(marker.kdata, function(key, value){
+					if (marker.kdata[key] != '') {
+						infoWindowTxt += '<br />' + key + " : " + marker.kdata[key];
+					}
+				});
+     	
+				var infowindow = new google.maps.InfoWindow({
+					content: infoWindowTxt,
+					position: mEvent.latLng
+				});
+        
+				infowindow.open(map);	
+				
+		} else if (marker.pid.split('_')[0] == 'line') {
 	    	if ($('#dialogParalelLine').dialog('isOpen') == true) {
 	    		if (document.getElementById('PLCopyType_0').checked) {
 	    			if ($('#m1').val() != '') { $('#m1').val(''); }
@@ -403,231 +528,198 @@ currentFeature: null,
 	    		return;  			
 	    	}
 	    		
-	    		if ($('#dialogWidenParallelGap').dialog('isOpen') == true) {
-	    			if (marker.pid == $('#dpLTs_Line1').val()) {
-	    				if ($('#dpLTs_stIdx').val() == '') {
-	    					$('#dpLTs_stIdx').val(marker.index);
-	    				} else {
-	    					$('#dpLTs_edIdx').val(marker.index);
-	    					if (parseInt($('#dpLTs_edIdx').val()) < parseInt($('#dpLTs_stIdx').val())) {
-	    						var no1 = parseInt($('#dpLTs_stIdx').val());
-	    						var no2 = parseInt($('#dpLTs_edIdx').val());
-	    						$('#dpLTs_stIdx').val(no2);
-	    						$('#dpLTs_edIdx').val(no1);
-	    					}	    					
-	    				}		    					
-	    			}
-	    			if (marker.pid == $('#dpLTs_Line2').val()) {
-	    				if ($('#dpLTs_stIdx2').val() == '') {
-	    					$('#dpLTs_stIdx2').val(marker.index);
-	    				} else {
-	    					$('#dpLTs_edIdx2').val(marker.index);
-	    					if (parseInt($('#dpLTs_edIdx2').val()) < parseInt($('#dpLTs_stIdx2').val())) {
-	    						var no1 = parseInt($('#dpLTs_stIdx2').val());
-	    						var no2 = parseInt($('#dpLTs_edIdx2').val());
-	    						$('#dpLTs_stIdx2').val(no2);
-	    						$('#dpLTs_edIdx2').val(no1);
-	    					}	    					
-	    				}		    					
-	    			}	    			 
-	    			return;  			
-	    		}	    		
+	    	if ($('#dialogWidenParallelGap').dialog('isOpen') == true) {
+	    		if (marker.pid == $('#dpLTs_Line1').val()) {
+	    			if ($('#dpLTs_stIdx').val() == '') {
+	    				$('#dpLTs_stIdx').val(marker.index);
+	    			} else {
+	    				$('#dpLTs_edIdx').val(marker.index);
+	    				if (parseInt($('#dpLTs_edIdx').val()) < parseInt($('#dpLTs_stIdx').val())) {
+	    					var no1 = parseInt($('#dpLTs_stIdx').val());
+	    					var no2 = parseInt($('#dpLTs_edIdx').val());
+	    					$('#dpLTs_stIdx').val(no2);
+	    					$('#dpLTs_edIdx').val(no1);
+	    				}	    					
+	    			}		    					
+	    		}
+	    		if (marker.pid == $('#dpLTs_Line2').val()) {
+	    			if ($('#dpLTs_stIdx2').val() == '') {
+	    				$('#dpLTs_stIdx2').val(marker.index);
+	    			} else {
+	    				$('#dpLTs_edIdx2').val(marker.index);
+	    				if (parseInt($('#dpLTs_edIdx2').val()) < parseInt($('#dpLTs_stIdx2').val())) {
+	    					var no1 = parseInt($('#dpLTs_stIdx2').val());
+	    					var no2 = parseInt($('#dpLTs_edIdx2').val());
+	    					$('#dpLTs_stIdx2').val(no2);
+	    					$('#dpLTs_edIdx2').val(no1);
+	    				}	    					
+	    			}		    					
+	    		}	    			 
+	    		return;  			
+	    	}	
+   
+	    	if ($('#dialogLinkLines').dialog('isOpen') == true) {
+	    		if (marker.pid == $('#dLL_Pid1').val()) {
+	    			if ($('#dLL_Pid1m1').val() == '') {
+	    				$('#dLL_Pid1m1').val(marker.index);
+	    			} else {
+	    				$('#dLL_Pid1m2').val(marker.index);
+	    				if (parseInt($('#dLL_Pid1m2').val()) < parseInt($('#dLL_Pid1m1').val())) {
+	    					var no1 = parseInt($('#dLL_Pid1m1').val());
+	    					var no2 = parseInt($('#dLL_Pid1m2').val());
+	    					$('#dLL_Pid1m1').val(no2);
+	    					$('#dLL_Pid1m2').val(no1);
+	    				}	    					
+	    			}		    					
+	    		} 
+	    		if (marker.pid == $('#dLL_Pid2').val()) {
+	    			if ($('#dLL_Pid2m1').val() == '') {
+	    				$('#dLL_Pid2m1').val(marker.index);
+	    			} else {
+	    				$('#dLL_Pid2m2').val(marker.index);
+	    				if (parseInt($('#dLL_Pid2m2').val()) < parseInt($('#dLL_Pid2m1').val())) {
+	    					var no1 = parseInt($('#dLL_Pid2m1').val());
+	    					var no2 = parseInt($('#dLL_Pid2m2').val());
+	    					$('#dLL_Pid2m1').val(no2);
+	    					$('#dLL_Pid2m2').val(no1);
+	    				}	    					
+	    			}		    					
+	    		}				
+	    		return;  			
+	    	} 		
 
-	    		var distance = getTrackDistanceFromStart(marker.pid,marker.index);
+	    	var distance = getTrackDistanceFromStart(marker.pid,marker.index);
+			var length = distance.polyline;
+			var actual = distance.line;
+			var polyMaxindex =MapToolbar.features['lineTab'][marker.pid].getPath().length-1;
+					
+			var infoWindowTxt = 'Line ID : ' + marker.pid + '    Marker index : ' + marker.index + '<br>Distance from start : ' + Math.round(length) + 'm (polyline) / ' + Math.round(actual) + ' m (actual).';	    		
+			var lat0 = mEvent.latLng.lat();
+			var lng0 = mEvent.latLng.lng();
 				
-					var length = distance.polyline;
-					var actual = distance.line;
-					var polyMaxindex =MapToolbar.features['lineTab'][marker.pid].getPath().length-1;
-					   		
-	    		var infoWindowTxt = 'Line ID : ' + marker.pid + '    Marker index : ' + marker.index + '<br>Distance from start : ' + Math.round(length) + 'm (polyline) / ' + Math.round(actual) + ' m (actual).';	    		
-					var lat0 = mEvent.latLng.lat();
-					var lng0 = mEvent.latLng.lng();
-		
-					infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="3"><tr>';
-					if ((marker.index != 0) && (marker.index != polyMaxindex)) {
-						infoWindowTxt += '<td><img src="images/curve.png" title="Circular curve" width="20" height="20" style="cursor: pointer;" onclick="predrawRailCurve(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
-						infoWindowTxt += '<td><img src="images/trans-curve.png" title="Transition@relexation curve (BVE 5 only)" width="20" height="20" style="cursor: pointer;" onclick="predrawRailTransitionCurve(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';					
-					}
-					/*
-					if ((marker.index == 0) || (marker.index == polyMaxindex)) {
-						infoWindowTxt += '<td><img src="images/switch_2.png" title="Rail switch" width="20" height="20" style="cursor: pointer;" onclick="prerailSwitch(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';						
-					}
-					*/
-					
-					infoWindowTxt += '<td><img src="images/expand-turnout.png" title="Insert Distance between track center widening" width="20" height="20" style="cursor: pointer;" onclick="fI_DTCWd(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
-					infoWindowTxt += '<td><img src="images/side-turnout.png" title="Insert Turnout" width="20" height="20" style="cursor: pointer;" onclick="fI_To(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
-					infoWindowTxt += '<td><img src="images/cross_2.png" title="Insert Track Cross Turnout" width="20" height="20" style="cursor: pointer;" onclick="fI_ToC(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
-					infoWindowTxt += '<td><img src="images/arrow_join.png" title="Make nearest track parallel" width="20" height="20" style="cursor: pointer;" onclick="fI_MakePL(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
-					infoWindowTxt += '<td>&nbsp;&nbsp;&nbsp;</td>';
-					infoWindowTxt += '<td><img src="images/crossing-icon.png" title="Insert Crossing" width="20" height="20" style="cursor: pointer;" onclick="fI_RC(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
-					infoWindowTxt += '<td><img src="images/bridge.png" title="Insert Bridge" width="20" height="20" style="cursor: pointer;" onclick="fI_Br(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
-					infoWindowTxt += '<td><img src="images/bridge2.png" title="Insert Overbridge" width="20" height="20" style="cursor: pointer;" onclick="fI_Ov(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
-					infoWindowTxt += '<td><img src="images/platform-icon.png" title="Insert Platform@Station" width="20" height="20" style="cursor: pointer;" onclick="fI_Pform(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
-					infoWindowTxt += '<td><img src="images/tunnel.png" title="Insert Tunnel" width="20" height="20" style="cursor: pointer;" onclick="fI_Tu(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
-					infoWindowTxt += '<td><img src="images/flyover2.png" title="Insert Flyover" width="20" height="20" style="cursor: pointer;" onclick="fI_Fyo(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
-					infoWindowTxt += '<td><img src="images/river-icon.png" title="Insert River" width="20" height="20" style="cursor: pointer;" onclick="fI_Rv(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
-					infoWindowTxt += '<td><img src="images/ground.png" title="Update ground" width="20" height="20" style="cursor: pointer;" onclick="fu_Gd(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
-					infoWindowTxt += '<td>&nbsp;&nbsp;&nbsp;</td>';
-					infoWindowTxt += '<td><img src="images/sticky_note_pencil.png" title="Add Note" width="16" height="16" style="cursor: pointer;" onclick="presetMarkerNote(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
-					infoWindowTxt += '<td><img src="images/xfce4_settings.png" title="Setting" width="16" height="16" style="cursor: pointer;" onclick="markerSetting(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
-					infoWindowTxt += '</tr></table>';
-				
-					if (marker.note != null) { 
-						if (marker.note != '') { 
-							infoWindowTxt += 'Note : ' + marker.note;
-						}
-					}
-					if (marker.curve != null) { 
-						if (marker.curve != '') { 
-							var teks2show = marker.curve.replace(/§/g,'<br />');
-							infoWindowTxt += '<br />Curve : ' + teks2show;
-						}
-					}
-					if (marker.tcurve != null) { 
-						if (marker.tcurve != '') { 
-							infoWindowTxt += '<br />Trans. Curve : ' + marker.tcurve;
-						}
-					}
-					
-					if (marker.lineX != null) { 
-						if (marker.lineX != '') { 
-							infoWindowTxt += '<br />Side line(s) distance : ' + marker.lineX;
-						}
-					}
-					if (marker.turn != null) { 
-						if (marker.turn != '') { 
-							infoWindowTxt += '<br />Turning : ' + marker.turn;
-						}
-					}
-					
-					if (marker.pitch != null) { 
-						if (marker.pitch != '') { 
-							infoWindowTxt += '<br />Pitch : ' + marker.pitch;
-						}
-					}
-					if (marker.bve != null) { 
-						if (marker.bve != '') { 
-							infoWindowTxt += '<br />bve data : ' + marker.bve;
-						}
-					}
-					if (marker.kit != null) { 
-						if (marker.kit != '') { 
-							infoWindowTxt += '<br />kit data : ' + marker.kit;
-						}
-					}
-
-					if (marker.prln != null) { 
-						if (marker.prln != '') { 
-							infoWindowTxt += '<br />paralell line data : ' + marker.prln;
-						}
-					}
-										     	
-					var infowindow = new google.maps.InfoWindow({
-						content: infoWindowTxt,
-						position: mEvent.latLng
-					});
-        
-					infowindow.open(map);	
-
-				} else if (marker.pid.split('_')[0] == 'ruler') { 
-					var poly =MapToolbar.features['rulerTab'][marker.pid];
-					var length = google.maps.geometry.spherical.computeLength(poly.getPath());;
-					var infoWindowTxt = 'Distance : ';
-					if (length < 1000) {
-						infoWindowTxt += length.toFixed(2) + ' m.<br />';
-					} else {
-						infoWindowTxt += (length/1000).toFixed(6) + ' km.<br />';
-					}
-					var infowindow = new google.maps.InfoWindow({
-						content: infoWindowTxt,
-						position: mEvent.latLng
-					});
-					infowindow.open(map);
-				
-				} else if (marker.pid.split('_')[0] == 'protractor') {
-					if (marker.index = 1) {
-						var poly =MapToolbar.features['protractorTab'][marker.pid];
-						var m0 = poly.markers.getAt(0).getPosition();
-						var m1 = poly.markers.getAt(1).getPosition();
-						var m2 = poly.markers.getAt(2).getPosition();				
-						var h1 = google.maps.geometry.spherical.computeHeading(m0,m1);
-						var h2 = google.maps.geometry.spherical.computeHeading(m1,m2);
-						var fic = intersection_angle(h1,h2);
-						var intAngleDeg = Math.round(fic.angle*1000)/1000;
-				
-						var infoWindowTxt = 'Intersection Angle : ' + intAngleDeg + '&deg;';
-						var infowindow = new google.maps.InfoWindow({
-							content: infoWindowTxt,
-							position: mEvent.latLng
-						});
-						infowindow.open(map);						
-					}
-					
-				} else if ((marker.pid.split('_')[0] == 'curve') || (marker.pid.split('_')[0] == 'tcurve')) {
-					//var distance = getTrackDistanceFromStart(marker.pid,marker.index);
-			
-					//var length = distance.polyline;
-					//var actual = distance.line;
-   		
-	    		var infoWindowTxt = 'Line ID : ' + marker.pid + '    Marker index : ' + marker.index; // + '<br>Distance from start : ' + Math.round(length) + 'm (polyline) / ' + Math.round(actual) + ' m (actual).';
-	    		infoWindowTxt += '<br />arc length : ' + marker.arc + '<br />x1 distance : ' + marker.ld1 + '<br />x2 distance : ' + marker.ld2 + '\n';
-					var lat0 = mEvent.latLng.lat();
-					var lng0 = mEvent.latLng.lng();
-		
-					infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="3"><tr>';
-					//infoWindowTxt += '<td><img src="images/gbm-gradient.png" title="Rail pitch (uphill, downhill, level)" width="20" height="20" style="cursor: pointer;" onclick="prelinepitch(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
-					infoWindowTxt += '<td><img src="images/cross_sym.png" title="Crossing" width="20" height="20" style="cursor: pointer;" onclick="alert(\'' + marker.pid + '\');"></td>';
-					infoWindowTxt += '<td><img src="images/bridge.png" title="Bridge" width="20" height="20" style="cursor: pointer;" onclick="alert(\'' + marker.pid + '\');"></td>';
-					infoWindowTxt += '<td><img src="images/expand-turnout.png" title="Track gap widening" width="20" height="20" style="cursor: pointer;" onclick="alert(\'' + marker.pid + '\');"></td>';
-					infoWindowTxt += '<td><img src="images/side-turnout.png" title="Side turn out" width="20" height="20" style="cursor: pointer;" onclick="alert(\'' + marker.pid + '\');"></td>';
-					infoWindowTxt += '<td><img src="images/flyover.png" title="Overbridge" width="20" height="20" style="cursor: pointer;" onclick="alert(\'' + marker.pid + '\');"></td>';
-					infoWindowTxt += '<td><img src="images/1_home.png" title="Platform@Station" width="20" height="20" style="cursor: pointer;" onclick="alert(\'' + marker.pid + '\');"></td>';
-					infoWindowTxt += '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
-					infoWindowTxt += '<td><img src="images/sticky_note_pencil.png" title="Add Note" width="16" height="16" style="cursor: pointer;" onclick="presetMarkerNote(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
-					infoWindowTxt += '<td><img src="images/xfce4_settings.png" title="Setting" width="16" height="16" style="cursor: pointer;" onclick="markerSetting(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
-					infoWindowTxt += '</tr></table>';
-				
-					if (marker.note != null) { 
-						if (marker.note != '') {
-							infoWindowTxt += '<br />Note : ' + marker.note;
-						}
-					}
-					
-					if (marker.lineX != null) { 
-						if (marker.lineX != '') { 
-							infoWindowTxt += '<br />Side line(s) distance : ' + marker.lineX;
-						}
-					}
-					if (marker.turn != null) { 
-						if (marker.turn != '') {
-							infoWindowTxt += '<br />Turning : ' + marker.turn;
-						}
-					}
-					
-					if (marker.pitch != null) { 
-						if (marker.pitch != '') { 
-							infoWindowTxt += '<br />Pitch : ' + marker.pitch;
-						}
-					}
-					if (marker.bve != null) { 
-						if (marker.bve != '') { 
-							infoWindowTxt += '<br />bve data : ' + marker.bve;
-						}
-					}
-					if (marker.kit != null) {
-						if (marker.kit != '') { 
-							infoWindowTxt += '<br />kit data : ' + marker.kit;
-						}
-					}
-     	
-					var infowindow = new google.maps.InfoWindow({
-						content: infoWindowTxt,
-						position: mEvent.latLng
-					});
-        
-					infowindow.open(map);	
+			if (marker.index > 0 ) {
+				var polyL = MapToolbar.features["lineTab"][marker.pid];
+				if (typeof polyL.markers.getAt(marker.index + 1) != 'undefined') {						
+					var m0 = polyL.markers.getAt(marker.index-1).getPosition();
+					var m1 = polyL.markers.getAt(marker.index).getPosition();
+					var m2 = polyL.markers.getAt(marker.index+1).getPosition();
+					var h1 = google.maps.geometry.spherical.computeHeading(m0,m1);
+					var h2 = google.maps.geometry.spherical.computeHeading(m1,m2);
+					var fic = intersection_angle(h1,h2);
+					var intAngleDeg = fic.angle;
+					var dir = fic.direction;
+					var delta = 180 - intAngleDeg;
+						
+					infoWindowTxt += '<br>intersection angle θ : ' + intAngleDeg + '&deg;';
+					infoWindowTxt += '<br>deflection angle Δ : ' + delta + '&deg;';
 				}
-	    });
+			}				
+		
+			infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="3"><tr>';
+			
+			if ((marker.index != 0) && (marker.index != polyMaxindex)) {
+				infoWindowTxt += '<td><img src="images/curve.png" title="Circular curve" width="20" height="20" style="cursor: pointer;" onclick="predrawRailCurve(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+				infoWindowTxt += '<td><img src="images/trans-curve.png" title="Transition@relexation curve (BVE 5 only)" width="20" height="20" style="cursor: pointer;" onclick="predrawRailTransitionCurve(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';					
+			}
+			/*
+			if ((marker.index == 0) || (marker.index == polyMaxindex)) {
+				infoWindowTxt += '<td><img src="images/switch_2.png" title="Rail switch" width="20" height="20" style="cursor: pointer;" onclick="prerailSwitch(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';						
+			}
+			*/
+					
+			infoWindowTxt += '<td><img src="images/expand-turnout.png" title="Insert Distance between track center widening" width="20" height="20" style="cursor: pointer;" onclick="fI_DTCWd(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td><img src="images/line_link.png" title="Link between lines" width="20" height="20" style="cursor: pointer;" onclick="fI_Link(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td><img src="images/cross_2.png" title="Insert Track Cross Turnout" width="20" height="20" style="cursor: pointer;" onclick="fI_ToC(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			/*
+			infoWindowTxt += '<td><img src="images/arrow_join.png" title="Make nearest track parallel" width="20" height="20" style="cursor: pointer;" onclick="fI_MakePL(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td>&nbsp;&nbsp;&nbsp;</td>'; */
+			infoWindowTxt += '<td><img src="images/crossing-icon.png" title="Insert Crossing" width="20" height="20" style="cursor: pointer;" onclick="fI_RC(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td><img src="images/bridge.png" title="Insert Bridge" width="20" height="20" style="cursor: pointer;" onclick="fI_Br(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td><img src="images/bridge2.png" title="Insert Overbridge" width="20" height="20" style="cursor: pointer;" onclick="fI_Ov(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td><img src="images/platform-icon.png" title="Insert Platform@Station" width="20" height="20" style="cursor: pointer;" onclick="fI_Pform(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td><img src="images/tunnel.png" title="Insert Tunnel" width="20" height="20" style="cursor: pointer;" onclick="fI_Tu(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td><img src="images/flyover2.png" title="Insert Flyover" width="20" height="20" style="cursor: pointer;" onclick="fI_Fyo(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td><img src="images/river-icon.png" title="Insert River" width="20" height="20" style="cursor: pointer;" onclick="fI_Rv(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td><img src="images/ground.png" title="Update ground" width="20" height="20" style="cursor: pointer;" onclick="fu_Gd(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td>&nbsp;&nbsp;&nbsp;</td>';
+			infoWindowTxt += '<td><img src="images/sticky_note_pencil.png" title="Add Note" width="16" height="16" style="cursor: pointer;" onclick="presetMarkerNote(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '<td><img src="images/xfce4_settings.png" title="Setting" width="16" height="16" style="cursor: pointer;" onclick="markerSetting(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
+			infoWindowTxt += '</tr></table>';
+				
+			if (marker.note != null) { 
+				if (marker.note != '') { 
+					infoWindowTxt += 'Note : ' + marker.note;
+				}
+			}
+			if (marker.bdata.curve != '') {
+				infoWindowTxt += '<br />Curve : ' + marker.bdata.curve;
+			}
+			if (marker.bdata.tcurve != '') { 
+				infoWindowTxt += '<br />Trans. Curve : ' + marker.bdata.tcurve;
+			}
+			if (marker.lineX != '') { 
+				infoWindowTxt += '<br />Side line(s) : ' + marker.lineX;
+			}
+/*
+			if (marker.turn != null) { 
+				if (marker.turn != '') { 
+					infoWindowTxt += '<br />Turning : ' + marker.turn;
+				}
+			}
+*/					
+
+			if (marker.bdata.pitch != '') { 
+				infoWindowTxt += '<br />Pitch : ' + marker.bdata.pitch;
+			}
+
+			if (marker.sline != '') { 
+				infoWindowTxt += '<br />paralell line data : ' + marker.sline;
+			}
+										     	
+			var infowindow = new google.maps.InfoWindow({
+				content: infoWindowTxt,
+				position: mEvent.latLng
+			});
+        
+			infowindow.open(map);	
+
+		} else if (marker.pid.split('_')[0] == 'ruler') { 
+		
+			var poly =MapToolbar.features['rulerTab'][marker.pid];
+			var length = google.maps.geometry.spherical.computeLength(poly.getPath());;
+			var infoWindowTxt = 'Distance : ';
+			if (length < 1000) {
+				infoWindowTxt += length.toFixed(2) + ' m.<br />';
+			} else {
+				infoWindowTxt += (length/1000).toFixed(6) + ' km.<br />';
+			}
+			var infowindow = new google.maps.InfoWindow({
+				content: infoWindowTxt,
+				position: mEvent.latLng
+			});
+			
+			infowindow.open(map);
+				
+		} else if (marker.pid.split('_')[0] == 'protractor') {
+			if (marker.index = 1) {
+				var poly =MapToolbar.features['protractorTab'][marker.pid];
+				var m0 = poly.markers.getAt(0).getPosition();
+				var m1 = poly.markers.getAt(1).getPosition();
+				var m2 = poly.markers.getAt(2).getPosition();				
+				var h1 = google.maps.geometry.spherical.computeHeading(m0,m1);
+				var h2 = google.maps.geometry.spherical.computeHeading(m1,m2);
+				var fic = intersection_angle(h1,h2);
+				var intAngleDeg = Math.round(fic.angle*1000)/1000;
+				
+				var infoWindowTxt = 'Intersection Angle : ' + intAngleDeg + '&deg;';
+				var infowindow = new google.maps.InfoWindow({
+					content: infoWindowTxt,
+					position: mEvent.latLng
+				});
+				infowindow.open(map);						
+			}
+		} 
+	});
 			
 /*
       google.maps.event.addListener(marker, 'dragstart', function() {
@@ -635,9 +727,77 @@ currentFeature: null,
 	  	})
 */		
       google.maps.event.addListener(marker, 'position_changed', function() {
- 		path.setAt(marker.index, marker.getPosition());
+ 				path.setAt(marker.index, marker.getPosition());
+
+				//2do testing removing unalign curve, tcurve n sline : 21/3/2014 				
+			  if (marker.bdata.curve != '') {
+					var cuvid = marker.bdata.curve;
+					if (typeof MapToolbar.features["curveTab"][cuvid] != 'undefined') { MapToolbar.removeFeature(cuvid); }
+			  }
+			  if (marker.bdata.tcurve != '') {
+ 					var tcuvid = marker.bdata.tcurve;								
+					if (typeof MapToolbar.features["tcurveTab"][tcuvid] != 'undefined') { MapToolbar.removeFeature(tcuvid); }
+			  } 
+			  /*
+		    if (marker.sline != '') {
+			  	if (marker.sline.indexOf(',') == 0) { 
+ 						marker.sline = marker.sline.substring(1,marker.sline.length);
+ 					}
+ 					var arrLine = marker.sline.split(',');
+ 					for (p = 0; p < arrLine.length; p++) {
+ 						var subArrL = arrLine[p].split(':');
+ 						var lineID = subArrL[0];
+ 						if (typeof MapToolbar.features["lineTab"][lineID] != 'undefined') { MapToolbar.removeFeature(lineID); }
+ 					}			    		
+		    }
+			  */ 
+			  if (typeof MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1) != 'undefined') { 					
+ 					if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).bdata.curve != '') {
+ 						var cuvid = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).bdata.curve;
+						if (typeof MapToolbar.features["curveTab"][cuvid] != 'undefined') { MapToolbar.removeFeature(cuvid); }
+ 			  	}
+ 					if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).bdata.tcurve != '') {
+ 						var tcuvid = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).bdata.tcurve;
+						if (typeof MapToolbar.features["tcurveTab"][tcuvid] != 'undefined') { MapToolbar.removeFeature(tcuvid); }
+ 			  	}
+ 			  	/*
+		    	if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).sline != '') {
+			  		if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).sline.indexOf(',') == 0) { 
+ 							MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).sline = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).sline.substring(1,marker.sline.length);
+ 						}
+ 						var arrLine = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).sline.split(',');
+ 						for (p = 0; p < arrLine.length; p++) {
+ 							var subArrL = arrLine[p].split(':');
+ 							var lineID = subArrL[0];
+ 							if (typeof MapToolbar.features["lineTab"][lineID] != 'undefined') { MapToolbar.removeFeature(lineID); }
+ 						}			    		
+		    	} 	
+		    	*/		  
+				}
+ 			  if (typeof MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1) != 'undefined') {
+ 			  	if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).bdata.curve != '') {
+ 						var cuvid = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).bdata.curve;
+						if (typeof MapToolbar.features["curveTab"][cuvid] != 'undefined') { MapToolbar.removeFeature(cuvid); }
+ 			  	}  			  	
+ 			  	if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).bdata.tcurve != '') {
+ 						var tcuvid = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).bdata.tcurve;
+						if (typeof MapToolbar.features["tcurveTab"][tcuvid] != 'undefined') { MapToolbar.removeFeature(tcuvid); }
+ 			  	}
+ 			  	/*
+		    	if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).sline != '') {
+			  		if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).sline.indexOf(',') == 0) { 
+ 							MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).sline = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).sline.substring(1,marker.sline.length);
+ 						}
+ 						var arrLine = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).sline.split(',');
+ 						for (p = 0; p < arrLine.length; p++) {
+ 							var subArrL = arrLine[p].split(':');
+ 							var lineID = subArrL[0];
+ 							if (typeof MapToolbar.features["lineTab"][lineID] != 'undefined') { MapToolbar.removeFeature(lineID); }
+ 						}			    		
+		    	} 	
+		    	*/		  	
+ 			  }			  
  			  
- 			  //2do 23/10/2012 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: remove curve or transition curve 
 	  	})
 				
 	    google.maps.event.addListener(marker, 'dragend', function() {
@@ -814,19 +974,18 @@ currentFeature: null,
 			    feature.setMap(null);
 		    break;
 		    case "curve":
-		    	var Pid = feature.pid;
+		    	var pid = feature.pid;
 		    	var Mid = feature.mid;
 		    	
-		    	MapToolbar.features['lineTab'][Pid].markers.getAt(Mid).curve = null;
-		    	MapToolbar.features['lineTab'][Pid].markers.getAt(Mid).bve = null;
-		    	MapToolbar.features['lineTab'][Pid].markers.getAt(Mid).setDraggable(true);
+		    	MapToolbar.features['lineTab'][pid].markers.getAt(Mid).bdata.curve = '';
+		    	MapToolbar.features['lineTab'][pid].markers.getAt(Mid).setDraggable(true);
 		    	
-		    	if (typeof MapToolbar.features['lineTab'][Pid].markers.getAt(Mid-1) != 'undefined') {
-		    		MapToolbar.features['lineTab'][Pid].markers.getAt(Mid-1).setDraggable(true);
+		    	if (typeof MapToolbar.features['lineTab'][pid].markers.getAt(Mid-1) != 'undefined') {
+		    		MapToolbar.features['lineTab'][pid].markers.getAt(Mid-1).setDraggable(true);
 		    	}
 		    	
-		    	if (typeof MapToolbar.features['lineTab'][Pid].markers.getAt(Mid+1) != 'undefined') {
-		    		MapToolbar.features['lineTab'][Pid].markers.getAt(Mid+1).setDraggable(true);
+		    	if (typeof MapToolbar.features['lineTab'][pid].markers.getAt(Mid+1) != 'undefined') {
+		    		MapToolbar.features['lineTab'][pid].markers.getAt(Mid+1).setDraggable(true);
 		    	}
 		    			    	
 		      feature.markers.forEach(function(marker, index){
@@ -836,14 +995,21 @@ currentFeature: null,
 			    
 		    	break;
 		    case "tcurve":
-		    	var Pid = feature.pid;
+		    	var pid = feature.pid;
 		    	var Mid = feature.mid;
 		    	
-		    	MapToolbar.features['lineTab'][Pid].markers.getAt(Mid).tcurve = null;
-		    	MapToolbar.features['lineTab'][Pid].markers.getAt(Mid).bve = null;
-		    	MapToolbar.features['lineTab'][Pid].markers.getAt(Mid).setDraggable(true);
-		    			    			    			    						
-		      feature.markers.forEach(function(marker, index){
+		    	MapToolbar.features['lineTab'][pid].markers.getAt(Mid).bdata.tcurve = '';
+		    	MapToolbar.features['lineTab'][pid].markers.getAt(Mid).setDraggable(true);
+				
+		    	if (typeof MapToolbar.features['lineTab'][pid].markers.getAt(Mid-1) != 'undefined') {
+		    		MapToolbar.features['lineTab'][pid].markers.getAt(Mid-1).setDraggable(true);
+		    	}
+		    	
+		    	if (typeof MapToolbar.features['lineTab'][pid].markers.getAt(Mid+1) != 'undefined') {
+		    		MapToolbar.features['lineTab'][pid].markers.getAt(Mid+1).setDraggable(true);
+		    	}				
+			
+				feature.markers.forEach(function(marker, index){
 				    marker.setMap(null);
 			    });		     
 			    feature.setMap(null);
@@ -858,39 +1024,32 @@ currentFeature: null,
 			case "protractor":
 				feature.setMap(null);
 		    	break;
-		    default:
-			    feature.markers.forEach(function(marker, index){
+		  default:
+			  feature.markers.forEach(function(marker, index){
 			    	//2do remove parallel line, tcurve, curve and all reference including object that created
-			    	if (typeof marker.prln != 'undefined') {
-			    		if ((marker.prln != null) && (marker.prln != '')) {
-				    		if (marker.prln.indexOf('§') == 0) { 
-  								marker.prln = marker.prln.substring(1,marker.prln.length);
-  							}
-  							var arrLine = marker.prln.split('§');
-  							for (p = 0; p < arrLine.length; p++) {
-  								var subArrL = arrLine[p].split(':');
-  								var lineName = subArrL[0];
-  								if (subArrL[2] == 'start') {
-  									if (typeof MapToolbar.features["lineTab"][lineName] != 'undefined') { MapToolbar.removeFeature(lineName); }
-  								} else if (subArrL[2] == 'end') {
-  									// do nothing
-  								}
-  							}			    		
-			    		}
-			    	}
-			    	if (typeof marker.curve != 'undefined') {
-			    		if ((marker.curve != null) && (marker.curve != '')) {
-			    			var cuvarr = marker.curve.split('§');
-								var cuvid =cuvarr[0].split(':')[1];
+		    		if (marker.sline != '') {
+			    		if (marker.sline.indexOf(',') == 0) { 
+ 								marker.sline = marker.sline.substring(1,marker.sline.length);
+ 							}
+ 							var arrLine = marker.sline.split(',');
+ 							for (p = 0; p < arrLine.length; p++) {
+ 								var subArrL = arrLine[p].split(':');
+ 								var lineName = subArrL[0];
+ 								if (subArrL[1] == '0') {
+ 									if (typeof MapToolbar.features["lineTab"][lineName] != 'undefined') { MapToolbar.removeFeature(lineName); }
+ 								} else if (subArrL[1] == '1') {
+ 									// do nothing
+ 								}
+ 							}			    		
+		    		}
+			    	
+			    	if (marker.bdata.curve != '') {
+								var cuvid = marker.bdata.curve;
 								if (typeof MapToolbar.features["curveTab"][cuvid] != 'undefined') { MapToolbar.removeFeature(cuvid); }
-							}
 			    	}
-			    	if (typeof marker.tcurve != 'undefined') {
-			    		if ((marker.tcurve != null) && (marker.tcurve != '')) {
-			    			var tcuvarr = marker.tcurve.split('§');
-								var tcuvid = tcuvarr[0].split(':')[1];								
-								if (typeof MapToolbar.features["transcurveTab"][tcuvid] != 'undefined') { MapToolbar.removeFeature(tcuvid); }
-							}
+			    	if (marker.bdata.tcurve != '') {
+ 								var tcuvid = marker.bdata.tcurve;								
+								if (typeof MapToolbar.features["tcurveTab"][tcuvid] != 'undefined') { MapToolbar.removeFeature(tcuvid); }
 			    	}
 			    	
 				    marker.setMap(null);
@@ -908,7 +1067,7 @@ currentFeature: null,
 	    
 	    if (feature.getVisible()) {
 	    	feature.setVisible(false); 
-	    	if(type == "shape" || type == "line" || type == "ruler" || type == "protractor"){
+	    	if(type == "shape" || type == "line" || type == "curve" || type == "tcurve" || type == "ruler" || type == "protractor"){
 	    		feature.markers.forEach(function(marker, index){
 				    marker.setVisible(false);
 			  	});
@@ -923,7 +1082,7 @@ currentFeature: null,
 	    	
 	    } else {
 	    	feature.setVisible(true);
-	    	if(type == "shape" || type == "line" || type == "ruler" || type == "protractor"){
+	    	if(type == "shape" || type == "line" || type == "curve" || type == "tcurve" || type == "ruler" || type == "protractor"){
 	    		feature.markers.forEach(function(marker, index){
 				    marker.setVisible(true);
 			  	});
@@ -945,9 +1104,9 @@ currentFeature: null,
 	    MapToolbar.buttons.$line.className="unselected";
 	    MapToolbar.buttons.$dotMarker.className="unselected";
 	    MapToolbar.buttons.$circle.className="unselected";
-		MapToolbar.buttons.$rectangle.className="unselected";
-		MapToolbar.buttons.$ruler.className="unselected";
-		MapToolbar.buttons.$protractor.className="unselected";
+			MapToolbar.buttons.$rectangle.className="unselected";
+			MapToolbar.buttons.$ruler.className="unselected";
+			MapToolbar.buttons.$protractor.className="unselected";
 	    document.getElementById(buttonId).className="selected";
     },
 
@@ -1043,17 +1202,29 @@ MapToolbar.Feature.prototype.poly = function(type) {
 					$('#dpLTs_Line2').val('');
 					return false;
 				}
+			}
+			
+			if ($('#dialogInsertPlatform').dialog('isOpen') == true) {
+				if (poly.id != $('#dInsForm_pid').val()) {
+					$('#dInsForm_pid2').val(poly.id);	
+				}				
+				return false;  			
+			}			
+			
+			if ($('#dialogInvertLine').dialog('isOpen')) {
+				if ($('#dInvLine_pid').val() != poly.id) {
+					$('#dInvLine_pid').val(poly.id);				
+				}
+				return false;
 			}			
 			
 			if ($('#dialogBuildRoute').dialog('isOpen')) {
 				if ($('#dbr_lineid').val() != poly.id) {
 					$('#dbr_lineid').val(poly.id);
 				}
-				if ((poly.trackname != null) && (poly.trackname != '')) { $('#dbr_trackname').val(poly.trackname); }
-				if ((poly.trackservice != null) && (poly.trackservice != '')) { $('#dbr_trackservice').val(poly.trackservice); }
-				if ((poly.trackno != null) && (poly.trackno != '')) { $('#dbr_tracknumber').val(poly.trackno); }
+				if (poly.name != '') { $('#dbr_trackname').val(poly.name); }
 
-				if ((poly.trackbve != null) && (poly.trackbve != '')) {
+				if (poly.trackbve != '') {
 					// data format :-> gauge: §train: §devID: 
 					var arrTB = poly.trackbve.split('§');
 					$('#dbr_trackGauge').val(arrTB[0].split(':')[1]); 
@@ -1061,9 +1232,18 @@ MapToolbar.Feature.prototype.poly = function(type) {
 					$('#dbr_devID').val(arrTB[3].split(':')[1]);
 				}
 	
-				if ((poly.kit != null) && (poly.kit != '')) { /* 2 do what ??? */ }	
 				if ((poly.note != null) && (poly.note != '')) { $('#dbr_note').val(poly.note); }
 				return false;
+			}
+			
+			if ($('#dialogLinkLines').dialog('isOpen') == true) {
+				if ($('#dLL_Pid2').val() != $('#dLL_Pid1').val()) {
+					$('#dLL_Pid2').val(poly.id);
+					return false;
+				} else {
+					$('#dLL_Pid2').val('');
+					return false;
+				}
 			}
 			
 			var path = poly.getPath();
@@ -1252,7 +1432,7 @@ MapToolbar.Feature.prototype.poly = function(type) {
 		poly.id = type + '_'+ MapToolbar[type+"Counter"];
 		poly.ptype = null;
 		poly.note = null;
-		poly.trackname = null;
+		poly.name = null;
 		poly.trackservice = null;
 		poly.trackno = null;
 		poly.tracksection = null;
