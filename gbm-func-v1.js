@@ -1,4 +1,4 @@
-﻿/*
+/*
 GB Maps ギビマップ - © Karya IT (http://www.karyait.net.my/) 2012-2014. All rights reserved. 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
 without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -53,8 +53,8 @@ function btnAddMarker2Polyline(polyid,tmpLat,tmpLng) {
 				polyAddMarker = MapToolbar.features["curveTab"][polyid];
 			}	
 		} else if (ty == 'tcurve') {	
-			if (typeof MapToolbar.features["transcurveTab"][polyid] != 'undefined') {
-				polyAddMarker = MapToolbar.features["transcurveTab"][polyid];
+			if (typeof MapToolbar.features["tcurveTab"][polyid] != 'undefined') {
+				polyAddMarker = MapToolbar.features["tcurveTab"][polyid];
 			}				
 		} else {
 				
@@ -65,7 +65,7 @@ function btnAddMarker2Polyline(polyid,tmpLat,tmpLng) {
 			return false;
 		}
 		
-		// modify code from http://jsfiddle.net/kjy112/NRafz/
+	// modify code from http://jsfiddle.net/kjy112/NRafz/
     markerDist = {p1:'', p2:'', d:-1};
 
     var allPoints = polyAddMarker.getPath().getArray();
@@ -76,7 +76,7 @@ function btnAddMarker2Polyline(polyid,tmpLat,tmpLng) {
     	var ab = google.maps.geometry.spherical.computeDistanceBetween(allPoints[i],e1); 
       var bc = google.maps.geometry.spherical.computeDistanceBetween(e1,allPoints[i + 1]); 
       var ac = google.maps.geometry.spherical.computeDistanceBetween(allPoints[i],allPoints[i + 1]); 
-      console.log(parseFloat(markerDist.d) + ' '+ Math.abs(ab+bc-ac));
+      //console.log(parseFloat(markerDist.d) + ' '+ Math.abs(ab+bc-ac));
       
       if ((parseFloat(markerDist.d) == -1) || parseFloat(markerDist.d) > parseFloat(Math.abs(ab + bc - ac))) {
       	markerDist.p1 = allPoints[i];
@@ -132,25 +132,24 @@ function setLineType(polyid) {
 	// ver. : 1.0.0
 	// purpose : set line properties
 	if (typeof polyid != 'undefined') {
-		var polyT = null;
-		if (MapToolbar.features["lineTab"][polyid] != null) {
-			polyT = MapToolbar.features["lineTab"][polyid];
-		}	
-		if (typeof polyT != 'undefined') {
+		
+		if (typeof MapToolbar.features["lineTab"][polyid] != 'undefined') {
+			var polyT = MapToolbar.features["lineTab"][polyid];
+			
 			if ($('#menu_pl_type').val() != '') {
 				polyT.ptype = $('#menu_pl_type').val();
 				
-				if ($('#menu_pl_type').val() == 'pl_rail') {
-					polyT.setOptions({strokeColor: "#06C"});
-				} else if ($('#menu_pl_type').val() == 'pl_road') {
-					polyT.setOptions({strokeColor: "#666",strokeOpacity:0.5});
-				} else if ($('#menu_pl_type').val() == 'pl_sideobj') {
+				if ($('#menu_pl_type').val() == 'mainline') {
+					polyT.setOptions({strokeOpacity:1});
+				} else if ($('#menu_pl_type').val() == 'sidelines') {
+					polyT.setOptions({strokeOpacity:0.5});
+				} else if ($('#menu_pl_type').val() == 'sideobj') {
 					polyT.setOptions({strokeColor: "#060",strokeOpacity:0.3});
-				} else if ($('#menu_pl_type').val() == 'pl_platform') {
-					polyT.setOptions({strokeColor: "#e0e0e0",strokeOpacity:0.3});
+				} else if ($('#menu_pl_type').val() == 'road') {
+					polyT.setOptions({strokeColor: "#000",strokeOpacity:0.3});
 				} else {
-					
-				}			
+					//reserved
+				}
 			}
 		}		
 	}
@@ -162,11 +161,8 @@ function setPolyType(polyid) {
 	// ver. : 1.0.0
 	// purpose : set polygon properties
 	if (typeof polyid != 'undefined') {
-		var polyT = null;
-		if (MapToolbar.features["shapeTab"][polyid] != null) {
-			polyT = MapToolbar.features["shapeTab"][polyid];
-		}	
-		if (typeof polyT != 'undefined') {
+		if (typeof MapToolbar.features["shapeTab"][polyid] != 'undefined') {
+			var polyT = MapToolbar.features["shapeTab"][polyid];
 			if (document.getElementById('menu_pg_type').value != '') {
 				polyT.ptype = document.getElementById('menu_pg_type').value;
 			}
@@ -180,117 +176,145 @@ function splitPolyline(polyid,tmpLat,tmpLng) {
 	// ver. : 1.0.0
 	// purpose : split single line into two seprate line at the break point
 
-if (typeof polyid != 'undefined') {
-	var poly2split = null;
-	var markerDist;
-	var dblClickIndexAt = null;		
+	if (typeof polyid != 'undefined') {
+		var poly2split = null;
+		var markerDist;
+		var dblClickIndexAt = null;		
 		
-	if (MapToolbar.features["lineTab"][polyid] != null) {
+		if (typeof MapToolbar.features["lineTab"][polyid] != 'undefined') {
 			poly2split = MapToolbar.features["lineTab"][polyid];
-	}	
+		}	
 
-	var tmppolypath1 = []; 
-	var tmppolypath2 = []; 
+		var tmppolypath1 = []; 
+		var tmppolypath2 = []; 
 			
 	
-	// modify code from http://jsfiddle.net/kjy112/NRafz/
-  markerDist = {p1:'', p2:'', d:-1};
+		// modify code from http://jsfiddle.net/kjy112/NRafz/
+		markerDist = {p1:'', p2:'', d:-1};
 
-	var allPoints = poly2split.getPath().getArray();
+		var allPoints = poly2split.getPath().getArray();
     
-  var e1 = new google.maps.LatLng(parseFloat(tmpLat), parseFloat(tmpLng));
+		var e1 = new google.maps.LatLng(parseFloat(tmpLat), parseFloat(tmpLng));
     
-  for (var i = 0; i < allPoints.length - 1; i++) {
-    var ab = google.maps.geometry.spherical.computeDistanceBetween(allPoints[i],e1); 
-    var bc = google.maps.geometry.spherical.computeDistanceBetween(e1,allPoints[i + 1]); 
-    var ac = google.maps.geometry.spherical.computeDistanceBetween(allPoints[i],allPoints[i + 1]); 
-    console.log(parseFloat(markerDist.d) + ' '+ Math.abs(ab+bc-ac));
+		for (var i = 0; i < allPoints.length - 1; i++) {
+			var ab = google.maps.geometry.spherical.computeDistanceBetween(allPoints[i],e1); 
+			var bc = google.maps.geometry.spherical.computeDistanceBetween(e1,allPoints[i + 1]); 
+			var ac = google.maps.geometry.spherical.computeDistanceBetween(allPoints[i],allPoints[i + 1]); 
+			//console.log(parseFloat(markerDist.d) + ' '+ Math.abs(ab+bc-ac));
       
-    if ((parseFloat(markerDist.d) == -1) || parseFloat(markerDist.d) > parseFloat(Math.abs(ab + bc - ac))) {
-     	markerDist.p1 = allPoints[i];
-      markerDist.p2 = allPoints[i + 1];
-      markerDist.d = Math.abs(ab + bc - ac);
-      dblClickIndexAt = i+1;
-    }
-  }
-    
-	MapToolbar.addPoint(e1, poly2split, dblClickIndexAt);
-
-	var currPolyPath = poly2split.getPath().getArray();
-	var currPolyPathLength = currPolyPath.length;
-		
-	for (var i = 0; i < currPolyPathLength; i++) {
-		if (i < dblClickIndexAt) {
-			tmppolypath1.push(currPolyPath[i]);
-		} else {						
-			tmppolypath2.push(currPolyPath[i]);
-			if (i == dblClickIndexAt) {
-				var tmpLat = currPolyPath[i].lat() - 0.0005; // 2 visualize that the two new marker at cutting point is not overlapping (random number)
-				var tmpLng = currPolyPath[i].lng() - 0.0005;
-				tmppolypath1.push(new google.maps.LatLng(tmpLat, tmpLng));
-			};
+			if ((parseFloat(markerDist.d) == -1) || parseFloat(markerDist.d) > parseFloat(Math.abs(ab + bc - ac))) {
+				markerDist.p1 = allPoints[i];
+				markerDist.p2 = allPoints[i + 1];
+				markerDist.d = Math.abs(ab + bc - ac);
+				dblClickIndexAt = i+1;
+			}
 		}
-	}
+    
+		MapToolbar.addPoint(e1, poly2split, dblClickIndexAt);
+
+		var currPolyPath = poly2split.getPath().getArray();
+		var currPolyPathLength = currPolyPath.length;
+		
+		for (var i = 0; i < currPolyPathLength; i++) {
+			if (i < dblClickIndexAt) {
+				tmppolypath1.push(currPolyPath[i]);
+			} else {						
+				tmppolypath2.push(currPolyPath[i]);
+				if (i == dblClickIndexAt) {
+					var tmpLat = currPolyPath[i].lat() - 0.0005; // 2 visualize that the two new marker at cutting point is not overlapping (random number)
+					var tmpLng = currPolyPath[i].lng() - 0.0005;
+					tmppolypath1.push(new google.maps.LatLng(tmpLat, tmpLng));
+				};
+			}
+		}
 							
-	MapToolbar.initFeature('line');
-	MapToolbar.stopEditing();
-	var no = MapToolbar['lineCounter']; 
+		MapToolbar.initFeature('line');
+		MapToolbar.stopEditing();
+		var no = MapToolbar['lineCounter']; 
 			
-	for (var i = 0; i < tmppolypath1.length ; i++) {
-		var tmpL = tmppolypath1[i];
-		MapToolbar.addPoint(tmpL, newPoly, i); 
-	}
+		for (var i = 0; i < tmppolypath1.length ; i++) {
+			var tmpL = tmppolypath1[i];
+			MapToolbar.addPoint(tmpL, newPoly, i); 
+		}
 				
-	newPoly = null;
-	MapToolbar.initFeature('line');
-	MapToolbar.stopEditing();
+		newPoly = null;
+		MapToolbar.initFeature('line');
+		MapToolbar.stopEditing();
 			
-	for (var i = 0; i < tmppolypath2.length ; i++) {
-		var tmpL = tmppolypath2[i];
-		MapToolbar.addPoint(tmpL, newPoly, i); 
-	}
+		for (var i = 0; i < tmppolypath2.length ; i++) {
+			var tmpL = tmppolypath2[i];
+			MapToolbar.addPoint(tmpL, newPoly, i); 
+		}
 	
 	// 2 do 29/10 ::::::::::::::::::::::::::::::::::::::::::::: restore old markers reference before deleting
 	
 	for (var i = 0; i < currPolyPathLength; i++) {
 		if ( i < tmppolypath1.length) {
 			var pno = 'line_' + no;
-			if (poly2split.markers.getAt(i).note != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).note = poly2split.markers.getAt(i).note;}  
-			if (poly2split.markers.getAt(i).pitch != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).pitch = poly2split.markers.getAt(i).pitch;} 
-			if (poly2split.markers.getAt(i).bve != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).bve = poly2split.markers.getAt(i).bve;} 
-			if (poly2split.markers.getAt(i).lineX != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).lineX = poly2split.markers.getAt(i).lineX;} 
-			if (poly2split.markers.getAt(i).turn != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).turn = poly2split.markers.getAt(i).turn;} 
-			if (poly2split.markers.getAt(i).kit != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).kit = poly2split.markers.getAt(i).kit;} 
-			if (poly2split.markers.getAt(i).curve != null) {
-				MapToolbar.features["lineTab"][pno].markers.getAt(i).curve = poly2split.markers.getAt(i).curve;				
-				var cid = poly2split.markers.getAt(i).curve.split('§')[0].split(':')[1]; 
+			if (poly2split.markers.getAt(i).note != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).note = poly2split.markers.getAt(i).note;} 
+			
+			$.each(poly2split.markers.getAt(i).bdata, function(key, value){
+				if (poly2split.markers.getAt(i).bdata[key] != '') {
+					MapToolbar.features["lineTab"][pno].markers.getAt(i).bdata.key = poly2split.markers.getAt(i).bdata[key];
+				}
+			});
+
+			$.each(poly2split.markers.getAt(i).kdata, function(key, value){
+				if (poly2split.markers.getAt(i).kdata[key] != '') {
+					MapToolbar.features["lineTab"][pno].markers.getAt(i).kdata.key = poly2split.markers.getAt(i).kdata[key];
+				}
+			});	
+			
+			if (poly2split.markers.getAt(i).bdata.curve != '') {
+				MapToolbar.features["lineTab"][pno].markers.getAt(i).bdata.curve = poly2split.markers.getAt(i).bdata.curve;
+				var cid = poly2split.markers.getAt(i).bdata.curve; 
 				MapToolbar.features['curveTab'][cid].pid = pno;
 				MapToolbar.features['curveTab'][cid].mid = i;
+				poly2split.markers.getAt(i).bdata.curve = '';
 			} 
-			if (poly2split.markers.getAt(i).tcurve != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).tcurve = poly2split.markers.getAt(i).tcurve;} 
-			if (poly2split.markers.getAt(i).prln != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).prln = poly2split.markers.getAt(i).prln;}
+			if (poly2split.markers.getAt(i).bdata.tcurve != '') {
+				MapToolbar.features["lineTab"][pno].markers.getAt(i).bdata.tcurve = poly2split.markers.getAt(i).bdata.tcurve;
+				var cid = poly2split.markers.getAt(i).bdata.tcurve; 
+				MapToolbar.features['tcurveTab'][cid].pid = pno;
+				MapToolbar.features['tcurveTab'][cid].mid = i;
+				poly2split.markers.getAt(i).bdata.tcurve = '';
+			} 
+			if (poly2split.markers.getAt(i).sline != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).sline = poly2split.markers.getAt(i).sline;}
 			if (poly2split.markers.getAt(i).pid != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).pid = pno;}
-			
-								
-			//MapToolbar.features["lineTab"][polyid].getAt(i). 
+			 
 		} else {
 			var j = i - tmppolypath1.length; // double cek
 			var pno = 'line_' + (no + 1);
 			if (i < currPolyPathLength+1 ) {
 				if (poly2split.markers.getAt(i).note != null) {MapToolbar.features["lineTab"][pno].markers.getAt(j+1).note = poly2split.markers.getAt(i).note;}  
-				if (poly2split.markers.getAt(i).pitch != null) {MapToolbar.features["lineTab"][pno].markers.getAt(j+1).pitch = poly2split.markers.getAt(i).pitch;} 
-				if (poly2split.markers.getAt(i).bve != null) {MapToolbar.features["lineTab"][pno].markers.getAt(j+1).bve = poly2split.markers.getAt(i).bve;} 
-				if (poly2split.markers.getAt(i).lineX != null) {MapToolbar.features["lineTab"][pno].markers.getAt(j+1).lineX = poly2split.markers.getAt(i).lineX;} 
-				if (poly2split.markers.getAt(i).turn != null) {MapToolbar.features["lineTab"][pno].markers.getAt(j+1).turn = poly2split.markers.getAt(i).turn;} 
-				if (poly2split.markers.getAt(i).kit != null) {MapToolbar.features["lineTab"][pno].markers.getAt(j+1).kit = poly2split.markers.getAt(i).kit;} 
-				if (poly2split.markers.getAt(i).curve != null) {
-					MapToolbar.features["lineTab"][pno].markers.getAt(j+1).curve = poly2split.markers.getAt(i).curve;
-					var cid = poly2split.markers.getAt(i).curve.split('§')[0].split(':')[1]; 
+				
+				$.each(poly2split.markers.getAt(i).bdata, function(key, value){
+					if (poly2split.markers.getAt(i).bdata[key] != '') {
+						MapToolbar.features["lineTab"][pno].markers.getAt(j+1).bdata.key = poly2split.markers.getAt(i).bdata[key];
+					}
+				});
+
+				$.each(poly2split.markers.getAt(i).kdata, function(key, value){
+					if (poly2split.markers.getAt(i).kdata[key] != '') {
+						MapToolbar.features["lineTab"][pno].markers.getAt(j+1).kdata.key = poly2split.markers.getAt(i).kdata[key];
+					}
+				});	
+				
+				if (poly2split.markers.getAt(i).bdata.curve != '') {
+					MapToolbar.features["lineTab"][pno].markers.getAt(j+1).bdata.curve = poly2split.markers.getAt(i).bdata.curve;
+					var cid = poly2split.markers.getAt(i).bdata.curve; 
 					MapToolbar.features['curveTab'][cid].pid = pno;
 					MapToolbar.features['curveTab'][cid].mid = j+1;
+					poly2split.markers.getAt(i).bdata.curve = '';
 				} 
-				if (poly2split.markers.getAt(i).tcurve != null) {MapToolbar.features["lineTab"][pno].markers.getAt(j+1).tcurve = poly2split.markers.getAt(i).tcurve;} 
-				if (poly2split.markers.getAt(i).prln != null) {MapToolbar.features["lineTab"][pno].markers.getAt(j+1).prln = poly2split.markers.getAt(i).prln;}
+				if (poly2split.markers.getAt(i).bdata.tcurve != '') {
+					MapToolbar.features["lineTab"][pno].markers.getAt(j+1).bdata.tcurve = poly2split.markers.getAt(i).bdata.tcurve;
+					var cid = poly2split.markers.getAt(i).bdata.tcurve; 
+					MapToolbar.features['tcurveTab'][cid].pid = pno;
+					MapToolbar.features['tcurveTab'][cid].mid = j+1;
+					poly2split.markers.getAt(i).bdata.tcurve = '';
+				} 
+				if (poly2split.markers.getAt(i).sline != null) {MapToolbar.features["lineTab"][pno].markers.getAt(j+1).sline = poly2split.markers.getAt(i).sline;}
 				if (poly2split.markers.getAt(i).pid != null) {MapToolbar.features["lineTab"][pno].markers.getAt(j+1).pid = pno;}			
 			}
 		}
@@ -318,14 +342,14 @@ function combine2polyline() {
 	// ver. : 1.0.0
 	// purpose : combine two line into a single line
 	
-	if ((document.getElementById('pline1name').value !== undefined) && (document.getElementById('pline2name').value !== undefined)) {
+	if ((typeof document.getElementById('pline1name').value !== 'undefined') && (typeof document.getElementById('pline2name').value !== 'undefined')) {
 		var poly1 = null; var poly2 = null;
 		
-		if (MapToolbar.features["lineTab"][document.getElementById('pline1name').value] != null) {
+		if (typeof MapToolbar.features["lineTab"][document.getElementById('pline1name').value] != 'undefined') {
 			poly1 = MapToolbar.features["lineTab"][document.getElementById('pline1name').value];
 		}
 		
-		if (MapToolbar.features["lineTab"][document.getElementById('pline2name').value] != null) {
+		if (typeof MapToolbar.features["lineTab"][document.getElementById('pline2name').value] != 'undefined') {
 			poly2 = MapToolbar.features["lineTab"][document.getElementById('pline2name').value];
 		}
 		
@@ -333,7 +357,7 @@ function combine2polyline() {
 			var poly1Path = poly1.getPath().getArray();
 			var poly2Path = poly2.getPath().getArray();
 		
-			var tmpEP = new Array(3);;
+			var tmpEP = new Array(3);
 			//calculate the shortest distance for 2 polyline edges
 			tmpEP[0] = google.maps.geometry.spherical.computeDistanceBetween(poly1Path[0],poly2Path[0]); 
 			tmpEP[1] = google.maps.geometry.spherical.computeDistanceBetween(poly1Path[0],poly2Path[poly2Path.length-1]); 
@@ -416,19 +440,34 @@ function combine2polyline() {
 			
 			for (var i = 0; i < poly1Path.length; i++) {
 				if (poly1.markers.getAt(i).note != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).note = poly1.markers.getAt(i).note;}  
-				if (poly1.markers.getAt(i).pitch != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).pitch = poly1.markers.getAt(i).pitch;} 
-				if (poly1.markers.getAt(i).bve != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).bve = poly1.markers.getAt(i).bve;} 
-				if (poly1.markers.getAt(i).lineX != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).lineX = poly1.markers.getAt(i).lineX;} 
-				if (poly1.markers.getAt(i).turn != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).turn = poly1.markers.getAt(i).turn;} 
-				if (poly1.markers.getAt(i).kit != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).kit = poly1.markers.getAt(i).kit;} 
-				if (poly1.markers.getAt(i).curve != null) {
-					MapToolbar.features["lineTab"][pno].markers.getAt(i).curve = poly1.markers.getAt(i).curve;				
-					var cid = poly1.markers.getAt(i).curve.split('§')[0].split(':')[1]; 
+								
+				$.each(poly1.markers.getAt(i).bdata, function(key, value){
+					if (poly1.markers.getAt(i).bdata[key] != '') {
+						MapToolbar.features["lineTab"][pno].markers.getAt(i).bdata.key = poly1.markers.getAt(i).bdata[key];
+					}
+				});
+
+				$.each(poly1.markers.getAt(i).kdata, function(key, value){
+					if (poly1.markers.getAt(i).kdata[key] != '') {
+						MapToolbar.features["lineTab"][pno].markers.getAt(i).kdata.key = poly1.markers.getAt(i).kdata[key];
+					}
+				});	
+				
+				if (poly1.markers.getAt(i).bdata.curve != '') {
+					MapToolbar.features["lineTab"][pno].markers.getAt(i).bdata.curve = poly1.markers.getAt(i).bdata.curve;
+					var cid = poly1.markers.getAt(i).bdata.curve; 
 					MapToolbar.features['curveTab'][cid].pid = pno;
 					MapToolbar.features['curveTab'][cid].mid = i;
+					poly1.markers.getAt(i).bdata.curve = '';
 				} 
-				if (poly1.markers.getAt(i).tcurve != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).tcurve = poly1.markers.getAt(i).tcurve;} 
-				if (poly1.markers.getAt(i).prln != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).prln = poly1.markers.getAt(i).prln;}
+				if (poly1.markers.getAt(i).bdata.tcurve != '') {
+					MapToolbar.features["lineTab"][pno].markers.getAt(i).bdata.tcurve = poly1.markers.getAt(i).bdata.tcurve;
+					var cid = poly1.markers.getAt(i).bdata.tcurve; 
+					MapToolbar.features['tcurveTab'][cid].pid = pno;
+					MapToolbar.features['tcurveTab'][cid].mid = i;
+					poly1.markers.getAt(i).bdata.tcurve = ''; 
+				} 
+				if (poly1.markers.getAt(i).sline != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).sline = poly1.markers.getAt(i).sline;}
 				if (poly1.markers.getAt(i).pid != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).pid = pno;}	
 				ix = i;		
 			}
@@ -436,19 +475,34 @@ function combine2polyline() {
 			for (var i = 0; i < poly2Path.length; i++) {
 				if (i+ix < newPLength ) {
 					if (poly2.markers.getAt(i).note != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i+ix+1).note = poly2.markers.getAt(i).note;}  
-					if (poly2.markers.getAt(i).pitch != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i+ix+1).pitch = poly2.markers.getAt(i).pitch;} 
-					if (poly2.markers.getAt(i).bve != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i+ix+1).bve = poly2.markers.getAt(i).bve;} 
-					if (poly2.markers.getAt(i).lineX != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i+ix+1).lineX = poly2.markers.getAt(i).lineX;} 
-					if (poly2.markers.getAt(i).turn != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i+ix+1).turn = poly2.markers.getAt(i).turn;} 
-					if (poly2.markers.getAt(i).kit != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i+ix+1).kit = poly2.markers.getAt(i).kit;} 
-					if (poly2.markers.getAt(i).curve != null) {
-						MapToolbar.features["lineTab"][pno].markers.getAt(i+ix+1).curve = poly2.markers.getAt(i).curve;				
-						var cid = poly2.markers.getAt(i).curve.split('§')[0].split(':')[1]; 
+
+					$.each(poly2.markers.getAt(i).bdata, function(key, value){
+						if (poly2.markers.getAt(i).bdata[key] != '') {
+							MapToolbar.features["lineTab"][pno].markers.getAt(i+ix+1).bdata.key = poly2.markers.getAt(i).bdata[key];
+						}
+					});
+
+					$.each(poly2.markers.getAt(i).kdata, function(key, value){
+						if (poly2.markers.getAt(i).kdata[key] != '') {
+							MapToolbar.features["lineTab"][pno].markers.getAt(i+ix+1).kdata.key = poly2.markers.getAt(i).kdata[key];
+						}
+					});	
+
+					if (poly2.markers.getAt(i).bdata.curve != '') {
+						MapToolbar.features["lineTab"][pno].markers.getAt(i+ix+1).bdata.curve = poly2.markers.getAt(i).bdata.curve;				
+						var cid = poly2.markers.getAt(i).bdata.curve; 
 						MapToolbar.features['curveTab'][cid].pid = pno;
 						MapToolbar.features['curveTab'][cid].mid = i+ix+1;
+						poly2.markers.getAt(i).bdata.curve = ''; 
 					} 
-					if (poly2.markers.getAt(i).tcurve != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i+ix+1).tcurve = poly2.markers.getAt(i).tcurve;} 
-					if (poly2.markers.getAt(i).prln != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i+ix+1).prln = poly2.markers.getAt(i).prln;}
+					if (poly2.markers.getAt(i).bdata.tcurve != '') {
+						MapToolbar.features["lineTab"][pno].markers.getAt(i+ix+1).bdata.tcurve = poly2.markers.getAt(i).bdata.tcurve;
+						var cid = poly2.markers.getAt(i).bdata.tcurve; 
+						MapToolbar.features['tcurveTab'][cid].pid = pno;
+						MapToolbar.features['tcurveTab'][cid].mid = i+ix+1;
+						poly2.markers.getAt(i).bdata.tcurve = ''; 
+					} 
+					if (poly2.markers.getAt(i).sline != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i+ix+1).sline = poly2.markers.getAt(i).sline;}
 					if (poly2.markers.getAt(i).pid != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i+ix+1).pid = pno;}						
 				}
 			}
@@ -457,14 +511,14 @@ function combine2polyline() {
 			MapToolbar.removeFeature(poly2.id);
 
  			newPoly = null;
-	    poly1 = null;		
-  	  poly2 = null;
-    	currMod = '';
+			poly1 = null;		
+			poly2 = null;
+			currMod = '';
     	
-    	$('#pline1name').val('');
-    	$('#pline2name').val('');
+			$('#pline1name').val('');
+			$('#pline2name').val('');
 
-    	jQuery('#dialogCombinePolyline').dialog('close');
+			jQuery('#dialogCombinePolyline').dialog('close');
     	
 		} else{
 			alert('line null');
@@ -474,6 +528,66 @@ function combine2polyline() {
 		alert ('start line undefine');
 	}
 			
+}
+
+function invertpolyline(pid) {
+	if (pid !== undefined) {
+		var poly = null;
+		if (MapToolbar.features["lineTab"][pid] != null) {
+			poly = MapToolbar.features["lineTab"][pid];
+			
+			var polyPath = poly.getPath().getArray();
+			var tmpEP = new Array(3);			
+			
+			MapToolbar.initFeature('line');
+	 		MapToolbar.stopEditing();
+			
+			var no = MapToolbar['lineCounter'];
+			var pno = 'line_' + no;
+			var polyR = MapToolbar.features["lineTab"][pno];
+			
+			for (var i = 0; i < polyPath.length ; i++) {
+				var tmpL = polyPath[polyPath.length-1-i];
+				MapToolbar.addPoint(tmpL, polyR, i); 
+			}
+						
+			for (var i = polyPath.length-1; i >= 0; i--) {
+				if (poly.markers.getAt(i).note != null) {polyR.markers.getAt(polyPath.length-1-i).note = poly.markers.getAt(i).note;}  
+				
+				$.each(poly.markers.getAt(i).bdata, function(key, value){
+					if (poly.markers.getAt(i).bdata[key] != '') {
+						polyR.markers.getAt(polyPath.length-1-i).bdata.key = poly.markers.getAt(i).bdata[key];
+					}
+				});
+
+				$.each(poly.markers.getAt(i).kdata, function(key, value){
+					if (poly.markers.getAt(i).kdata[key] != '') {
+						polyR.markers.getAt(polyPath.length-1-i).kdata.key = poly.markers.getAt(i).kdata[key];
+					}
+				});	
+
+				if (poly.markers.getAt(i).bdata.curve != '') {
+					polyR.markers.getAt(polyPath.length-1-i).bdata.curve = poly.markers.getAt(i).bdata.curve;				
+					var cid = poly.markers.getAt(i).bdata.curve; 
+					MapToolbar.features['curveTab'][cid].pid = pno;
+					MapToolbar.features['curveTab'][cid].mid = polyPath.length-1-i;
+					poly.markers.getAt(i).bdata.curve = '';
+				} 
+				if (poly.markers.getAt(i).bdata.tcurve != '') {
+					polyR.markers.getAt(polyPath.length-1-i).bdata.tcurve = poly.markers.getAt(i).bdata.tcurve;
+					var cid = poly.markers.getAt(i).bdata.tcurve; 
+					MapToolbar.features['tcurveTab'][cid].pid = pno;
+					MapToolbar.features['tcurveTab'][cid].mid = polyPath.length-1-i;
+					poly.markers.getAt(i).bdata.tcurve = '';
+				} 
+				if (poly.markers.getAt(i).sline != null) {polyR.markers.getAt(polyPath.length-1-i).sline = poly.markers.getAt(i).sline;}
+				if (poly.markers.getAt(i).pid != null) {polyR.markers.getAt(polyPath.length-1-i).pid = pno;}	
+			}
+	
+			MapToolbar.removeFeature(poly.id);
+			polyR = null;					
+		}
+	}
 }
 
 function preparallel_line(polyid) {
@@ -488,16 +602,19 @@ function preparallel_line(polyid) {
 }
 
 function parallel_line() {
-	// by : Karya IT (Mac 2012)
+	// by : Karya IT (Feb 2014)
 	// url : http://www.karyait.net.my/
 	// ver. : 1.0.0
 	// purpose : generate parallel line based on selected line
 	
 	if (document.getElementById('PLbasePolyID').value != "") {
 		var polyid = document.getElementById('PLbasePolyID').value;
-		var polyBaseLine = null;
-		if (MapToolbar.features["lineTab"][polyid] != null) {
+		var polyBaseLine;
+		if (typeof MapToolbar.features["lineTab"][polyid] !== 'undefined') {
 			polyBaseLine = MapToolbar.features["lineTab"][polyid];
+		} else {
+			alert ('based line undefine');
+			return;
 		}
 				
 		if ((currMod == 'parallel_line') && (polyBaseLine.id.split('_')[0] == 'line')) {		
@@ -517,27 +634,26 @@ function parallel_line() {
 	 			
 	 			if (document.getElementById('PLCopyType_0').checked) {						  
 					sP = 1;
-	    		eP = polyPath.length-1 ;
-	    		MapToolbar.initFeature('line');
+					eP = polyPath.length-1 ;
+					MapToolbar.initFeature('line');
 	 				MapToolbar.stopEditing();	
-	    	} else {
-	    		if (($('#m1').val() != '') && ($('#m2').val() != '')) {
-	    			sP = parseInt($('#m1').val()) + 1;
-	    			eP = parseInt($('#m2').val());	    				    			
-	    			MapToolbar.initFeature('line');
+				} else {
+					if (($('#m1').val() != '') && ($('#m2').val() != '')) {
+						sP = parseInt($('#m1').val()) + 1;
+						eP = parseInt($('#m2').val());	    				    			
+						MapToolbar.initFeature('line');
 	 					MapToolbar.stopEditing();
-	    		} else {
-	    			alert('please state your start point and end point for the line that you want to duplicate')
-	    			return;
-	    		}	
-	    	}
+					} else {
+						alert('please state your start point and end point for the line that you want to duplicate')
+						return;
+					}	
+				}
 	 			
 				for (var i = sP; i <= eP; i++) {
 	 				var h1 = google.maps.geometry.spherical.computeHeading(polyPath[i-1],polyPath[i]);
 	 				var platLng;
-	 				//2do : double check 14/12/2012
+	 				//2do : double check 21/03/2014
 	 				if (i == sP) {	 										
-						var kodOffset = (side < 0)?  -offset : offset;
 						var startOffset = null;
 						if (document.getElementById('plswAtStart').checked) { startOffset = 0; }
 						var stSwlength = null; 
@@ -548,28 +664,31 @@ function parallel_line() {
 							var odml = google.maps.geometry.spherical.computeOffset(polyPath[i-1], stSwlength, h1);
 							platLng = google.maps.geometry.spherical.computeOffset(odml, offset, h1 +  side);
 							MapToolbar.addPoint(platLng, newPoly, 1);
-							newPoly.markers.getAt(0).lineX = null;
+							
+							//new format 4 v1.0.0
+							newPoly.markers.getAt(0).lineX = polyid + ':' + side + ':' + startOffset + ':' + stSwlength;
+							newPoly.markers.getAt(1).lineX = polyid + ':' + side + ':' + offset + ':';
 						} else {
 							platLng = google.maps.geometry.spherical.computeOffset(polyPath[i-1], offset, h1 +  side);
 							MapToolbar.addPoint(platLng, newPoly, 0);
-							newPoly.markers.getAt(0).lineX = null;
+							//new format 4 v1.0.0
+							newPoly.markers.getAt(0).lineX = polyid + ':' + side + ':' + offset + ':';
 						}
+						// data format lineX = (base line):(side direction):(offset distance):(switch length opsyenal)
+
 						
-						if (polyBaseLine.markers.getAt(i-1).prln == null) {
-							polyBaseLine.markers.getAt(i-1).prln = newPoly.id + ':' + kodOffset + ':start:' + startOffset + ':' + stSwlength;
+						if (polyBaseLine.markers.getAt(i-1).sline == '') {
+							polyBaseLine.markers.getAt(i-1).sline = newPoly.id + ':0:' + 0;
 						} else {
-							if (polyBaseLine.markers.getAt(i-1).prln == '') {
-								polyBaseLine.markers.getAt(i-1).prln = newPoly.id + ':' + kodOffset + ':start:' + startOffset + ':' + stSwlength;
-							} else {
-								polyBaseLine.markers.getAt(i-1).prln += '§' + newPoly.id + ':' + kodOffset + ':start:' + startOffset + ':' + stSwlength;
-							}
+							polyBaseLine.markers.getAt(i-1).sline += ',' + newPoly.id + ':0:' + 0;
 						}
-						//.prln = '§' + newPoly.id + ':' + kodOffset + ':start:' + startOffset + ':' + stSwlength;
+						// data format sline = '(side line 1):(0=start,>0 end):index,(side line 1):(0=start,>0 end):index,,,,....';
+						
+						polyBaseLine.markers.getAt(i-1).setDraggable(false);
 	 				}
 					
 					if (i == eP) {
 						//2do : double check 14/12/2012	
-						var kodOffset = (side < 0)?  -offset : offset;
 						var endOffset = null;
 						if (document.getElementById('plswAtEnd').checked) { endOffset = 0; }
 						var edSwlength = null;
@@ -580,99 +699,102 @@ function parallel_line() {
 														
 							platLng = google.maps.geometry.spherical.computeOffset(odml, offset, h1 +  side);
 							var plength = newPoly.markers.length;
-							//alert(newPoly.markers.length);
 							MapToolbar.addPoint(platLng, newPoly, plength);
-							//alert(newPoly.markers.length);
 		 					MapToolbar.addPoint(polyPath[i], newPoly, plength+1);
-		 					//alert(newPoly.markers.length);
-		 					//newPoly.markers.getAt(0).lineX = polyid + ':' + eP;
+							
+							//new format 4 v1.0.0
+							newPoly.markers.getAt(newPoly.markers.length-2).lineX = polyid + ':' + side + ':' + offset + ':';
+							newPoly.markers.getAt(newPoly.markers.length-1).lineX = polyid + ':' + side + ':' + endOffset + ':' + edSwlength;
+								
 						} else {
 							platLng = google.maps.geometry.spherical.computeOffset(polyPath[i], offset, h1 + side);
 		 					MapToolbar.addPoint(platLng, newPoly, newPoly.markers.length);	
-		 					//newPoly.markers.getAt(0).lineX = polyid + ':' + eP;
+							//new format 4 v1.0.0
+							newPoly.markers.getAt(newPoly.markers.length-1).lineX = polyid + ':' + side + ':' + offset + ':';
 						}
-						
-						if (polyBaseLine.markers.getAt(i).prln == null) {
-							polyBaseLine.markers.getAt(i).prln = newPoly.id + ':' + kodOffset + ':end:' + endOffset + ':' + edSwlength;
+							
+						if (polyBaseLine.markers.getAt(i).sline == '') {
+							polyBaseLine.markers.getAt(i).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
 						} else {
-							if (polyBaseLine.markers.getAt(i).prln == '') {
-								polyBaseLine.markers.getAt(i).prln = newPoly.id + ':' + kodOffset + ':end:' + endOffset + ':' + edSwlength;	
-							} else {
-								polyBaseLine.markers.getAt(i).prln += '§' + newPoly.id + ':' + kodOffset + ':end:' + endOffset + ':' + edSwlength;	
-							}
+							polyBaseLine.markers.getAt(i).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}
-						//.prln = '§' + newPoly.id + ':' + kodOffset + ':end:' + endOffset + ':' + edSwlength;
+						// data format sline = '(side line 1):(0=start,>0 end):index,(side line 1):(0=start,>0 end):index,,,,....';
+						
+						polyBaseLine.markers.getAt(i).setDraggable(false);
+							
 					} else {
+							
 						var h2 = google.maps.geometry.spherical.computeHeading(polyPath[i],polyPath[i+1]);
-						//alert(h1 + ' / ' + h2 + ' = ' + intersection_angle(h1, h2)); 
 						var fic = intersection_angle(h1, h2);
 						var s12 = fic.angle;
 						var sdir = fic.direction;
-						//alert('s12 : ' + s12);
-						
-						//if (s12 >= 0) {
-							if (s12 <= 90) {
-								if (side >= 0) {
-									var t0;								
-									if (sdir > 0)  {
-										t0 = (180 - h1 + h2) / 2; // pass
-									} else {
-										t0 = (h2 - 180 - h1) / 2; //pass
-									}									
-
-									var x0 = offset / Math.tan(t0.toRad());
-									var sx = google.maps.geometry.spherical.computeOffset(polyPath[i], offset, h1+ side);
-									
-									platLng = google.maps.geometry.spherical.computeOffset(sx, x0, h1 );
-									MapToolbar.addPoint(platLng, newPoly, i+1);	
-																										
-								} else {	
-									var t0;								
-									if (sdir > 0) {
-										t0 = (180 - h1 + h2) / 2; // pass
-									} else {
-										t0 = (h2 - 180 - h1) / 2; // pass
-									}									
-									var x0 = - offset / Math.tan(t0.toRad());
-									var sx = google.maps.geometry.spherical.computeOffset(polyPath[i], x0, h1);
-									
-									platLng = google.maps.geometry.spherical.computeOffset(sx, offset, h1 + side);
-									MapToolbar.addPoint(platLng, newPoly, i+1);								
-								}
-
-							}	else { // > 90
-								//alert('s12 > 180 : ' + s12);
-								if (side >= 0) {
-									var sx = google.maps.geometry.spherical.computeOffset(polyPath[i], offset, h1 + side);
-									var t0 = (h1 - h2) / 2;
-									var x0 = offset * Math.tan(t0.toRad());
-									
-									platLng = google.maps.geometry.spherical.computeOffset(sx, x0, h1);
-									MapToolbar.addPoint(platLng, newPoly, i+1);
+							
+							
+						if (s12 <= 90) {
+							if (side >= 0) {
+								var t0;								
+								if (sdir > 0)  {
+									t0 = (180 - h1 + h2) / 2; // pass
 								} else {
-									var t0 = (180 - h1 + h2) / 2;
-									var x0 = -offset / Math.tan(t0.toRad());
-									var sx = google.maps.geometry.spherical.computeOffset(polyPath[i], x0, h1);
-									
-									platLng = google.maps.geometry.spherical.computeOffset(sx, offset, h1 + side);
-									MapToolbar.addPoint(platLng, newPoly, i+1);									
-								}
-							}					
-					}
-			}
+									t0 = (h2 - 180 - h1) / 2; //pass
+								}									
 
-			$('#m1').val('');
-			$('#m2').val('');
+								var x0 = offset / Math.tan(t0.toRad());
+								var sx = google.maps.geometry.spherical.computeOffset(polyPath[i], offset, h1+ side);
+									
+								platLng = google.maps.geometry.spherical.computeOffset(sx, x0, h1 );
+								MapToolbar.addPoint(platLng, newPoly, i+1);
+									
+									
+							} else {	
+								var t0;								
+								if (sdir > 0) {
+									t0 = (180 - h1 + h2) / 2; // pass
+								} else {
+									t0 = (h2 - 180 - h1) / 2; // pass
+								}									
+								var x0 = - offset / Math.tan(t0.toRad());
+								var sx = google.maps.geometry.spherical.computeOffset(polyPath[i], x0, h1);
+									
+								platLng = google.maps.geometry.spherical.computeOffset(sx, offset, h1 + side);
+								MapToolbar.addPoint(platLng, newPoly, i+1);								
+							}
+								
+						} else { // > 90
+								
+							if (side >= 0) {
+								var sx = google.maps.geometry.spherical.computeOffset(polyPath[i], offset, h1 + side);
+								var t0 = (h1 - h2) / 2;
+								var x0 = offset * Math.tan(t0.toRad());
+									
+								platLng = google.maps.geometry.spherical.computeOffset(sx, x0, h1);
+								MapToolbar.addPoint(platLng, newPoly, i+1);
+									
+							} else {
+								var t0 = (180 - h1 + h2) / 2;
+								var x0 = -offset / Math.tan(t0.toRad());
+								var sx = google.maps.geometry.spherical.computeOffset(polyPath[i], x0, h1);
+									
+								platLng = google.maps.geometry.spherical.computeOffset(sx, offset, h1 + side);
+								MapToolbar.addPoint(platLng, newPoly, i+1);	
+									
+							}
+						}					
+					}
 				
-			polyBaseLine = null;			
- 			newPoly = null;
- 	 		currMod = '';
+				}
+
+				$('#m1').val('');
+				$('#m2').val('');
+				
+				polyBaseLine = null;			
+				newPoly = null;
+				currMod = '';
     		
 				jQuery('#dialogParalelLine').dialog('close');
 			} 
 		}
 	}
-	
 }
 
 function prelinepitch(polyid) {
@@ -716,7 +838,7 @@ function prelinepitch(polyid) {
 		$('#dialogRailpitch').dialog('open');
 	 	$('#dialogpreRailpitch').dialog('close');
 	 
-  	if (typeof polyid != 'undefined') {
+		if (typeof polyid != 'undefined') {
 			var epoly = null; 
 			if (MapToolbar.features["lineTab"][polyid] != null) {
 				epoly = MapToolbar.features["lineTab"][polyid];
@@ -725,38 +847,59 @@ function prelinepitch(polyid) {
 				return;			
 			}
 			
-	    var allPoints = epoly.getPath().getArray();
-		  var path = new Array();
-    	var gnote = new Array();    	   	
+			var allPoints = epoly.getPath().getArray();
+			var path = new Array();
+			var gnote = new Array();    	   	
     	
 			for (var k = rpm1; k<= rpm2; k++) {
-				if ((epoly.markers.getAt(k).curve == null) && (epoly.markers.getAt(k).tcurve == null)) {
+				if ((epoly.markers.getAt(k).bdata.curve == '') && (epoly.markers.getAt(k).bdata.tcurve == '')) {
 					path.push(allPoints[k]);
 					
-					var note = '', pit = '', bve = '', kit = '';
+					var note = '', pit = '', bdata = '', kit = '';
 					if (epoly.markers.getAt(k).note != null) { note = epoly.markers.getAt(k).note; } 
-					if (epoly.markers.getAt(k).pitch != null) { pit = epoly.markers.getAt(k).pitch; }
-					if (epoly.markers.getAt(k).bve != null) { bve = epoly.markers.getAt(k).bve; }
-					if (epoly.markers.getAt(k).kit != null) { kit = epoly.markers.getAt(k).kit; }
+					
+					$.each(epoly.markers.getAt(k).bdata, function(key, value){
+						if (epoly.markers.getAt(k).bdata[key] != '') {
+							if (key = 'pitch') {
+								pit = epoly.markers.getAt(k).pitch;
+							} else {
+								if (bdata == '') {
+									bdata = key + ":" + epoly.markers.getAt(k).bdata[key];
+								} else {
+									bdata += '§' + key + ":" + epoly.markers.getAt(k).bdata[key];
+								}
+							}
+						}
+					});
+
+					$.each(epoly.markers.getAt(k).kdata, function(key, value){
+						if (epoly.markers.getAt(k).kdata[key] != '') {
+							if (kit == '') {
+								kit = key + ":" + epoly.markers.getAt(k).kdata[key];
+							} else {
+								kit += '§' + key + ":" + epoly.markers.getAt(k).kdata[key];
+							}						
+						}
+					});	
+					
 					
 					var dis =  google.maps.geometry.spherical.computeLength(path);
 					
-					gnote.push([Math.ceil(dis.toString()), note, pit, bve, kit]); 
+					gnote.push([Math.ceil(dis.toString()), note, pit, bdata, kit]); 
 					
 				} else {
-					if ((epoly.markers.getAt(k).curve != null) || (epoly.markers.getAt(k).tcurve == null)) {
-						if (epoly.markers.getAt(k).curve != '') {
-							// 'curve:'+ curve.id + '§radius:' + preR * dir + '§cant:' + parseFloat($('#sBtnRCCant').val()) + '§limit:' + parseFloat($('#sBtnRCDesignSpeed').val()) + '§tlength:' + l2m1 + '§clength:' + arcL + '§center:' + Cc.lat() + '/' + Cc.lng() + '§start_point:' + extp[0].lat() + '/' + extp[0].lng() + '§end_point:' + extp[extp.length-1].lat() + '/' + extp[extp.length-1].lng()  + '§h1:' + h1 + '§h2:' + h2 + '§forceSL:' + enforceSL; 
-							var cuvarr = epoly.markers.getAt(k).curve.split('§');
-							var cuvid =cuvarr[0].split(':')[1];
-							var cR = Math.abs(parseFloat(cuvarr[1].split(':')[1]));
-							var tL = parseFloat(cuvarr[4].split(':')[1]);
-							var cL = parseFloat(cuvarr[5].split(':')[1]);
-							var xpc = new google.maps.LatLng(parseFloat(cuvarr[6].split(':')[1].split('/')[0]), parseFloat(cuvarr[6].split(':')[1].split('/')[1]));
-							var xp1 = new google.maps.LatLng(parseFloat(cuvarr[7].split(':')[1].split('/')[0]), parseFloat(cuvarr[7].split(':')[1].split('/')[1]));
-							var xp2 = new google.maps.LatLng(parseFloat(cuvarr[8].split(':')[1].split('/')[0]), parseFloat(cuvarr[8].split(':')[1].split('/')[1]));
-							var xh1 = parseFloat(cuvarr[9].split(':')[1]);
-							var xh2 = parseFloat(cuvarr[10].split(':')[1]);
+					if ((epoly.markers.getAt(k).bdata.curve != '') || (epoly.markers.getAt(k).bdata.tcurve == '')) {
+						if (epoly.markers.getAt(k).bdata.curve != '') {
+							
+							var cuvid = epoly.markers.getAt(k).bdata.curve;
+							var cR = MapToolbar.features['curveTab'][cuvid].Rc;
+							var tL = MapToolbar.features['curveTab'][cuvid].Lt ;
+							var cL = MapToolbar.features['curveTab'][cuvid].Lc ;
+							var xpc = MapToolbar.features['curveTab'][cuvid].Cc;
+							var xp1 = MapToolbar.features['curveTab'][cuvid].st;
+							var xp2 = MapToolbar.features['curveTab'][cuvid].ed;
+							var xh1 = MapToolbar.features['curveTab'][cuvid].h1;
+							var xh2 = MapToolbar.features['curveTab'][cuvid].h2;
 							
 							path.push(xp1);
 							var points = Math.ceil(cL/25);
@@ -775,50 +918,87 @@ function prelinepitch(polyid) {
 							var cpoly = MapToolbar.features['curveTab'][cuvid];
 							var cuvstart =  parseFloat(google.maps.geometry.spherical.computeLength(path));
 
-							var note = '', pit = '', bve = '', kit = '';
-							if (cpoly.markers.getAt(0).note != null) { note = cpoly.markers.getAt(0).note; } 
-							if (cpoly.markers.getAt(0).pitch != null) { pit = cpoly.markers.getAt(0).pitch; }
-							if (cpoly.markers.getAt(0).bve != null) { 
-								if (cpoly.markers.getAt(0).bve.indexOf('curve:' + cuvid) < 0 ) {	bve = cpoly.markers.getAt(0).bve + '§curve:' + cuvid; }
-							} else {
-								bve = "curve:" + cuvid; 
-							}
-							if (cpoly.markers.getAt(0).kit != null) { kit = cpoly.markers.getAt(0).kit; }
+							var note = '', pit = '', bdata = '', kit = '';
 							
-							gnote.push([Math.ceil(cuvstart).toString(), note , pit, bve, kit]); 
-							var cuvendidx =-1;
-														
-							for (var c = 1; c < cpoly.markers.length; c++) {									
-								if ((typeof cpoly.markers.getAt(c).ld1 != 'undefined') || (typeof cpoly.markers.getAt(c).ld2 != 'undefined' )) {
-									var note = '', pit = '', bve = '', kit = '';
-									if (cpoly.markers.getAt(c).note != null) { note = cpoly.markers.getAt(c).note; } 
-									if (cpoly.markers.getAt(c).pitch != null) { pit = cpoly.markers.getAt(c).pitch; }
-									if (cpoly.markers.getAt(c).bve != null) { bve = cpoly.markers.getAt(c).bve; }
-									if (cpoly.markers.getAt(c).kit != null) { kit = cpoly.markers.getAt(c).kit; }
-					
-									var dis = Math.ceil(parseFloat(cpoly.markers.getAt(c).ld1) + cuvstart);
-									gnote.push([dis.toString(), note, pit, bve, kit]);
-																													
-								} else if (cpoly.markers.getAt(c).kit != null){
-									if (cpoly.markers.getAt(c).kit.indexOf('curve:end') >= 0) {
-										cuvendidx = c;
+							//curve start marker index 0
+							if (cpoly.markers.getAt(0).note != null) { note = cpoly.markers.getAt(0).note; } 
+							if (cpoly.markers.getAt(0).bdata.pitch != '') { 
+								pit = cpoly.markers.getAt(0).bdata.pitch; 
+							}
+							bdata = "curve:start:" + cuvid; 
+							if (cpoly.markers.getAt(0).bdata.height != '') { 
+								bdata += '§height:' + cpoly.markers.getAt(0).bdata.height;
+							}
+
+							
+							$.each(cpoly.markers.getAt(0).kdata, function(key, value){
+								if (cpoly.markers.getAt(0).kdata[key] != '') {
+									if (kit == '') {
+										kit = key + ":" + cpoly.markers.getAt(0).kdata[key];
+									} else {
+										kit += '§' + key + ":" + cpoly.markers.getAt(0).kdata[key];
 									}
 								}
+							});
+							
+							
+							gnote.push([Math.ceil(cuvstart).toString(), note , pit, bdata, kit]); 
+							
+							
+							//curve end marker index 1
+							note = ''; pit = ''; bdata = ''; kit = '';
+							if (cpoly.markers.getAt(1).note != null) { note = cpoly.markers.getAt(1).note; } 
+							if (cpoly.markers.getAt(1).bdata.pitch != '') { 
+								pit = cpoly.markers.getAt(1).bdata.pitch; 
+							}
+							bdata = "curve:end:" + cuvid; 
+							if (cpoly.markers.getAt(1).bdata.height != '') { 
+								bdata += '§height:' + cpoly.markers.getAt(1).bdata.height;
+							}
+
+							$.each(cpoly.markers.getAt(1).kdata, function(key, value){
+								if (cpoly.markers.getAt(1).kdata[key] != '') {
+									if (kit == '') {
+										kit = key + ":" + cpoly.markers.getAt(1).kdata[key];
+									} else {
+										kit += '§' + key + ":" + cpoly.markers.getAt(1).kdata[key];
+									}
+
+								}
+							});
+
+							var cuvend = Math.ceil(cuvstart + cL);
+							gnote.push([cuvend.toString(), note, pit, bdata, kit]); 
+							
+
+							for (var c = 1; c < cpoly.markers.length; c++) {
+								if (typeof cpoly.markers.getAt(c).ld != 'undefined')  {
+									note = ''; pit = ''; bdata = ''; kit = '';
+									if (cpoly.markers.getAt(c).note != null) { note = cpoly.markers.getAt(c).note; } 
+									
+									if (cpoly.markers.getAt(c).bdata.pitch != '') { 
+										pit = cpoly.markers.getAt(c).bdata.pitch; 
+									}
+									if (cpoly.markers.getAt(c).bdata.height != '') { 
+										bdata = 'height:' + cpoly.markers.getAt(c).bdata.height;
+									}
+
+									$.each(cpoly.markers.getAt(c).kdata, function(key, value){
+										if (cpoly.markers.getAt(c).kdata[key] != '') {
+											if (kit == '') {
+												kit = key + ":" + cpoly.markers.getAt(c).kdata[key];
+											} else {
+												kit += '§' + key + ":" + cpoly.markers.getAt(c).kdata[key];
+											}
+										}
+									});
+					
+									var dis = Math.ceil(cpoly.markers.getAt(c).ld + cuvstart);
+									gnote.push([dis.toString(), note, pit, bdata, kit]);
+	
+								} 
 							} 
 							
-							if (cuvendidx > 0){
-								if (cpoly.markers.getAt(cuvendidx).kit.indexOf('curve:end') >= 0) {
-									var note = '', pit = '', bve = '', kit = '';
-									if (cpoly.markers.getAt(cuvendidx).note != null) { note = cpoly.markers.getAt(cuvendidx).note; } 
-									if (cpoly.markers.getAt(cuvendidx).pitch != null) { pit = cpoly.markers.getAt(cuvendidx).pitch; }
-									if (cpoly.markers.getAt(cuvendidx).bve != null) { bve = cpoly.markers.getAt(cuvendidx).bve; }
-									if (cpoly.markers.getAt(cuvendidx).kit != null) { kit = cpoly.markers.getAt(cuvendidx).kit; }
-									var cuvend = Math.ceil(cuvstart + cL);
-									gnote.push([cuvend.toString(), note, pit, bve, kit]); 									
-								}
-							} else {
-								alert('unable to detect end of ' + cuvid);
-							}
 							
 							//gnote.sort(function(a,b){return a-b});
 							var sorted;
@@ -835,27 +1015,26 @@ function prelinepitch(polyid) {
 								}								
 							} while (sorted < gnote.length -1);
 							
-							for (var i=0; (i < points+1); i++) 
-  						{     
-    	  				path.push(google.maps.geometry.spherical.computeOffset(xpc, cR, iB + i*deltaBearing)); 
+							for (var i=0; (i < points+1); i++) {     
+								path.push(google.maps.geometry.spherical.computeOffset(xpc, cR, iB + i*deltaBearing)); 
 							}
 							path.push(xp2);
 							
 							
 						}
-					} else if ((epoly.markers.getAt(k).curve == null) || (epoly.markers.getAt(k).tcurve != null)) {
+					} else if ((epoly.markers.getAt(k).bdata.curve == '') || (epoly.markers.getAt(k).bdata.tcurve != '')) {
 						if (epoly.markers.getAt(k).tcurve != '') {
-							//2do
+							//2do 4 transition curve
 							alert('to do');
 						}
 					} else {
 						// either 1 only
 					}
 				}
-  		}
+			}
   		
-  		var sectionLength = google.maps.geometry.spherical.computeLength(path);
-  		var numberOfSegment = Math.ceil(sectionLength/25); // segmen per 25 meter
+			var sectionLength = google.maps.geometry.spherical.computeLength(path);
+			var numberOfSegment = Math.ceil(sectionLength/25); // segmen per 25 meter
 
 			if (numberOfSegment > 512) { 
 				alert('distance is too large (' + sectionLength + ' m),\nnumber of sample generate is ' + numberOfSegment + '.\nplease add new point to make the line segment shorter and to make\nthe number of sample is less than 512.');
@@ -863,15 +1042,15 @@ function prelinepitch(polyid) {
 				return;
 			}
 
-  		// Create a new chart in the elevation_chart DIV.
-  		//chart = new google.visualization.ColumnChart(document.getElementById('elevation_chart'));
+			// Create a new chart in the elevation_chart DIV.
+			//chart = new google.visualization.ColumnChart(document.getElementById('elevation_chart'));
   
-  		// Create a PathElevationRequest object using this array.
-  		// Ask for 256 samples along that path.
-  		var pathRequest = {
-  			'path': path,
-    		'samples': numberOfSegment
-  		}
+			// Create a PathElevationRequest object using this array.
+			// Ask for 256 samples along that path.
+			var pathRequest = {
+				'path': path,
+				'samples': numberOfSegment
+			}
 			var startdistance = Math.round(parseFloat(getTrackDistanceFromStart(polyid,rpm1).line));
 			$('#txtPitchDetails').val(gnote.join('\n'));
 			$('#txtPitchStartPointAtM').val(startdistance);
@@ -906,15 +1085,13 @@ function drawRailCurve() {
 					break;
 				}
 			}
-			if (polyL.markers.getAt(currIdx).curve != null) {
-				if (polyL.markers.getAt(currIdx).curve != '') {
-					var arr = polyL.markers.getAt(currIdx).split('§');
-					alert('Please remove the current curve (' + arr[0].split(':')[1]+ ') at this point.');
-					$('#dialogRailCurve').dialog('close');					
-					return;
-				}
-			}
 
+			if (polyL.markers.getAt(currIdx).bdata.curve != '') {
+				alert('Please remove the current curve (' + polyL.markers.getAt(currIdx).bdata.curve + ') at this point.');
+				$('#dialogRailCurve').dialog('close');					
+				return;
+			}
+						
 			if ((typeof polyL.markers.getAt(currIdx - 1) == 'undefined') || (polyL.markers.getAt(currIdx - 1) == null)) {
 				alert('sorry, you can\'t create curve at the beginning of the line.');
 				$('#dialogRailCurve').dialog('close');
@@ -933,25 +1110,49 @@ function drawRailCurve() {
 				var h1 = google.maps.geometry.spherical.computeHeading(m0,m1);
 				var h2 = google.maps.geometry.spherical.computeHeading(m1,m2);
 				var fic = intersection_angle(h1,h2);
-				var intAngleDeg = fic.angle;
+				var theta = fic.angle;
 				var dir = fic.direction;
 				
 				if (dir == 0) {
 					alert('sorry, unable to draw curve on stright line');
 					$('#dialogRailCurve').dialog('close');	
 				} else {
-					var curveAngleDeg = 180-intAngleDeg ; 
-					var curveAngleRad = curveAngleDeg.toRad();
-					var preR = (typeof $('#sBtnCurveRadius').val() != 'undefined')? parseFloat($('#sBtnCurveRadius').val()) : 160;
-					var l2m1 = preR /(Math.tan((intAngleDeg/2).toRad())); // length@distance to m1 point
-					var np1 = google.maps.geometry.spherical.computeOffset(m1, -l2m1, h1);
-					var np2 = google.maps.geometry.spherical.computeOffset(m1, l2m1, h2);
-					var arcL = (curveAngleDeg/360) * 2 * Math.PI * preR;
+					var delta = 180-theta ; 
+					var deltaR = delta.toRad();
+					var Rc = (typeof $('#sBtnCurveRadius').val() != 'undefined')? parseFloat($('#sBtnCurveRadius').val()) : 160;
+					var Lt = Rc /(Math.tan((theta/2).toRad())); // length@distance to m1 point
+					var np1 = google.maps.geometry.spherical.computeOffset(m1, -Lt, h1);
+					var np2 = google.maps.geometry.spherical.computeOffset(m1, Lt, h2);
+					var Lc = (delta/360) * 2 * Math.PI * Rc;
 
-					var cc1a = google.maps.geometry.spherical.computeOffset(np1, preR, h1 + (90 * dir));
-					var cc1b = google.maps.geometry.spherical.computeOffset(np1, preR, h1 - (90 * dir));
-					var cc2a = google.maps.geometry.spherical.computeOffset(np2, preR, h2 + (90 * dir));
-					var cc2b = google.maps.geometry.spherical.computeOffset(np2, preR, h2 - (90 * dir));	
+					var Lb0 = google.maps.geometry.spherical.computeDistanceBetween(m0,m1) ;
+					var Lb1 = google.maps.geometry.spherical.computeDistanceBetween(m1,m2) ;
+					
+					if (polyL.markers.getAt(currIdx-1).bdata.curve != '') {
+						var Lt0 = MapToolbar.features['curveTab'][polyL.markers.getAt(currIdx-1).bdata.curve].Lt;
+						if (Lt0 + Lt > Lb0) {
+							alert('Warning! curve overlapped with previous curve.');
+							return;
+						}
+					}
+
+					if (polyL.markers.getAt(currIdx+1).bdata.curve != '') {
+						var Lt1 = MapToolbar.features['curveTab'][polyL.markers.getAt(currIdx+1).bdata.curve].Lt;
+						if (Lt1 + Lt > Lb1) {
+							alert('Warning! curve overlapped with next curve.');
+							return;
+						}					
+					}
+					
+					if ((Lt > Lb0) || (Lt > Lb1)) {
+							alert('Warning! Unable to fit curve at the intersection. Curve is too big, please reduce curve radius or design speed.');
+							return;						
+					}
+					
+					var cc1a = google.maps.geometry.spherical.computeOffset(np1, Rc, h1 + (90 * dir));
+					var cc1b = google.maps.geometry.spherical.computeOffset(np1, Rc, h1 - (90 * dir));
+					var cc2a = google.maps.geometry.spherical.computeOffset(np2, Rc, h2 + (90 * dir));
+					var cc2b = google.maps.geometry.spherical.computeOffset(np2, Rc, h2 - (90 * dir));	
 
 					var Cc = null;
 				
@@ -967,7 +1168,7 @@ function drawRailCurve() {
 						//alert('center satu pun tak match : \n' + google.maps.geometry.spherical.computeDistanceBetween(cc1a,cc2a) + '\n' + google.maps.geometry.spherical.computeDistanceBetween(cc1a,cc2b) + '\n' + google.maps.geometry.spherical.computeDistanceBetween(cc1b,cc2a) + '\n' + google.maps.geometry.spherical.computeDistanceBetween(cc1b,cc2b));
 					}
 							
-					var points = Math.ceil(arcL/25);
+					var points = Math.ceil(Lc/25);
 					var iB = google.maps.geometry.spherical.computeHeading(Cc,np1);
 					var fB = google.maps.geometry.spherical.computeHeading(Cc,np2);
 
@@ -981,81 +1182,73 @@ function drawRailCurve() {
 				
 					var deltaBearing = br/points;
 				
-					for (var i=0; (i < points+1); i++) 
-  				{     
-    	  		extp.push(google.maps.geometry.spherical.computeOffset(Cc, preR, iB + i*deltaBearing)); 
+					for (var i=0; (i < points+1); i++) {     
+						extp.push(google.maps.geometry.spherical.computeOffset(Cc, Rc, iB + i*deltaBearing)); 
 					}
 										
 					var color = MapToolbar.getColor(true),
 					curve = new google.maps.Polyline({
 						path: [extp],
-           	strokeColor: "#FF0000",
-           	strokeOpacity: 0.7,
+						strokeColor: "#FF0000",
+						strokeOpacity: 0.7,
 						geodesic: true,
 						map: map,
-           	strokeWeight: 1
+						strokeWeight: 1
 					});
 					
 					++MapToolbar["curveCounter"];
 					curve.id = 'curve_'+ MapToolbar["curveCounter"];
 					curve.pid = polyL.id;
 					curve.mid = currIdx;
-					curve.ctype = null;
-					curve.note = null; 
+ 					curve.Rc = Rc * dir,
+ 					curve.cant = parseFloat($('#sBtnRCCant').val());
+ 					curve.Vd = parseFloat($('#sBtnRCDesignSpeed').val());
+ 					curve.Lt = Lt;
+ 					curve.Lc = Lc;
+ 					curve.Cc = Cc;
+ 					curve.st = extp[0];
+ 					curve.ed = extp[extp.length-1];
+ 					curve.h1 = h1;
+ 					curve.h2 = h2;
+ 					curve.forceSL = enforceSL;
+ 					curve.delta = delta;
+ 					curve.theta = theta;
+ 					curve.railindex = railIndex;
 					curve.$el = MapToolbar.addFeatureEntry(curve.id);
 					curve.markers = new google.maps.MVCArray;	     
 					MapToolbar.features['curveTab'][curve.id] = curve;
 									
-							
- 					MapToolbar.features["lineTab"][polyL.id].markers.getAt(currIdx).note = null ;
- 					MapToolbar.features["lineTab"][polyL.id].markers.getAt(currIdx).curve = 'curve:'+ curve.id + '§radius:' + preR * dir + '§cant:' + parseFloat($('#sBtnRCCant').val()) + '§limit:' + parseFloat($('#sBtnRCDesignSpeed').val()) + '§tlength:' + l2m1 + '§clength:' + arcL + '§center:' + Cc.lat() + '/' + Cc.lng() + '§start_point:' + extp[0].lat() + '/' + extp[0].lng() + '§end_point:' + extp[extp.length-1].lat() + '/' + extp[extp.length-1].lng()  + '§h1:' + h1 + '§h2:' + h2 + '§forceSL:' + enforceSL; 
- 					if ((MapToolbar.features["lineTab"][polyL.id].markers.getAt(currIdx).bve != null) && (MapToolbar.features["lineTab"][polyL.id].markers.getAt(currIdx).bve != '')) {
- 						if (MapToolbar.features["lineTab"][polyL.id].markers.getAt(currIdx).bve.indexOf('railindex:') >= 0) {
- 							var arrCur = MapToolbar.features["lineTab"][polyL.id].markers.getAt(currIdx).bve.split('§');
- 							for (h = 0; h < arrCur.length; h++) {
- 								if (arrCur[h].split(':')[0] = 'railindex') {
- 									arrCur[h] = '§railindex:' + railIndex;
- 									MapToolbar.features["lineTab"][polyL.id].markers.getAt(currIdx).bve = arrCur.join('§');
- 									break;
- 								}
- 							}
- 						} else {
-	 						MapToolbar.features["lineTab"][polyL.id].markers.getAt(currIdx).bve += '§railindex:' + railIndex;
- 						}
- 					} else {
- 						MapToolbar.features["lineTab"][polyL.id].markers.getAt(currIdx).bve = 'railindex:' + railIndex;
- 					}
-
+					MapToolbar.features["lineTab"][polyL.id].markers.getAt(currIdx).bdata.curve = curve.id ;
 					MapToolbar.features["lineTab"][polyL.id].markers.getAt(currIdx).setDraggable(false);
 					MapToolbar.features["lineTab"][polyL.id].markers.getAt(currIdx-1).setDraggable(false);
 					MapToolbar.features["lineTab"][polyL.id].markers.getAt(currIdx+1).setDraggable(false);
 															
-    			var imgurl = "images/curve-sign.png";
-    			var imgurl2 = "images/curve-sign2.png";
-    			var imgccurl = "images/bullet_white.png";
+					var imgurl = "images/curve-sign.png";
+					var imgurl2 = "images/curve-sign2.png";
+					var imgccurl = "images/bullet_white.png";
      
-    			var e1 = new google.maps.LatLng(extp[0]),      
-          image = new google.maps.MarkerImage(imgurl,
-		        new google.maps.Size(6, 6),
-		        new google.maps.Point(0, 0),
-		        new google.maps.Point(5, 5)), 
-          index =0,
-	        marker = new google.maps.Marker({
-				    position: extp[0],
-				    map: map,
-				    icon: image,
-				    title: curve.id + ' start point : ' + extp[0] ,
-				    note: null, // any extra note 
-   					pitch: null, // track pitch
-						bve: null, // various bve data
-						lineX:null, // non parallel line distance
-						turn:null, // main line non curve turning
-						kit:'curve:start:'+curve.id, // others data (reserved) by Karya IT
-				    pid: curve.id
-	        });
+					var e1 = new google.maps.LatLng(extp[0]),      
+						image = new google.maps.MarkerImage(imgurl,
+						new google.maps.Size(6, 6),
+						new google.maps.Point(0, 0),
+						new google.maps.Point(5, 5)), 
+						index =0,
+						marker = new google.maps.Marker({
+							position: extp[0],
+							map: map,
+							icon: image,
+							title: curve.id + ' start point : ' + extp[0] ,
+							note: null, // any extra note 
+							bdata: {height:'',pitch:''},
+							kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:''}, // various bve data
+							sline: null,
+				
+							ld:0, // distance on circumference from curve start point 
+							pid:curve.id
+						});
 
-	        marker.index = index;    
-	        curve.markers.insertAt(index, marker)
+				marker.index = index;    
+				curve.markers.insertAt(index, marker)
 
           var e2 = new google.maps.LatLng(extp.length-1),      
           image= new google.maps.MarkerImage(imgurl2,
@@ -1069,12 +1262,12 @@ function drawRailCurve() {
 				    icon: image,
 				    title: curve.id + ' end point : ' + extp[extp.length-1],
 				    note: null, // any extra note 
-   					pitch: null, // track pitch
-						bve: null, // various bve data
-						lineX:null, // non parallel line distance
-						turn:null, // main line non curve turning
-						kit:'curve:end:'+curve.id, // others data (reserved) by Karya IT
-				    pid: curve.id
+					bdata: {height:'',pitch:''},
+					kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:''}, // various bve data
+					sline: null,
+				
+					ld:Lc, // distance on circumference from curve start point 
+					pid:curve.id
 	        });
 	        marker.index = index;    
 	        curve.markers.insertAt(index, marker)
@@ -1090,49 +1283,45 @@ function drawRailCurve() {
 				    map: map,
 				    icon: image,
 				    title: curve.id + ' center point : ' + Cc ,
-				    kit:'curve:center:'+curve.id, // others data (reserved) by Karya IT
-				    pid: curve.id
+					bdata: {height:'',pitch:''},
+					kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:''}, // various bve data
+					sline: null,
+				
+					ld:null, // distance on circumference from curve start point 
+					pid:curve.id
 	        });
-
 	        marker.index = index;    
 	        curve.markers.insertAt(index, marker)
 	        
 					google.maps.event.addListener(curve, "click", function(mEvent){
-					//alert(mEvent.latLng.toString());
-					var infoWindowTxt = 'curve Id : ' + curve.id + '<br>curve length : ' + arcL + ' m<br>';
-					infoWindowTxt += '<br>line id : ' + curve.pid + ' mid : ' + curve.mid; 																	// warning : marker ID sentiasa berubah2, reference ke marker index tak boleh digunakan
-					infoWindowTxt += '<br>radius : ' + (preR * dir) + 'm<br>design speed : ' + parseFloat($('#sBtnRCDesignSpeed').val()) + ' km/h<br>cant : ' + parseFloat($('#sBtnRCCant').val()) + ' mm';
-					infoWindowTxt += '<br><br>start point : ' + extp[0] + '<br>end point : ' + extp[extp.length-1];
-					infoWindowTxt += '<br>curve center : ' + Cc;
-					var lat0 = mEvent.latLng.lat();
-					var lng0 = mEvent.latLng.lng();
+						var infoWindowTxt = 'curve Id : ' + curve.id;
+						infoWindowTxt += '<br><br>line id : ' + curve.pid + ' mid : ' + curve.mid; 
+						infoWindowTxt += '<br>radius : ' + curve.Rc + 'm<br>design speed : ' + curve.Vd + ' km/h<br>cant : ' + curve.cant + ' mm' + '<br>curve length : ' + (Math.round(Lc*10000)/10000) + ' m<br>';
+
+						var lat0 = mEvent.latLng.lat();
+						var lng0 = mEvent.latLng.lng();
 						
-					infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="2"><tr>' + '<td width="24"><img src="images/remove line.png" width="20" height="20" title="Remove line" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\''+ curve.id + '\');"></td><td>&nbsp;&nbsp;</td>'; 
+						infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="2"><tr>' + '<td width="24"><img src="images/remove line.png" width="20" height="20" title="Remove line" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\''+ curve.id + '\');"></td><td>&nbsp;&nbsp;</td>'; 
     	
-    			infoWindowTxt += '<td width="24"><img src="images/line+point.png" width="20" height="20" title="Add new point to current line" style="cursor: pointer;" onclick="btnAddMarker2Polyline(\''+ curve.id + '\',\'' + lat0 + '\',\'' + lng0 + '\');"></td>';
+    				infoWindowTxt += '<td width="24"><img src="images/line+point.png" width="20" height="20" title="Add new point to current line" style="cursor: pointer;" onclick="btnAddMarker2Polyline(\''+ curve.id + '\',\'' + lat0 + '\',\'' + lng0 + '\');"></td>';
     			
-					infoWindowTxt += '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
+						infoWindowTxt += '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
 					
-					infoWindowTxt += '<td><img src="images/sticky_note_pencil.png" title="Add Note" width="16" height="16" style="cursor: pointer;" onclick="curveNote(\'' + curve.id + '\');"></td>';
+						infoWindowTxt += '<td><img src="images/sticky_note_pencil.png" title="Add Note" width="16" height="16" style="cursor: pointer;" onclick="curveNote(\'' + curve.id + '\');"></td>';
 					
-					infoWindowTxt += '<td><img src="images/xfce4_settings.png" title="Setting" width="16" height="16" style="cursor: pointer;" onclick="curveSetting(\'' + curve.id + '\');"></td>';
+						infoWindowTxt += '<td><img src="images/xfce4_settings.png" title="Setting" width="16" height="16" style="cursor: pointer;" onclick="curveSetting(\'' + curve.id + '\');"></td>';
 					
-					infoWindowTxt += '</tr></table>';    			
+						infoWindowTxt += '</tr></table>';    			
     	 	   	
-					var infowindow = new google.maps.InfoWindow({
-						content: infoWindowTxt,
-						position: mEvent.latLng
+						var infowindow = new google.maps.InfoWindow({
+							content: infoWindowTxt,
+							position: mEvent.latLng
 						});
         
-					infowindow.open(map);	
-					/*
-					if ($('#dialogRailSwitch').dialog('isOpen')) {
-						if ($('#railend_pid').val() != curve.id) {
-							$('#railbase_sw').val(curve.id);
-						}
-					}	
-					*/
+						infowindow.open(map);	
+
 					});
+					
 					$('#dialogRailCurve').dialog('close');	     							
 				}
 		}
@@ -1147,295 +1336,715 @@ function predrawRailTransitionCurve(polyid,mindex) {
 }
 
 function drawRailTransitionCurve() {
-	if (typeof $('#DtCbasePolyID').val() != 'undefined') {
-		var polyL = null;
-		if (MapToolbar.features["lineTab"][$('#DtCbasePolyID').val()] != null) {
-			polyL = MapToolbar.features["lineTab"][$('#DtCbasePolyID').val()];
-			var currIdx = parseInt($('#DtCmarkerIndex').val());
-			
-			if ((polyL.markers.getAt(currIdx).note != '') && (polyL.markers.getAt(currIdx).note != null)) {
-				var str = polyL.markers.getAt(currIdx).note;				
-				if (str.indexOf('curve') >= 0) {
-					var arr = str.split('§');
-					for (x=0; x < arr.length; x++) {
-						if (arr[x].indexOf('curve') >= 0) {
-							alert('Please remove the current curve (' + arr[x].split(':')[1]+ ') at this point.');
-							break;
-						}
-					}
-					$('#dialogRailTransitionCurve').dialog('close');					
-					return;
-				}
-			}
-			
-			if ((typeof polyL.markers.getAt(currIdx - 1).index != 'undefined') && (typeof polyL.markers.getAt(currIdx + 1).index != 'undefined')) {
-				var cant = parseFloat($('#sBtnRtCCant').val()); // mm unit
-				var gauge = parseFloat($('#sRTCBtnGauge').val()); // mm unit
-				var v_ds = parseFloat($('#sBtnRTCDesignSpeed').val()); // kph unit
-				var TcL =  parseFloat($('#sBtnTCLength').val());
-				var _shift = parseFloat($('#sBtnTCShift').val());
-				
-				var m0 = polyL.markers.getAt(currIdx-1).getPosition();
-				var m1 = polyL.markers.getAt(currIdx).getPosition();
-				var m2 = polyL.markers.getAt(currIdx+1).getPosition();
-				var h1 = google.maps.geometry.spherical.computeHeading(m0,m1);
-				var h2 = google.maps.geometry.spherical.computeHeading(m1,m2);
-				var fic = intersection_angle(h1,h2);
-				var intAngleDeg = fic.angle;
-				var dir = fic.direction;
-				
-				if (dir == 0) {
-					alert('sorry, unable to draw curve or transition curve on stright line');
-					$('#dialogRailTransitionCurve').dialog('close');	
-					
-				} else {
-					
-				var curveAngleDeg = intAngleDeg ; //180 - intAngleDeg ; 
-				var curveAngleRad = curveAngleDeg.toRad();
-				var preR = (typeof $('#sBtnRTCCircularRadius').val() != 'undefined')? parseFloat($('#sBtnRTCCircularRadius').val()) : 160;
-				//var l2m1 = preR /(Math.tan((intAngleDeg.toRad()/2))); // length@distance to m1 point
-				
-				var rmin = 1.39 * Math.sqrt(preR * TcL);
-				
-				if (preR < rmin) {				
-					alert('Warning: Minimum radius for this transition curve is ' + rmin + ' m.'); 
-					return;
-				}	
+// by : Karya IT
+// updated : 15 Jan 2014
+// v1.0.0
+	var cant = parseFloat($('#sBtnRtCCant').val()); // mm unit
+	var gauge = parseFloat($('#sRTCBtnGauge').val()); // mm unit
+	var v_ds = parseFloat($('#sBtnRTCDesignSpeed').val()); // kph unit
+	var mid = parseFloat($('#DtCmarkerIndex').val());
+	var pid = $('#DtCbasePolyID').val();
+	var Rc = parseFloat($('#sBtnRTCCircularRadius').val());
+	var Ls = 0;
+	var Lc = 0;
+	var TL = 0;
 
-			
-				var tlen = ((preR + _shift)/(Math.tan(curveAngleRad/2)))+ (TcL/2); // tangent length from intersection point to transition start/end point
-				var ntp1 = google.maps.geometry.spherical.computeOffset(m1, -tlen, h1); //point 1 : transition start
-				var ntp2 = google.maps.geometry.spherical.computeOffset(m1, tlen, h2); //point 2 : transition end
-								
-				var Xb = (TcL/2)*(1/(Math.sqrt(1+Math.pow((TcL/(2*preR)),2))));								
-				var tditcl = (preR + _shift)/(Math.tan(curveAngleRad/2));			
-				var tditc0 = google.maps.geometry.spherical.computeOffset(m1, -tditcl, h1);
-				var tditc1 = google.maps.geometry.spherical.computeOffset(m1, tditcl, h2);
-				
-				var im1 = new google.maps.Marker({
-				    position: tditc0,
-				    map: map,
-				    icon: 'images/bullet_grey.png'
-	        });
-	        
-				var im1 = new google.maps.Marker({
-				    position: tditc1,
-				    map: map,
-				    icon: 'images/bullet_grey.png'
-	        });					
-				
-				var nscc1 = google.maps.geometry.spherical.computeOffset(tditc0, (preR+_shift), h1 + (90 * dir));
-				var nscc2 = google.maps.geometry.spherical.computeOffset(tditc0, (preR+_shift), h1 - (90 * dir));
-				var nscc3 = google.maps.geometry.spherical.computeOffset(tditc1, (preR+_shift), h2 + (90 * dir));
-				var nscc4 = google.maps.geometry.spherical.computeOffset(tditc1, (preR+_shift), h2 - (90 * dir));	
-				
-				var Cc = null;
-				
-					if (google.maps.geometry.spherical.computeDistanceBetween(nscc1,nscc3) <= 1) {
-						Cc = nscc1;
-						//alert('center match : \n' + google.maps.geometry.spherical.computeDistanceBetween(nscc1,nscc3) + '\n' + google.maps.geometry.spherical.computeDistanceBetween(nscc1,nscc4) + '\n' + google.maps.geometry.spherical.computeDistanceBetween(nscc2,nscc3) + '\n' + google.maps.geometry.spherical.computeDistanceBetween(nscc2,nscc4));
-						//var Cc = google.maps.geometry.spherical.computeOffset(np1, preR, h1 + (90 * dir));
-					} else if (google.maps.geometry.spherical.computeDistanceBetween(nscc1,nscc4) <= 1) {
-						Cc = nscc2;
-						//alert('center match : \n' + google.maps.geometry.spherical.computeDistanceBetween(nscc1,nscc3) + '\n' + google.maps.geometry.spherical.computeDistanceBetween(nscc1,nscc4) + '\n' + google.maps.geometry.spherical.computeDistanceBetween(nscc2,nscc3) + '\n' + google.maps.geometry.spherical.computeDistanceBetween(nscc2,nscc4));
-						//var Cc = google.maps.geometry.spherical.computeOffset(np1, preR, h1 + (90 * dir));
-					} else if (google.maps.geometry.spherical.computeDistanceBetween(nscc2,nscc3) <= 1) {
-						Cc = nscc3;
-						//alert('center match : \n' + google.maps.geometry.spherical.computeDistanceBetween(nscc1,nscc3) + '\n' + google.maps.geometry.spherical.computeDistanceBetween(nscc1,nscc4) + '\n' + google.maps.geometry.spherical.computeDistanceBetween(nscc2,nscc3) + '\n' + google.maps.geometry.spherical.computeDistanceBetween(nscc2,nscc4));
-						//var Cc = google.maps.geometry.spherical.computeOffset(np1, preR, h1 + (90 * dir));
-					} else if (google.maps.geometry.spherical.computeDistanceBetween(nscc2,nscc4) <= 1) {
-						Cc = nscc4;
-						//alert('center match : \n' + google.maps.geometry.spherical.computeDistanceBetween(nscc1,nscc3) + '\n' + google.maps.geometry.spherical.computeDistanceBetween(nscc1,nscc4) + '\n' + google.maps.geometry.spherical.computeDistanceBetween(nscc2,nscc3) + '\n' + google.maps.geometry.spherical.computeDistanceBetween(nscc2,nscc4));
-						//var Cc = google.maps.geometry.spherical.computeOffset(np1, preR, h1 + (90 * dir));
-					} else {
-						//alert('center satu pun tak match : \n' + google.maps.geometry.spherical.computeDistanceBetween(nscc1,nscc3) + '\n' + google.maps.geometry.spherical.computeDistanceBetween(nscc1,nscc4) + '\n' + google.maps.geometry.spherical.computeDistanceBetween(nscc2,nscc3) + '\n' + google.maps.geometry.spherical.computeDistanceBetween(nscc2,nscc4));
-							Cc = nscc1;
-					}		
-							
-				var cm1 = new google.maps.Marker({
-				    position: Cc,
-				    map: map,
-				    icon: 'images/bullet_white.png'
-	        });
-
-				var parts = 30; // any value, higher = more precision on plotting
-				var ts = TcL / parts; // TotalX = full length of transition by assumption (see Cubic Parabola calculation), ntc new transition segment divided by any value
-				var TotalY = (Math.pow(TcL,2))/(6*preR); //(Math.pow(TcL,2)/(6*preR)) - (preR*(1-(1/(Math.sqrt(1+Math.pow((TcL/(2*preR)),2)))))); //4 * _shift;//(TcL*TcL)/(6*preR);
-             
-				var tarr = new Array();
-				var scp1;
-				var scp2;
-				
-				
-				
-				for (var i=0; (i <= parts); i++) 
-  			{     
-    	  	if (i == 0) 
-    	  	{
-    	  		tarr.push(ntp1);
-    	  		var mmx = new google.maps.Marker({
-				    position: tarr[tarr.length-1],
-				    map: map,
-				    icon: 'images/gbm-m_curve.png'
-	        });	
-    	  		 
-    	  	} 
-    	  	else if (i== parts) 
-    	  	{
-    	  		var scp1x = google.maps.geometry.spherical.computeOffset(ntp1, TcL, h1);
-						var scp1y = google.maps.geometry.spherical.computeOffset(scp1x, TotalY, h1+(90 * dir));
-						var xo = google.maps.geometry.spherical.computeHeading(tarr[i-1],scp1y);
-						var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[i-1],scp1y);
-						scp1 = google.maps.geometry.spherical.computeOffset(tarr[i-1], xd, xo);
-						tarr.push(xi);   	  		 
-    	  	}
-    	  	else 
-    	  	{
-    	  		var yi = google.maps.geometry.spherical.computeOffset(ntp1, ts * i, h1);
-    	  		var ycd = (Math.pow((ts * i),3))/(6 * preR * TcL);
-    	  		var yd = google.maps.geometry.spherical.computeOffset(yi, ycd , h1+(90 * dir));
-    	  		var xo = google.maps.geometry.spherical.computeHeading(tarr[i-1],yd);
-    	  		var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[i-1],yd);
-    	  		var xi = google.maps.geometry.spherical.computeOffset(tarr[i-1], xd, xo);
-    	  		tarr.push(xi);
-    	  	}
-				}		
-
-    	  var scp2x = google.maps.geometry.spherical.computeOffset(ntp2, -TcL, h2);
-				var scp2y = google.maps.geometry.spherical.computeOffset(scp2x, -TotalY, h2-(90 * dir));
-				var xo = google.maps.geometry.spherical.computeHeading(tarr[tarr.length-1],scp2y);
-				var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[tarr.length-1],scp2y);
-				scp2 = google.maps.geometry.spherical.computeOffset(tarr[tarr.length-1], xd, xo);
-			
-				var arcL = preR*curveAngleRad - tlen; //(curveAngleDeg/360) * 2 * Math.PI * preR;
-					
-				var points = Math.ceil(arcL/25);
-				var iB = google.maps.geometry.spherical.computeHeading(Cc,scp1);
-				var fB = google.maps.geometry.spherical.computeHeading(Cc,scp2);
+	var imgurlTcSt = "images/gbm-m_curve.png";
+	var imgurlCcSt = "images/curve-sign2.png";
+	var imgurlCcCt = "images/bullet_white.png";
+	var imgurlShft = "images/bullet_grey.png";	
 	
-				var br = null;
-				
-				br = fB - iB;
-				if (br >  180) {br -= 360;}
-				if (br < -180) {br += 360;}
-				
-				var deltaBearing = br/points;
-
-					for (var i=0; (i < points+1); i++) 
-  				{     
-    	  		tarr.push(google.maps.geometry.spherical.computeOffset(Cc, preR, iB + i*deltaBearing)); 
-    	  		if (i == 0) {  						
-							var mmx = new google.maps.Marker({
-						    position: tarr[tarr.length-1],
-						    map: map,
-						    icon: 'images/curve-sign.png'
-	        		});	
-  					} else if (i == points) {
-							var mmx = new google.maps.Marker({
-						    position: tarr[tarr.length-1],
-						    map: map,
-						    icon: 'images/curve-sign.png'
-	        		});	 						
-  					}
-					}				
-				
-				for (var i=parts; (i >= 0); i--) 
-  			{     
-    	  	if (i == 0) 
-    	  	{
-    	  		tarr.push(ntp2); 
-    	  		var mmx = new google.maps.Marker({
-				    position: tarr[tarr.length-1],
-				    map: map,
-				    icon: 'images/gbm-m_curve.png'
-	        });		  		 	 
-    	  	} 
-    	  	else if (i== parts) 
-    	  	{		
-						tarr.push(scp2);  	  		 
-    	  	}
-    	  	else 
-    	  	{
-    	  		var yi = google.maps.geometry.spherical.computeOffset(ntp2, -ts * i, h2);
-    	  		var ycd = (Math.pow((ts * i),3))/(6 * preR * TcL);
-    	  		var yd = google.maps.geometry.spherical.computeOffset(yi, -ycd , h2-(90 * dir));
-    	  		var xo = google.maps.geometry.spherical.computeHeading(tarr[i-1],yd);
-    	  		var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[i-1],yd);
-    	  		var xi = google.maps.geometry.spherical.computeOffset(tarr[i-1], xd, xo);
-    	  		tarr.push(xi);
-    	  	}
-				}				
-
-				var tcurve = new google.maps.Polyline({
-						path: [tarr],
-           	strokeColor: "#FF0FF0",
-           	strokeOpacity: 0.7,
-						geodesic: true,
-						map: map,
-           	strokeWeight: 1
-					});
-									
-					++MapToolbar["transcurveCounter"];
-					tcurve.id = 'tcurve_'+ MapToolbar["transcurveCounter"];
-					tcurve.pid = polyL.id;
-					tcurve.mid = currIdx;
-					tcurve.tctype = null;
-					tcurve.note = null; 
-					tcurve.$el = MapToolbar.addFeatureEntry(tcurve.id);
-					tcurve.markers = new google.maps.MVCArray;	     
-					MapToolbar.features['tcurveTab'][tcurve.id] = tcurve;
-									
-							
- 					MapToolbar.features["lineTab"][polyL.id].markers.getAt(currIdx).note = null ;
- 					MapToolbar.features["lineTab"][polyL.id].markers.getAt(currIdx).tcurve = 'curve:'+ tcurve.id + '§radius:' + preR * dir + '§cant:' + parseFloat($('#sBtnRCCant').val()) + '§limit:' + parseFloat($('#sBtnRCDesignSpeed').val()) + '§tlength:' + l2m1 + '§clength:' + arcL + '§center:' + Cc.lat() + '/' + Cc.lng() + '§start_point:' + extp[0].lat() + '/' + extp[0].lng() + '§end_point:' + extp[extp.length-1].lat() + '/' + extp[extp.length-1].lng()  + '§h1:' + h1 + '§h2:' + h2 + '§forceSL:' + enforceSL; 
-										
-					
-				google.maps.event.addListener(tcurve, "click", function(mEvent){
-					//alert(mEvent.latLng.toString());
-					var infoWindowTxt = 'curve Id : ' + tcurve.id + '<br>curve length : ' + arcL;
-					infoWindowTxt += '<br>start point : ' + extp[0] + '<br>end point : ' + extp[extp.length-1];
-					infoWindowTxt += '<br>curve center : ' + Cc;
-					var lat0 = mEvent.latLng.lat();
-					var lng0 = mEvent.latLng.lng();
-		
-					infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="3"><tr><td>';
-					infoWindowTxt += '<img src="images/marker_remove.png" title="Remove marker" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\'' + tcurve.id + '\');"></td><td>&nbsp;</td><td>';
-  
-					infoWindowTxt += '<select name="menu_m_type" id="menu_m_type" style="font-size:10px" onchange="setMarkerType(\''+ tcurve.id + '\');"><option> - select - </option>';
-					if (tcurve.tctype == 'm_stopsign') {infoWindowTxt += '<option value="m_stopsign" selected>Stop Sign</option>'; } else {infoWindowTxt += '<option value="m_stopsign">Stop Sign</option>';}
-					if (tcurve.tctype == 'm_rail_start') {infoWindowTxt += '<option value="m_rail_start" selected>Rail Start</option>'; } else {infoWindowTxt += '<option value="m_rail_start">Rail Start</option>'; }
-					if (tcurve.tctype == 'm_rail_end') {infoWindowTxt += '<option value="m_rail_end" selected>Rail End</option>'; } else {infoWindowTxt += '<option value="m_rail_end">Rail End</option>'; }
-					if (tcurve.tctype == 'm_tree') {infoWindowTxt += '<option value="m_tree" selected>Tree</option>'; } else {infoWindowTxt += '<option value="m_tree">Tree</option>'; }
-					if (tcurve.tctype == 'm_traffic_signal') {infoWindowTxt += '<option value="m_traffic_signal" selected>Traffic Signal</option>'; } else {infoWindowTxt += '<option value="m_traffic_signal">Traffic Signal</option>'; }
-					if (tcurve.tctype == 'm_object') {infoWindowTxt += '<option value="m_object" selected>Custom Object</option>'; } else {infoWindowTxt += '<option value="m_object">Custom Object</option>'; }
-  		
-					infoWindowTxt += '</select></td></tr></table>';
-	   	
-					var infowindow = new google.maps.InfoWindow({
-						content: infoWindowTxt,
-						position: mEvent.latLng
-						});
-        
-					infowindow.open(map);	
-					/*
-					if ($('#dialogRailSwitch').dialog('isOpen')) {
-						if ($('#railend_pid').val() != curve.id) {
-							$('#railbase_sw').val(curve.id);
-						}
-					} */		
-					});
-					
-					
+	if (typeof MapToolbar.features["lineTab"][pid] == 'undefined') {
+		alert('poly id undefined');
+		$('#dialogRailTransitionCurve').dialog('close');
+		return;		
+	}
+	
+	var polyL = MapToolbar.features["lineTab"][pid];	
+	
+	if ((polyL.markers.getAt(mid).note != '') && (polyL.markers.getAt(mid).note != null)) {
+		var str = polyL.markers.getAt(mid).note;				
+		if (str.indexOf('tcurve') >= 0) {
+			var arr = str.split('§');
+			for (x=0; x < arr.length; x++) {
+				if (arr[x].indexOf('tcurve') >= 0) {
+					alert('Please remove the current curve (' + arr[x].split(':')[1]+ ') at this point.');
+					break;
 				}
-        $('#dialogRailTransitionCurve').dialog('close');
-				$('#tnote').html('');
-								
-				
 			}
+			$('#dialogRailTransitionCurve').dialog('close');		
+			return;
 		}
 	}
+	
+	if ((typeof polyL.markers.getAt(mid - 1).index == 'undefined') && (typeof polyL.markers.getAt(mid + 1).index == 'undefined')) {
+		alert('Unable to draw a curve at the end of the polyline.');
+		$('#dialogRailTransitionCurve').dialog('close');
+		return;
+	}
+
+	var m0 = polyL.markers.getAt(mid-1).getPosition();
+	var m1 = polyL.markers.getAt(mid).getPosition();
+	var m2 = polyL.markers.getAt(mid+1).getPosition();
+	var h1 = google.maps.geometry.spherical.computeHeading(m0,m1);
+	var h2 = google.maps.geometry.spherical.computeHeading(m1,m2);
+	var fic = intersection_angle(h1,h2);
+	var thetaD = fic.angle; // θ intersection angle
+	var dir = fic.direction;
+	
+	var Lb0 = google.maps.geometry.spherical.computeDistanceBetween(m0,m1) ;
+	var Lb1 = google.maps.geometry.spherical.computeDistanceBetween(m1,m2) ;
+		
+	var thetaR = thetaD * (Math.PI / 180);
+	
+	var delta = 180 - thetaD; //Δ deflectionAngle
+	var deltaRad = delta * (Math.PI / 180);
+
+	if (dir == 0) {
+		alert('sorry, unable to draw curve or transition curve on stright line');
+		$('#dialogRailTransitionCurve').dialog('close');	
+		return;
+	}
+		
+	if (document.getElementById('tc_cubic_parabola').checked) {
+	//cubic parabola
+		Ls = Math.pow(v_ds,3) / (Math.pow(3.6,3) * 0.3 * Rc); // spiral length
+		var S = (Ls * Ls) /(24 * Rc); //shift of the curve 
+		var IT = ((Rc + S)/(Math.tan(thetaR/2)))+ (Ls/2);
+			
+		Lc = deltaRad * Rc - Ls; // 2 x Ls/2
+		var TotalL = Lc + 2 * Ls;
+	
+		var delta_C = (Lc*360)/(2*Math.PI*Rc); //Δc
+		var delta_S = (delta - delta_C)/2; //Δs
+	
+		if (delta_S < 0) {
+			alert('Warning: the deflection angle is too small to introduce transition curve. \nCurrent deflection angle is ' + (Math.round(delta*100)/100) + '°.');
+			$('#dialogRailTransitionCurve').dialog('close');	
+			return;
+		}
+	
+		var rmin1 = 1.39 * Math.sqrt(Rc * Ls); // method 1		
+		var rmin2 = Math.sqrt(Math.pow(v_ds,3)/(Math.pow(3.6,3)*0.3*deltaRad));// method 2
+		var rmin = 0;
+			
+		if (rmin1 > rmin2) { 
+			rmin = rmin1;
+		} else if (rmin1 < rmin2) { 
+			rmin = rmin2;
+		} else	{ 				
+			rmin = rmin2; // @ rmin = rmin1;	
+		}
+			
+		if (Rc < rmin) { 
+			alert('Warning: Minimum radius for this deflection angle is ' + rmin + ' m.'); 
+			return;
+		}
+				
+		var IT = ((Rc + S)/(Math.tan(thetaR/2)))+ (Ls/2); // Total tangent length from intersection point to transition start/end point
+		var K = Ls/2;
+		var ntp1 = google.maps.geometry.spherical.computeOffset(m1, -IT, h1); //point 1 : transition start
+		var ntp2 = google.maps.geometry.spherical.computeOffset(m1, IT, h2); //point 2 : transition end
+		
+		var tditcl = (Rc + S)/(Math.tan(thetaR/2));			
+		var tditc0 = google.maps.geometry.spherical.computeOffset(m1, -tditcl, h1);
+		var tditc1 = google.maps.geometry.spherical.computeOffset(m1, tditcl, h2);
+	
+		var nscc1 = google.maps.geometry.spherical.computeOffset(tditc0, (Rc+S), h1 + (90 * dir));
+		var nscc2 = google.maps.geometry.spherical.computeOffset(tditc0, (Rc+S), h1 - (90 * dir));
+		var nscc3 = google.maps.geometry.spherical.computeOffset(tditc1, (Rc+S), h2 + (90 * dir));
+		var nscc4 = google.maps.geometry.spherical.computeOffset(tditc1, (Rc+S), h2 - (90 * dir));	
+
+		var Cc = null;
+		TL = IT;
+		
+		if (google.maps.geometry.spherical.computeDistanceBetween(nscc1,nscc3) <= 1) {
+			Cc = nscc1;
+		} else if (google.maps.geometry.spherical.computeDistanceBetween(nscc1,nscc4) <= 1) {
+			Cc = nscc2;
+		} else if (google.maps.geometry.spherical.computeDistanceBetween(nscc2,nscc3) <= 1) {
+			Cc = nscc3;
+		} else if (google.maps.geometry.spherical.computeDistanceBetween(nscc2,nscc4) <= 1) {
+			Cc = nscc4;
+		} else {
+			Cc = nscc1;
+		}
+
+		// Cubic Parabola : TotalX = Ls  (full length of transition by assumption)
+		var parts = 30; // any value, higher = more precision
+		var ts = Ls / parts; //transition segment divided by any value (for plotting)
+		var TotalY = (Math.pow(Ls,2))/(6*Rc); //(L^2/6R)
+		
+		if (polyL.markers.getAt(mid-1).bdata.tcurve != '') {
+			var TL0 = MapToolbar.features['tcurveTab'][polyL.markers.getAt(mid-1).bdata.tcurve].TL;
+			if (TL0 + TL > Lb0) {
+				alert('Warning! curve overlapped with previous transition curve.');
+				return;
+			}
+		}
+
+		if (polyL.markers.getAt(mid+1).bdata.tcurve != '') {
+			var TL1 = MapToolbar.features['tcurveTab'][polyL.markers.getAt(mid+1).bdata.tcurve].TL;
+			if (TL1 + TL > Lb1) {
+				alert('Warning! curve overlapped with next transition curve.');
+				return;
+			}					
+		}
+
+		if (polyL.markers.getAt(mid-1).bdata.curve != '') {
+			var Lt0 = MapToolbar.features['curveTab'][polyL.markers.getAt(mid-1).bdata.curve].Lt;
+			if (Lt0 + TL > Lb0) {
+				alert('Warning! curve overlapped with previous curve.');
+				return;
+			}
+		}
+
+		if (polyL.markers.getAt(mid+1).bdata.curve != '') {
+			var Lt1 = MapToolbar.features['curveTab'][polyL.markers.getAt(mid+1).bdata.curve].Lt;
+			if (Lt1 + TL > Lb1) {
+				alert('Warning! curve overlapped with next curve.');
+				return;
+			}					
+		}
+					
+		if ((TL > Lb0) || (TL > Lb1)) {
+			alert('Warning! Unable to fit transition curve at the intersection. Transition curve is too big, please reduce curve radius or the design speed.');
+			return;						
+		}		
+             
+		var tarr = new Array();
+		var scp1;
+		var scp2;
+	
+		//plotting entering spiral curve
+		for (var i=0; (i <= parts); i++) {     
+			if (i == 0) {
+				tarr.push(ntp1);
+			} else if (i== parts) {
+				var scp1x = google.maps.geometry.spherical.computeOffset(ntp1, Ls, h1);
+				var scp1y = google.maps.geometry.spherical.computeOffset(scp1x, TotalY, h1+(90 * dir));
+				var xo = google.maps.geometry.spherical.computeHeading(tarr[i-1],scp1y);
+				var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[i-1],scp1y);
+				scp1 = google.maps.geometry.spherical.computeOffset(tarr[i-1], xd, xo);
+				tarr.push(xi);   	  		 
+			} else {
+				var yi = google.maps.geometry.spherical.computeOffset(ntp1, ts * i, h1);
+				var ycd = (Math.pow((ts * i),3))/(6 * Rc * Ls);
+				var yd = google.maps.geometry.spherical.computeOffset(yi, ycd , h1+(90 * dir));
+				var xo = google.maps.geometry.spherical.computeHeading(tarr[i-1],yd);
+				var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[i-1],yd);
+				var xi = google.maps.geometry.spherical.computeOffset(tarr[i-1], xd, xo);
+				tarr.push(xi);
+			}
+		}
+		// --- end
+	
+		var tarrL = tarr.length;
+		var scp2x = google.maps.geometry.spherical.computeOffset(ntp2, -Ls, h2);
+		var scp2y = google.maps.geometry.spherical.computeOffset(scp2x, -TotalY, h2-(90 * dir));
+		var xo = google.maps.geometry.spherical.computeHeading(tarr[tarrL-1],scp2y);
+		var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[tarrL-1],scp2y);
+		scp2 = google.maps.geometry.spherical.computeOffset(tarr[tarrL-1], xd, xo);
+	
+		
+		var points = Math.ceil(Lc/25);
+		var iB = google.maps.geometry.spherical.computeHeading(Cc,scp1);
+		var fB = google.maps.geometry.spherical.computeHeading(Cc,scp2);
+	
+		var br = fB - iB;
+		if (br >  180) {br -= 360;}
+		if (br < -180) {br += 360;}
+	
+		var deltaBearing = br/points;
+		var ccSt;
+		var ccEd;
+	
+		//plotting circular curve
+		for (var i=0; (i < points+1); i++) {     
+			tarr.push(google.maps.geometry.spherical.computeOffset(Cc, Rc, iB + i*deltaBearing)); 
+			if (i == 0) {  
+				ccSt = tarr[tarr.length-1];
+			} else if (i == points) {
+				ccEd = tarr[tarr.length-1];
+			}
+		}	
+		// --- end
+	
+		//plotting exiting spiral curve
+		for (var i=parts; (i >= 0); i--) {     
+			if (i == 0) {
+				tarr.push(ntp2); 		  		 	 
+			} else if (i== parts) {		
+				tarr.push(scp2);  	  		 
+			} else {
+				var yi = google.maps.geometry.spherical.computeOffset(ntp2, -ts * i, h2);
+				var ycd = (Math.pow((ts * i),3))/(6 * Rc * Ls);
+				var yd = google.maps.geometry.spherical.computeOffset(yi, -ycd , h2-(90 * dir));
+				var xo = google.maps.geometry.spherical.computeHeading(tarr[i-1],yd);
+				var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[i-1],yd);
+				var xi = google.maps.geometry.spherical.computeOffset(tarr[i-1], xd, xo);
+				tarr.push(xi);
+			}
+		}
+		// --- end
+	
+		tarrL = tarr.length;	
+
+		var tcurve = new google.maps.Polyline({
+			path: [tarr],
+			strokeColor: "#00E600",
+			strokeOpacity: 0.7,
+			geodesic: true,
+			map: map,
+			strokeWeight: 1
+		});
+			
+		// cubic parabola plotter end
+				
+	} else {
+		//halfsine tangent
+		
+		if (gauge == 1067) {
+			kc = 1;
+		} else if (gauge == 1435) {
+			kc = 0.75;
+		} else if (gauge == 1372) {
+			kc = 0.78;
+		} else if (gauge == 762) {
+			kc = 1.4;
+		} else {
+			kc = 1;
+		}
+
+		if (v_ds > 75) {
+			Ls = 0.008 * kc * cant * v_ds ;
+		} else {
+			Ls = 0.007 * kc * cant * v_ds ;
+		}
+					
+		var TotalX = Ls - 0.0226689447*(Math.pow(Ls,3)/Math.pow(Rc,2));
+		var X2_2PI2 = Math.pow(TotalX,2)/(2*Math.pow(Math.PI,2));
+	
+		var delta_S = Math.atan(TotalX/(2*Rc)); //Δs
+		var delta_C = deltaRad - 2 * delta_S; //Δc
+		Lc = delta_C * Rc; // circular arc length
+		var delta_Sd = delta_S * (180/Math.PI); //Δs
+		var delta_Cd = delta_C * (180/Math.PI); //Δc
+
+		var TotalY = (0.25-(1/Math.pow(Math.PI,2)))*(Math.pow(TotalX,2)/Rc);
+		var P = TotalY - Rc * (1-Math.cos(delta_S));
+		tShift = P;
+		var K = TotalX - Rc * Math.sin(delta_S);
+		var TV = (Rc+P)*Math.tan(deltaRad/2) + K; // Total tangent length from intersection point to transition start/end point
+		var TotalL = Lc + 2 * Ls;
+		TL = TV;
+		
+		if (delta_Cd < 0) {
+			alert('<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong>Warning:</strong> the deflection angle is too small to introduce transition curve. <br />Current deflection angle is ' + (Math.round(delta*100)/100) + '°.');
+			return;
+		}
+
+		var ntp1 = google.maps.geometry.spherical.computeOffset(m1, -TV, h1); //point 1 : transition start
+		var ntp2 = google.maps.geometry.spherical.computeOffset(m1, TV, h2); //point 2 : transition end
+								
+		//var Xb = (Ls/2)*(1/(Math.sqrt(1+Math.pow((Ls/(2*Rc)),2))));
+		var tditcl = (Rc + P)/(Math.tan(thetaR/2));			
+		var tditc0 = google.maps.geometry.spherical.computeOffset(m1, -tditcl, h1);
+		var tditc1 = google.maps.geometry.spherical.computeOffset(m1, tditcl, h2);
+	
+		var nscc1 = google.maps.geometry.spherical.computeOffset(tditc0, (Rc+P), h1 + (90 * dir));
+		var nscc2 = google.maps.geometry.spherical.computeOffset(tditc0, (Rc+P), h1 - (90 * dir));
+		var nscc3 = google.maps.geometry.spherical.computeOffset(tditc1, (Rc+P), h2 + (90 * dir));
+		var nscc4 = google.maps.geometry.spherical.computeOffset(tditc1, (Rc+P), h2 - (90 * dir));	
+
+		var Cc = null;
+
+		if (google.maps.geometry.spherical.computeDistanceBetween(nscc1,nscc3) <= 1) {
+			Cc = nscc1;
+		} else if (google.maps.geometry.spherical.computeDistanceBetween(nscc1,nscc4) <= 1) {
+			Cc = nscc2;
+		} else if (google.maps.geometry.spherical.computeDistanceBetween(nscc2,nscc3) <= 1) {
+			Cc = nscc3;
+		} else if (google.maps.geometry.spherical.computeDistanceBetween(nscc2,nscc4) <= 1) {
+			Cc = nscc4;
+		} else {
+			Cc = nscc1;
+		}		
+
+		var parts = 30; // any value, higher = more precision on plotting
+		var ts = Ls / parts; // TotalX = full length of transition by assumption (see Cubic Parabola calculation), ntc new transition segment divided by any value
+		
+		if (polyL.markers.getAt(mid-1).bdata.tcurve != '') {
+			var TL0 = MapToolbar.features['tcurveTab'][polyL.markers.getAt(mid-1).bdata.tcurve].TL;
+			if (TL0 + TL > Lb0) {
+				alert('Warning! curve overlapped with previous transition curve.');
+				return;
+			}
+		}
+
+		if (polyL.markers.getAt(mid+1).bdata.tcurve != '') {
+			var TL1 = MapToolbar.features['tcurveTab'][polyL.markers.getAt(mid+1).bdata.tcurve].TL;
+			if (TL1 + TL > Lb1) {
+				alert('Warning! curve overlapped with next transition curve.');
+				return;
+			}					
+		}
+
+		if (polyL.markers.getAt(mid-1).bdata.curve != '') {
+			var Lt0 = MapToolbar.features['curveTab'][polyL.markers.getAt(mid-1).bdata.curve].Lt;
+			if (Lt0 + TL > Lb0) {
+				alert('Warning! curve overlapped with previous curve.');
+				return;
+			}
+		}
+
+		if (polyL.markers.getAt(mid+1).bdata.curve != '') {
+			var Lt1 = MapToolbar.features['curveTab'][polyL.markers.getAt(mid+1).bdata.curve].Lt;
+			if (Lt1 + TL > Lb1) {
+				alert('Warning! curve overlapped with next curve.');
+				return;
+			}					
+		}
+					
+		if ((TL > Lb0) || (TL > Lb1)) {
+			alert('Warning! Unable to fit transition curve at the intersection. Transition curve is too big, please reduce curve radius or the design speed.');
+			return;						
+		}				
+             
+		var tarr = new Array();
+		var scp1;
+		var scp2;
+	
+		for (var i=0; (i <= parts); i++) {     
+			if (i == 0) {
+				tarr.push(ntp1);
+			} else if (i== parts) {
+				var scp1x = google.maps.geometry.spherical.computeOffset(ntp1, Ls, h1);
+				var scp1y = google.maps.geometry.spherical.computeOffset(scp1x, TotalY, h1+(90 * dir));
+				var xo = google.maps.geometry.spherical.computeHeading(tarr[i-1],scp1y);
+				var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[i-1],scp1y);
+				scp1 = google.maps.geometry.spherical.computeOffset(tarr[i-1], xd, xo);
+				tarr.push(xi);   	  		 
+			} else {
+				var yi = google.maps.geometry.spherical.computeOffset(ntp1, ts * i, h1);
+				var ycd = (1/Rc)*((Math.pow(ts * i,2)/4)-X2_2PI2*(1-Math.cos((Math.PI * ts * i)/TotalX)));
+				var yd = google.maps.geometry.spherical.computeOffset(yi, ycd , h1+(90 * dir));
+				var xo = google.maps.geometry.spherical.computeHeading(tarr[i-1],yd);
+				var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[i-1],yd);
+				var xi = google.maps.geometry.spherical.computeOffset(tarr[i-1], xd, xo);
+				tarr.push(xi);
+			}
+		}	
+	
+		var tarrL = tarr.length;
+		var scp2x = google.maps.geometry.spherical.computeOffset(ntp2, -Ls, h2);
+		var scp2y = google.maps.geometry.spherical.computeOffset(scp2x, -TotalY, h2-(90 * dir));
+		var xo = google.maps.geometry.spherical.computeHeading(tarr[tarrL-1],scp2y);
+		var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[tarrL-1],scp2y);
+		scp2 = google.maps.geometry.spherical.computeOffset(tarr[tarrL-1], xd, xo);
+	
+		var points = Math.ceil(Lc/25);
+		var iB = google.maps.geometry.spherical.computeHeading(Cc,scp1);
+		var fB = google.maps.geometry.spherical.computeHeading(Cc,scp2);
+	
+		var br = fB - iB;
+		if (br >  180) {br -= 360;}
+		if (br < -180) {br += 360;}
+	
+		var deltaBearing = br/points;
+		var ccSt;
+		var ccEd;
+	
+		for (var i=0; (i < points+1); i++) {     
+			tarr.push(google.maps.geometry.spherical.computeOffset(Cc, Rc, iB + i*deltaBearing)); 
+			if (i == 0) {  
+				ccSt = tarr[tarr.length-1];
+			} else if (i == points) {
+				ccEd = tarr[tarr.length-1];
+			}
+		}	
+	
+		for (var i=parts; (i >= 0); i--) {     
+			if (i == 0) {
+				tarr.push(ntp2); 		  		 	 
+			} else if (i== parts) {		
+				tarr.push(scp2);  	  		 
+			} else {
+				var yi = google.maps.geometry.spherical.computeOffset(ntp2, -ts * i, h2);
+				var ycd = (1/Rc)*((Math.pow(ts * i,2)/4)-X2_2PI2*(1-Math.cos((Math.PI * ts * i)/TotalX)));
+				var yd = google.maps.geometry.spherical.computeOffset(yi, -ycd , h2-(90 * dir));
+				var xo = google.maps.geometry.spherical.computeHeading(tarr[i-1],yd);
+				var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[i-1],yd);
+				var xi = google.maps.geometry.spherical.computeOffset(tarr[i-1], xd, xo);
+				tarr.push(xi);
+			}
+		}
+
+		tarrL = tarr.length;	
+
+		var tcurve = new google.maps.Polyline({
+			path: [tarr],
+			strokeColor: "#00E600",
+			strokeOpacity: 0.7,
+			geodesic: true,
+			map: map,
+			strokeWeight: 1
+		});
+		// halfsine curve plotter end
+		
+	
+	}
+ 			
+	++MapToolbar["tcurveCounter"];
+	tcurve.id = 'tcurve_'+ MapToolbar["tcurveCounter"];
+	tcurve.pid = pid;
+	tcurve.mid = mid;
+	tcurve.tctype = (document.getElementById('tc_cubic_parabola').checked) ? 'cubic' : 'halfsine';
+	tcurve.note = null; 
+	tcurve.Rc = Rc * dir,
+ 	tcurve.cant = cant;
+ 	tcurve.Vd = v_ds;
+ 	tcurve.Ls = Ls;
+ 	tcurve.Lc = Lc;
+ 	tcurve.K = K;
+	tcurve.TotalX = TotalX;
+	tcurve.TotalY = TotalY;
+ 	tcurve.Cc = Cc;
+ 	tcurve.Ttst = tarr[0];
+ 	tcurve.Tted = tarr[tarr.length-1];
+ 	tcurve.Tcst = ccSt;
+ 	tcurve.Tced = ccEd;
+
+ 	tcurve.h1 = h1;
+ 	tcurve.h2 = h2;
+
+ 	tcurve.TL = TL;
+ 	tcurve.shift = (document.getElementById('tc_cubic_parabola').checked) ? S : P;
+ 	 	
+ 	tcurve.forceSL = true;
+ 	tcurve.delta = delta;
+ 	tcurve.theta = thetaD;
+ 
+ 	tcurve.deltaS = (document.getElementById('tc_cubic_parabola').checked) ? delta_S : delta_Sd;
+ 	tcurve.deltaC = (document.getElementById('tc_cubic_parabola').checked) ? delta_C : delta_Cd;
+ 	//tcurve.railindex = railIndex;		 						
+	tcurve.$el = MapToolbar.addFeatureEntry(tcurve.id);
+	tcurve.markers = new google.maps.MVCArray;	 
+	
+	MapToolbar.features['tcurveTab'][tcurve.id] = tcurve;
+
+	
+	MapToolbar.features["lineTab"][pid].markers.getAt(mid).note = null ;
+	MapToolbar.features["lineTab"][pid].markers.getAt(mid).bdata.tcurve = tcurve.id; 
+	
+	var e1 = new google.maps.LatLng(tarr[0]),      
+		image = new google.maps.MarkerImage(imgurlTcSt,
+			new google.maps.Size(16, 16),
+			new google.maps.Point(0, 0),
+			new google.maps.Point(8, 8)), 
+		index =0,
+		marker = new google.maps.Marker({
+			position: tarr[0],
+			map: map,
+			icon: image,
+			bdata: {height:'',pitch:''},
+			kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:''}, // various bve data
+			sline: null,
+				
+			ld:0, // distance on circumference from curve start point 
+			pid : tcurve.id,
+			title : tcurve.id + ' start point : ' + tarr[0] 
+		});
+
+	marker.index = index;    
+	tcurve.markers.insertAt(index, marker)
+		
+	var e2 = new google.maps.LatLng(tarr[tarrL-1]),      
+		image= new google.maps.MarkerImage(imgurlTcSt,
+			new google.maps.Size(16, 16),
+			new google.maps.Point(0, 0),
+			new google.maps.Point(8, 8)), 
+		index =1,
+		marker = new google.maps.Marker({
+			position: tarr[tarrL-1],
+			map: map,
+			icon: image,
+			bdata: {height:'',pitch:''},
+			kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:''}, // various bve data
+			sline: null,
+				
+			ld:2*Ls + Lc,  
+			pid : tcurve.id,
+			title: tcurve.id + ' end point : ' + tarr[tarrL-1]
+		});
+		marker.index = index;    
+		tcurve.markers.insertAt(index, marker)
+	    
+		var ec = new google.maps.LatLng(Cc),      
+			image= new google.maps.MarkerImage(imgurlCcCt,
+				new google.maps.Size(6, 6),
+				new google.maps.Point(0, 0),
+				new google.maps.Point(3, 3)), 
+		index =2,
+		marker = new google.maps.Marker({
+			position: Cc,
+			map: map,
+			icon: image,
+			bdata: {height:'',pitch:''},
+			kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:''}, // various bve data
+			sline: null,
+				
+			ld:null,  
+			pid : tcurve.id,
+			title: tcurve.id + ' circlular center : ' + Cc
+		});
+		marker.index = index;    
+		tcurve.markers.insertAt(index, marker)
+
+		var e3 = new google.maps.LatLng(ccSt),      
+			image= new google.maps.MarkerImage(imgurlCcSt,
+				new google.maps.Size(6, 6),
+				new google.maps.Point(0, 0),
+				new google.maps.Point(3, 3)), 
+		index =3,
+		marker = new google.maps.Marker({
+			position: ccSt,
+			map: map,
+			icon: image,
+			bdata: {height:'',pitch:''},
+			kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:''}, // various bve data
+			sline: null,
+				
+			ld:Ls,  
+			pid : tcurve.id,
+			title: tcurve.id + ' circlular start : ' + ccSt
+		});
+		marker.index = index;    
+		tcurve.markers.insertAt(index, marker)
+
+		var e4 = new google.maps.LatLng(ccEd),      
+			image= new google.maps.MarkerImage(imgurlCcSt,
+				new google.maps.Size(6, 6),
+				new google.maps.Point(0, 0),
+				new google.maps.Point(3, 3)), 
+		index =4,
+		marker = new google.maps.Marker({
+			position: ccEd,
+			map: map,
+			icon: image,
+			bdata: {height:'',pitch:''},
+			kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:''}, // various bve data
+			sline: null,
+				
+			ld:Ls + Lc,  
+			pid : tcurve.id,
+			title: tcurve.id + ' circlular end : ' + ccEd
+		});
+		marker.index = index;    
+		tcurve.markers.insertAt(index, marker)
+	
+	google.maps.event.addListener(tcurve, "click", function(mEvent){
+		var infoWindowTxt = 'curve Id : ' + tcurve.id + '<br>total transition curve length : ' + (Math.round((Lc + 2 * Ls)*10000)/10000) + ' m';
+		infoWindowTxt += '<br>total tangent from intersection : ' + (Math.round(TL*10000)/10000) + ' m';
+		infoWindowTxt += '<br>spiral curve length Ls : ' + (Math.round(Ls*10000)/10000) + ' m';
+		infoWindowTxt += '<br>circular curve length Lc : ' + (Math.round(Lc*10000)/10000) + ' m';
+		infoWindowTxt += '<br>shift : ' + (Math.round(tcurve.shift*10000)/10000)  + ' m';
+		infoWindowTxt += '<br>deflection angle Δ : ' + delta + '&deg;';
+		infoWindowTxt += '<br>intersection angle θ : ' + thetaD + '&deg;';
+		infoWindowTxt += '<br>Δs : ' + delta_Sd + '&deg;';
+		infoWindowTxt += '<br>Δc : ' + delta_Cd + '&deg;';
+		
+		infoWindowTxt += '<br>Rc : ' + tcurve.Rc  + '&deg;';
+		infoWindowTxt += '<br>cant : ' + tcurve.cant + ' mm';
+		infoWindowTxt += '<br>Vd : ' + tcurve.Vd + ' km/h';
+
+		var lat0 = mEvent.latLng.lat();
+		var lng0 = mEvent.latLng.lng();
+		
+		infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="2"><tr>' + '<td width="24"><img src="images/remove line.png" width="20" height="20" title="Remove line" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\''+ tcurve.id + '\');"></td><td>&nbsp;&nbsp;</td>'; 
+    	
+    	infoWindowTxt += '<td width="24"><img src="images/line+point.png" width="20" height="20" title="Add new point to current line" style="cursor: pointer;" onclick="btnAddMarker2Polyline(\''+ tcurve.id + '\',\'' + lat0 + '\',\'' + lng0 + '\');"></td>';
+    			
+		infoWindowTxt += '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
+					
+		infoWindowTxt += '<td><img src="images/sticky_note_pencil.png" title="Add Note" width="16" height="16" style="cursor: pointer;" onclick="curveNote(\'' + tcurve.id + '\');"></td>';
+					
+		infoWindowTxt += '<td><img src="images/xfce4_settings.png" title="Setting" width="16" height="16" style="cursor: pointer;" onclick="curveSetting(\'' + tcurve.id + '\');"></td>';
+
+		infoWindowTxt += '</td></tr></table><br />';
+	   	
+		var infowindow = new google.maps.InfoWindow({
+			content: infoWindowTxt,
+			position: mEvent.latLng
+		});
+        
+		infowindow.open(map);	
+		
+	});	
+	
+    $('#dialogRailTransitionCurve').dialog('close');
+	$('#tnote').html('');	
 }
 
+
+function intersection_angle(h1,h2) {
+	//http://stackoverflow.com/questions/16180595/find-the-angle-between-two-bearings 
+	//test fail pd 04 Feb 2014 1:00pm GMT8+
+	//return Math.min( (h1-h2)<0 ? h1-h2+360 : h1-h2, (h2-h1)<0 ? h2-h1+360 : h2-h1);
+	
+	//modified version : 10 April 2014
+	// by : Karya IT (Mac 2012)
+	// url : http://www.karyait.net.my/
+	// ver. : 1.0.0
+	// purpose : angle and direction between two line @ bearing
+	
+	var lineratio = h1 / h2;
+	
+	if ((Math.round(lineratio*1000)/1000) == 1) {
+		return {'angle': 0, 'direction':0};
+	}	
+	var h1a = (h1 < 0)? h1 + 180 : h1 -180;
+	var angle = Math.min((h1a - h2) < 0 ? h1a - h2 + 360 : h1a - h2, (h2 - h1a) < 0 ? h2 - h1a + 360 : h2 - h1a);
+	var hd = 0; // 0 - error, -ve left, +ve right
+	
+	if (h1 == 0) {
+		if (h2 < 0) {
+			hd = -1;
+		} else {
+			hd = 1;
+		}
+
+	} else if ((h1 == 180) || (h1 == -180)) {
+		if (h2 < 0) {
+			hd = 1;
+		} else {
+			hd = -1;
+		}
+	
+	} else if (h1 > 0) {
+		if (((h2 >= h1) && (h2 <=180)) || ((h1a >= h2) && (h2 >=-180))) {
+			hd = 1;
+		} else {
+			hd = -1;
+		}
+	
+	} else if (h1 < 0) {
+		if (((h2 >= h1) && (h2 <=0)) || ((h2 >= 0) && (h2 <=h1a))) {
+			hd = 1;
+		} else {
+			hd = -1;
+		}
+	
+	} else {
+		//error
+		alert('sorry! unable to determine next heading direction');
+		return false;
+	}
+
+	return {'angle': angle, 'direction':hd};
+}
+
+/*
 function intersection_angle(h1,h2) {
 	// by : Karya IT (Mac 2012)
 	// url : http://www.karyait.net.my/
@@ -1971,6 +2580,7 @@ function intersection_angle(h1,h2) {
 	return {'angle': angle, 'direction':hd};
 }
 
+*/
 function codeAddress(address) {
 	if (address==null || address=="") { address = $('#address').val();}
   geocoder.geocode( { 'address': address}, function(results, status) {
@@ -1982,88 +2592,257 @@ function codeAddress(address) {
   	}	
 	});
 }
-/*
-function getCookie(c_name){
-var i,x,y,ARRcookies=document.cookie.split(";");
-for (i=0;i<ARRcookies.length;i++)
-  {
-  x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
-  y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
-  x=x.replace(/^\s+|\s+$/g,"");
-  if (x==c_name)
-    {
-    return unescape(y);
-    }
-  }
-}
 
-function setCookie(c_name,value,exdays) {
-var exdate=new Date();
-exdate.setDate(exdate.getDate() + exdays);
-var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
-document.cookie=c_name + "=" + c_value;
-}
-*/
 function curveCalculator(mod, lock) {
-	if (mod =='RC') 
-	{
+	var msgTxt = '';
+	
+	if (mod =='RC') {
 		var cant = parseFloat($('#sBtnRCCant').val()); // mm unit
 		var gauge = parseFloat($('#sBtnRCGauge').val()); // mm unit
 		var v_ds = parseFloat($('#sBtnRCDesignSpeed').val()); // kph unit
-		//2do
-  	var srad = Math.round((gauge * v_ds * v_ds) / (127 * cant));
-  	
-		$('#sBtnCurveRadius').val(srad);
+		var Rc = Math.round((gauge * v_ds * v_ds) / (127 * cant)); 	
+		$('#sBtnCurveRadius').val(Rc);
 		
-	} 
-	else 
-	{
+		var mid = parseFloat($('#DCmarkerIndex').val());
+		var pid = $('#DCbasePolyID').val();
+  	var polyL = MapToolbar.features["lineTab"][pid];
+		var m0 = polyL.markers.getAt(mid-1).getPosition();
+		var m1 = polyL.markers.getAt(mid).getPosition();
+		var m2 = polyL.markers.getAt(mid+1).getPosition();
+		var h1 = google.maps.geometry.spherical.computeHeading(m0,m1);
+		var h2 = google.maps.geometry.spherical.computeHeading(m1,m2);
+		var fic = intersection_angle(h1,h2);
+		var theta = fic.angle;				
+		var Lb0 = google.maps.geometry.spherical.computeDistanceBetween(m0,m1) ;
+		var Lb1 = google.maps.geometry.spherical.computeDistanceBetween(m1,m2) ;
+		var Lt = Rc /(Math.tan((theta/2).toRad()));
+		
+		if (polyL.markers.getAt(mid-1).bdata.curve != '') {
+			var Lt0 = MapToolbar.features['curveTab'][polyL.markers.getAt(mid-1).bdata.curve].Lt;
+			if (Lt0 + Lt > Lb0) {
+				msgTxt += '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong> Warning!: </strong> curve overlapped with previous curve.<br />';
+			}
+		}
+
+		if (polyL.markers.getAt(mid+1).bdata.curve != '') {
+			var Lt1 = MapToolbar.features['curveTab'][polyL.markers.getAt(mid+1).bdata.curve].Lt;
+			if (Lt1 + Lt > Lb1) {
+				msgTxt += '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong> Warning!: </strong> curve overlapped with next curve.<br />';
+			}					
+		}
+					
+		if ((Lt > Lb0) || (Lt > Lb1)) {
+			msgTxt += '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong> Warning!: </strong> Unable to fit curve at the intersection.<br />Curve is too big, please reduce curve radius or design speed.<br />';					
+		}
+					
+		$('#cvdata').html(msgTxt);					
+		
+	} else {
 		var cant = parseFloat($('#sBtnRtCCant').val()); // mm unit
 		var gauge = parseFloat($('#sRTCBtnGauge').val()); // mm unit
 		var v_ds = parseFloat($('#sBtnRTCDesignSpeed').val()); // kph unit
-		//2do
-  	var srad = 0;
-  	
-  	if (lock =='') {
-			srad = Math.round((gauge * v_ds * v_ds) / (127 * cant));
+		var mid = parseFloat($('#DtCmarkerIndex').val());
+		var pid = $('#DtCbasePolyID').val();
+		var Rc = 0;
+		var Lt = 0;
+		
+		
+		if (lock =='') {
+			Rc = Math.round((gauge * v_ds * v_ds) / (127 * cant));
+			$('#sBtnRTCCircularRadius').val(Rc);
 		} else {
-			srad = parseFloat($('#sBtnRTCCircularRadius').val());
+			Rc = parseFloat($('#sBtnRTCCircularRadius').val());
 		}
-  				
-		$('#sBtnRTCCircularRadius').val(srad);
 		
-		var TcL = 0;
-		var acc = 0;
+  	var polyL = MapToolbar.features["lineTab"][pid];
+		var m0 = polyL.markers.getAt(mid-1).getPosition();
+		var m1 = polyL.markers.getAt(mid).getPosition();
+		var m2 = polyL.markers.getAt(mid+1).getPosition();
+		var h1 = google.maps.geometry.spherical.computeHeading(m0,m1);
+		var h2 = google.maps.geometry.spherical.computeHeading(m1,m2);
+		var fic = intersection_angle(h1,h2);
+		var thetaD = fic.angle; // θ intersection angle
+		var dir = fic.direction;
 		
-		if ((v_ds >= 40) && (v_ds < 80)) {
-			acc = 0.6;
-		} else if ((v_ds >= 80) && (v_ds <= 120)) {
-			acc = 0.45;
-		} else if (v_ds > 120) {
-			acc = 0.3;
-		} else {
-			acc = 0.6; // guess value
-		}	
-		
-		TcL = (v_ds*v_ds*v_ds)/(46.73 * srad * acc);
+		var thetaR = thetaD * (Math.PI / 180);
+	
+		var delta = 180 - thetaD; //Δ deflectionAngle
+		var deltaRad = delta * (Math.PI / 180);
 
-		$('#sBtnTCLength').val(TcL);
-		var _shift = (TcL * TcL) /(24 * srad);
-		$('#sBtnTCShift').val(_shift);
+		$('#tc_theta').val(thetaD);
+		$('#tc_delta').val(delta);
 		
-		var msgTxt = '';
+		var Lb0 = google.maps.geometry.spherical.computeDistanceBetween(m0,m1) ;
+		var Lb1 = google.maps.geometry.spherical.computeDistanceBetween(m1,m2) ;
 		
-		if (_shift < 0.25) {
-			msgTxt = '<span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>Transition curve is not required for this setting.';
-		} else {
-			msgTxt = '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong>Note:</strong> Transition curve is required for this setting.';			
+		if (document.getElementById('tc_cubic_parabola').checked) {
+		//cubic parabola
+			var Lt = Math.pow(v_ds,3) / (Math.pow(3.6,3) * 0.3 * Rc); // spiral length
+			var S = (Lt * Lt) /(24 * Rc); //shift of the curve 
+			var IT = ((Rc + S)/(Math.tan(thetaR/2)))+ (Lt/2);
+			var TL = IT;
+			var Lc = deltaRad * Rc - Lt; // 2 x Lt/2
+			var TotalL = Lc + 2 * Lt;
+	
+			var delta_C = (Lc*360)/(2*Math.PI*Rc); //Δc
+			var delta_S = (delta - delta_C)/2; //Δs
+	
+			if (delta_C < 0) {
+				msgTxt += '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong>Warning:</strong> the deflection angle is too small to introduce transition curve. <br />Current deflection angle is ' + (Math.round(delta*100)/100) + '°.<br />';
+			}
+	
+			var rmin1 = 1.39 * Math.sqrt(Rc * Lt); // method 1		
+			var rmin2 = Math.sqrt(Math.pow(v_ds,3)/(Math.pow(3.6,3)*0.3*deltaRad));// method 2
+			var rmin = 0;
+			
+			if (rmin1 > rmin2) { 
+				if (Rc < rmin1) { 
+					msgTxt += '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong>Warning:</strong> Minimum radius for this deflection angle is ' + rmin1 + ' m.<br />'; 
+				}
+				rmin = rmin1;
+			} else if (rmin1 < rmin2) { 
+				if (Rc < rmin2) { 
+					msgTxt += '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong>Warning:</strong> Minimum radius for this deflection angle is ' + rmin2 + ' m.<br />'; 
+				} 
+				rmin = rmin2;
+			} else	{ 
+				if (Rc < rmin2) { //rmin1 = rmin2
+					msgTxt += '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong>Warning:</strong> Minimum radius for this deflection angle is ' + rmin2 + ' m.<br />'; 
+				}
+				rmin = rmin2; // @ rmin = rmin1;	
+			}
+	
+			if (S < 0.25) {
+				msgTxt += '<span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>Transition curve is not required for this setting.<br />';
+			} else {
+				msgTxt += '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong>Note:</strong> Transition curve is required for this setting.<br />';			
+			}
+			
+			$('#sBtnTCShift').val(S);			
+			$('#tc_cp_minR').val(rmin);
+			$('#tc_Tt').val(IT);
+			$('#tc_TL').val(TotalL);
+			$('#tc_Lt').val(Lt);
+			$('#tc_Lc').val(Lc);
+			$('#tc_deltaS').val(delta_S);
+			$('#tc_deltaC').val(delta_C);
+
+		if (polyL.markers.getAt(mid-1).bdata.tcurve != '') {
+			var TL0 = MapToolbar.features['tcurveTab'][polyL.markers.getAt(mid-1).bdata.tcurve].TL;
+			if (TL0 + TL > Lb0) {
+				msgTxt += '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong> Warning!: </strong> overlapped with previous transition curve.<br />';
+			}
 		}
-		
-		var rmin = 1.39 * Math.sqrt(srad * TcL);
-		
-		if (srad < rmin) { msgTxt += '<br /><img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong>Warning:</strong> Minimum radius for this transition curve is ' + rmin + ' m.'; }
-		
-		if (msgTxt != '') { $('#tdata').html(msgTxt); }
+
+		if (polyL.markers.getAt(mid+1).bdata.tcurve != '') {
+			var TL1 = MapToolbar.features['tcurveTab'][polyL.markers.getAt(mid+1).bdata.tcurve].TL;
+			if (TL1 + TL > Lb1) {
+				msgTxt += '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong> Warning!: </strong> curve overlapped with next transition curve.<br />';
+			}					
+		}
+
+		if (polyL.markers.getAt(mid-1).bdata.curve != '') {
+			var Lt0 = MapToolbar.features['curveTab'][polyL.markers.getAt(mid-1).bdata.curve].Lt;
+			if (Lt0 + TL > Lb0) {
+				msgTxt += '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong> Warning!: </strong>  curve overlapped with previous curve.<br />';
+			}
+		}
+
+		if (polyL.markers.getAt(mid+1).bdata.curve != '') {
+			var Lt1 = MapToolbar.features['curveTab'][polyL.markers.getAt(mid+1).bdata.curve].Lt;
+			if (Lt1 + TL > Lb1) {
+				msgTxt += '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong> Warning!: </strong> curve overlapped with next curve.<br />';
+			}					
+		}
+					
+		if ((TL > Lb0) || (TL > Lb1)) {
+			msgTxt += '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong> Warning!: </strong> Unable to fit transition curve at the intersection.<br />Transition curve is too big, please reduce curve radius or the design speed.<br />';				
+		}		
+			
+			
+		} else {
+		//halfsine tangent
+			if (gauge == 1067) {
+				kc = 1;
+			} else if (gauge == 1435) {
+				kc = 0.75;
+			} else if (gauge == 1372) {
+				kc = 0.78;
+			} else if (gauge == 762) {
+				kc = 1.4;
+			} else {
+				kc = 1;
+			}
+
+			if (v_ds > 75) {
+				Lt = 0.008 * kc * cant * v_ds ;
+			} else {
+				Lt = 0.007 * kc * cant * v_ds ;
+			}
+					
+			var TotalX = Lt - 0.0226689447*(Math.pow(Lt,3)/Math.pow(Rc,2));
+			var X2_2PI2 = Math.pow(TotalX,2)/(2*Math.pow(Math.PI,2));
+	
+			var delta_S = Math.atan(TotalX/(2*Rc)); //Δs
+			var delta_C = deltaRad - 2 * delta_S; //Δc
+			var Lc = delta_C * Rc; // circular arc length
+			var delta_Sd = delta_S * (180/Math.PI); //Δs
+			var delta_Cd = delta_C * (180/Math.PI); //Δc
+
+			var TotalY = (0.25-(1/Math.pow(Math.PI,2)))*(Math.pow(TotalX,2)/Rc);
+			var P = TotalY - Rc * (1-Math.cos(delta_S));
+			var K = TotalX - Rc * Math.sin(delta_S);
+			var TV = (Rc+P)*Math.tan(deltaRad/2) + K; // Total tangent length from intersection point to transition start/end point
+			var TotalL = Lc + 2 * Lt;
+			var TL = TV;
+			if (delta_C < 0) {
+				msgTxt += '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong>Warning:</strong> the deflection angle is too small to introduce transition curve. <br />Current deflection angle is ' + (Math.round(delta*100)/100) + '°.';
+			}
+
+			$('#sBtnTCShift').val(P);			
+			$('#tc_cp_minR').val('');
+			$('#tc_Tt').val(TV);
+			$('#tc_TL').val(TotalL);
+			$('#tc_Lt').val(Lt);
+			$('#tc_Lc').val(Lc);
+			$('#tc_deltaS').val(delta_Sd);
+			$('#tc_deltaC').val(delta_Cd);
+			
+		if (polyL.markers.getAt(mid-1).bdata.tcurve != '') {
+			var TL0 = MapToolbar.features['tcurveTab'][polyL.markers.getAt(mid-1).bdata.tcurve].TL;
+			if (TL0 + TL > Lb0) {
+				msgTxt += '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong> Warning!: </strong> overlapped with previous transition curve.<br />';
+			}
+		}
+
+		if (polyL.markers.getAt(mid+1).bdata.tcurve != '') {
+			var TL1 = MapToolbar.features['tcurveTab'][polyL.markers.getAt(mid+1).bdata.tcurve].TL;
+			if (TL1 + TL > Lb1) {
+				msgTxt += '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong> Warning!: </strong> curve overlapped with next transition curve.<br />';
+			}					
+		}
+
+		if (polyL.markers.getAt(mid-1).bdata.curve != '') {
+			var Lt0 = MapToolbar.features['curveTab'][polyL.markers.getAt(mid-1).bdata.curve].Lt;
+			if (Lt0 + TL > Lb0) {
+				msgTxt += '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong> Warning!: </strong>  curve overlapped with previous curve.<br />';
+			}
+		}
+
+		if (polyL.markers.getAt(mid+1).bdata.curve != '') {
+			var Lt1 = MapToolbar.features['curveTab'][polyL.markers.getAt(mid+1).bdata.curve].Lt;
+			if (Lt1 + TL > Lb1) {
+				msgTxt += '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong> Warning!: </strong> curve overlapped with next curve.<br />';
+			}					
+		}
+					
+		if ((TL > Lb0) || (TL > Lb1)) {
+			msgTxt += '<img src="images/warning.png" width="16" height="16" align="left">&nbsp;<strong> Warning!: </strong> Unable to fit transition curve at the intersection.<br />Transition curve is too big, please reduce curve radius or the design speed.<br />';						
+		}				
+			
+		}
+				
+		$('#tdata').html(msgTxt);
 	}
 }
 /*
@@ -2109,9 +2888,9 @@ function ReloadPolyline (loadPoly,rd, n, rowsData, i, quickScan) {
   	loadPoly.markers.getAt(n-9).pitch = null; 
   }
   if (xD[4] != '') {
-  	loadPoly.markers.getAt(n-9).bve = xD[4]; 
+  	loadPoly.markers.getAt(n-9).bdata = xD[4]; 
   } else {
-  	loadPoly.markers.getAt(n-9).bve = null; 
+  	loadPoly.markers.getAt(n-9).bdata = null; 
   }
   if (xD[5] != '') {
   	loadPoly.markers.getAt(n-9).kit = xD[5];   	
@@ -2144,9 +2923,9 @@ function ReloadPolyline (loadPoly,rd, n, rowsData, i, quickScan) {
   }
   
   if (xD[10] != '') {
-  	loadPoly.markers.getAt(n-9).prln = xD[10]; 
+  	loadPoly.markers.getAt(n-9).sline = xD[10]; 
   } else {
-  	loadPoly.markers.getAt(n-9).prln = null; 
+  	loadPoly.markers.getAt(n-9).sline = null; 
   }
 
 
@@ -2159,7 +2938,7 @@ function ReloadPolyline (loadPoly,rd, n, rowsData, i, quickScan) {
   	i++;
   	if(i < rowsData.length) {
   		if (rowsData[i] != '') {
-  			//line_1,ptype,note,trackname,trackservice,trackno,tracksection,trackbve,kit, 3.6975060399011115;101.50496006011963;note;pitch;bve;kit, ...
+  			//line_1,ptype,note,name,trackservice,trackno,tracksection,trackbve,kit, 3.6975060399011115;101.50496006011963;note;pitch;bve;kit, ...
   			var rd = rowsData[i].split(",");
   			var dname = rd[0];				    					
   			var otype = dname.split("_")[0];
@@ -2173,7 +2952,7 @@ function ReloadPolyline (loadPoly,rd, n, rowsData, i, quickScan) {
 	 													
 					if (rd[1] != '') { loadNextPoly.ptype = rd[1]; } else { loadNextPoly.ptype = null; }
 					if (rd[2] != '') { loadNextPoly.note = rd[2]; } else { loadNextPoly.note = null; }
-	 				if (rd[3] != '') { loadNextPoly.trackname = rd[3]; } else { loadNextPoly.trackname = null; }
+	 				if (rd[3] != '') { loadNextPoly.name = rd[3]; } else { loadNextPoly.name = null; }
 	 				if (rd[4] != '') { loadNextPoly.trackservice = rd[4]; } else { loadNextPoly.trackservice = null; }
 	 				if (rd[5] != '') { loadNextPoly.trackno = rd[5]; } else { loadNextPoly.trackno = null; }
 	 				if (rd[6] != '') { loadNextPoly.tracksection = rd[6]; } else { loadNextPoly.tracksection = null; }
@@ -2317,7 +3096,7 @@ function reloadCurve(polyL,mi,rowsData, i, quickScan) {
 					title: curve.id + ' start point : ' + extp[0] ,
 					note: null, // any extra note 
 					pitch: null, // track pitch
-					bve: null, // various bve data
+					bdata: null, // various bve data
 					lineX:null, // non parallel line distance
 					turn:null, // main line non curve turning
 					kit:'curve:start:'+curve.id, // others data (reserved) by Karya IT
@@ -2340,7 +3119,7 @@ function reloadCurve(polyL,mi,rowsData, i, quickScan) {
 					title: curve.id + ' end point : ' + extp[extp.length-1] ,
 					note: null, // any extra note 
 					pitch: null, // track pitch
-					bve: null, // various bve data
+					bdata: null, // various bve data
 					lineX:null, // non parallel line distance
 					turn:null, // main line non curve turning
 					kit:'curve:end:'+curve.id, // others data (reserved) by Karya IT
@@ -2626,7 +3405,7 @@ function reloaddotMarker(rowsData,i, quickScan) {
 	 													
 	 				if (rd[1] != '') { loadPoly.ptype = rd[1]; } else { loadPoly.ptype = null; }
 	 				if (rd[2] != '') { loadPoly.note = rd[2]; } else { loadPoly.note = null; }
-	 				if (rd[3] != '') { loadPoly.trackname = rd[3]; } else { loadPoly.trackname = null; }
+	 				if (rd[3] != '') { loadPoly.name = rd[3]; } else { loadPoly.name = null; }
 	 				if (rd[4] != '') { loadPoly.trackservice = rd[4]; } else { loadPoly.trackservice = null; }
 	 				if (rd[5] != '') { loadPoly.trackno = rd[5]; } else { loadPoly.trackno = null; }
 	 				if (rd[6] != '') { loadPoly.tracksection = rd[6]; } else { loadPoly.tracksection = null; }
@@ -2730,13 +3509,12 @@ function updateMarkerOnCurve(polyL,i,rowsData) {
 										if (cpltlg.equals(xc0) || cpltlg.equals(xc1) || cpltlg.equals(xcC)) {
 											if ( cmdata[3] != '' ) { curve.markers.getAt(rj-5).note = cmdata[3]; } else { curve.markers.getAt(rj-5).note = null; }
 											if ( cmdata[4] != '' ) { curve.markers.getAt(rj-5).pitch = cmdata[4]; } else { curve.markers.getAt(rj-5).pitch = null; }
-											if ( cmdata[5] != '' ) { curve.markers.getAt(rj-5).bve = cmdata[5]; } else { curve.markers.getAt(rj-5).bve = null; }    					
+											if ( cmdata[5] != '' ) { curve.markers.getAt(rj-5).bdata = cmdata[5]; } else { curve.markers.getAt(rj-5).bdata = null; }    					
 											if ( cmdata[6] != '' ) { curve.markers.getAt(rj-5).lineX = cmdata[6]; } else { curve.markers.getAt(rj-5).lineX = null; }    					
 											if ( cmdata[7] != '' ) { curve.markers.getAt(rj-5).turn = cmdata[7]; } else { curve.markers.getAt(rj-5).turn = null;}
 											if ( cmdata[8] != '' ) { curve.markers.getAt(rj-5).kit = cmdata[8]; } else { curve.markers.getAt(rj-5).kit = null; }   					
-											if ( cmdata[9] != '' ) { curve.markers.getAt(rj-5).ld1 = cmdata[9]; } else { curve.markers.getAt(rj-5).ld1 = null; }
-											if ( cmdata[10] != '' ) { curve.markers.getAt(rj-5).ld2 = cmdata[10]; } else { curve.markers.getAt(rj-5).ld2 = null; }
-											if ( cmdata[11] != '' ) { curve.markers.getAt(rj-5).arc = cmdata[11]; } else { curve.markers.getAt(rj-5).arc = null; }	
+											if ( cmdata[9] != '' ) { curve.markers.getAt(rj-5).ld = cmdata[9]; } else { curve.markers.getAt(rj-5).ld = null; }
+											if ( cmdata[11] != '' ) { curve.markers.getAt(rj-5).Lc = cmdata[11]; } else { curve.markers.getAt(rj-5).Lc = null; }	
 											if ( cmdata[12] != '' ) { curve.markers.getAt(rj-5).title = cmdata[12]; } else { curve.markers.getAt(rj-5).title = null; }   					
 										
 										} else {
@@ -2754,13 +3532,12 @@ function updateMarkerOnCurve(polyL,i,rowsData) {
 													if ( cmdata[2] != '') { curve.markers.getAt(c).pid = cmdata[2]; } else { curve.markers.getAt(c).pid = null; }
 													if ( cmdata[3] != '' ) { curve.markers.getAt(c).note = cmdata[3]; } else { curve.markers.getAt(c).note = null; }
 													if ( cmdata[4] != '' ) { curve.markers.getAt(c).pitch = cmdata[4]; } else { curve.markers.getAt(c).pitch = null; }
-													if ( cmdata[5] != '' ) { curve.markers.getAt(c).bve = cmdata[5]; } else { curve.markers.getAt(c).bve = null; }
+													if ( cmdata[5] != '' ) { curve.markers.getAt(c).bdata = cmdata[5]; } else { curve.markers.getAt(c).bdata = null; }
 													if ( cmdata[6] != '' ) { curve.markers.getAt(c).lineX = cmdata[6]; } else { curve.markers.getAt(c).lineX = null; }    					
 													if ( cmdata[7] != '' ) { curve.markers.getAt(c).turn = cmdata[7]; } else { curve.markers.getAt(c).turn = null; }    					
 													if ( cmdata[8] != '' ) { curve.markers.getAt(c).kit = cmdata[8]; } else { curve.markers.getAt(c).kit = null; }
-													if ( cmdata[9] != '' ) { curve.markers.getAt(c).ld1 = cmdata[9]; } else { curve.markers.getAt(c).ld1 = null; }
-													if ( cmdata[10] != '' ) { curve.markers.getAt(c).ld2 = cmdata[10]; } else { curve.markers.getAt(c).ld2 = null; }    					
-													if ( cmdata[11] != '' ) { curve.markers.getAt(c).arc = cmdata[11]; } else { curve.markers.getAt(c).arc = null; }	    					
+													if ( cmdata[9] != '' ) { curve.markers.getAt(c).ld = cmdata[9]; } else { curve.markers.getAt(c).ld = null; }
+													if ( cmdata[11] != '' ) { curve.markers.getAt(c).Lc = cmdata[11]; } else { curve.markers.getAt(c).Lc = null; }	    					
 													if ( cmdata[12] != '' ) { curve.markers.getAt(c).title = cmdata[12]; } else { curve.markers.getAt(c).title = null; }
 														
 													break; 													
@@ -2807,52 +3584,36 @@ function getTrackDistanceFromStart(pid,index) {
 	var arrD = new Array();
 	var polylength = 0;
 	var tCuvlength = 0;
-	// 'curve:'+ curve.id + '§radius:' + preR * dir + '§cant:' + parseFloat($('#sBtnRCCant').val()) + '§limit:' + parseFloat($('#sBtnRCDesignSpeed').val()) + '§tlength:' + l2m1 + '§clength:' + arcL + '§center:' + Cc.lat() + '/' + Cc.lng() + '§start_point:' + extp[0].lat() + '/' + extp[0].lng() + '§end_point:' + extp[extp.length-1].lat() + '/' + extp[extp.length-1].lng()  + '§h1:' + h1 + '§h2:' + h2 + '§forceSL:' + enforceSL; 
 	
 	if (typeof pLM == 'undefined') { alert('polyline not exist.'); return false; }
 	if (index > allPoints.length) { alert('getTrackDistanceFromStart - index over flow.'); return false; }
 	
-  for (var i = 1; i <= index; i++) 
-  {  	
-	  if (i == 1) { arrD.push(allPoints[0]); } // add first point i = 0
-  	arrD.push(allPoints[i]); // collect distance up to point i on polyline	
+  for (var i = 1; i <= index; i++) {  	
+	if (i == 1) { arrD.push(allPoints[0]); } // add first point i = 0
+	arrD.push(allPoints[i]); // collect distance up to point i on polyline	
   	
-  	//if (typeof pLM.getAt(i-1) != 'undefined')  {
-  		//alert(pLM.getAt(i-1).curve.length);
-  		if ((pLM.getAt(i-1).curve == null) && (pLM.getAt(i-1).tcurve == null)) {
-  			
-  			tCuvlength += google.maps.geometry.spherical.computeDistanceBetween(allPoints[i-1], allPoints[i]);
+	if ((pLM.getAt(i-1).bdata.curve == '') && (pLM.getAt(i-1).bdata.tcurve == '')) {
+		tCuvlength += google.maps.geometry.spherical.computeDistanceBetween(allPoints[i-1], allPoints[i]);
   		  		
-  		} else {
+	} else {
   		
-  			if ((pLM.getAt(i-1).curve != null) && (pLM.getAt(i-1).tcurve == null)) {
-  				if (pLM.getAt(i-1).curve != '') {
-  				
-  					tCuvlength += google.maps.geometry.spherical.computeDistanceBetween(allPoints[i-1], allPoints[i]);
-  			
-  					var cuvarr = pLM.getAt(i-1).curve.split('§');
-  					var tL = parseFloat(cuvarr[4].split(':')[1]);
-  					var cL = parseFloat(cuvarr[5].split(':')[1]); 
-  				
-						tCuvlength += (-2 * tL) + cL;
-  				}
-  				
-  			} else if ((pLM.getAt(i-1).curve == null) && (pLM.getAt(i-1).tcurve != null)) {
-					//2do reserved for transition curve
-					if (pLM.getAt(i-1).tcurve != '') {
-					}
-					
-  			} /* else {
-  				tCuvlength += google.maps.geometry.spherical.computeDistanceBetween(allPoints[i-1], allPoints[i]);
-  			} */
-  		}  	
-  	/*}	else {
-  		console.log('getTrackDistanceFromStart - pLM.getAt(i) undefined i = ' + i);
-		}*/
-	}
-	polylength = google.maps.geometry.spherical.computeLength(arrD);
+		if ((pLM.getAt(i-1).bdata.curve == '') && (pLM.getAt(i-1).bdata.tcurve != '')) {
+			tCuvlength += google.maps.geometry.spherical.computeDistanceBetween(allPoints[i-1], allPoints[i]);
+			var TL = MapToolbar.features['tcurveTab'][pLM.getAt(i-1).bdata.tcurve].TL;
+			var Ls = MapToolbar.features['tcurveTab'][pLM.getAt(i-1).bdata.tcurve].Ls;
+			var Lc = MapToolbar.features['tcurveTab'][pLM.getAt(i-1).bdata.tcurve].Lc;
+			tCuvlength += (-2 * TL) + ((2*Ls)+ Lc); //TotalL = (2*Ls)+ Lc
 
-	return { 'polyline':polylength, 'line':tCuvlength };
+		} else if ((pLM.getAt(i-1).bdata.curve != '') && (pLM.getAt(i-1).bdata.tcurve == '')) {
+			tCuvlength += google.maps.geometry.spherical.computeDistanceBetween(allPoints[i-1], allPoints[i]);
+			var tL = MapToolbar.features['curveTab'][pLM.getAt(i-1).bdata.curve].Lt;
+			var cL = MapToolbar.features['curveTab'][pLM.getAt(i-1).bdata.curve].Lc;
+			tCuvlength += (-2 * tL) + cL;
+		}
+	}
+  }
+  polylength = google.maps.geometry.spherical.computeLength(arrD);
+  return { 'polyline':polylength, 'line':tCuvlength };
 }
 
 function getElevation(event) {
@@ -2911,7 +3672,7 @@ function plotElevation(results, status) {
 
     //2do 29-1-2013
     //redraw elevation if exist 
-    //[X, note, pitch, bve, kit]
+    //[X, note, pitch, bdata, kit]
     var arrElv0 =  $('#txtPitchDetails').val().split('\n');
     var arrElv = [];
     for (var ei=0; ei < arrElv0.length; ei++) {
@@ -3137,7 +3898,7 @@ function markerSetting(pid,midx) {
 function polylineSetting(pid) {
 	$('#dtsv_lineid').val(pid);
 	var poly = MapToolbar.features["lineTab"][pid];
-	if ((poly.trackname != null) && (poly.trackname != '')) { $('#dtsv_trackname').val(poly.trackname); }
+	if ((poly.name != null) && (poly.name != '')) { $('#dtsv_trackname').val(poly.name); }
 	if ((poly.trackservice != null) && (poly.trackservice != '')) { $('#dtsv_trackservice').val(poly.trackservice); }
 	if ((poly.trackno != null) && (poly.trackno != '')) { $('#dtsv_tracknumber').val(poly.trackno); }
 	if ((poly.tracksection != null) && (poly.tracksection != '')) { $('#dtsv_trackSection').val(poly.tracksection); }
@@ -3246,15 +4007,15 @@ function fI_Tu(pid,idx) {
 	$('#dialogInsertTunnel').dialog('open');
 }
 
-function fI_To(pid,idx) {
-	$('#dInsNpLTo_PID').val(pid);
-	$('#dInsNpLTo_MID').val(idx);
-	$('#dialogNonParallelTurnOut').dialog('open');
+function fI_Link(pid,idx) {
+	$('#dLL_Pid1').val(pid);
+	$('#dLL_Pid1m1').val(idx);
+	$('#dialogLinkLines').dialog('open');
 }
 
 function fI_Pform(pid,idx) {
-	$('#').val(pid);
-	$('#').val(idx);
+	$('#dInsForm_pid').val(pid);
+	$('#dInsForm_idx').val(idx);
 	$('#dialogInsertPlatform').dialog('open');
 }
 
@@ -3325,4 +4086,110 @@ function componentToHex(c) {
 
 function rgbToHex(r, g, b) {
     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+function changeFormType() {
+	if (typeof document.getElementById('MMchoosePlatform').value != 'undefined') {
+		$( ".formTab" ).hide();
+		var noF = parseInt(document.getElementById('MMchoosePlatform').value);
+		switch(noF){
+		    case 0:
+			    $( "#tabs-form0" ).show();
+		    	break;
+		    case 1:
+			    $( "#tabs-form1" ).show();
+		    	break;
+		    case 2:
+			    $( "#tabs-form2" ).show();
+		    	break;
+		    case 3:
+			    $( "#tabs-form3" ).show();
+		    	break;
+		    case 4:
+			    $( "#tabs-form4" ).show(); 
+		    	break;
+		    case 5:
+			    $( "#tabs-form5" ).show();
+		    	break;
+		    case 6:
+			    $( "#tabs-form6" ).show();
+		    	break;
+		    case 7:
+			    $( "#tabs-form7" ).show();
+		    	break;
+		    case 8:
+			    $( "#tabs-form8" ).show();
+		    	break;
+		    case 9:
+			    $( "#tabs-form9" ).show();
+		    	break;
+		    case 10:
+			    $( "#tabs-form10" ).show();
+		    	break;
+		    case 11:
+			    $( "#tabs-form11" ).show();
+		    	break;
+		    case 12:
+			    $( "#tabs-form12" ).show();
+		    	break;
+		    case 13:
+			    $( "#tabs-form13" ).show();
+		    	break;
+		    case 14:
+			    $( "#tabs-form14" ).show();
+		    	break;
+		    case 15:
+			    $( "#tabs-form15" ).show();
+		    	break;
+		    default:
+		    	$( ".formTab" ).hide();
+		    	break;
+		}
+	} else {
+		$( ".formTab" ).hide();
+	}
+}
+
+function curveAddAt(pid,e1) {
+	// modify code from http://jsfiddle.net/kjy112/NRafz/
+	var markerDist = {p1:'', p2:'', d:-1};
+
+	var allPoints = (typeof MapToolbar.features['curveTab'][pid] != 'undefined')? MapToolbar.features['curveTab'][pid].getPath().getArray() : MapToolbar.features['tcurveTab'][pid].getPath().getArray();
+    
+	for (var i = 0; i < allPoints.length - 1; i++) {
+		var ab = google.maps.geometry.spherical.computeDistanceBetween(allPoints[i],e1); 
+		var bc = google.maps.geometry.spherical.computeDistanceBetween(e1,allPoints[i + 1]); 
+		var ac = google.maps.geometry.spherical.computeDistanceBetween(allPoints[i],allPoints[i + 1]); 
+		//console.log(parseFloat(markerDist.d) + ' '+ Math.abs(ab+bc-ac));
+      
+		if ((parseFloat(markerDist.d) == -1) || parseFloat(markerDist.d) > parseFloat(Math.abs(ab + bc - ac))) {
+			markerDist.p1 = allPoints[i];
+			markerDist.p2 = allPoints[i + 1];
+			markerDist.d = Math.abs(ab + bc - ac);
+			addAt = i+1;
+		}
+	}
+	return addAt;
+}
+
+function formLineWidenAddAt(pid,e1) {
+	// modify code from http://jsfiddle.net/kjy112/NRafz/
+	var markerDist = {p1:'', p2:'', d:-1};
+
+	var allPoints = MapToolbar.features["lineTab"][pid].getPath().getArray();
+    
+	for (var i = 0; i < allPoints.length - 1; i++) {
+		var ab = google.maps.geometry.spherical.computeDistanceBetween(allPoints[i],e1); 
+		var bc = google.maps.geometry.spherical.computeDistanceBetween(e1,allPoints[i + 1]); 
+		var ac = google.maps.geometry.spherical.computeDistanceBetween(allPoints[i],allPoints[i + 1]); 
+		//console.log(parseFloat(markerDist.d) + ' '+ Math.abs(ab+bc-ac));
+      
+		if ((parseFloat(markerDist.d) == -1) || parseFloat(markerDist.d) > parseFloat(Math.abs(ab + bc - ac))) {
+			markerDist.p1 = allPoints[i];
+			markerDist.p2 = allPoints[i + 1];
+			markerDist.d = Math.abs(ab + bc - ac);
+			addAt = i;
+		}
+	}
+	return addAt;
 }
