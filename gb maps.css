@@ -1,11 +1,39 @@
-html { height: 100% }
-body {
-  font-family: Arial, sans serif;
-  font-size: 11px;
-  height: 100%; 
-  margin: 0; 
-  padding: 0;
+/*
+GB Maps ギビマップ - © Karya IT (http://www.karyait.net.my/) 2012-2014. All rights reserved. 
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+GB Maps ギビマップ by Karya IT is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. Based on a work at https://code.google.com/p/gbmaps/. Permissions beyond the scope of this license may be available at https://developers.google.com/readme/terms. Google Maps - ©2014 Google.
+
+Code license : Apache License 2.0
+
+Main GB Maps ギビマップ Website : http://gbmaps.karyait.net.my/ or http://gbmaps.blogspot.com
+
+Development site (programming) : https://github.com/karyait/gbmaps & https://code.google.com/p/gbmaps/
+Personal blog for GB Maps ギビマップ (design algorithm) : http://blogkaryait.wordpress.com/tag/gbmaps/
+
+File : gb maps.css
+purpose : CSS
+type : release (under development)
+version : 1.0.0
+build : 
+last update : 18 Dec 2013 12:00am (GMT 8+)
+
+*/
+
+html { 
+height: 100% ;
 }
+body {
+	font-family: Arial, sans serif;
+	font-size: 62.5%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;  
+	position: relative;
+}
+
 #hand_b {
   width:26px;
   height:26px;
@@ -98,25 +126,110 @@ body {
   cursor: pointer;
 }
 
-ul.menubar {
-	font-family: Arial, Verdana;
-	font-size: 10px;
+#protractor_b {
+  width:26px;
+  height:26px;
+  background-image: url(../images/angle-default.png);
+}
+#protractor_b.selected {
+  background-image: url(../images/angle-click.png);
+}
+#protractor_b.hover {
+  background-image: url(../images/angle-hover.png);
+  cursor: pointer;
+}
+
+#ruler_b {
+  width:26px;
+  height:26px;
+  background-image: url(../images/ruler-default.png);
+}
+#ruler_b.selected {
+  background-image: url(../images/ruler-click.png);
+}
+#ruler_b.hover {
+  background-image: url(../images/ruler-hover.png);
+  cursor: pointer;
+}
+
+#undo_b {
+  width:26px;
+  height:26px;
+  background-image: url(../images/undo-default.png);
+}
+#undo_b.selected {
+  background-image: url(../images/undo-click.png);
+}
+#undo_b.hover {
+  background-image: url(../images/undo-hover.png);
+  cursor: pointer;
+}
+
+#redo_b {
+  width:26px;
+  height:26px;
+  background-image: url(../images/redo-default.png);
+}
+#redo_b.selected {
+  background-image: url(../images/redo-click.png);
+}
+#redo_b.hover {
+  background-image: url(../images/redo-hover.png);
+  cursor: pointer;
+}
+
+ul.langmenu {
 	margin: 0;
 	padding: 0;
 	list-style: none;
-	background: #2C5463;
+	position: fixed;
+	left: 120px;
+	top: 5px;
+}
+ul.langmenu li {
+	display: block;
+	position: relative;
+	float: left;
+	color: #333;
+	white-space: nowrap;
+	cursor: pointer;
+	background-color: #FFF;
+	font-size: 11px;
+	font-weight: normal;
+	font-family: Arial, Helvetica, sans-serif;
+	border: thin solid #CCC;
+	padding-top: 2px;
+	padding-right: 4px;
+	padding-bottom: 2px;
+	padding-left: 4px;
+}
+
+
+ul.menubar {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	position: fixed;
+	left: 220px;
+	top: 5px;
+	background-color: #FFF;
 }
 ul.menubar li {
 	display: block;
 	position: relative;
 	float: left;
-	color: #ffffff;
-	border-top: 1px solid #ffffff;
-	padding: 3px 6px 3px 6px;
-	background: #2C5463;
-	margin-left: 1px;
+	color: #333;
 	white-space: nowrap;
 	cursor: pointer;
+	background-color: #FFF;
+	font-size: 11px;
+	font-weight: normal;
+	font-family: Arial, Helvetica, sans-serif;
+	border: thin solid #CCC;
+	padding-top: 2px;
+	padding-right: 4px;
+	padding-bottom: 2px;
+	padding-left: 4px;
 }
 
 li ul { display: none; }
@@ -152,21 +265,22 @@ li:hover li a:hover  { background: #95A9B1; }
 #map {
 	width: 100%; 
 	height: 100%; 
-	/* float:left; */
-	position:absolute; 
+	position:fixed; 
 	/* z-index:1; */
+	top: 0px; 
+	left: 0px;
 }
 
 #sidemenu {
-  font-family: Arial, Verdana;
-  font-size: 10px;
-  width: 220px; 
-  height: 96%; 
-  float:right;
-  background-image: url(../images/sidebg.png);
-  background-repeat: repeat-x;
-  opacity:0.9;
-  overflow:auto;
+	width: 230px;
+	height: 96%;
+	float:right;
+	/* background-image: url(../images/sidebg.png); */
+  /* background-repeat: repeat-x; */
+	opacity:0.8;
+	position: fixed;
+	top: 3px;
+	right: 5px;  /* overflow:auto; */
 }
 
 #map_lokasi {
@@ -174,7 +288,7 @@ li:hover li a:hover  { background: #95A9B1; }
 	overflow:auto;
 	z-index:auto;
 	text-align:center;
-	position: absolute;
+	position: fixed;
 	visibility: visible;
 	height: auto;
 	width: auto;
@@ -186,15 +300,15 @@ li:hover li a:hover  { background: #95A9B1; }
 	left: 140px;
 }
 
-
-.slidingDiv {
-	width:90%;
-  padding:2px;
-  font-family: Arial, Verdana;
-  font-size: 10px;
-  margin: 2px;
+#drawingtools {
+	position: fixed;
+	left: 400px;
+	top: 1px;
+	margin: 0;
+	padding: 0;
+	float: left;
 }
- 
+
 .show_hide {
     display:none;
 }
@@ -202,5 +316,34 @@ li:hover li a:hover  { background: #95A9B1; }
 .hidden { display: none; }
 .unhidden { display: block; }
 
+.formTab { 
+	display: none; 
+	width: 100%;
+	height : 300px;
+	overflow: auto;
+	left: auto;
+	top: auto;
+	}
 
 .ui-progressbarBuildBVE4O .ui-progressbar-value { background-image: url(../images/pbar-ani.gif); }
+
+#red, #green, #blue {
+	float: left;
+	clear: left;
+	width: 220px;
+	margin: 5px;
+}
+
+#swatch {
+	width: 120px;
+	height: 100px;
+	background-image: none;
+}
+
+#red .ui-slider-range { background: #ef2929; }
+#red .ui-slider-handle { border-color: #ef2929; }
+#green .ui-slider-range { background: #8ae234; }
+#green .ui-slider-handle { border-color: #8ae234; }
+#blue .ui-slider-range { background: #729fcf; }
+#blue .ui-slider-handle { border-color: #729fcf; }
+
