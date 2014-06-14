@@ -18,7 +18,7 @@ purpose : gb maps functions based on jquery
 type : release (under development)
 version : 1.0.0
 build : 
-last update : 06 May 2014 12:00am (GMT 8+)
+last update : 15 June 2014 12:00am (GMT 8+)
 
 */
 	
@@ -115,7 +115,50 @@ last update : 06 May 2014 12:00am (GMT 8+)
 
 		$('#dInsR_width').spinner({step: 25, min: 25 }); 
 		
-		$('#sBtnSpeedLimit').spinner('disable'); 		
+		$('#sBtnSpeedLimit').spinner('disable'); 	
+
+		$('#op_DGauge').spinner({step: 1, largeStep: 50, min: 1067, max: 3000 });
+		$('#op_Cant').spinner({step: 1, largeStep: 10, min: 0});
+		
+		$('#colorR').spinner({
+			step: 1,
+			min: 0,
+			max: 255,
+			stop: function( event, ui ) {
+				$( "#red" ).slider( "value", $('#colorR').spinner("value")); 
+				refreshSwatch2;
+			}, 
+			change: function( event, ui ) {
+				$( "#red" ).slider( "value", $('#colorR').spinner("value")); 
+				refreshSwatch2;
+			} 
+		});
+		$('#colorG').spinner({
+			step: 1, 
+			min: 0, 
+			max: 255,
+			stop: function( event, ui ) { 
+				$( "#green" ).slider( "value", $('#colorG').spinner("value")); 
+				refreshSwatch2; 
+			},  
+			change: function( event, ui ) { 
+				$( "#green" ).slider( "value", $('#colorG').spinner("value")); 
+				refreshSwatch2; 
+			}  
+		});
+		$('#colorB').spinner({
+			step: 1, 
+			min: 0, 
+			max: 255,
+			stop: function( event, ui ) { 
+				$( "#blue" ).slider( "value", $('#colorB').spinner("value")); 
+				refreshSwatch2; 
+			},  
+			change: function( event, ui ) { 
+				$( "#blue" ).slider( "value", $('#colorB').spinner("value")); 
+				refreshSwatch2; 
+			}  
+		});
 
 		$( "#accordion" ).accordion({
 			heightStyle: "fill"
@@ -161,7 +204,17 @@ last update : 06 May 2014 12:00am (GMT 8+)
 			curveCalculator('TC','');
 	  });	
 	  
-	  
+	  $( "#red, #green, #blue" ).slider({
+		orientation: "horizontal",
+		range: "min",
+		max: 255,
+		value: 127,
+		slide: refreshSwatch,
+		change: refreshSwatch
+	  });
+	  $( "#red" ).slider( "value", 60 );
+	  $( "#green" ).slider( "value", 120 );
+	  $( "#blue" ).slider( "value", 180 );	  
 	  	  
 // ******************************* Dialog Start ********************************************
 		
@@ -264,7 +317,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 				//google.visualization.events.removeListener(chartListener);
 				//chartListener = null;
 				//alert('chart clear');
-				}
+				},
+			position: { my: "center top-5%", at: "center", of: "#drawingtools", collision : "flipfit"}	
 			});	
 			
 		$( "#dialogRailCurve" ).dialog({ 
@@ -300,7 +354,7 @@ last update : 06 May 2014 12:00am (GMT 8+)
 
 		$( "#dialogpreRailpitch" ).dialog({ 
 			autoOpen: false, 
-			minWidth: 480
+			minWidth: 480,
 			});	
 			
 		$( "#dialogInsertNoteAtMarker" ).dialog({ 
@@ -338,9 +392,9 @@ last update : 06 May 2014 12:00am (GMT 8+)
 			minWidth: 480
 			});	
 			
-		$( "#dialogOptions" ).dialog({ 
+		$( "#dialogRouteColor" ).dialog({ 
 			autoOpen: false, 
-			minWidth: 480
+			minWidth: 500
 			});	
 
 		$( "#dialogBVEOptions" ).dialog({ 
@@ -442,7 +496,7 @@ last update : 06 May 2014 12:00am (GMT 8+)
 		$( "#dialogInsertPlatform" ).dialog({ 
 			autoOpen: false, 
 			minWidth: 760,
-			height: 520,
+			height: 460,
 			//close: function(){
 			//	dInsForm_pid
 			//	dInsForm_pid2
@@ -474,6 +528,12 @@ last update : 06 May 2014 12:00am (GMT 8+)
 			autoOpen: false, 
 			minWidth: 480
 		});*/
+		
+		$( "#dialogOptions" ).dialog({ 
+			autoOpen: false, 
+			minWidth: 440,
+			height: 340
+		});		
 // ****************************************************************************
 
 // *****************************Dialog Operation ******************************					
@@ -507,26 +567,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
     					teks += ',';
     				}
 
-    				if (MapToolbar.features[oType][oName].trackservice != null) {
-    					teks += ',' + MapToolbar.features[oType][oName].trackservice;
-    				} else {
-    					teks += ',';
-    				}
-
-    				if (MapToolbar.features[oType][oName].trackno != null) {
-    					teks += ',' + MapToolbar.features[oType][oName].trackno;
-    				} else {
-    					teks += ',';
-    				}
-
-    				if (MapToolbar.features[oType][oName].tracksection != null) {
-    					teks += ',' + MapToolbar.features[oType][oName].tracksection;
-    				} else {
-    					teks += ',';
-    				}
-
-    				if (MapToolbar.features[oType][oName].trackbve != null) {
-    					teks += ',' + MapToolbar.features[oType][oName].trackbve;
+    				if (MapToolbar.features[oType][oName].route != null) {
+    					teks += ',' + MapToolbar.features[oType][oName].route;
     				} else {
     					teks += ',';
     				}
@@ -798,6 +840,29 @@ last update : 06 May 2014 12:00am (GMT 8+)
 			$('#dialogImportData').dialog('open');
 		});
 		
+		$('#mMGBMOptions').click(function() {
+			//$('#importDataText').text("paste text here ...");
+			$('#op_DevID').val($.cookie('developerID'));
+			$('#op_DGauge').val($.cookie('defaulGauge'));
+			$('#op_Cant').val($.cookie('defaulCant'));
+			$('#op_RailsPack').val($.cookie('railsPack'));
+			$('#op_ObjectsPack').val($.cookie('objectsPack'));
+			switch ($.cookie('api')) {
+				case '3' :
+					document.getElementById('op_api_3').checked = true;
+					break;
+				case '3.exp' :
+					document.getElementById('op_api_3exp').checked = true;
+					break;
+				default :
+					document.getElementById('op_api_custom').checked = true;
+					$('#op_APIv').val($.cookie('api'));
+					break;
+			}
+			
+			$('#dialogOptions').dialog('open');
+		});		
+		
 		$('#btnImportData').click(function() {
 			if ($('#importDataText').val() != '') {
 				var teksIm = $('#importDataText').val();
@@ -806,7 +871,7 @@ last update : 06 May 2014 12:00am (GMT 8+)
   			map.setCenter(new google.maps.LatLng(kood[0],kood[1])); // recenter map
   			map.setZoom(11);
   			if (rowsData[1] != '') {
-  				//line_1,ptype,note,name,trackservice,trackno,tracksection,trackbve,kit, 3.6975060399011115;101.50496006011963;note;pitch;bve;kit, ...
+  				//line_1,ptype,note,name,route,trackno,tracksection,trackbve,kit, 3.6975060399011115;101.50496006011963;note;pitch;bve;kit, ...
   				var rd = rowsData[1].split(",");
   				var dname = rd[0];				    					
   				var otype = dname.split("_")[0];
@@ -819,7 +884,7 @@ last update : 06 May 2014 12:00am (GMT 8+)
 	 					if (rd[1] != '') { loadPoly.ptype = rd[1]; } else { loadPoly.ptype = null; }
 	 					if (rd[2] != '') { loadPoly.note = rd[2]; } else { loadPoly.note = null; }
 	 					if (rd[3] != '') { loadPoly.name = rd[3]; } else { loadPoly.name = null; }
-	 					if (rd[4] != '') { loadPoly.trackservice = rd[4]; } else { loadPoly.trackservice = null; }
+	 					if (rd[4] != '') { loadPoly.route = rd[4]; } else { loadPoly.route = null; }
 	 					if (rd[5] != '') { loadPoly.trackno = rd[5]; } else { loadPoly.trackno = null; }
 	 					if (rd[6] != '') { loadPoly.tracksection = rd[6]; } else { loadPoly.tracksection = null; }
 	 					if (rd[7] != '') { loadPoly.trackbve = rd[7]; } else { loadPoly.trackbve = null; }
@@ -923,7 +988,7 @@ last update : 06 May 2014 12:00am (GMT 8+)
   				    		map.setCenter(new google.maps.LatLng(kood[0],kood[1])); // recenter map
   				    		map.setZoom(11);
   				    		if (rowsData[1] != '') {
-  				    		//line_1,ptype,note,name,trackservice,trackno,tracksection,trackbve,kit, 3.6975060399011115;101.50496006011963;note;pitch;bve;kit, ...
+  				    		//line_1,ptype,note,name,route,trackno,tracksection,trackbve,kit, 3.6975060399011115;101.50496006011963;note;pitch;bve;kit, ...
   				    			var rd = rowsData[1].split(",");
   				    			var dname = rd[0];				    					
   				    			var otype = dname.split("_")[0];
@@ -938,7 +1003,7 @@ last update : 06 May 2014 12:00am (GMT 8+)
 	 												if (rd[1] != '') { loadPoly.ptype = rd[1]; } else { loadPoly.ptype = null; }
 	 												if (rd[2] != '') { loadPoly.note = rd[2]; } else { loadPoly.note = null; }
 	 												if (rd[3] != '') { loadPoly.name = rd[3]; } else { loadPoly.name = null; }
-	 												if (rd[4] != '') { loadPoly.trackservice = rd[4]; } else { loadPoly.trackservice = null; }
+	 												if (rd[4] != '') { loadPoly.route = rd[4]; } else { loadPoly.route = null; }
 	 												if (rd[5] != '') { loadPoly.trackno = rd[5]; } else { loadPoly.trackno = null; }
 	 												if (rd[6] != '') { loadPoly.tracksection = rd[6]; } else { loadPoly.tracksection = null; }
 	 												if (rd[7] != '') { loadPoly.trackbve = rd[7]; } else { loadPoly.trackbve = null; }
@@ -1239,35 +1304,39 @@ last update : 06 May 2014 12:00am (GMT 8+)
 			$('#dialogMakeItParallelBetween2Point').dialog('open');
 		});
 		
-		/*
-		$.rloader({defaultcache:false});
-		$.rloader({src:'script/bveobjects.js', callback:scriptLoaded});
-		*/
-		/*
-		$.ajaxSetup({async:false});
-		var currentTime = new Date();
-		
-		$.getScript('script/test.js?time=' + currentTime.getSeconds(), function() {
- 	    //scriptLoaded();
-		});
-		*/
-		/*
-		$.ajax({
-    	url: 'script/bveobjects.js',
-    	dataType: 'script',
-   		success: scriptLoaded()
-		});
-		*/
-	
-	/*
-		function scriptLoaded() {
+		$('#mMRouteColor').click(function() {
+			$("#routeColor_Routes").empty();
+			var svclist = document.getElementById('route_list');
+			var select = document.getElementById('routeColor_Routes');
+			
+			if (svclist.childElementCount == 0) {
+				alert('Please define at least one route.\nConfigure line setting ...');
+				return false;
+			}
+			
+			var op = document.createElement('option');
+			op.value = '';
+			op.innerHTML = "- select -";
+			select.appendChild(op);
+			
+			for (var i = 0; i < svclist.childElementCount; i++) {
+				var opt = document.createElement('option');
+				opt.value = i;
+				opt.innerHTML = svclist.children[i].firstElementChild.getAttribute("value");
+				select.appendChild(opt);
+
+			}
+			$('#dialogRouteColor').dialog('open');
+		});			
+
+	function scriptLoaded() {
     // do something
       for (var i=0; i < bverailobjArr.length; i++) {
-      	$('#railindex').append($("<option></option>").attr("value", bverailobjArr[i][5]).text(bverailobjArr[i][2]));
-      	if (bverailobjArr[i][3] == 'st') {      			
-     			$('#dms_railindex').append($("<option></option>").attr("value", bverailobjArr[i][1]).text(bverailobjArr[i][2])); 
-     			$('#dtsv_railtypedefault').append($("<option></option>").attr("value", bverailobjArr[i][1]).text(bverailobjArr[i][2]));
-     			$('#dbr_railtypedefault').append($("<option></option>").attr("value", bverailobjArr[i][1]).text(bverailobjArr[i][2]));
+      	$('#railindex').append($("<option></option>").attr("value", bverailobjArr[i][5]).text(bverailobjArr[i][2].substr(0, 25)));
+      	if (bverailobjArr[i][3] == 'st') { 
+			$('#dms_railindex').append($("<option></option>").attr("value", bverailobjArr[i][1]).text(bverailobjArr[i][2]));		
+     		$('#dtsv_railtypedefault').append($("<option></option>").attr("value", bverailobjArr[i][1]).text(bverailobjArr[i][2]));
+     		$('#dbr_railtypedefault').append($("<option></option>").attr("value", bverailobjArr[i][1]).text(bverailobjArr[i][2]));
       	} 
       	if (bverailobjArr[i][3] == 'cv') {
      			$('#ddc_railindex').append($("<option></option>").attr("value", bverailobjArr[i][1]).text(bverailobjArr[i][2]));
@@ -1284,81 +1353,78 @@ last update : 06 May 2014 12:00am (GMT 8+)
     	}
     	
     	for (var i=0; i < bvetunnelObjArr.length; i++) {
-    		$('#strobjTunnel').append($("<option></option>").attr("value", bvetunnelObjArr[i][3]).text(bvetunnelObjArr[i][2]));
-    		$('#dms_GBstr').append($("<option></option>").attr("value", bvetunnelObjArr[i][1]).text(bvetunnelObjArr[i][2]));
+    		$('#strBVE').append($("<option></option>").attr("value", bvetunnelObjArr[i][3]).text(bvetunnelObjArr[i][2].substr(0, 25)));
     		$('#dInsTun_tun').append($("<option></option>").attr("value", bvetunnelObjArr[i][1]).text(bvetunnelObjArr[i][2]));
     	}
     	
     	for (var i=0; i < bvebridgeObjArr.length; i++) {
-    		$('#strobjBridge').append($("<option></option>").attr("value", bvebridgeObjArr[i][3]).text(bvebridgeObjArr[i][2]));
-    		$('#dms_GBstr').append($("<option></option>").attr("value", bvebridgeObjArr[i][1]).text(bvebridgeObjArr[i][2]));
+    		$('#strBVE').append($("<option></option>").attr("value", bvebridgeObjArr[i][3]).text(bvebridgeObjArr[i][2].substr(0, 25)));
     		$('#dInsB_bridge').append($("<option></option>").attr("value", bvebridgeObjArr[i][1]).text(bvebridgeObjArr[i][2]));
     	}
     	
     	for (var i=0; i < bveFOObjArr.length; i++) {
-    		$('#strobjflyover').append($("<option></option>").attr("value", bveFOObjArr[i][3]).text(bveFOObjArr[i][2]));
-    		$('#dms_GBstr').append($("<option></option>").attr("value", bveFOObjArr[i][1]).text(bveFOObjArr[i][2]));
+    		$('#strBVE').append($("<option></option>").attr("value", bveFOObjArr[i][3]).text(bveFOObjArr[i][2].substr(0, 25)));
     		$('#dInsFO_Fo').append($("<option></option>").attr("value", bveFOObjArr[i][1]).text(bveFOObjArr[i][2]));
     	}    	
 
     	for (var i=0; i < bvecutObjArr.length; i++) {
-    		$('#strobjCut').append($("<option></option>").attr("value", bvecutObjArr[i][3]).text(bvecutObjArr[i][2]));
-    		$('#dms_GBstr').append($("<option></option>").attr("value", bvecutObjArr[i][1]).text(bvecutObjArr[i][2]));
+    		$('#strBVE').append($("<option></option>").attr("value", bvecutObjArr[i][3]).text(bvecutObjArr[i][2].substr(0, 25)));
     	}
     	
     	for (var i=0; i < bvedikeObjArr.length; i++) {
-    		$('#strobjDike').append($("<option></option>").attr("value", bvedikeObjArr[i][3]).text(bvedikeObjArr[i][2]));
-    		$('#dms_GBstr').append($("<option></option>").attr("value", bvedikeObjArr[i][1]).text(bvedikeObjArr[i][2]));
+    		$('#strBVE').append($("<option></option>").attr("value", bvedikeObjArr[i][3]).text(bvedikeObjArr[i][2].substr(0, 25)));
     	}
-    	
-    	for (var i=0; i < bveUGObjArr.length; i++) {
-    		$('#strobjunderground').append($("<option></option>").attr("value", bveUGObjArr[i][3]).text(bveUGObjArr[i][2]));
-    		$('#dms_GBstr').append($("<option></option>").attr("value", bveUGObjArr[i][1]).text(bveUGObjArr[i][2]));
-    	}
-    	
+    	   	
     	for (var i=0; i < bveRCObjArr.length; i++) {
-    		$('#strobjroadcross').append($("<option></option>").attr("value", bveRCObjArr[i][3]).text(bveRCObjArr[i][2]));
-    		$('#dms_GBstr').append($("<option></option>").attr("value", bveRCObjArr[i][1]).text(bveRCObjArr[i][2]));
+    		$('#sideObj').append($("<option></option>").attr("value", bveRCObjArr[i][3]).text(bveRCObjArr[i][2].substr(0, 25)));
     		$('#dInsC_Crossing').append($("<option></option>").attr("value", bveRCObjArr[i][1]).text(bveRCObjArr[i][2]));
     	}
     	
     	for (var i=0; i < bveplatformObjArr.length; i++) {
-    		$('#strobjformbase').append($("<option></option>").attr("value", bveplatformObjArr[i][3]).text(bveplatformObjArr[i][2]));
-    		$('#dms_GBstr').append($("<option></option>").attr("value", bveplatformObjArr[i][1]).text(bveplatformObjArr[i][2]));
+    		$('#strBVE').append($("<option></option>").attr("value", bveplatformObjArr[i][3]).text(bveplatformObjArr[i][2].substr(0, 25)));
+    		$('#dInsForm_BVEStr').append($("<option></option>").attr("value", bveplatformObjArr[i][1]).text(bveplatformObjArr[i][2].substr(0, 25)));			
     	}   
     	
     	for (var i=0; i < bvepoleObjArr.length; i++) {
-				$('#poleindex').append($("<option></option>").attr("value", bvepoleObjArr[i][3]).text(bvepoleObjArr[i][2]));
-				$('#dms_poleindex').append($("<option></option>").attr("value", bvepoleObjArr[i][1]).text(bvepoleObjArr[i][2]));
+		$('#strBVE').append($("<option></option>").attr("value", bvepoleObjArr[i][3]).text(bvepoleObjArr[i][2].substr(0, 25)));
+		$('#dms_poleindex').append($("<option></option>").attr("value", bvepoleObjArr[i][1]).text(bvepoleObjArr[i][2]));
     	}
     	
     	for (var i=0; i < bvecrackObjArr.length; i++) {
-    		$('#crackindex').append($("<option></option>").attr("value", bvecrackObjArr[i][3]).text(bvecrackObjArr[i][2]));
+    		$('#grnObj').append($("<option></option>").attr("value", bvecrackObjArr[i][3]).text(bvecrackObjArr[i][2].substr(0, 25)));
+    		$('#PLcrackID').append($("<option></option>").attr("value", bvecrackObjArr[i][1]).text(bvecrackObjArr[i][2].substr(0, 25)));
+    		$('#formcrackID').append($("<option></option>").attr("value", bvecrackObjArr[i][1]).text(bvecrackObjArr[i][2].substr(0, 25)));
+		if ( i == 0 ) { 
+			$("#PLcrackID option[value=\'" + bvecrackObjArr[i][1] + "\']").attr("selected", "selected"); 
+			$("#formcrackID option[value=\'" + bvecrackObjArr[i][1] + "\']").attr("selected", "selected"); 
+			document.getElementById('PLcrackView').src='images/' + bvecrackObjArr[i][3];
+		}
     	}
     	
     	for (var i=0; i < bvebveStrOjArr.length; i++) {
     		switch (bvebveStrOjArr[i][3]) {
-					case 'Ground':
-						$('#groundindex').append($("<option></option>").attr("value", bvebveStrOjArr[i][4]).text(bvebveStrOjArr[i][2]));
-						$('#dUpdG_object').append($("<option></option>").attr("value", bvebveStrOjArr[i][1]).text(bvebveStrOjArr[i][2]));
-						break;
-					case 'Background':
-						$('#backgroundindex').append($("<option></option>").attr("value", bvebveStrOjArr[i][4]).text(bvebveStrOjArr[i][2]));
-						break;
-					case 'Beacon':
-						$('#beconindex').append($("<option></option>").attr("value", bvebveStrOjArr[i][4]).text(bvebveStrOjArr[i][2]));
-						break;
-					case 'River':
-						$('#dInsB_river').append($("<option></option>").attr("value", bvebveStrOjArr[i][1]).text(bvebveStrOjArr[i][2]));
-						$('#dInsR_river').append($("<option></option>").attr("value", bvebveStrOjArr[i][1]).text(bvebveStrOjArr[i][2]));
-						break;
+			case 'Ground':
+				$('#grnObj').append($("<option></option>").attr("value", bvebveStrOjArr[i][4]).text(bvebveStrOjArr[i][2].substr(0, 25)));
+				$('#dUpdG_object').append($("<option></option>").attr("value", bvebveStrOjArr[i][1]).text(bvebveStrOjArr[i][2]));
+				break;
+			case 'Background':
+				$('#grnObj').append($("<option></option>").attr("value", bvebveStrOjArr[i][4]).text(bvebveStrOjArr[i][2].substr(0, 25)));
+				break;
+			case 'Beacon':
+				$('#grnObj').append($("<option></option>").attr("value", bvebveStrOjArr[i][4]).text(bvebveStrOjArr[i][2].substr(0, 25)));
+				break;
+			case 'River':
+				$('#grnObj').append($("<option></option>").attr("value", bvebveStrOjArr[i][1]).text(bvebveStrOjArr[i][2].substr(0, 25)));
+				$('#dInsB_river').append($("<option></option>").attr("value", bvebveStrOjArr[i][1]).text(bvebveStrOjArr[i][2]));
+				$('#dInsR_river').append($("<option></option>").attr("value", bvebveStrOjArr[i][1]).text(bvebveStrOjArr[i][2]));
+				break;
 																
-					default:
-				}
+			default:
+		}
     	}
 
     	for (var i=0; i < bvefreeObjArr.length; i++) {
-    		$('#freeobjectid').append($("<option></option>").attr("value", bvefreeObjArr[i][4]).text(bvefreeObjArr[i][2]));
+    		$('#sideObj').append($("<option></option>").attr("value", bvefreeObjArr[i][4]).text(bvefreeObjArr[i][2].substr(0, 25)));
     		if (bvefreeObjArr[i][3] == 'Structure') {
     			if (bvefreeObjArr[i][1].indexOf('overbridge') == 0) {
     				$('#dInsOb_overbridge').append($("<option></option>").attr("value", bvefreeObjArr[i][1]).text(bvefreeObjArr[i][2]));
@@ -1367,34 +1433,12 @@ last update : 06 May 2014 12:00am (GMT 8+)
     	}
 
     	for (var i=0; i < bvetrainObjArr.length; i++) {
-    		$('#denshaobj').append($("<option></option>").attr("value", bvetrainObjArr[i][4]).text(bvetrainObjArr[i][2]));
     		$('#dtsv_runningTrain').append($("<option></option>").attr("value", bvetrainObjArr[i][4]).text(bvetrainObjArr[i][2]));
     		$('#dbr_runningTrain').append($("<option></option>").attr("value", bvetrainObjArr[i][4]).text(bvetrainObjArr[i][2]));
     	}    	    	    	
 
-    	for (var i=0; i < bveaudioObjArr.length; i++) {
-    		switch (bveaudioObjArr[i][3]) {
-					case 'Announce':
-						// statements
-						$('#annouceindex').append($("<option></option>").attr("value", bveaudioObjArr[i][5]).text(bveaudioObjArr[i][2]));
-						break;
-					case 'Melody':
-						// statements
-						$('#melodyindex').append($("<option></option>").attr("value", bveaudioObjArr[i][5]).text(bveaudioObjArr[i][2]));
-						break;
-					case 'Dopler':
-						// statements
-						$('#doplerindex').append($("<option></option>").attr("value", bveaudioObjArr[i][5]).text(bveaudioObjArr[i][2]));
-						break;
-					case 'Flange':
-						// statements
-						$('#flangeindex').append($("<option></option>").attr("value", bveaudioObjArr[i][5]).text(bveaudioObjArr[i][2]));
-						break;
-					default:
-						// default statements
-				}
-    	}   
-		} */
+   
+		} 
 		
 		$('#accordion').accordion( "option", "disabled", false );
 		
@@ -1913,30 +1957,30 @@ last update : 06 May 2014 12:00am (GMT 8+)
 		});	    		
 
 		$('#setPitchStr').click(function() {
-				var pitchStr = $('#railPitchStructure').val();
-				var start = null; //($("input[@id=pitchStr_Start]:checked")) ? true : false;
-//alert(document.getElementById('pitchStr_Start').checked + "\n" + document.getElementById('pitchStr_End').checked);
-				switch (true) {
-					case (document.getElementById('pitchStr_Start').checked):
-						start = true;
-						break;
-					case (document.getElementById('pitchStr_End').checked):
-						start = false;
-						break;
-					default:
-						alert('please select either structure start point or end point, tq');
-						return false;
-				}
-				var strPLIndex = $('#PLstrListIndex').val();
+			var pitchStr = $('#railPitchStructure').val();
+			var start = null; //($("input[@id=pitchStr_Start]:checked")) ? true : false;
+			//alert(document.getElementById('pitchStr_Start').checked + "\n" + document.getElementById('pitchStr_End').checked);
+			switch (true) {
+				case (document.getElementById('pitchStr_Start').checked):
+					start = true;
+					break;
+				case (document.getElementById('pitchStr_End').checked):
+					start = false;
+					break;
+				default:
+					alert('please select either structure start point or end point, tq');
+					return false;
+			}
+			var strPLIndex = $('#PLstrListIndex').val();
 		  	var txtPitchDetails = $('#txtPitchDetails').val();
 		  	var arrTE = txtPitchDetails.split('\n');
 		    var cgsp = parseInt($('#txtPitchStrP').val());
 		    
-	    	var spm = false;
-	    	if (typeof pitchStr == 'undefined') {
-	    		alert('please select the structure type');
-	    		return false;	
-	    	}
+			var spm = false;
+			if (typeof pitchStr == 'undefined') {
+				alert('please select the structure type');
+				return false;	
+			}
 	    	
 	    	var strType = (start) ? pitchStr + '_start': pitchStr + '_end';
 	    	
@@ -2068,71 +2112,68 @@ last update : 06 May 2014 12:00am (GMT 8+)
     			$strLIndex.empty().append('<option selected>- select structure -</option>');
     			
     			if ($('#railPitchStructure').val() == 'cut') {								
-						for (var i=0; i < bvecutObjArr.length; i++) {
+				for (var i=0; i < bvecutObjArr.length; i++) {
     					$strLIndex.append($("<option></option>").attr("value", bvecutObjArr[i][1]).text(bvecutObjArr[i][2]));
     				}
     				
-					} else if ($('#railPitchStructure').val() == 'dike') {
-						for (var i=0; i < bvedikeObjArr.length; i++) {
+			} else if ($('#railPitchStructure').val() == 'dike') {
+				for (var i=0; i < bvedikeObjArr.length; i++) {
     					$strLIndex.append($("<option></option>").attr("value", bvedikeObjArr[i][1]).text(bvedikeObjArr[i][2]));
     				}								
 					
-					} else if ($('#railPitchStructure').val() == 'bridge') {
+			} else if ($('#railPitchStructure').val() == 'bridge') {
 			    	for (var i=0; i < bvebridgeObjArr.length; i++) {
-							$strLIndex.append($("<option></option>").attr("value", bvebridgeObjArr[i][1]).text(bvebridgeObjArr[i][2]));
+					$strLIndex.append($("<option></option>").attr("value", bvebridgeObjArr[i][1]).text(bvebridgeObjArr[i][2]));
     				}								
 					
-					} else if ($('#railPitchStructure').val() == 'tunnel') {
+			} else if ($('#railPitchStructure').val() == 'tunnel') {
 			    	for (var i=0; i < bvetunnelObjArr.length; i++) {
-							$strLIndex.append($("<option></option>").attr("value", bvetunnelObjArr[i][1]).text(bvetunnelObjArr[i][2]));
+					$strLIndex.append($("<option></option>").attr("value", bvetunnelObjArr[i][1]).text(bvetunnelObjArr[i][2]));
     				}
 						
-					} else if($('#railPitchStructure').val() == 'flyover') {
+			} else if($('#railPitchStructure').val() == 'flyover') {
 			    	for (var i=0; i < bveFOObjArr.length; i++) {
-							$strLIndex.append($("<option></option>").attr("value", bveFOObjArr[i][1]).text(bveFOObjArr[i][2]));
+					$strLIndex.append($("<option></option>").attr("value", bveFOObjArr[i][1]).text(bveFOObjArr[i][2]));
     				} 
-						
-					} else if ($('#railPitchStructure').val() == 'underground') {
+			/*			
+			} else if ($('#railPitchStructure').val() == 'underground') {
 			    	for (var i=0; i < bveUGObjArr.length; i++) {
-							$strLIndex.append($("<option></option>").attr("value", bveUGObjArr[i][1]).text(bveUGObjArr[i][2]));
+					$strLIndex.append($("<option></option>").attr("value", bveUGObjArr[i][1]).text(bveUGObjArr[i][2]));
     				}
-						
-					} else if ($('#railPitchStructure').val() == 'form') {
-						for (var i=0; i < bveplatformObjArr.length; i++) {
-    					$strLIndex.append($("<option></option>").attr("value", bveplatformObjArr[i][1]).text(bveplatformObjArr[i][2]));
-    				}
-					
-					} else if ($('#railPitchStructure').val() == 'roadcross') {
-						for (var i=0; i < bveRCObjArr.length; i++) {
-    					$strLIndex.append($("<option></option>").attr("value", bveRCObjArr[i][1]).text(bveRCObjArr[i][2]));
-    				}
-					
-					} 
+			*/			
+			} 
     	    			
     		}
     });	
 
-		$('#btnSetpitchOp').click(function() {
-			var txtPitchDetails = $('#txtPitchDetails').val();
-		  var arrTE = txtPitchDetails.split('\n');
-		  var miSt = parseInt($('#LLmidxSt').val());
-		  var miEd = parseInt($('#LLmidxEd').val());
-		  var distanceAtStart = parseInt($('#txtPitchStartPointAtM').val());
-		  var polyIDtxt = $('#LLbasePolyID').val();
-			var cuvid = '';
+	$('#btnSetpitchOp').click(function() {
+		var txtPitchDetails = $('#txtPitchDetails').val();
+		var arrTE = txtPitchDetails.split('\n');
+		var miSt = parseInt($('#LLmidxSt').val());
+		var miEd = parseInt($('#LLmidxEd').val());
+		var distanceAtStart = parseInt($('#txtPitchStartPointAtM').val());
+		var polyIDtxt = $('#LLbasePolyID').val();
+		var cuvid = '';
+		
+		$('#rpM1').val('');
+		$('#rpM2').val('');
 			
-			$('#dialogRailpitch').dialog('close');
+		$('#dialogRailpitch').dialog('close');
 		  var endLtLg = MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(miEd).getPosition();
 	
 			for (var i = 0; i < arrTE.length; i++) {
 				if (arrTE[i] != '') {
-					var arr0 = arrTE[i].split(',');
+					var arr0 = arrTE[i].split(','); // gnote.push([dis.toString(), note, pit, bdata, kit]);
 					var pitchStrdistance = distanceAtStart + parseInt(arr0[0]);
 					if (i == 0) {
-						if (typeof arr0[1] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(miSt).note = arr0[1] }
-						if (typeof arr0[2] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(miSt).pitch = arr0[2] }
-						if (typeof arr0[3] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(miSt).bdata = arr0[3] }
-						if (typeof arr0[4] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(miSt).kit = arr0[4] }
+						if (typeof arr0[1] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(miSt).note = arr0[1]; }
+						if (typeof arr0[2] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(miSt).bdata.pitch = arr0[2]; }
+						if (typeof arr0[3] != 'undefined') { 
+							updateKdata("lineTab",polyIDtxt,miSt,arr0[3]);
+						}
+						if (typeof arr0[4] != 'undefined') { 
+							updateBdata("lineTab",polyIDtxt,miSt,arr0[4]);						
+						}
 
 					} else if (i == (arrTE.length - 1)) {
 						var endidx;
@@ -2146,119 +2187,158 @@ last update : 06 May 2014 12:00am (GMT 8+)
 							alert('unable to detect end index after reconstruction ...');
 							break;
 						} 
-						if (typeof arr0[1] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).note = arr0[1] }
-						if (typeof arr0[2] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).pitch = arr0[2] }
-						if (typeof arr0[3] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).bdata = arr0[3] }
-						if (typeof arr0[4] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).kit = arr0[4] }
-						
-						if ((typeof $('#LLlastpitch').val() != 'undefined') && (typeof $('#LLlastheight').val() != 'undefined') && (typeof $('#LLlastheightratio').val() != 'undefined')) {
-							if (($('#LLlastpitch').val() != '') && ($('#LLlastheight').val() != '') && ($('#LLlastheightratio').val() != '')) {
-								if ((MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).kit == null) || (MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).kit =='')) {
-									MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).kit += 'lastpitch:' + $('#LLlastpitch').val();
-									MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).kit += '§lastheight:' + $('#LLlastheight').val();
-									MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).kit += '§lastheightratio:' + $('#LLlastheightratio').val();
-
-								} else {
-										if (MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).kit.indexOf('lastpitch:') < 0) {
-											MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).kit += '§lastpitch:' + $('#LLlastpitch').val();
-											MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).kit += '§lastheight:' + $('#LLlastheight').val();
-											MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).kit += '§lastheightratio:' + $('#LLlastheightratio').val();
-
-										} else {
-											var kitArr = MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).kit.split('§');
-											for (kI = 0; kI < kitArr.length; kI++) {
-												//2do
-												if (kitArr[kI].indexOf('lastpitch:') >= 0) {
-													var kitPart = kitArr[kI].split(':');
-													kitPart[1] = $('#LLlastpitch').val();
-													kitArr[kI] = kitPart[0] + ':' + kitPart[1];
-												}
-												if (kitArr[kI].indexOf('lastheight:') >= 0) {
-													var kitPart = kitArr[kI].split(':');
-													kitPart[1] = $('#LLlastheight').val();
-													kitArr[kI] = kitPart[0] + ':' + kitPart[1];
-												}
-												if (kitArr[kI].indexOf('lastheightratio:') >= 0) {
-													var kitPart = kitArr[kI].split(':');
-													kitPart[1] = $('#LLlastheightratio').val();
-													kitArr[kI] = kitPart[0] + ':' + kitPart[1];
-												}												
-											}
-											MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).kit = kitArr.join('§');
-										}
-																	
-								}
-							}
+						if (typeof arr0[1] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).note = arr0[1]; }
+						if (typeof arr0[2] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).bdata.pitch = arr0[2]; }
+						if (typeof arr0[3] != 'undefined') {
+							updateKdata("lineTab",polyIDtxt,endidx,arr0[3]);					
 						}
-
-						MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).setIcon("images/marker_squared_edit.png");
+						if (typeof arr0[4] != 'undefined') { 
+							updateBdata("lineTab",polyIDtxt,endidx,arr0[4]);
+						}
 						
+						if (typeof $('#LLlastpitch').val() != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).gdata.lastpitch = ($('#LLlastpitch').val() != '') ? $('#LLlastpitch').val() : ''; }
+						if (typeof $('#LLlastheight').val() != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).gdata.lastheight = ($('#LLlastheight').val() != '') ? $('#LLlastheight').val() : ''; }
+						if (typeof $('#LLlastheightratio').val() != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).gdata.lastheightratio = ($('#LLlastheightratio').val() != '') ? $('#LLlastheightratio').val() : ''; }
+						
+						//MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).setIcon("images/marker_squared_edit.png");
+						var hm = google.maps.geometry.spherical.computeHeading(MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx-1).getPosition(),MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).getPosition());
+						var mm = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).getPosition(), 6, hm-90);
+
+						var edit = new google.maps.Marker({
+							position: mm,
+							icon: "images/marker_squared_edit.png",
+							draggable: false,
+							map: map
+						});
+					
+						++MapToolbar["dotMarkerCounter"];
+						edit.id = 'dotMarker_'+ MapToolbar["dotMarkerCounter"];
+						edit.ptype = null;
+						edit.note = 'last point of polyline elavation editing';
+						edit.iwref = null;
+						edit.$el = MapToolbar.addFeatureEntry(edit.id);	     
+						MapToolbar.features['dotMarkerTab'][edit.id] = edit;
+						google.maps.event.addListener(edit, "click", function(mEvent){
+							var DegMinSec = DecInDeg(mEvent.latLng);
+							var infoWindowTxt = 'Marker Id : ' + edit.id;
+							infoWindowTxt += '<br />' + 'Location : ';
+							infoWindowTxt += DegMinSec + '<br />';
+							infoWindowTxt += '<br />' + 'Note : ' + edit.note;
+		
+							var infowindow = new google.maps.InfoWindow({
+								content: infoWindowTxt,
+								position: mEvent.latLng
+							});
+        
+							infowindow.open(map);		
+						});
 						MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(endidx).setDraggable(false);
 	        //));
 						
 					} else {
-						//2 do detect current curve, if point on curve line create and set data
-						if (typeof arr0[4] != 'undefined') {
-							if ((arr0[4].indexOf('curve') >= 0) || ((arr0[4].indexOf('tcurve') >= 0))){
-								var arrOnC = arr0[4].split('§');
-								var cuvmod = '';
-								for (var k =0; k< arrOnC.length; k++) {
-									if ((arrOnC[k].indexOf('curve') == 0) || ((arrOnC[k].indexOf('tcurve') == 0))){
-										var arrcuv = arrOnC[k].split(':');									
-										if (arrcuv[1] == 'start') {
-											cuvid = arrcuv[2];
-											cuvmod = arrcuv[1];
-										} else if (arrcuv[1] == 'end') {
-											cuvid = '';
-											cuvmod = arrcuv[1];
-										}
-									}
-								}
-								//2 do get curve and update edge marker
-								if (cuvid.split('_')[0] == 'curve') {
-									if (cuvmod == 'start') {
-										if (typeof arr0[1] != 'undefined') { MapToolbar.features["curveTab"][cuvid].markers.getAt(0).note = arr0[1]; }
-										if (typeof arr0[2] != 'undefined') { MapToolbar.features["curveTab"][cuvid].markers.getAt(0).pitch = arr0[2]; }
-										if (typeof arr0[3] != 'undefined') { MapToolbar.features["curveTab"][cuvid].markers.getAt(0).bdata = arr0[3]; }
-										if (typeof arr0[4] != 'undefined') { MapToolbar.features["curveTab"][cuvid].markers.getAt(0).kit = arr0[4]; }
-									} else if (cuvmod == 'end') {
-										var cendId = -1;
-										for (var f = 1; f < MapToolbar.features["curveTab"][cuvid].markers.length; f++) {
-											if (MapToolbar.features["curveTab"][cuvid].markers.getAt(f).kit.indexOf('curve:end:'+cuvid) >= 0) {
-												cendId = f;
-												break;
-											}
-										}
-										if (cendId > 0) {
-											if (typeof arr0[1] != 'undefined') { MapToolbar.features["curveTab"][cuvid].markers.getAt(cendId).note = arr0[1]; }
-											if (typeof arr0[2] != 'undefined') { MapToolbar.features["curveTab"][cuvid].markers.getAt(cendId).pitch = arr0[2]; }
-											if (typeof arr0[3] != 'undefined') { MapToolbar.features["curveTab"][cuvid].markers.getAt(cendId).bdata = arr0[3]; }
-											if (typeof arr0[4] != 'undefined') { MapToolbar.features["curveTab"][cuvid].markers.getAt(cendId).kit = arr0[4]; }
-										}
-									}
-								} else if (cuvid.split('_')[0] == 'tcurve') {
-									if (cuvmod == 'start') {
-										if (typeof arr0[1] != 'undefined') { MapToolbar.features["tcurveTab"][cuvid].markers.getAt(0).note = arr0[1]; }
-										if (typeof arr0[2] != 'undefined') { MapToolbar.features["tcurveTab"][cuvid].markers.getAt(0).pitch = arr0[2]; }
-										if (typeof arr0[3] != 'undefined') { MapToolbar.features["tcurveTab"][cuvid].markers.getAt(0).bdata = arr0[3]; }
-										if (typeof arr0[4] != 'undefined') { MapToolbar.features["tcurveTab"][cuvid].markers.getAt(0).kit = arr0[4]; }
-									} else if (cuvmod == 'end') {
-										var cendId = -1;
-										for (var f = 1; f < MapToolbar.features["tcurveTab"][cuvid].markers.length; f++) {
-											if (MapToolbar.features["tcurveTab"][cuvid].markers.getAt(f).kit.indexOf('tcurve:end:'+cuvid) >= 0) {
-												cendId = f;
-												break;
-											}
-										}
-										if (cendId > 0) {
-											if (typeof arr0[1] != 'undefined') { MapToolbar.features["tcurveTab"][cuvid].markers.getAt(cendId).note = arr0[1]; }
-											if (typeof arr0[2] != 'undefined') { MapToolbar.features["tcurveTab"][cuvid].markers.getAt(cendId).pitch = arr0[2]; }
-											if (typeof arr0[3] != 'undefined') { MapToolbar.features["tcurveTab"][cuvid].markers.getAt(cendId).bdata = arr0[3]; }
-											if (typeof arr0[4] != 'undefined') { MapToolbar.features["tcurveTab"][cuvid].markers.getAt(cendId).kit = arr0[4]; }
-										}
-									}
-								}
+						//detect current curve, if point on curve line create and set data
+							if ((arr0[3].indexOf('curve') >= 0) || ((arr0[3].indexOf('tcurve') >= 0))){
+								var arr1 = arr0[3].split('§');
 
+								for (var a = 0; a < arr1.length; a++) {
+									var arr2 = arr1[a].split(':');
+									switch (arr2[0]) {
+										case 'height' :
+											MapToolbar.features["curveTab"][cuvid].markers.getAt(j).bdata.height = arr2[1];
+											break;
+										case 'tcurve' :
+											if (arr2[1] == 'startT') {
+												cuvid = arr2[2];
+												if (typeof arr0[1] != 'undefined') { MapToolbar.features["tcurveTab"][cuvid].markers.getAt(0).note = arr0[1]; }
+												if (typeof arr0[2] != 'undefined') { MapToolbar.features["tcurveTab"][cuvid].markers.getAt(0).bdata.pitch = arr0[2]; }
+												if (typeof arr0[3] != 'undefined') { 
+													updateKdata("tcurveTab",cuvid,0,arr0[3]);
+												}
+												if (typeof arr0[4] != 'undefined') { 
+													updateBdata("tcurveTab",cuvid,0,arr0[4]);
+												}												
+											} else if (arr2[1] == 'endT') {
+												cuvid = arr2[2];
+												if (typeof arr0[1] != 'undefined') { MapToolbar.features["tcurveTab"][cuvid].markers.getAt(1).note = arr0[1]; }
+												if (typeof arr0[2] != 'undefined') { MapToolbar.features["tcurveTab"][cuvid].markers.getAt(1).bdata.pitch = arr0[2]; }
+												if (typeof arr0[3] != 'undefined') { 
+													updateKdata("tcurveTab",cuvid,1,arr0[3]);
+												}
+												if (typeof arr0[4] != 'undefined') { 
+													updateBdata("tcurveTab",cuvid,1,arr0[4]);
+												}												
+												cuvid = '';
+											} else if (arr2[1] == 'startC') {
+												cuvid = arr2[2];
+												if (typeof arr0[1] != 'undefined') { MapToolbar.features["tcurveTab"][cuvid].markers.getAt(3).note = arr0[1]; }
+												if (typeof arr0[2] != 'undefined') { MapToolbar.features["tcurveTab"][cuvid].markers.getAt(3).bdata.pitch = arr0[2]; }
+												if (typeof arr0[3] != 'undefined') { 
+													updateKdata("tcurveTab",cuvid,3,arr0[3]);
+												}
+												if (typeof arr0[4] != 'undefined') { 
+													updateBdata("tcurveTab",cuvid,3,arr0[4]);
+												}												
+											} else if (arr2[1] == 'endC') {
+												cuvid =  arr2[2];
+												if (typeof arr0[1] != 'undefined') { MapToolbar.features["tcurveTab"][cuvid].markers.getAt(4).note = arr0[1]; }
+												if (typeof arr0[2] != 'undefined') { MapToolbar.features["tcurveTab"][cuvid].markers.getAt(4).bdata.pitch = arr0[2]; }
+												if (typeof arr0[3] != 'undefined') { 
+													updateKdata("tcurveTab",cuvid,4,arr0[3]);
+												}
+												if (typeof arr0[4] != 'undefined') { 
+													updateBdata("tcurveTab",cuvid,4,arr0[4]);
+												}												
+											} else if (arr2[1] == 'ld') {
+												cuvid =  arr2[2];
+												var l = parseInt(arr2[3]);
+												if (typeof arr0[1] != 'undefined') { MapToolbar.features["tcurveTab"][cuvid].markers.getAt(l).note = arr0[1]; }
+												if (typeof arr0[2] != 'undefined') { MapToolbar.features["tcurveTab"][cuvid].markers.getAt(l).bdata.pitch = arr0[2]; }
+												if (typeof arr0[3] != 'undefined') { 
+													updateKdata("tcurveTab",cuvid,l,arr0[3]);
+												}
+												if (typeof arr0[4] != 'undefined') { 
+													updateBdata("tcurveTab",cuvid,l,arr0[4]);
+												}												
+											}							
+											break;
+										case 'curve' :
+											if (arr2[1] == 'start') {
+												cuvid = arr2[2];
+												if (typeof arr0[1] != 'undefined') { MapToolbar.features["curveTab"][cuvid].markers.getAt(0).note = arr0[1]; }
+												if (typeof arr0[2] != 'undefined') { MapToolbar.features["curveTab"][cuvid].markers.getAt(0).bdata.pitch = arr0[2]; }
+												if (typeof arr0[3] != 'undefined') { 
+													updateKdata("curveTab",cuvid,0,arr0[3]);
+												}
+												if (typeof arr0[4] != 'undefined') { 
+													updateBdata("curveTab",cuvid,0,arr0[4]);
+												}
+											} else if (arr2[1] == 'end') {
+												if (typeof arr0[1] != 'undefined') { MapToolbar.features["curveTab"][cuvid].markers.getAt(1).note = arr0[1]; }
+												if (typeof arr0[2] != 'undefined') { MapToolbar.features["curveTab"][cuvid].markers.getAt(1).bdata.pitch = arr0[2]; }
+												if (typeof arr0[3] != 'undefined') { 
+													updateKdata("curveTab",cuvid,1,arr0[3]);
+												}
+												if (typeof arr0[4] != 'undefined') { 
+													updateBdata("curveTab",cuvid,1,arr0[4]);
+												}
+												cuvid = '';
+											} else if (arr2[1] == 'ld') {
+												cuvid = arr2[2];
+												var l = parseInt(arr2[3]);
+												if (typeof arr0[1] != 'undefined') { MapToolbar.features["curveTab"][cuvid].markers.getAt(l).note = arr0[1]; }
+												if (typeof arr0[2] != 'undefined') { MapToolbar.features["curveTab"][cuvid].markers.getAt(l).bdata.pitch = arr0[2]; }
+												if (typeof arr0[3] != 'undefined') { 
+													updateKdata("curveTab",cuvid,l,arr0[3]);
+												}
+												if (typeof arr0[4] != 'undefined') { 
+													updateBdata("curveTab",cuvid,l,arr0[4]);
+												}
+											}							
+											break;
+
+									}
+								}
+								
 							} else {
 								if (cuvid == '') {
 									
@@ -2268,17 +2348,21 @@ last update : 06 May 2014 12:00am (GMT 8+)
 									for (var j= miSt; j <= miEd; j++) {
 										//cek, debug dan rebuild algoritma kat sini
 										// ok kalau tengah line, tapi ko bila 2 point saja
-										var distancePrv = (j == 0)? 0: Math.ceil(parseFloat(getTrackDistanceFromStart(polyIDtxt, j -1).line));
-										var distanceNow = Math.ceil(parseFloat(getTrackDistanceFromStart(polyIDtxt, j).line));										
+										var distancePrv = (j == 0) ? 0: Math.ceil(parseFloat(getTrackDistanceFromStart(polyIDtxt, j -1).LwCurve));
+										var distanceNow = Math.ceil(parseFloat(getTrackDistanceFromStart(polyIDtxt, j).LwCurve));										
 										if ((distancePrv <= pitchStrdistance) && (pitchStrdistance <= distanceNow)) {
 											if (pitchStrdistance == distanceNow) {
 												if (typeof arr0[1] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(j).note = arr0[1]; }
-												if (typeof arr0[2] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(j).pitch = arr0[2]; }
-												if (typeof arr0[3] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(j).bdata = arr0[3]; }
-												if (typeof arr0[4] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(j).kit = arr0[4]; }
+												if (typeof arr0[2] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(j).bdata.pitch = arr0[2]; }
+												if (typeof arr0[3] != 'undefined') { 
+													updateKdata("lineTab",polyIDtxt,j,arr0[3]);
+												}
+												if (typeof arr0[4] != 'undefined') { 
+													updateBdata("lineTab",polyIDtxt,j,arr0[4]); 
+												}
 												break;
 											} else {
-												//2 create new point
+												//create new point
 												//calc new point based on distance from previus point
 												var newPoffset = pitchStrdistance - distancePrv;
 												var hd = google.maps.geometry.spherical.computeHeading(allPoints[j-1],allPoints[j]);
@@ -2288,9 +2372,13 @@ last update : 06 May 2014 12:00am (GMT 8+)
 												if (allPoints.length <= MapToolbar.features["lineTab"][polyIDtxt].getPath().getArray().length) { //array checking
 													// array expanded - OK
 													if (typeof arr0[1] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(j).note = arr0[1]; }
-													if (typeof arr0[2] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(j).pitch = arr0[2]; }
-													if (typeof arr0[3] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(j).bdata = arr0[3]; }
-													if (typeof arr0[4] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(j).kit = arr0[4]; }
+													if (typeof arr0[2] != 'undefined') { MapToolbar.features["lineTab"][polyIDtxt].markers.getAt(j).bdata.pitch = arr0[2]; }
+													if (typeof arr0[3] != 'undefined') { 
+														updateKdata("lineTab",polyIDtxt,j,arr0[3]);													 
+													}
+													if (typeof arr0[4] != 'undefined') { 
+														updateBdata("lineTab",polyIDtxt,j,arr0[4]);
+													}
 													
 													break;
 												} else {
@@ -2302,573 +2390,193 @@ last update : 06 May 2014 12:00am (GMT 8+)
 									}
 			
 								} else {
-									// first get curve details and curve starting point
 									var bPoly = MapToolbar.features["lineTab"][polyIDtxt];
 									var allPoints = bPoly.getPath().getArray();
 									if (miEd >= allPoints.length ) { alert('over flow'); return false;}
-									var midx;
 									var cuvtype = cuvid.split('_')[0];
-									//get curve line index
-									for (var j= miSt; j <= miEd; j++) {    		
-									/* 'curve:'+ curve.id + '§radius:' + preR * dir + '§cant:' + parseFloat($('#sBtnRCCant').val()) + '§limit:' + parseFloat($('#sBtnRCDesignSpeed').val()) + '§tlength:' + l2m1 + '§clength:' + arcL + '§center:' + Cc.lat() + '/' + Cc.lng() + '§start_point:' + extp[0].lat() + '/' + extp[0].lng() + '§end_point:' + extp[extp.length-1].lat() + '/' + extp[extp.length-1].lng()  + '§h1:' + h1 + '§h2:' + h2 + '§forceSL:' + enforceSL; */
-										if (bPoly.markers.getAt(j).curve != null) {
-							    		var arr = bPoly.markers.getAt(j).curve.split('§');
-							    		if (arr[0].split(':')[1] == cuvid){ midx = j; break;}
-										} else if  (bPoly.markers.getAt(j).tcurve != null) {
-											var arr = bPoly.markers.getAt(j).tcurve.split('§');
-							    		if (arr[0].split(':')[1] == cuvid){ midx = j; break; }
-										}
-									}
-									if (typeof midx != 'undefined') {
-										if (cuvtype == 'curve') {
-											var arr = bPoly.markers.getAt(midx).curve.split('§');
-											var cR = Math.abs(parseFloat(arr[1].split(':')[1]));
-											var tL = parseFloat(arr[4].split(':')[1]);
-											var cL = parseFloat(arr[5].split(':')[1]);
-											var xpc = new google.maps.LatLng(parseFloat(arr[6].split(':')[1].split('/')[0]), parseFloat(arr[6].split(':')[1].split('/')[1]));
-											var xp1 = new google.maps.LatLng(parseFloat(arr[7].split(':')[1].split('/')[0]), parseFloat(arr[7].split(':')[1].split('/')[1]));
-											var xp2 = new google.maps.LatLng(parseFloat(arr[8].split(':')[1].split('/')[0]), parseFloat(arr[8].split(':')[1].split('/')[1]));
-											var xh1 = parseFloat(arr[9].split(':')[1]);
-											var xh2 = parseFloat(arr[10].split(':')[1]);
-
-											//2do calc distance etc .... 4/12/2012
-											var midxD = parseFloat(getTrackDistanceFromStart(polyIDtxt, j).line);
-											var cvStD = Math.ceil(midxD - tL);
-											var cvEdD = Math.ceil(midxD - tL + cL);
+									
+									if (cuvtype == 'curve') {
+										var cR = Math.abs(MapToolbar.features['curveTab'][cuvid].Rc);
+										var Lt = MapToolbar.features['curveTab'][cuvid].Lt ;
+										var Lc = MapToolbar.features['curveTab'][cuvid].Lc ;
+										var xpc = MapToolbar.features['curveTab'][cuvid].Cc;
+										var xp1 = MapToolbar.features['curveTab'][cuvid].st;
+										var xp2 = MapToolbar.features['curveTab'][cuvid].ed;
+										var xh1 = MapToolbar.features['curveTab'][cuvid].h1;
+										var xh2 = MapToolbar.features['curveTab'][cuvid].h2;
+										var mid = MapToolbar.features['curveTab'][cuvid].mid;
+										var dir = (MapToolbar.features['curveTab'][cuvid].Rc < 0) ? -1 : 1;
+										var iB = google.maps.geometry.spherical.computeHeading(xpc,xp1);		
+												
+										var midxD = parseFloat(getTrackDistanceFromStart(polyIDtxt, mid).LwCurve);
+										var cvStD = Math.ceil(midxD - Lt);
+										var cvEdD = Math.ceil(midxD - Lt + Lc);
 											
-											if ((cvStD <= pitchStrdistance) && (pitchStrdistance <= cvEdD)) {
-												//cek adakah ia jatuh pada marker sedia ada????
+										if ((cvStD <= pitchStrdistance) && (pitchStrdistance <= cvEdD)) {
+											var cpoly = MapToolbar.features["curveTab"][cuvid];
+											var sL = pitchStrdistance - cvStD;
+											var a_deg = (180 * sL) / (Math.PI * cR);
+											var e1;
 												
-												if (pitchStrdistance == cvStD) {
-													// sepatutnya tak sampai ke sini lagi dah, tapi kalau sampai gak ...
-													alert('repeating ending ????');
+											if (dir  > 0) {
+												var ha = (iB + a_deg <= 180) ? iB + a_deg : iB + a_deg - 360;
+												e1 = google.maps.geometry.spherical.computeOffset(xpc, cR, ha);
+												var addAt =  curveAddAt(cuvid,e1);	
+												MapToolbar.addPoint(e1, MapToolbar.features['curveTab'][cuvid], addAt);
+											} else {
+												var ha = (iB - a_deg <= -180) ? iB - a_deg + 360 : iB - a_deg ;
+												e1 = google.maps.geometry.spherical.computeOffset(xpc, cR, ha);
+												var addAt =  curveAddAt(cuvid,e1);	
+												MapToolbar.addPoint(e1, MapToolbar.features['curveTab'][cuvid], addAt);
 
-												} else if (pitchStrdistance == cvEdD) {
-													// sepatutnya tak sampai ke sini lagi dah, tapi kalau sampai gak ...
-													alert('repeating ending ????');
-												
+											}
+											var cuvNewIdx = MapToolbar.features["curveTab"][cuvid].markers.getLength()-1;
+													
+											if (typeof arr0[1] != 'undefined') { cpoly.markers.getAt(cuvNewIdx).note = arr0[1]; }
+											if (typeof arr0[2] != 'undefined') { cpoly.markers.getAt(cuvNewIdx).bdata.pitch = arr0[2]; }
+											if (typeof arr0[3] != 'undefined') { 
+												updateKdata("curveTab",cuvid,cuvNewIdx,arr0[3]);
+											}
+											if (typeof arr0[4] != 'undefined') { 
+												updateBdata("curveTab",cuvid,cuvNewIdx,arr0[4]);
+											}																	
+										}
+											
+									} else if (cuvtype == 'tcurve') {
+										var Rc = Math.abs(MapToolbar.features['tcurveTab'][cuvid].Rc);
+										var Ls = MapToolbar.features['tcurveTab'][cuvid].Ls;
+										var Lc = MapToolbar.features['tcurveTab'][cuvid].Lc;
+										var Lt = Lc + 2*Ls;
+										var Cc = MapToolbar.features['tcurveTab'][cuvid].Cc;
+										var Ttst = MapToolbar.features['tcurveTab'][cuvid].Ttst;
+										var Tted = MapToolbar.features['tcurveTab'][cuvid].Tted;
+										var Tcst = MapToolbar.features['tcurveTab'][cuvid].Tcst;
+										var Tced = MapToolbar.features['tcurveTab'][cuvid].Tced;
+										var mid = MapToolbar.features['tcurveTab'][cuvid].mid;
+
+										var TL = MapToolbar.features['tcurveTab'][cuvid].TL;
+		
+										var dir = (MapToolbar.features['tcurveTab'][cuvid].Rc < 0) ? -1 : 1;
+									
+										var midxD = parseFloat(getTrackDistanceFromStart(polyIDtxt, mid).LwCurve);
+										var tcpoly = MapToolbar.features["tcurveTab"][cuvid];
+										
+										var iB = google.maps.geometry.spherical.computeHeading(Cc,Tcst);
+										
+										var tcTst = Math.ceil(midxD - TL);
+										var tcCst = Math.ceil(midxD - TL + Ls);
+										var tcCed = Math.ceil(midxD - TL + Ls + Lc);
+										var tcTed = Math.ceil(midxD - TL + Lt);
+																				
+										if ((tcTst <= pitchStrdistance) && (pitchStrdistance <= tcCst)) {
+											//approximation method
+											var sL = pitchStrdistance - tcTst;											
+											var allPoints = tcpoly.getPath().getArray();
+											var arrD = new Array();
+											var sIdx = null;
+											var lastD; 
+											
+											for (var t = 0; t <= allPoints.length; t++) { 
+												arrD.push(allPoints[t]);
+												var curL = google.maps.geometry.spherical.computeLength(arrD);
+												if (curL <= sL) {
+													sIdx = t;
+													lastD = curL;
+													//console.log(t + ':' + curL + '=' + sL);
 												} else {
-													var cpoly = MapToolbar.features["curveTab"][cuvid];
-													var onCurveMarker = false;
-													
-													for (var c = 1; c < cpoly.markers.length; c++) {									
-														if (typeof cpoly.markers.getAt(c).ld != 'undefined')  { // marker on curve
-															
-															if (cpoly.markers.getAt(c).kit.indexOf('cmi:') >= 0) { // on current marker
-																
-																if (pitchStrdistance == Math.ceil(midxD - tL + parseFloat(cpoly.markers.getAt(c).ld))) {
-																	if (typeof arr0[1] != 'undefined') { cpoly.markers.getAt(c).note = arr0[1]; }
-																	if (typeof arr0[2] != 'undefined') { cpoly.markers.getAt(c).pitch = arr0[2]; }
-																	if (typeof arr0[3] != 'undefined') { cpoly.markers.getAt(c).bdata = arr0[3]; }
-																	if (typeof arr0[4] != 'undefined') { cpoly.markers.getAt(c).kit = arr0[4]; }
-																	onCurveMarker = true;
-																	break;	
-																										
-																} else {
-																	//alert((pitchStrdistance/Math.ceil(midxD - tL + parseFloat(cpoly.markers.getAt(c).ld))));
-																	
-																}																
-															}
-														}
+													//console.log(t + ':' + curL + '=' + sL);
+													if (sL - lastD > curL - sL) {
+														sIdx = t;
+														lastD = curL;													
 													}
-													
-													if (!onCurveMarker) {
-														//2 create new point
-														
-														var sL = pitchStrdistance - cvStD;
-														var segA = (360 * sL) / (2 * Math.PI * cR);
-														var cStH = google.maps.geometry.spherical.computeHeading(xpc,xp1);
-														var cEdH = google.maps.geometry.spherical.computeHeading(xpc,xp2);
-														var cXxH;
-														
-														var nwP;
-	
-	// sorry for a long code, i just want to make sure that i dont get confuse and the algorithm is mess up
-	// this algorithm will be simplified (إن شاء الله) if every thing running as OK without any error and running as expected
-	if (cStH >= 0) { // +ve bearing cStH
-		if ((cStH > 0) && (cStH < 90)) {
-			// ****************** cStH 0 ~ 90
-			if (cEdH < 0) {
-				switch (true) {
-  				case (cEdH == -180):
-    				nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-    				break;
-  				case (cEdH == -90):
-    				nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-    				break;
-  				case (cEdH >-90):
-    				nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-    				break;
-  				case (cEdH > -180):    				
-    				if (cEdH > cStH - 180) { 
-    					nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);	
-    				} else {
-    					var cxH = cStH + segA;
-    					if (cxH > 180) {
-    						cxH -=360;
-    					}
-    					nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cxH);    					
-    				}    		
-    				break;    						
-				}				
-			} else {
-				switch (true) {
-					case (cEdH == 0):
-  					nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-  					break;
-					case (cEdH < 90):
-  					if (cEdH < cStH) { 
-  						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-  					} else {
-  						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-  					}
-  					break;
-  				case (cEdH == 90):
-    				nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-  		  		break;
-  				case (cEdH < 180):
-    				nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-    				break;
-  				case (cEdH == 180):
-    				nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-    				break;
-  			}				
-			}
-			
-		} else if (cStH == 90) {
-			// *********************** cStH 90			
-			if (cEdH < 0) {
-				switch (true) {
-  				case (cEdH == -180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-    				break;
-  				case (cEdH == -90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-    				break;
-  				case (cEdH >-90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-    				break;
-  				case (cEdH > -180):
-  					var cxH = cStH + segA;
-    					if (cxH > 180) {
-    						cxH -=360;
-    					}
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cxH);
-    				break;
-				}
-			} else {
-				switch (true) {
-					case (cEdH == 0):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-  					break;
-					case (cEdH < 90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-  					break;
-  				case (cEdH == 90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-  		  		break;
-  				case (cEdH < 180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-    				break;
-  				case (cEdH == 180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-    				break;
-  			}			 		 				
-			}
-			
-		} else if ((cStH > 90) && (cStH < 180)) {
-			// **************** cStH 90 ~ 180
-			
-			if (cEdH < 0) {			
-				switch (true) {
-  				case (cEdH ==-180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-    				break;
-  				case (cEdH == -90):
-  				
-						var cxH = cStH + segA;
-    					if (cxH > 180) {
-    						cxH -=360;
-    					}
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cxH);
-    				break;
-  				case (cEdH >-90):						
-						if ( cEdH >= cStH - 180) {
-							nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-						} else {
-					 		var cxH = cStH + segA;
-    					if (cxH > 180) {
-    						cxH -=360;
-    					}
-							nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cxH);
-						} 
-    				break;
-  				case (cEdH >-180):
-						var cxH = cStH + segA;
-    				if (cxH > 180) {
-    					cxH -=360;
-    				}
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cxH);
-    				break;
-				}
-			} else {
-				switch (true) {
-					case (cEdH == 0):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-  					break;
-					case (cEdH < 90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-  					break;
-  				case (cEdH == 90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-  		  		break;
-  				case (cEdH < 180):						
-						if (cEdH < cStH) {
-							nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-						} else {
-							nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-						}
-    				break;
-  				case (cEdH == 180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-    				break;
-  			}				
-			}			
-		
-		} else if (cStH == 180) {
-			// *********************** cStH : 180
-			
-			if (cEdH < 0) {			
-				switch (true) {
-  				case (cEdH ==-180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-    				break;
-  				case (cEdH == -90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-    				break;
-  				case (cEdH >-90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-    				break;	
-  				case (cEdH >-180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-    				break;
-    		}		
-			} else {
-				switch (true) {	
-					case (cEdH == 0):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-  					break;
-					case (cEdH < 90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-  					break;
-		  		case (cEdH == 90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-		  		  break;
-  				case (cEdH < 180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-    				break;
-		  		case (cEdH == 180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-    				break;
- 		 		}
-			}
-		
-		} else {
-			// *********************** cStH 0
-			
-			if (cEdH < 0) {			
-				switch (true) {
-  				case (cEdH ==-180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-		    		break;
-  				case (cEdH == -90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-		    		break;
-		  		case (cEdH > -90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-    				break;
-		  		case (cEdH > -180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-    				break;
-				}
-			} else {
-				switch (true) {
-					case (cEdH == 0):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-  					break;
-					case (cEdH < 90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-  					break;
-		  		case (cEdH == 90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-  		  		break;
-		  		case (cEdH < 180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-    				break;
-		  		case (cEdH == 180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-    				break;
-  			}	
-			}
-		
-		}
-	} else {  // *************************************************************************** -ve bearing cStH *****************************
-		if ((cStH < 0) && (cStH > -90)) {
-			// *********************** cStH 0 ~ -90
-			
-			if (cEdH < 0) {
-				switch (true) {
-  				case (cEdH ==-180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-		    		break;
-  				case (cEdH == -90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-		    		break;
-		  		case (cEdH > -90):						
-						if (cEdH < cStH) {
-							nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-						} else {
-							nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-						}	
-    				break;
-  				case (cEdH >-180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-		    		break;
-				}			
-			} else {
-				switch (true) {
-					case (cEdH == 0):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-  					break;
-  				case (cEdH == 90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-  		  		break;
-					case (cEdH < 90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-  					break;
-  				case (cEdH < 180):						
-						if (cEdH < cStH + 180) {
-							nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-						} else {
-							var cxH = cStH - segA;
-    					if (cxH < -180) {
-    						cxH +=360;
-    					}
-							nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cxH);
-						}
-    				break;
-  				case (cEdH == 180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-    				break;
-  			}				
-			}
-
-		} else if (cStH == -90) {
-			// *********************** cStH -90
-			
-			if (cEdH < 0) {			
-				switch (true) {
-  				case (cEdH ==-180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-		    		break;
-  				case (cEdH == -90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-		    		break;
-  				case (cEdH >-90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-		    		break;	
-		  		case (cEdH >-180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-    				break;
-    		}		
-			} else {
-				switch (true) {
-					case (cEdH == 0):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-		  			break;
-					case (cEdH < 90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-		  			break;
-  				case (cEdH == 90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-		  		  break;
-		  		case (cEdH < 180):
-		  			var cxH = cStH - segA;
-    				if (cxH < -180) {
-    					cxH +=360;
-    				}
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cxH);						
-		    		break;
-		  		case (cEdH == 180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-		    		break;
-  			}				
-			}
-				  					
-		} else if ((cStH < -90) && (cStH > -180)) {
-			// *********************** cStH -90 ~ 180
-			
-			if (cEdH < 0) {			
-				switch (true) {
-  				case (cEdH ==-180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-		    		break;
-		  		case (cEdH == -90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-		    		break;
-		  		case (cEdH >-90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-		    		break;
-  				case (cEdH >-180):						
-						if (cEdH < cStH) {
-							nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-						} else {
-							nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-						}
-    				break;
-				}
-			} else {
-				switch (true) {
-					case (cEdH == 0):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-		  			break;
-					case (cEdH < 90):						
-						if (cEdH < cStH + 180) {
-							nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-						} else {
-							var cxH = cStH - segA;
-    					if (cxH < -180) {
-    						cxH +=360;
-    					}
-							nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cxH);
-						}
-		  			break;
-  				case (cEdH == 90):
-						var cxH = cStH - segA;
-    				if (cxH < -180) {
-    					cxH +=360;
-    				}
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cxH);
-		  		  break;
-		  		case (cEdH < 180):
-						var cxH = cStH - segA;
-    				if (cxH < -180) {
-    					cxH +=360;
-    				}
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cxH);
-		    		break;
-		  		case (cEdH == 180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-		    		break;
-  			}			
-			}
-							
-		} else if (cStH == -180) {
-			// *********************** cStH ~180/180
-			
-			if (cEdH < 0) {			
-				switch (true) {
-		  		case (cEdH ==-180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-		    		break;
-		  		case (cEdH == -90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-		    		break;
-		  		case (cEdH >-90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-		    		break;
-		  		case (cEdH >-180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-		    		break;
-    		}			
-			} else {
-				switch (true) {
-					case (cEdH == 0):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, -cStH - segA);
-  					break;
-					case (cEdH < 90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, -cStH - segA);
-		  			break;
-  				case (cEdH == 90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, -cStH - segA);
-		  		  break;
-  				case (cEdH < 180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, -cStH - segA);
-		    		break;
-  				case (cEdH == 180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, -cStH - segA);
-		    		break;
-  			}							
-			}
-			
-		} else {
-			// *********************** cStH 0
-			
-			if (cEdH < 0) {			
-				switch (true) {
-		  		case (cEdH ==-180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-		    		break;
-		  		case (cEdH == -90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-		    		break;
-		  		case (cEdH >-90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-		    		break;
-  				case (cEdH >-180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH - segA);
-		    		break;
-				}
-			} else {
-				switch (true) {
-					case (cEdH == 0):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-		  			break;
-					case (cEdH < 90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-		  			break;
-		  		case (cEdH == 90):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-		  		  break;
-		  		case (cEdH < 180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-		    		break;
-		  		case (cEdH == 180):
-						nwP = google.maps.geometry.spherical.computeOffset(xpc, cR, cStH + segA);
-		    		break;
-  			}				
-			}
-			
-		}		
-	}														
-
-														btnAddMarker2Polyline(cuvid,nwP.lat(),nwP.lng());
-														for (var c = 1; c < cpoly.markers.length; c++) {									
-															if (cpoly.markers.getAt(c).getPosition().equals(nwP)) {
-																if (typeof arr0[1] != 'undefined') { cpoly.markers.getAt(c).note = arr0[1]; }
-																if (typeof arr0[2] != 'undefined') { cpoly.markers.getAt(c).pitch = arr0[2]; }
-																if (typeof arr0[3] != 'undefined') { cpoly.markers.getAt(c).bdata = arr0[3]; }
-																if (typeof arr0[4] != 'undefined') { cpoly.markers.getAt(c).kit = arr0[4]; }																	
-															}
-														}															
-													}
-													
+													break;
 												}
 											}
 											
-										} else if (cuvtype == 'tcurve') {
-											var arr = bPoly.markers.getAt(midx).tcurve.split('§');
+											var e1 = allPoints[sIdx];
+											MapToolbar.addPoint(e1, tcpoly, sIdx);
+											var cuvNewIdx = MapToolbar.features["tcurveTab"][cuvid].markers.getLength()-1;
+													
+											if (typeof arr0[1] != 'undefined') { tcpoly.markers.getAt(cuvNewIdx).note = arr0[1]; }
+											if (typeof arr0[2] != 'undefined') { tcpoly.markers.getAt(cuvNewIdx).bdata.pitch = arr0[2]; }
+											if (typeof arr0[3] != 'undefined') { 
+												updateKdata("tcurveTab",cuvid,cuvNewIdx,arr0[3]);
+											}
+											if (typeof arr0[4] != 'undefined') { 
+												updateBdata("tcurveTab",cuvid,cuvNewIdx,arr0[4]);
+											}
 											
+											
+										} else if ((tcCst <= pitchStrdistance) && (pitchStrdistance <= tcCed)) {
+											var sL = pitchStrdistance - tcCst;
+											var a_deg = (180 * sL) / (Math.PI * Rc);
+											var e1;
+											if (dir  > 0) {
+												var ha = (iB + a_deg <= 180) ? iB + a_deg : iB + a_deg - 360;
+												e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
+												var addAt =  curveAddAt(cuvid,e1);	
+												MapToolbar.addPoint(e1, tcpoly, addAt);
+											} else {
+												var ha = (iB - a_deg <= -180) ? iB - a_deg + 360 : iB - a_deg ;
+												e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
+												var addAt =  curveAddAt(cuvid,e1);	
+												MapToolbar.addPoint(e1, tcpoly, addAt);
+
+											}
+											var cuvNewIdx = MapToolbar.features["tcurveTab"][cuvid].markers.getLength()-1;
+													
+											if (typeof arr0[1] != 'undefined') { tcpoly.markers.getAt(cuvNewIdx).note = arr0[1]; }
+											if (typeof arr0[2] != 'undefined') { tcpoly.markers.getAt(cuvNewIdx).bdata.pitch = arr0[2]; }
+											if (typeof arr0[3] != 'undefined') { 
+												updateKdata("tcurveTab",cuvid,cuvNewIdx,arr0[3]);
+											}
+											if (typeof arr0[4] != 'undefined') { 
+												updateBdata("tcurveTab",cuvid,cuvNewIdx,arr0[4]);
+											}																	
+										
+										} else if ((tcCed <= pitchStrdistance) && (pitchStrdistance <= tcTed)) {
+											//approximation method
+											var sL = pitchStrdistance - tcTst;
+											var allPoints = tcpoly.getPath().getArray();
+											var arrD = new Array();
+											var sIdx = null;
+											var lastD; 
+											
+											for (var t = 0; t <= allPoints.length; t++) { 
+												arrD.push(allPoints[t]);
+												var curL = google.maps.geometry.spherical.computeLength(arrD);
+												if (curL <= sL) {
+													sIdx = t;
+													lastD = curL;
+													//console.log(t + ':' + curL + '=' + sL);
+												} else {
+													//console.log(t + ':' + curL + '=' + sL);
+													if (sL - lastD > curL - sL) {
+														sIdx = t;
+														lastD = curL;													
+													}
+													break;
+												}
+											}
+											
+											var e1 = allPoints[sIdx];											
+											MapToolbar.addPoint(e1, tcpoly, sIdx);
+											var cuvNewIdx = MapToolbar.features["tcurveTab"][cuvid].markers.getLength()-1;
+													
+											if (typeof arr0[1] != 'undefined') { tcpoly.markers.getAt(cuvNewIdx).note = arr0[1]; }
+											if (typeof arr0[2] != 'undefined') { tcpoly.markers.getAt(cuvNewIdx).bdata.pitch = arr0[2]; }
+											if (typeof arr0[3] != 'undefined') { 
+												updateKdata("tcurveTab",cuvid,cuvNewIdx,arr0[3]);
+											}
+											if (typeof arr0[4] != 'undefined') { 
+												updateBdata("tcurveTab",cuvid,cuvNewIdx,arr0[4]);
+											}											
 											
 										}
-									} else {
-										alert('unable to get curve reference');
+	
 									}
 								}
 							}
-						} else {
-							
-						}
 					}
 				}
 			}
@@ -2885,47 +2593,54 @@ last update : 06 May 2014 12:00am (GMT 8+)
 		  var pid = $('#dtsv_lineid').val();
 			var poly = MapToolbar.features["lineTab"][pid];
 			
-			if ($('#dtsv_trackname').val() != '') { poly.name = $('#dtsv_trackname').val(); } else { poly.name = null; }
-			if ($('#dtsv_trackservice').val() != '') { 
-				poly.trackservice = $('#dtsv_trackservice').val(); 
-				//2do 
-				//'track_services'
-				//kalau servis tiada dalam senarai, add kalau dah ada x perlu add
+			if ($('#dtsv_trackname').val() != '') { poly.name = $('#dtsv_trackname').val(); } else { poly.name = ''; }
+			if ($('#dtsv_route').val() != '') { 
+				poly.route = $('#dtsv_route').val(); 
+
+				var svclist = document.getElementById('route_list');
+				if (svclist.childElementCount > 0) {
+					var dahada = false;
+					for (var i = 0; i < svclist.childElementCount; i++) {
+						if (svclist.children[i].firstElementChild.getAttribute("value") == poly.route) {
+							dahada = true;
+							break;
+						}
+					}
+					if (dahada == false) {
+						var slist = document.createElement('label');
+						slist.id = poly.route;
+						slist.innerHTML = '<input type="checkbox" value="' + poly.route + '" checked="checked" onClick="toggleRoute(\'' + poly.route + '\')">' + poly.route + '<br />';
+						svclist.appendChild(slist);						
+					}
+				} else {
+					var slist = document.createElement('label');
+					slist.id = poly.route;
+					slist.innerHTML = '<input type="checkbox" value="' + poly.route + '" checked="checked" onClick="toggleRoute(\'' + poly.route + '\')">' + poly.route + '<br />';
+					svclist.appendChild(slist);
+		
+				}
+				
 			} else {
-				poly.trackservice = null; 
+				poly.route = ''; 
 			}
-			if ($('#dtsv_tracknumber').val() != '') { poly.trackno = $('#dtsv_tracknumber').val(); } else { poly.trackno = null; }
-			if ($('#dtsv_trackSection').val() != '') { poly.tracksection = $('#dtsv_trackSection').val(); } else { poly.tracksection = null; }
-
-			var arrTxt = '';
-			
-			if ($('#dtsv_trackGauge').val() != '') { 
-				arrTxt += 'gauge:' + $('#dtsv_trackGauge').val() + '§';
-			} 
-
-			if ($('#dtsv_runningTrain').val() != '') { 
-				arrTxt += 'train:' + $('#dtsv_runningTrain').val() + '§';
-			} 
-			
-			if ($('#dtsv_railtypedefault').val() != '') { 
-				arrTxt += 'defaultrailindex:' + $('#dtsv_railtypedefault').val() + '§';
-			} 			
-
-			if ($('#dtsv_devID').val() != '') { 
-				arrTxt += 'devID:' + $('#dtsv_devID').val();
-			}
-
-			if (arrTxt != '') { poly.trackbve = arrTxt; } else { poly.trackbve = null;}
+					
+			if ($('#dtsv_devID').val() != '') { poly.bdata.devID = $('#dtsv_devID').val(); }
+			if ($('#dtsv_maxSpeed').val() != '') { poly.bdata.maxSpeed = $('#dtsv_maxSpeed').val(); }
+			if ($('#dtsv_simBVE').val() != '') { poly.bdata.simBVE = $('#dtsv_simBVE').val(); }
+			if ($('#dtsv_trackGauge').val() != '') { poly.bdata.gauge = $('#dtsv_trackGauge').val(); }
+			if ($('#dtsv_desc').val() != '') { poly.bdata.desc = $('#dtsv_desc').val(); }
+			if ($('#dtsv_runningTrain').val() != '') { poly.bdata.train = $('#dtsv_runningTrain').val(); }			
+			if ($('#dtsv_railtypedefault').val() != '') { poly.bdata.rail = $('#dtsv_railtypedefault').val(); }			
 	
 			if ($('#dtsv_note').val() != '') { poly.note = $('#dtsv_note').val(); } else { poly.note = null; }
+			
+			linesRoute(pid,poly.route);
 			
 			$('#dialogTrackSetting').dialog('close');
 			alert('track setting updated');
 			$('#dtsv_lineid').val('');
 			$('#dtsv_trackname').val('');
-			$('#dtsv_trackservice').val('');
-			$('#dtsv_tracknumber').val('');
-			$('#dtsv_trackSection').val('');
+			$('#dtsv_route').val('');
 			$('#dtsv_trackGauge').val('');
 			$('#dtsv_railtypedefault').val('');
 			$('#dtsv_runningTrain').val('');
@@ -2936,30 +2651,28 @@ last update : 06 May 2014 12:00am (GMT 8+)
 		$('#btnUpdateMarkerSetting').click(function() {
 			var pid = $('#dms_lineid').val(); // $('#').val();
 			var mIdx = $('#dms_markerindex').val();
-			var dms_service = $('#dms_service').val();
-			var lockedmarker = (document.getElementById('pitchStr_End').checked)? true : false;
-			var dms_railindex;
 			
-			for (i = 0; i < bverailobjArr.length; i++) {
-				if (typeof $('#dms_railindex option:selected').val() != 'undefined') {
-					var defaultRail = $('#dms_railindex option:selected').text();
-					if ( defaultRail == bverailobjArr[i][2] ) { 
-						dms_railindex = i; 
-						break;
-					}
-				}	
+			MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).bdata.railindex = $('#dms_railindex option:selected').val();
+			MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).bdata.height = $('#dms_height').val();
+			MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).bdata.pitch = $('#dms_pitch').val();
+			MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).note = $('#dms_note').val();
+			
+			if (document.getElementById('lockedmarker').checked) {
+				MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).setDraggable(false);
+			} else {
+				MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).setDraggable(true);
 			}
 			
-			var dms_poleindex = $('#').val();
-			var dms_GBstr = $('#').val();
-			var dms_objtype = $('#').val();
-			var dms_objindex = $('#').val();
-			var dms_leftX = $('#dms_leftX').val();
-			var dms_rightX = $('#dms_rightX').val();
-			var dms_heightX = $('#dms_heightX').val();
-			var dms_repeatCount = $('#dms_repeatCount').val();
-			var dms_repeatX = $('#dms_repeatX').val();
-			var dms_note = $('#dms_note').val();
+			if (document.getElementById('poleOn').checked) {
+				if (typeof $('#dms_poleindex option:selected').val() != 'undefined') {
+					MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).kdata.pole = $('#dms_poleindex option:selected').val();
+				}				
+				
+			} else {
+				MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).kdata.pole = '';
+			}			
+			$('#dialogMarkerSetting').dialog('close');
+			alert('marker updated');
 			
 		});
 		
@@ -2969,7 +2682,7 @@ last update : 06 May 2014 12:00am (GMT 8+)
 				var lng1 = parseFloat($('#dap_1lng').val());
 				var lat2 = parseFloat($('#dap_2lat').val());
 				var lng2 = parseFloat($('#dap_2lng').val());
-				var checkOK = (((lat1 != NaN) && (lng1 != NaN)) && ((lat2 != NaN) &&  (lng2 != NaN)))? true : false;
+				var checkOK = (((lat1 != NaN) && (lng1 != NaN)) && ((lat2 != NaN) &&  (lng2 != NaN))) ? true : false;
 				
 				if (checkOK) {
 					var pointA =  new google.maps.LatLng(lat1,lng1);
@@ -3064,26 +2777,15 @@ last update : 06 May 2014 12:00am (GMT 8+)
 		
 		$('#dInsB_bridge').change(function() {
 			if (document.getElementById('dInsB_bridge').value != '') {
-				for (i = 0; i < bvebridgeObjArr.length; i++) {					
-					if (bvebridgeObjArr[i][1] == document.getElementById('dInsB_bridge').value) {
-						$('#dInsB_BL').val(bvebridgeObjArr[i][9]);
-						document.getElementById('bridgeImg').src = 'images/' + bvebridgeObjArr[i][3];
-						break;
-					}					
-				}
+				var src = getObjectImage('bridge',$('#dInsB_bridge').val());
+				document.getElementById('bridgeImg').src='images/' + src;
 			}
 		});
 		
 		$('#dInsB_river').change(function() {
 			if (document.getElementById('dInsB_river').value != '') {
-				for (i = 0; i < bvebveStrOjArr.length; i++) {					
-					if (bvebveStrOjArr[i][3] == 'River') {
-						if (bvebveStrOjArr[i][1] == document.getElementById('dInsB_river').value) {
-							document.getElementById('bridgeRiverImg').src = 'images/' + bvebveStrOjArr[i][4];
-							break;
-						} 
-					}					
-				}
+				var src = getObjectImage('river',$('#dInsB_river').val());
+				document.getElementById('bridgeRiverImg').src='images/' + src;
 			}
 		});
 
@@ -3092,9 +2794,9 @@ last update : 06 May 2014 12:00am (GMT 8+)
 			//if (document.getElementById('dInsOb_overbridge').value != '') {
 				var pid = $('#dInsOb_PID').val(); 
 				var mIdx = parseInt($('#dInsOb_MID').val());
-				var distance_correction =($('#dInsOb_Lm').val() != '')? $('#dInsOb_Lm').val() : 0;
-				var height_correction =($('#dInsOb_Ht').val() != '')? $('#dInsOb_Ht').val() : 0;
-				var angle_correction = ($('#dInsOb_RA').val() != '')? $('#dInsOb_RA').val() : 0;	
+				var distance_correction =($('#dInsOb_Lm').val() != '') ? $('#dInsOb_Lm').val() : 0;
+				var height_correction =($('#dInsOb_Ht').val() != '') ? $('#dInsOb_Ht').val() : 0;
+				var angle_correction = ($('#dInsOb_RA').val() != '') ? $('#dInsOb_RA').val() : 0;	
 				
 				if (typeof MapToolbar.features["lineTab"][pid].markers.getAt(mIdx) != 'undefined') {
 					MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).kdata.overbridge = $('#dInsOb_overbridge').val() + ',' + distance_correction + ',' + height_correction + ',' + angle_correction;
@@ -3117,14 +2819,9 @@ last update : 06 May 2014 12:00am (GMT 8+)
 		
 		$('#dInsOb_overbridge').change(function() {
 			if (document.getElementById('dInsOb_overbridge').value != '') {
-				for (i = 0; i < bvefreeObjArr.length; i++) {					
-					if (bvefreeObjArr[i][3] == 'Structure') {
-						if (bvefreeObjArr[i][1] == document.getElementById('dInsOb_overbridge').value) {
-							document.getElementById('overbridgeImg').src = 'images/' + bvefreeObjArr[i][4];
-							break;
-						} 
-					}					
-				}
+				var src = getObjectImage('overbridge',$('#dInsOb_overbridge').val());
+				document.getElementById('overbridgeImg').src='images/' + src;
+
 			}
 		});		
 
@@ -3189,14 +2886,9 @@ last update : 06 May 2014 12:00am (GMT 8+)
 		
 		$('#dUpdG_object').change(function() {
 			if (document.getElementById('dUpdG_object').value != '') {
-				for (i = 0; i < bvebveStrOjArr.length; i++) {					
-					if (bvebveStrOjArr[i][3] == 'Ground') {
-						if (bvebveStrOjArr[i][1] == document.getElementById('dUpdG_object').value) {
-							document.getElementById('groundImg').src = 'images/' + bvebveStrOjArr[i][4];
-							break;
-						} 
-					}					
-				}
+				var src = getObjectImage('ground',$('#dUpdG_object').val());
+				document.getElementById('groundImg').src='images/' + src;
+
 			}
 		});			
 
@@ -3217,8 +2909,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 
 			var ti1 = parseFloat($('#dpLTs_iToL1').val());			
 			var wi1 = parseFloat($('#dpLTs_iToW1').val());
-			var ti2 = (document.getElementById('dpLTs_chkDifSlRatio1').checked)? parseFloat($('#dpLTs_iToL2').val()) : ti1;
-			var wi2 = (document.getElementById('dpLTs_chkDifSlRatio1').checked)? parseFloat($('#dpLTs_iToW2').val()) : wi1;
+			var ti2 = (document.getElementById('dpLTs_chkDifSlRatio1').checked) ? parseFloat($('#dpLTs_iToL2').val()) : ti1;
+			var wi2 = (document.getElementById('dpLTs_chkDifSlRatio1').checked) ? parseFloat($('#dpLTs_iToW2').val()) : wi1;
 			
 			var wst = parseInt($('#dpLTs_stIdx').val());
 			var wed = parseInt($('#dpLTs_edIdx').val());
@@ -3228,8 +2920,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 			
 			var te1 = parseFloat($('#dpLTs_eToL1').val());
 			var we1 = parseFloat($('#dpLTs_eToW1').val());
-			var te2 = (document.getElementById('dpLTs_chkDifSlRatio2').checked)? parseFloat($('#dpLTs_eToL2').val()) : te1;
-			var we2 = (document.getElementById('dpLTs_chkDifSlRatio2').checked)? parseFloat($('#dpLTs_eToW2').val()) : we1;
+			var te2 = (document.getElementById('dpLTs_chkDifSlRatio2').checked) ? parseFloat($('#dpLTs_eToL2').val()) : te1;
+			var we2 = (document.getElementById('dpLTs_chkDifSlRatio2').checked) ? parseFloat($('#dpLTs_eToW2').val()) : we1;
 			
 			
 			var i1slope = wi1 / ti1;
@@ -3256,7 +2948,7 @@ last update : 06 May 2014 12:00am (GMT 8+)
 										arrLineX = lineXdata.split(':'); 
 										if (arrLineX[0] == pid1) {
 											side = parseInt(arrLineX[1] );
-											offset = (side < 0)? (-1 * parseFloat(arrLineX[2])) : parseFloat(arrLineX[2]);
+											offset = (side < 0) ? (-1 * parseFloat(arrLineX[2])) : parseFloat(arrLineX[2]);
 											break;
 										}
 									}
@@ -3288,8 +2980,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 			
 			var pxa = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti1, h1);
 			var pxb = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te1, h1);
-			var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-			var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+			var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+			var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 			
 			var pxa2 = google.maps.geometry.spherical.computeOffset(pxa, wi1, h1-side);
 			var pxb2 = google.maps.geometry.spherical.computeOffset(pxb, -we1, h1+side);
@@ -3357,22 +3049,27 @@ last update : 06 May 2014 12:00am (GMT 8+)
 			var idx = parseInt($('#dInsForm_idx').val());
 			var side = $('#form0_pos').val();				
 			var platform_length = parseInt($('#platform_length').val());
-			var howtoForm = parseInt($('#howtocreateform').val());	
+			var howtoForm = parseInt($('#howtocreateform').val());
+
+			var formSide = ($('#form0_pos').val() == 'L')?  ':' + pid : pid + ':';			
 			
-			formMaker(pid,idx,platform_length,howtoForm,'form0');
-					
+			formMaker(pid,idx,platform_length,howtoForm,'form0',formSide);
+								
 			$('#dialogInsertPlatform').dialog('close');
 		});
 		
 		$('#form1_Insert').click(function() {
 			if ((typeof $('#dInsForm_pid').val() != 'undefined') && (typeof $('#dInsForm_idx').val() != 'undefined')) {
 				var pid = $('#dInsForm_pid').val();
+				var pid2 = $('#dInsForm_pid2').val();
 				var idx = parseInt($('#dInsForm_idx').val());
 				var side = $('#form0_pos').val();				
 				var platform_length = parseInt($('#platform_length').val());
-				var howtoForm = parseInt($('#howtocreateform').val());	
+				var howtoForm = parseInt($('#howtocreateform').val());
+				
+				var formSide  =  ':' + pid + ',' + pid2 + ':';
 								
-				formMaker(pid,idx,platform_length,howtoForm,'form1');
+				formMaker(pid,idx,platform_length,howtoForm,'form1',formSide);
 				
 				$('#dialogInsertPlatform').dialog('close');
 			}
@@ -3396,10 +3093,21 @@ last update : 06 May 2014 12:00am (GMT 8+)
 				var te2 = parseFloat($('#form2_tf2').val());
 				var we2 = parseFloat($('#form2_wf2').val());
 
-				var ti = (ti1 >= ti2)? ti1 : ti2;
-				var tf = (te1 >= te2)? te1 : te2;
+				var ti = (ti1 >= ti2) ? ti1 : ti2;
+				var tf = (te1 >= te2) ? te1 : te2;
 				
 				var sL = ti + platform_length + tf;
+
+				var formstr = ($('#dInsForm_BVEStr').val() != '- select -')? $('#dInsForm_BVEStr').val() : '';
+				var staName = $('#dInsForm_StaName').val();
+				var staID = $('#dInsForm_StaID').val();
+				var stopD = $('#dInsForm_StopDuration').val();
+				var stopS = (document.getElementById('dInsForm_StopSign').checked)? 1 : 0;
+				var fcar = $('#dInsForm_Cars').val();
+				var stopO = $('#dInsForm_StopOffset').val();
+				var stopT = (document.getElementById('dInsForm_TrainStop').checked)? 1 : 0;
+			
+				var formSide;
 				
 				var ptype = pid1.split('_')[0];
 				if (ptype == 'line') {
@@ -3417,11 +3125,15 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								var wst = idx;
 								var wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
 								var pxa = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti1, h1);
 								var pxb = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te1, h1);
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 			
 								var pxa2 = google.maps.geometry.spherical.computeOffset(pxa, wi1, h1-side);
 								var pxb2 = google.maps.geometry.spherical.computeOffset(pxb, -we1, h1+side);
@@ -3454,7 +3166,13 @@ last update : 06 May 2014 12:00am (GMT 8+)
 									new google.maps.Point(3, 3));
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).setIcon(image);
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).setIcon(image);
-							
+								
+								formSide = pid1 + ':' + pid2;
+
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = stopS + ',' + stopO;
+								addStation (staName,staID,MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).getPosition());
+														
 							}
 						
 						} else {
@@ -3467,11 +3185,15 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								var wst = idx;
 								var wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
 								var pxa = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti1, h1);
 								var pxb = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te1, h1);
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 			
 								var pxa2 = google.maps.geometry.spherical.computeOffset(pxa, wi1, h1-side);
 								var pxb2 = google.maps.geometry.spherical.computeOffset(pxb, -we1, h1+side);
@@ -3504,6 +3226,13 @@ last update : 06 May 2014 12:00am (GMT 8+)
 									new google.maps.Point(3, 3));
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).setIcon(image);
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).setIcon(image);
+								
+								formSide = pid1 + ':' + pid2;
+
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = stopS + ',' + stopO;
+								addStation (staName,staID,MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).getPosition());
+
 							}
 						}
 					}
@@ -3544,10 +3273,21 @@ last update : 06 May 2014 12:00am (GMT 8+)
 				var te4 = parseFloat($('#form3_tf4').val());
 				var we4 = parseFloat($('#form3_wf4').val());				
 				
-				var ti = (ti3 >= ti4)? ti3 : ti4;
-				var tf = (te3 >= te4)? te3 : te4;
+				var ti = (ti3 >= ti4) ? ti3 : ti4;
+				var tf = (te3 >= te4) ? te3 : te4;
 				
 				var sL = ti + platform_length + tf;
+				
+				var formstr = ($('#dInsForm_BVEStr').val() != '- select -')? $('#dInsForm_BVEStr').val() : '';
+				var staName = $('#dInsForm_StaName').val();
+				var staID = $('#dInsForm_StaID').val();
+				var stopD = $('#dInsForm_StopDuration').val();
+				var stopS = (document.getElementById('dInsForm_StopSign').checked)? 1 : 0;
+				var fcar = $('#dInsForm_Cars').val();
+				var stopO = $('#dInsForm_StopOffset').val();
+				var stopT = (document.getElementById('dInsForm_TrainStop').checked)? 1 : 0;
+			
+				var formSide;				
 				
 				var ptype = pid1.split('_')[0];
 				if (ptype == 'line') {
@@ -3577,8 +3317,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								var pxa = google.maps.geometry.spherical.computeOffset(pst1i, ti1, h1);
 								var pxb = google.maps.geometry.spherical.computeOffset(pst1e, -te1, h1);
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(pst1i, offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(pst1i, offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(pst1e, offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(pst1e, offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(pst1i, offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(pst1i, offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(pst1e, offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(pst1e, offset, (h1 + side));
 			
 								var pxa2 = google.maps.geometry.spherical.computeOffset(pxa, wi1, h1-side);
 								var pxb2 = google.maps.geometry.spherical.computeOffset(pxb, -we1, h1+side);
@@ -3592,6 +3332,13 @@ last update : 06 May 2014 12:00am (GMT 8+)
 									new google.maps.Point(3, 3));
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).setIcon(image);
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).setIcon(image);
+								
+								formSide = pid1 + ':' + pid2;;
+
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = stopS + ',' + stopO;
+								addStation (staName,staID,MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).getPosition());
+								
 															
 								wst2 = formLineWidenAddAt(pid2,px0);
 								
@@ -3635,8 +3382,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								var pxa = google.maps.geometry.spherical.computeOffset(pst1i, ti1, h1);
 								var pxb = google.maps.geometry.spherical.computeOffset(pst1e , -te1, h1);
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(pst1i , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(pst1i, offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(pst1e, offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(pst1e, offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(pst1i , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(pst1i, offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(pst1e, offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(pst1e, offset, (h1 + side));
 			
 								var pxa2 = google.maps.geometry.spherical.computeOffset(pxa, wi1, h1-side);
 								var pxb2 = google.maps.geometry.spherical.computeOffset(pxb, -we1, h1+side);
@@ -3649,7 +3396,14 @@ last update : 06 May 2014 12:00am (GMT 8+)
 									new google.maps.Point(0, 0),
 									new google.maps.Point(3, 3));
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).setIcon(image);
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).setIcon(image);		
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).setIcon(image);	
+
+								formSide = pid1 + ':' + pid2;;
+
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = stopS + ',' + stopO;
+								addStation (staName,staID,MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).getPosition());
+								
 								
 								wst2 = formLineWidenAddAt(pid2,px0);
 								
@@ -3675,6 +3429,10 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						}
 						
 						//formCreateLine(pid1,pid2,side,h1,offset,wst,wst+3,wst2,wed2,ti1,ti2,ti3,ti4,te3,te4,wi3,wi4,we3,we4);
+						if (document.getElementById('formcrackOp').checked) {
+							var crack = $('#formcrackID option:selected').val();
+							if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst-1).kdata.crack = crack; }
+						}
 						
 						var ti3a = ti3 - ti1;
 								
@@ -3691,6 +3449,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px3_b, newPoly, 1);
 						MapToolbar.addPoint(px3_c, newPoly, 2);
 						MapToolbar.addPoint(px3_d, newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + ':';
@@ -3698,24 +3458,24 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + (-1*side) + ':0:' + te3;
 
 	
-						var wst_3i = formLineWidenAddAt(pid1,px3_a);
+						//var wst_3i = formLineWidenAddAt(pid1,px3_a);
 						//MapToolbar.addPoint(px3_a, MapToolbar.features["lineTab"][pid1], wst_3i + 1);
 	
-						var wst_3f = formLineWidenAddAt(pid1,px3_d);
+						//var wst_3f = formLineWidenAddAt(pid1,px3_d);
 						//MapToolbar.addPoint(px3_d, MapToolbar.features["lineTab"][pid1], wst_3f + 1);
 	
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline = newPoly.id + ':0:0';
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst - 1).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst - 1).sline = newPoly.id + ':0:0';
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline += ',' + newPoly.id + ':0:0';
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst - 1).sline += ',' + newPoly.id + ':0:0';
 						}
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).setDraggable(false);
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
+						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).setDraggable(false);
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 4).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 4).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 4).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).setDraggable(false);
+						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).setDraggable(false);
 	
 						newPoly = null;
 
@@ -3734,31 +3494,33 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px4_b, newPoly, 1);
 						MapToolbar.addPoint(px4_c, newPoly, 2);
 						MapToolbar.addPoint(px4_d, newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + ':';
 						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + ':';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + te4;
 	
-						var wst_4i = formLineWidenAddAt(pid2,px4_a);
-						MapToolbar.addPoint(px4_a, MapToolbar.features["lineTab"][pid2], wst_4i + 1);
+						//var wst_4i = formLineWidenAddAt(pid2,px4_a);
+						//MapToolbar.addPoint(px4_a, MapToolbar.features["lineTab"][pid2], wst_4i + 1);
 	
-						var wst_4f = formLineWidenAddAt(pid2,px4_d);
-						MapToolbar.addPoint(px4_d, MapToolbar.features["lineTab"][pid2], wst_4f + 1);
+						//var wst_4f = formLineWidenAddAt(pid2,px4_d);
+						//MapToolbar.addPoint(px4_d, MapToolbar.features["lineTab"][pid2], wst_4f + 1);
 		
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline = newPoly.id + ':0:0';
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst - 1).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst - 1).sline = newPoly.id + ':0:0';
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline += ',' + newPoly.id + ':0:0';
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst - 1).sline += ',' + newPoly.id + ':0:0';
 						}
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4i + 1).setDraggable(false);
+						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4i + 1).setDraggable(false);
 	
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 4).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 4).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 4).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4f + 1).setDraggable(false);
+						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4f + 1).setDraggable(false);
 	
 						newPoly = null;	
 	
@@ -3801,10 +3563,21 @@ last update : 06 May 2014 12:00am (GMT 8+)
 				var te4 = parseFloat($('#form4_tf4').val());
 				var we4 = parseFloat($('#form4_wf4').val());				
 				
-				var ti = (ti1 >= ti2)? ti1 : ti2;
-				var tf = (te1 >= te2)? te1 : te2;
+				var ti = (ti1 >= ti2) ? ti1 : ti2;
+				var tf = (te1 >= te2) ? te1 : te2;
 				
 				var sL = ti + platform_length + tf;
+
+				var formstr = ($('#dInsForm_BVEStr').val() != '- select -')? $('#dInsForm_BVEStr').val() : '';
+				var staName = $('#dInsForm_StaName').val();
+				var staID = $('#dInsForm_StaID').val();
+				var stopD = $('#dInsForm_StopDuration').val();
+				var stopS = (document.getElementById('dInsForm_StopSign').checked)? 1 : 0;
+				var fcar = $('#dInsForm_Cars').val();
+				var stopO = $('#dInsForm_StopOffset').val();
+				var stopT = (document.getElementById('dInsForm_TrainStop').checked)? 1 : 0;
+			
+				var formSide;
 				
 				var ptype = pid1.split('_')[0];
 				if (ptype == 'line') {
@@ -3827,11 +3600,15 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
 								var pxa = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti1, h1);
 								var pxb = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te1, h1);
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 			
 								var pxa2 = google.maps.geometry.spherical.computeOffset(pxa, wi1, h1-side);
 								var pxb2 = google.maps.geometry.spherical.computeOffset(pxb, -we1, h1+side);
@@ -3845,7 +3622,7 @@ last update : 06 May 2014 12:00am (GMT 8+)
 									new google.maps.Point(3, 3));
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).setIcon(image);
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).setIcon(image);
-															
+								
 								wst2 = formLineWidenAddAt(pid2,px0);
 								
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
@@ -3878,11 +3655,15 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
 								var pxa = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti1, h1);
 								var pxb = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te1, h1);
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 			
 								var pxa2 = google.maps.geometry.spherical.computeOffset(pxa, wi1, h1-side);
 								var pxb2 = google.maps.geometry.spherical.computeOffset(pxb, -we1, h1+side);
@@ -3920,6 +3701,7 @@ last update : 06 May 2014 12:00am (GMT 8+)
 							}
 						}
 						
+						var pid3,pid4;
 						
 						var ti3a = ti1 - ti3;
 								
@@ -3938,6 +3720,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px3_c, newPoly, 3);
 						MapToolbar.addPoint(px3_d, newPoly, 4);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst+3).getPosition(), newPoly, 5);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3a;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + (Math.round((wi1/ti1) * ti3a * 1000)/1000) + ':' + ti3;
@@ -3952,18 +3736,20 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						var wst_3f = formLineWidenAddAt(pid1,px3_d);
 						//MapToolbar.addPoint(px3_d, MapToolbar.features["lineTab"][pid1], wst_3f + 1);
 	
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline = newPoly.id + ':0:0';
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i).sline = newPoly.id + ':0:0';
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline += ',' + newPoly.id + ':0:0';
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i).sline += ',' + newPoly.id + ':0:0';
 						}
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).setDraggable(false);
+						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).setDraggable(false);
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline == '') {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
 						} else {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).setDraggable(false);
+						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).setDraggable(false);
+						
+						pid3 = newPoly.id;
 	
 						newPoly = null;
 
@@ -3984,6 +3770,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px4_c, newPoly, 3);
 						MapToolbar.addPoint(px4_d, newPoly, 4);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+4).getPosition(), newPoly, 5);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4a;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + (Math.round((wi2/ti2) * ti4a * 1000)/1000) + ':' + ti4;
@@ -3998,20 +3786,28 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						var wst_4f = formLineWidenAddAt(pid2,px4_d);
 						//MapToolbar.addPoint(px4_d, MapToolbar.features["lineTab"][pid2], wst_4f + 1);
 		
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline = newPoly.id + ':0:0';
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i).sline = newPoly.id + ':0:0';
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline += ',' + newPoly.id + ':0:0';
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i).sline += ',' + newPoly.id + ':0:0';
 						}
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4i + 1).setDraggable(false);
+						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4i + 1).setDraggable(false);
 	
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline == '') {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
 						} else {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4f + 1).setDraggable(false);
-	
+						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4f + 1).setDraggable(false);
+						
+						pid4 = newPoly.id;
+						
+						formSide = pid3 + ':' + pid4;
+
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = stopS + ',' + stopO;
+						addStation (staName,staID,MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).getPosition());
+							
 						newPoly = null;
 						
 					}
@@ -4043,10 +3839,21 @@ last update : 06 May 2014 12:00am (GMT 8+)
 				var te2 = parseFloat($('#form5_tf2').val());
 				var we2 = parseFloat($('#form5_wf2').val());
 			
-				var ti = (ti1 >= ti2)? ti1 : ti2;
-				var tf = (te1 >= te2)? te1 : te2;
+				var ti = (ti1 >= ti2) ? ti1 : ti2;
+				var tf = (te1 >= te2) ? te1 : te2;
 				
 				var sL = ti + platform_length + tf;
+				
+				var formstr = ($('#dInsForm_BVEStr').val() != '- select -')? $('#dInsForm_BVEStr').val() : '';
+				var staName = $('#dInsForm_StaName').val();
+				var staID = $('#dInsForm_StaID').val();
+				var stopD = $('#dInsForm_StopDuration').val();
+				var stopS = (document.getElementById('dInsForm_StopSign').checked)? 1 : 0;
+				var fcar = $('#dInsForm_Cars').val();
+				var stopO = $('#dInsForm_StopOffset').val();
+				var stopT = (document.getElementById('dInsForm_TrainStop').checked)? 1 : 0;
+			
+				var formSide ;
 				
 				var ptype = pid1.split('_')[0];
 				if (ptype == 'line') {
@@ -4069,11 +3876,15 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
 								var pxa = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti1, h1);
 								var pxb = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te1, h1);
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 			
 								var pxa2 = google.maps.geometry.spherical.computeOffset(pxa, wi1, h1-side);
 								var pxb2 = google.maps.geometry.spherical.computeOffset(pxb, -we1, h1+side);
@@ -4087,6 +3898,13 @@ last update : 06 May 2014 12:00am (GMT 8+)
 									new google.maps.Point(3, 3));
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).setIcon(image);
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).setIcon(image);
+								
+								formSide = ':'+ pid1 + ',' + pid2 + ':';
+
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = stopS + ',' + stopO;
+								addStation (staName,staID,MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).getPosition());
+
 															
 								wst2 = formLineWidenAddAt(pid2,px0);
 								
@@ -4120,11 +3938,15 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
 								var pxa = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti1, h1);
 								var pxb = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te1, h1);
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 			
 								var pxa2 = google.maps.geometry.spherical.computeOffset(pxa, wi1, h1-side);
 								var pxb2 = google.maps.geometry.spherical.computeOffset(pxb, -we1, h1+side);
@@ -4137,7 +3959,14 @@ last update : 06 May 2014 12:00am (GMT 8+)
 									new google.maps.Point(0, 0),
 									new google.maps.Point(3, 3));
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).setIcon(image);
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).setIcon(image);		
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).setIcon(image);	
+
+								formSide = ':'+ pid1 + ',' + pid2 + ':';
+
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = stopS + ',' + stopO;
+								addStation (staName,staID,MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).getPosition());
+								
 								
 								wst2 = formLineWidenAddAt(pid2,px0);
 								
@@ -4172,6 +4001,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px3_b, newPoly, 1);
 						MapToolbar.addPoint(px3_c, newPoly, 2);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst+3).getPosition(), newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti1;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi1 + ':';
@@ -4211,6 +4042,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px4_a, newPoly, 1);
 						MapToolbar.addPoint(px4_d, newPoly, 2);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+4).getPosition(), newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':0:' + ti2;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + wi2 + ':';
@@ -4269,10 +4102,21 @@ last update : 06 May 2014 12:00am (GMT 8+)
 				var te4 = parseFloat($('#form6_tf4').val());
 				var we4 = parseFloat($('#form6_wf4').val());				
 				
-				var ti = (ti3 >= ti4)? ti3 : ti4;
-				var tf = (te3 >= te4)? te3 : te4;
+				var ti = (ti3 >= ti4) ? ti3 : ti4;
+				var tf = (te3 >= te4) ? te3 : te4;
 				
 				var sL = ti + platform_length + tf;
+				
+				var formstr = ($('#dInsForm_BVEStr').val() != '- select -')? $('#dInsForm_BVEStr').val() : '';
+				var staName = $('#dInsForm_StaName').val();
+				var staID = $('#dInsForm_StaID').val();
+				var stopD = $('#dInsForm_StopDuration').val();
+				var stopS = (document.getElementById('dInsForm_StopSign').checked)? 1 : 0;
+				var fcar = $('#dInsForm_Cars').val();
+				var stopO = $('#dInsForm_StopOffset').val();
+				var stopT = (document.getElementById('dInsForm_TrainStop').checked)? 1 : 0;
+			
+				var formSide;
 				
 				var ptype = pid1.split('_')[0];
 				if (ptype == 'line') {
@@ -4286,6 +4130,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						var wed;
 						var wst2;
 						var wed2;
+						var px3_a;
+						var px3_d;
 						
 						if (howtoForm < 0 ) {
 							if (typeof MapToolbar.features["lineTab"][pid1].markers.getAt(idx-1) != 'undefined') {
@@ -4295,17 +4141,28 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
-								
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+
+								px3_a = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti3, h1);
+								px3_d = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -ti3, h1);	
+						
+								MapToolbar.addPoint(px3_a, MapToolbar.features["lineTab"][pid1], wst+1);
+								MapToolbar.addPoint(px3_d, MapToolbar.features["lineTab"][pid1], wst+2);
+						
 								var image = new google.maps.MarkerImage('images/form_icon.png',
 									new google.maps.Size(6, 6),
 									new google.maps.Point(0, 0),
 									new google.maps.Point(3, 3));
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wst).setIcon(image);
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wed).setIcon(image);
-															
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).setIcon(image);
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).setIcon(image);								
+								
+																															
 								wst2 = formLineWidenAddAt(pid2,px0);
 								
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
@@ -4323,16 +4180,26 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
-								
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+
+								px3_a = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti3, h1);
+								px3_d = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -ti3, h1);	
+						
+								MapToolbar.addPoint(px3_a, MapToolbar.features["lineTab"][pid1], wst+1);
+								MapToolbar.addPoint(px3_d, MapToolbar.features["lineTab"][pid1], wst+2);
+						
 								var image = new google.maps.MarkerImage('images/form_icon.png',
 									new google.maps.Size(6, 6),
 									new google.maps.Point(0, 0),
 									new google.maps.Point(3, 3));
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wst).setIcon(image);
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wed).setIcon(image);		
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).setIcon(image);
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).setIcon(image);								
 								
 								wst2 = formLineWidenAddAt(pid2,px0);
 								
@@ -4341,11 +4208,14 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 							}
 						}
+						
+						var pid3,pid4;
 														
-						var px3_a = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti3, h1);
-						var px3_d = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -ti3, h1);	
 						var px3_b = google.maps.geometry.spherical.computeOffset(px3_a, wi3, h1-side);
 						var px3_c = google.maps.geometry.spherical.computeOffset(px3_d, -we3, h1+side);
+								
+						wst = idx;
+						wed = idx + 3;
 	
 						MapToolbar.initFeature('line');
 						MapToolbar.stopEditing();
@@ -4353,6 +4223,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px3_b, newPoly, 1);
 						MapToolbar.addPoint(px3_c, newPoly, 2);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition(), newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + ':';
@@ -4371,6 +4243,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wed).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wed).setDraggable(false);
+						
+						pid3 = newPoly.id;
 	
 						newPoly = null;
 
@@ -4385,6 +4259,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px4_b, newPoly, 1);
 						MapToolbar.addPoint(px4_c, newPoly, 2);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).getPosition(), newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + ':';
@@ -4404,12 +4280,20 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						}
 						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4i + 1).setDraggable(false);
 	
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+2).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+2).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+4).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+4).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+2).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+4).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
 						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4f + 1).setDraggable(false);
+						
+						pid4 = newPoly.id;
+						
+						formSide = ':'+ pid3 + ',' + pid4 + ':';
+
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).kdata.form = stopS + ',' + stopO;
+						addStation (staName,staID,MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).getPosition());
 	
 						newPoly = null;	
 						
@@ -4442,10 +4326,21 @@ last update : 06 May 2014 12:00am (GMT 8+)
 				var te2 = parseFloat($('#form7_tf2').val());
 				var we2 = parseFloat($('#form7_wf2').val());
 			
-				var ti = (ti1 >= ti2)? ti1 : ti2;
-				var tf = (te1 >= te2)? te1 : te2;
+				var ti = (ti1 >= ti2) ? ti1 : ti2;
+				var tf = (te1 >= te2) ? te1 : te2;
 				
 				var sL = ti + platform_length + tf;
+				
+				var formstr = ($('#dInsForm_BVEStr').val() != '- select -')? $('#dInsForm_BVEStr').val() : '';
+				var staName = $('#dInsForm_StaName').val();
+				var staID = $('#dInsForm_StaID').val();
+				var stopD = $('#dInsForm_StopDuration').val();
+				var stopS = (document.getElementById('dInsForm_StopSign').checked)? 1 : 0;
+				var fcar = $('#dInsForm_Cars').val();
+				var stopO = $('#dInsForm_StopOffset').val();
+				var stopT = (document.getElementById('dInsForm_TrainStop').checked)? 1 : 0;
+			
+				var formSide;
 				
 				var ptype = pid1.split('_')[0];
 				if (ptype == 'line') {
@@ -4468,11 +4363,15 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
 								var pxa = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti1, h1);
 								var pxb = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te1, h1);
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 			
 								var pxa2 = google.maps.geometry.spherical.computeOffset(pxa, wi1, h1-side);
 								var pxb2 = google.maps.geometry.spherical.computeOffset(pxb, -we1, h1+side);
@@ -4519,11 +4418,15 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
 								var pxa = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti1, h1);
 								var pxb = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te1, h1);
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 			
 								var pxa2 = google.maps.geometry.spherical.computeOffset(pxa, wi1, h1-side);
 								var pxb2 = google.maps.geometry.spherical.computeOffset(pxb, -we1, h1+side);
@@ -4560,7 +4463,7 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 							}
 						}
-						
+						var pid3, pid4;
 								
 						var px3_b = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti1, h1);
 						var px3_c = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst+3).getPosition() , -te1, h1);
@@ -4571,6 +4474,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px3_b, newPoly, 1);
 						MapToolbar.addPoint(px3_c, newPoly, 2);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst+3).getPosition(), newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti1;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi1 + ':';
@@ -4596,6 +4501,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 3).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 3).setDraggable(false);
+						
+						pid3 = newPoly.id;
 	
 						newPoly = null;
 
@@ -4610,6 +4517,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px4_a, newPoly, 1);
 						MapToolbar.addPoint(px4_d, newPoly, 2);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+4).getPosition(), newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':0:' + ti2;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + wi2 + ':';
@@ -4636,7 +4545,15 @@ last update : 06 May 2014 12:00am (GMT 8+)
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 3).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 3).setDraggable(false);
-	
+						
+						pid4 = newPoly.id;
+						
+						formSide = pid1 + ':'+ pid3 + ',' + pid4 + ':' + pid2;
+
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = stopS + ',' + stopO;
+						addStation (staName,staID,MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).getPosition());
+
 						newPoly = null;
 						
 					}
@@ -4668,10 +4585,21 @@ last update : 06 May 2014 12:00am (GMT 8+)
 				var te4 = parseFloat($('#form8_tf4').val());
 				var we4 = parseFloat($('#form8_wf4').val());				
 				
-				var ti = (ti3 >= ti4)? ti3 : ti4;
-				var tf = (te3 >= te4)? te3 : te4;
+				var ti = (ti3 >= ti4) ? ti3 : ti4;
+				var tf = (te3 >= te4) ? te3 : te4;
 				
 				var sL = ti + platform_length + tf;
+				
+				var formstr = ($('#dInsForm_BVEStr').val() != '- select -')? $('#dInsForm_BVEStr').val() : '';
+				var staName = $('#dInsForm_StaName').val();
+				var staID = $('#dInsForm_StaID').val();
+				var stopD = $('#dInsForm_StopDuration').val();
+				var stopS = (document.getElementById('dInsForm_StopSign').checked)? 1 : 0;
+				var fcar = $('#dInsForm_Cars').val();
+				var stopO = $('#dInsForm_StopOffset').val();
+				var stopT = (document.getElementById('dInsForm_TrainStop').checked)? 1 : 0;
+			
+				var formSide;
 				
 				var ptype = pid1.split('_')[0];
 				if (ptype == 'line') {
@@ -4685,6 +4613,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						var wed;
 						var wst2;
 						var wed2;
+						var px3_a;
+						var px3_d;
 						
 						if (howtoForm < 0 ) {
 							if (typeof MapToolbar.features["lineTab"][pid1].markers.getAt(idx-1) != 'undefined') {
@@ -4694,16 +4624,26 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 								
+								px3_a = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti3, h1);
+								px3_d = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -ti3, h1);	
+						
+								MapToolbar.addPoint(px3_a, MapToolbar.features["lineTab"][pid1], wst+1);
+								MapToolbar.addPoint(px3_d, MapToolbar.features["lineTab"][pid1], wst+2);
+						
 								var image = new google.maps.MarkerImage('images/form_icon.png',
 									new google.maps.Size(6, 6),
 									new google.maps.Point(0, 0),
 									new google.maps.Point(3, 3));
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wst).setIcon(image);
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wed).setIcon(image);
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).setIcon(image);
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).setIcon(image);								
 															
 								wst2 = formLineWidenAddAt(pid2,px0);
 								
@@ -4722,16 +4662,26 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 								
+								px3_a = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti3, h1);
+								px3_d = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -ti3, h1);	
+						
+								MapToolbar.addPoint(px3_a, MapToolbar.features["lineTab"][pid1], wst+1);
+								MapToolbar.addPoint(px3_d, MapToolbar.features["lineTab"][pid1], wst+2);
+						
 								var image = new google.maps.MarkerImage('images/form_icon.png',
 									new google.maps.Size(6, 6),
 									new google.maps.Point(0, 0),
 									new google.maps.Point(3, 3));
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wst).setIcon(image);
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wed).setIcon(image);		
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).setIcon(image);
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).setIcon(image);								
 								
 								wst2 = formLineWidenAddAt(pid2,px0);
 								
@@ -4740,11 +4690,14 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 							}
 						}
+						
+						var pid3, pid4;
 														
-						var px3_a = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti3, h1);
-						var px3_d = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -ti3, h1);	
 						var px3_b = google.maps.geometry.spherical.computeOffset(px3_a, wi3, h1-side);
 						var px3_c = google.maps.geometry.spherical.computeOffset(px3_d, -we3, h1+side);
+						
+						wst = idx;
+						wed = idx + 3;
 	
 						MapToolbar.initFeature('line');
 						MapToolbar.stopEditing();
@@ -4752,6 +4705,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px3_b, newPoly, 1);
 						MapToolbar.addPoint(px3_c, newPoly, 2);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition(), newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + ':';
@@ -4770,6 +4725,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wed).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wed).setDraggable(false);
+						
+						pid3 = newPoly.id;
 	
 						newPoly = null;
 
@@ -4784,6 +4741,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px4_b, newPoly, 1);
 						MapToolbar.addPoint(px4_c, newPoly, 2);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).getPosition(), newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + ':';
@@ -4803,13 +4762,21 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						}
 						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4i + 1).setDraggable(false);
 	
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+2).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+2).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+4).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+4).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+2).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+4).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
 						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4f + 1).setDraggable(false);
-	
+
+						pid4 = newPoly.id;
+						
+						formSide = pid3 + ':'+ pid1 + ',' + pid2 + ':' + pid4;
+
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).kdata.form = stopS + ',' + stopO;
+						addStation (staName,staID,MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition());
+						
 						newPoly = null;	
 						
 					}
@@ -4851,10 +4818,21 @@ last update : 06 May 2014 12:00am (GMT 8+)
 				var te4 = parseFloat($('#form9_tf4').val());
 				var we4 = parseFloat($('#form9_wf4').val());				
 				
-				var ti = (ti1 >= ti2)? ti1 : ti2;
-				var tf = (te1 >= te2)? te1 : te2;
+				var ti = (ti1 >= ti2) ? ti1 : ti2;
+				var tf = (te1 >= te2) ? te1 : te2;
 				
 				var sL = ti + platform_length + tf;
+				
+				var formstr = ($('#dInsForm_BVEStr').val() != '- select -')? $('#dInsForm_BVEStr').val() : '';
+				var staName = $('#dInsForm_StaName').val();
+				var staID = $('#dInsForm_StaID').val();
+				var stopD = $('#dInsForm_StopDuration').val();
+				var stopS = (document.getElementById('dInsForm_StopSign').checked)? 1 : 0;
+				var fcar = $('#dInsForm_Cars').val();
+				var stopO = $('#dInsForm_StopOffset').val();
+				var stopT = (document.getElementById('dInsForm_TrainStop').checked)? 1 : 0;
+			
+				var formSide;
 				
 				var ptype = pid1.split('_')[0];
 				if (ptype == 'line') {
@@ -4877,11 +4855,15 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
 								var pxa = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti1, h1);
 								var pxb = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te1, h1);
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 			
 								var pxa2 = google.maps.geometry.spherical.computeOffset(pxa, wi1, h1-side);
 								var pxb2 = google.maps.geometry.spherical.computeOffset(pxb, -we1, h1+side);
@@ -4928,11 +4910,15 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
 								var pxa = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti1, h1);
 								var pxb = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te1, h1);
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 			
 								var pxa2 = google.maps.geometry.spherical.computeOffset(pxa, wi1, h1-side);
 								var pxb2 = google.maps.geometry.spherical.computeOffset(pxb, -we1, h1+side);
@@ -4970,6 +4956,7 @@ last update : 06 May 2014 12:00am (GMT 8+)
 							}
 						}
 						
+						var pid3, pid4;
 					
 						var ti3a = ti1 - ti3;
 								
@@ -4988,6 +4975,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px3_c, newPoly, 3);
 						MapToolbar.addPoint(px3_d, newPoly, 4);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst+3).getPosition(), newPoly, 5);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3a;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + (Math.round((wi1/ti1) * ti3a * 1000)/1000) + ':' + ti3;
@@ -4996,46 +4985,53 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						newPoly.markers.getAt(4).lineX = pid1 + ':' + (-1*side) + ':' + (Math.round((we1/te1) * ti3a * 1000)/1000) + ':' + te3;
 						newPoly.markers.getAt(5).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3a;
 
+						var nIdx1 = AddMarker2Polyline(pid1,px3_a);
+						var nIdx2 = AddMarker2Polyline(pid1,px3_d);						
+						
 						var wst_3i = formLineWidenAddAt(pid1,px3_a);
 						//MapToolbar.addPoint(px3_a, MapToolbar.features["lineTab"][pid1], wst_3i + 1);
 	
 						var wst_3f = formLineWidenAddAt(pid1,px3_d);
 						//MapToolbar.addPoint(px3_d, MapToolbar.features["lineTab"][pid1], wst_3f + 1);
 	
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline = newPoly.id + ':0:0';
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i).sline = newPoly.id + ':0:0';
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline += ',' + newPoly.id + ':0:0';
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i).sline += ',' + newPoly.id + ':0:0';
 						}
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).setDraggable(false);
+						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).setDraggable(false);
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline == '') {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
 						} else {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).setDraggable(false);
+						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).setDraggable(false);
+						
+						pid3 = newPoly.id;
 	
 						newPoly = null;
-						
+												
 						MapToolbar.initFeature('line');
 						MapToolbar.stopEditing();
 						MapToolbar.addPoint(px3_a, newPoly, 0);
 						MapToolbar.addPoint(px3_d, newPoly, 1);
 						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
+						
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':' + wi1 + ':';
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + we1 + ':';
 						
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).sline = newPoly.id + ':0:0';
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(nIdx1).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(nIdx1).sline = newPoly.id + ':0:0';
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).sline += ',' + newPoly.id + ':0:0';
+							MapToolbar.features["lineTab"][pid1].markers.getAt(nIdx1).sline += ',' + newPoly.id + ':0:0';
 						}
 						
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(nIdx2).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(nIdx2).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
-						}									
+							MapToolbar.features["lineTab"][pid1].markers.getAt(nIdx2).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
+						}	
 						
 						newPoly = null;
 
@@ -5056,6 +5052,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px4_c, newPoly, 3);
 						MapToolbar.addPoint(px4_d, newPoly, 4);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+4).getPosition(), newPoly, 5);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4a;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + (Math.round((wi2/ti2) * ti4a * 1000)/1000) + ':' + ti4;
@@ -5064,25 +5062,34 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						newPoly.markers.getAt(4).lineX = pid1 + ':' + side + ':' + (Math.round((we2/te2) * ti4a * 1000)/1000) + ':' + te4;
 						newPoly.markers.getAt(5).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4a;
 	
-						var wst_4i = formLineWidenAddAt(pid2,px4_a);
+						//var wst_4i = formLineWidenAddAt(pid2,px4_a);
 						//MapToolbar.addPoint(px4_a, MapToolbar.features["lineTab"][pid2], wst_4i + 1);
 	
-						var wst_4f = formLineWidenAddAt(pid2,px4_d);
+						//var wst_4f = formLineWidenAddAt(pid2,px4_d);
 						//MapToolbar.addPoint(px4_d, MapToolbar.features["lineTab"][pid2], wst_4f + 1);
 		
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline = newPoly.id + ':0:0';
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i).sline = newPoly.id + ':0:0';
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline += ',' + newPoly.id + ':0:0';
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i).sline += ',' + newPoly.id + ':0:0';
 						}
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4i + 1).setDraggable(false);
+						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4i + 1).setDraggable(false);
 	
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline == '') {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
 						} else {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4f + 1).setDraggable(false);
+						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4f + 1).setDraggable(false);
+						
+						pid4 = newPoly.id;
+						
+						formSide = pid1 + ':'+ pid3 + ',' + pid4 + ':' + pid2;
+
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 3).kdata.form = stopS + ',' + stopO;
+						addStation (staName,staID,MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).getPosition());
+						
 	
 						newPoly = null;
 						
@@ -5091,19 +5098,21 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px4_a, newPoly, 0);
 						MapToolbar.addPoint(px4_d, newPoly, 1);
 						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
+						
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + wi2 + ':';
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we2 + ':';
 						
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).sline = newPoly.id + ':0:0';
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(nIdx1).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(nIdx1).sline = newPoly.id + ':0:0';
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).sline += ',' + newPoly.id + ':0:0';
+							MapToolbar.features["lineTab"][pid1].markers.getAt(nIdx1).sline += ',' + newPoly.id + ':0:0';
 						}
 						
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(nIdx2).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(nIdx2).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
+							MapToolbar.features["lineTab"][pid1].markers.getAt(nIdx2).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
 						newPoly = null;
 					}
@@ -5145,10 +5154,21 @@ last update : 06 May 2014 12:00am (GMT 8+)
 				var te4 = parseFloat($('#form10_tf4').val());
 				var we4 = parseFloat($('#form10_wf4').val());				
 				
-				var ti = (ti3 >= ti4)? ti3 : ti4;
-				var tf = (te3 >= te4)? te3 : te4;
+				var ti = (ti3 >= ti4) ? ti3 : ti4;
+				var tf = (te3 >= te4) ? te3 : te4;
 				
 				var sL = ti + platform_length + tf;
+				
+				var formstr = ($('#dInsForm_BVEStr').val() != '- select -')? $('#dInsForm_BVEStr').val() : '';
+				var staName = $('#dInsForm_StaName').val();
+				var staID = $('#dInsForm_StaID').val();
+				var stopD = $('#dInsForm_StopDuration').val();
+				var stopS = (document.getElementById('dInsForm_StopSign').checked)? 1 : 0;
+				var fcar = $('#dInsForm_Cars').val();
+				var stopO = $('#dInsForm_StopOffset').val();
+				var stopT = (document.getElementById('dInsForm_TrainStop').checked)? 1 : 0;
+			
+				var formSide;				
 				
 				var ptype = pid1.split('_')[0];
 				if (ptype == 'line') {
@@ -5178,8 +5198,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								var pxa = google.maps.geometry.spherical.computeOffset(pst1i, ti1, h1);
 								var pxb = google.maps.geometry.spherical.computeOffset(pst1e, -te1, h1);
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(pst1i, offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(pst1i, offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(pst1e, offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(pst1e, offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(pst1i, offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(pst1i, offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(pst1e, offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(pst1e, offset, (h1 + side));
 			
 								var pxa2 = google.maps.geometry.spherical.computeOffset(pxa, wi1, h1-side);
 								var pxb2 = google.maps.geometry.spherical.computeOffset(pxb, -we1, h1+side);
@@ -5236,8 +5256,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								var pxa = google.maps.geometry.spherical.computeOffset(pst1i, ti1, h1);
 								var pxb = google.maps.geometry.spherical.computeOffset(pst1e , -te1, h1);
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(pst1i , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(pst1i, offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(pst1e, offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(pst1e, offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(pst1i , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(pst1i, offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(pst1e, offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(pst1e, offset, (h1 + side));
 			
 								var pxa2 = google.maps.geometry.spherical.computeOffset(pxa, wi1, h1-side);
 								var pxb2 = google.maps.geometry.spherical.computeOffset(pxb, -we1, h1+side);
@@ -5275,6 +5295,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 							}
 						}
 						
+						var pid3,pid4;
+						
 						var ti3a = ti3 - ti1;
 								
 						var px3_a = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , -ti3a, h1);
@@ -5290,6 +5312,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px3_b, newPoly, 1);
 						MapToolbar.addPoint(px3_c, newPoly, 2);
 						MapToolbar.addPoint(px3_d, newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + ':';
@@ -5298,48 +5322,33 @@ last update : 06 May 2014 12:00am (GMT 8+)
 
 	
 						var wst_3i = formLineWidenAddAt(pid1,px3_a);
-						//MapToolbar.addPoint(px3_a, MapToolbar.features["lineTab"][pid1], wst_3i + 1);
+						MapToolbar.addPoint(px3_a, MapToolbar.features["lineTab"][pid1], wst_3i + 1);
 	
 						var wst_3f = formLineWidenAddAt(pid1,px3_d);
-						//MapToolbar.addPoint(px3_d, MapToolbar.features["lineTab"][pid1], wst_3f + 1);
+						MapToolbar.addPoint(px3_d, MapToolbar.features["lineTab"][pid1], wst_3f + 1);
 	
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline == '') {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline = newPoly.id + ':0:0';
 						} else {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline += ',' + newPoly.id + ':0:0';
 						}
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).setDraggable(false);
+						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).setDraggable(false);
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline == '') {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
 						} else {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).setDraggable(false);
+						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).setDraggable(false);
+						
+						if (document.getElementById('formcrackOp').checked) {
+							var crack = $('#formcrackID option:selected').val();
+							if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).kdata.crack = crack; }
+						}
+						
+						pid3 = newPoly.id;
 	
 						newPoly = null;
 	
-						MapToolbar.initFeature('line');
-						MapToolbar.stopEditing();
-						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 2).getPosition(), newPoly, 0);
-						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 5).getPosition(), newPoly, 1);
-						
-						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':' + wi1 + ':';
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + we1 + ':';
-						
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline = newPoly.id + ':0:0';
-						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline += ',' + newPoly.id + ':0:0';
-						}
-						
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
-						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
-						}									
-						
-						newPoly = null;	
-
 						var ti4a = ti4 - ti2;
 	
 						var px4_a = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).getPosition() , -ti4a, h1);
@@ -5355,6 +5364,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px4_b, newPoly, 1);
 						MapToolbar.addPoint(px4_c, newPoly, 2);
 						MapToolbar.addPoint(px4_d, newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + ':';
@@ -5362,45 +5373,81 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + te4;
 	
 						var wst_4i = formLineWidenAddAt(pid2,px4_a);
-						MapToolbar.addPoint(px4_a, MapToolbar.features["lineTab"][pid2], wst_4i + 1);
+						//MapToolbar.addPoint(px4_a, MapToolbar.features["lineTab"][pid2], wst_4i + 1);
 	
 						var wst_4f = formLineWidenAddAt(pid2,px4_d);
-						MapToolbar.addPoint(px4_d, MapToolbar.features["lineTab"][pid2], wst_4f + 1);
+						//MapToolbar.addPoint(px4_d, MapToolbar.features["lineTab"][pid2], wst_4f + 1);
 		
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline == '') {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline = newPoly.id + ':0:0';
 						} else {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline += ',' + newPoly.id + ':0:0';
 						}
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4i + 1).setDraggable(false);
+						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4i + 1).setDraggable(false);
 	
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline == '') {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
 						} else {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4f + 1).setDraggable(false);
+						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4f + 1).setDraggable(false);
+
+						pid4 = newPoly.id;
+						
+						newPoly = null;							
+						
+						formSide = pid3 + ':'+ pid1 + ',' + pid2 + ':' + pid4;
+
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 3).kdata.form = stopS + ',' + stopO;
+						addStation (staName,staID,MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).getPosition());					
 	
-						newPoly = null;	
+
 						
 						MapToolbar.initFeature('line');
 						MapToolbar.stopEditing();
-						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst_4i+2).getPosition(), newPoly, 0);
-						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst_4i+5).getPosition(), newPoly, 1);
+						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 3).getPosition(), newPoly, 0);
+						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 6).getPosition(), newPoly, 1);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
+						
+						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':' + wi1 + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + we1 + ':';
+						
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 3).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 3).sline = newPoly.id + ':0:0';
+						} else {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 3).sline += ',' + newPoly.id + ':0:0';
+						}
+						
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 6).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 6).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
+						} else {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 6).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
+						}									
+						
+						newPoly = null;	
+												
+						MapToolbar.initFeature('line');
+						MapToolbar.stopEditing();
+						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst_4i+1).getPosition(), newPoly, 0);
+						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst_4i+4).getPosition(), newPoly, 1);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 						
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + wi2 + ':';
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we2 + ':';
 						
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline = newPoly.id + ':0:0';
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 3).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 3).sline = newPoly.id + ':0:0';
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 1).sline += ',' + newPoly.id + ':0:0';
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 3).sline += ',' + newPoly.id + ':0:0';
 						}
 						
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 6).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 6).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 6).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
 						newPoly = null;						
 						
@@ -5443,10 +5490,21 @@ last update : 06 May 2014 12:00am (GMT 8+)
 				var te6 = parseFloat($('#form11_tf6').val());
 				var we6 = parseFloat($('#form11_wf6').val());				
 				
-				var ti = (ti3 >= ti4)? ti3 : ti4;
-				var tf = (te3 >= te4)? te3 : te4;
+				var ti = (ti3 >= ti4) ? ti3 : ti4;
+				var tf = (te3 >= te4) ? te3 : te4;
 				
 				var sL = ti + platform_length + tf;
+				
+				var formstr = ($('#dInsForm_BVEStr').val() != '- select -')? $('#dInsForm_BVEStr').val() : '';
+				var staName = $('#dInsForm_StaName').val();
+				var staID = $('#dInsForm_StaID').val();
+				var stopD = $('#dInsForm_StopDuration').val();
+				var stopS = (document.getElementById('dInsForm_StopSign').checked)? 1 : 0;
+				var fcar = $('#dInsForm_Cars').val();
+				var stopO = $('#dInsForm_StopOffset').val();
+				var stopT = (document.getElementById('dInsForm_TrainStop').checked)? 1 : 0;
+			
+				var formSide;
 				
 				var ptype = pid1.split('_')[0];
 				if (ptype == 'line') {
@@ -5460,6 +5518,9 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						var wed;
 						var wst2;
 						var wed2;
+						var px3_a;
+						var px3_d;
+					
 						
 						if (howtoForm < 0 ) {
 							if (typeof MapToolbar.features["lineTab"][pid1].markers.getAt(idx-1) != 'undefined') {
@@ -5469,16 +5530,26 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 								
+								px3_a = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti3, h1);
+								px3_d = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -ti3, h1);	
+						
+								MapToolbar.addPoint(px3_a, MapToolbar.features["lineTab"][pid1], wst+1);
+								MapToolbar.addPoint(px3_d, MapToolbar.features["lineTab"][pid1], wst+2);
+						
 								var image = new google.maps.MarkerImage('images/form_icon.png',
 									new google.maps.Size(6, 6),
 									new google.maps.Point(0, 0),
 									new google.maps.Point(3, 3));
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wst).setIcon(image);
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wed).setIcon(image);
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).setIcon(image);
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).setIcon(image);								
 															
 								wst2 = formLineWidenAddAt(pid2,px0);
 								
@@ -5497,16 +5568,26 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 								
+								px3_a = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti3, h1);
+								px3_d = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -ti3, h1);	
+						
+								MapToolbar.addPoint(px3_a, MapToolbar.features["lineTab"][pid1], wst+1);
+								MapToolbar.addPoint(px3_d, MapToolbar.features["lineTab"][pid1], wst+2);
+						
 								var image = new google.maps.MarkerImage('images/form_icon.png',
 									new google.maps.Size(6, 6),
 									new google.maps.Point(0, 0),
 									new google.maps.Point(3, 3));
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wst).setIcon(image);
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wed).setIcon(image);		
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).setIcon(image);
+								MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).setIcon(image);								
 								
 								wst2 = formLineWidenAddAt(pid2,px0);
 								
@@ -5515,9 +5596,12 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 							}
 						}
-														
-						var px3_a = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti3, h1);
-						var px3_d = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te3, h1);	
+						
+						var pid3,pid4,pid5,pid6;
+
+						wst = idx;
+						wed = idx + 3;
+																			
 						var px3_b = google.maps.geometry.spherical.computeOffset(px3_a, wi3, h1-side);
 						var px3_c = google.maps.geometry.spherical.computeOffset(px3_d, -we3, h1+side);
 	
@@ -5527,6 +5611,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px3_b, newPoly, 1);
 						MapToolbar.addPoint(px3_c, newPoly, 2);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition(), newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + ':';
@@ -5545,49 +5631,11 @@ last update : 06 May 2014 12:00am (GMT 8+)
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wed).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wed).setDraggable(false);
+						
+						pid3 = newPoly.id;
 	
 						newPoly = null;
 						
-						var ti5a = ti3 -ti5;
-						var te5a = te3 -te5;
-						var px5_a = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti5a, h1);
-						var px5_d = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te5a, h1);	
-						var px5_a2 = google.maps.geometry.spherical.computeOffset(px5_a, ti5, h1);
-						var px5_d2 = google.maps.geometry.spherical.computeOffset(px5_d, -te5, h1);	
-						var px5_b = google.maps.geometry.spherical.computeOffset(px5_a2, wi5, h1-side);
-						var px5_c = google.maps.geometry.spherical.computeOffset(px5_d2, -we5, h1+side);
-	
-						MapToolbar.initFeature('line');
-						MapToolbar.stopEditing();
-						MapToolbar.addPoint(px5_a, newPoly, 0);
-						MapToolbar.addPoint(px5_b, newPoly, 1);
-						MapToolbar.addPoint(px5_c, newPoly, 2);
-						MapToolbar.addPoint(px5_d, newPoly, 3);
-	
-						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti5;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi5 + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we5 + ':';
-						newPoly.markers.getAt(3).lineX = pid1 + ':' + (-1*side) + ':0:' + te5;
-						
-						//MapToolbar.addPoint(px5_a, MapToolbar.features["lineTab"][pid1], wst+1);
-						//MapToolbar.addPoint(px5_d, MapToolbar.features["lineTab"][pid1], wed+2);
-	
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).sline = newPoly.id + ':0:0';
-						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).sline += ',' + newPoly.id + ':0:0';
-						}
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).setDraggable(false);
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wed+1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wed+1).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
-						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wed+1).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
-						}						
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wed+1).setDraggable(false);
-	
-						newPoly = null;
-						
-
 						var px4_a = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).getPosition() , ti4, h1);
 						var px4_d = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).getPosition() , -te4, h1);
 						var px4_b = google.maps.geometry.spherical.computeOffset(px4_a, wi4, h1+side);
@@ -5599,18 +5647,14 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px4_b, newPoly, 1);
 						MapToolbar.addPoint(px4_c, newPoly, 2);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).getPosition(), newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + ':';
 						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + ':';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + te4;
-	
-						//var wst_4i = formLineWidenAddAt(pid2,px4_a);
-						//MapToolbar.addPoint(px4_a, MapToolbar.features["lineTab"][pid2], wst_4i + 1);
-	
-						//var wst_4f = formLineWidenAddAt(pid2,px4_d);
-						//MapToolbar.addPoint(px4_d, MapToolbar.features["lineTab"][pid2], wst_4f + 1);
-		
+			
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+1).sline == '') {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+1).sline = newPoly.id + ':0:0';
 						} else {
@@ -5618,14 +5662,60 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						}
 						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4i + 1).setDraggable(false);
 	
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+2).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+2).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+4).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+4).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+2).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+4).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
-						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4f + 1).setDraggable(false);
+						
+						pid4 = newPoly.id;
 	
 						newPoly = null;	
+											
+						var ti5a = ti3 -ti5;
+						var te5a = te3 -te5;
+						
+						var px5_a = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti5a, h1);
+						var px5_d = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te5a, h1);	
+						
+						MapToolbar.addPoint(px5_a, MapToolbar.features["lineTab"][pid1], wst+1);
+						MapToolbar.addPoint(px5_d, MapToolbar.features["lineTab"][pid1], wst+4);
+						
+						var px5_a2 = google.maps.geometry.spherical.computeOffset(px5_a, ti5, h1);
+						var px5_d2 = google.maps.geometry.spherical.computeOffset(px5_d, -te5, h1);	
+						var px5_b = google.maps.geometry.spherical.computeOffset(px5_a2, wi5, h1-side);
+						var px5_c = google.maps.geometry.spherical.computeOffset(px5_d2, -we5, h1+side);
+	
+						MapToolbar.initFeature('line');
+						MapToolbar.stopEditing();
+						MapToolbar.addPoint(px5_a, newPoly, 0);
+						MapToolbar.addPoint(px5_b, newPoly, 1);
+						MapToolbar.addPoint(px5_c, newPoly, 2);
+						MapToolbar.addPoint(px5_d, newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
+	
+						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti5;
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi5 + ':';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we5 + ':';
+						newPoly.markers.getAt(3).lineX = pid1 + ':' + (-1*side) + ':0:' + te5;
+							
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).sline = newPoly.id + ':0:0';
+						} else {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).sline += ',' + newPoly.id + ':0:0';
+						}
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).setDraggable(false);
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst+4).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst+4).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
+						} else {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst+4).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
+						}						
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+4).setDraggable(false);
+						
+						pid5 = newPoly.id;
+	
+						newPoly = null;
 
 						var ti6a = ti4 -ti6;
 						var te6a = te4 -te6;
@@ -5642,31 +5732,37 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px6_b, newPoly, 1);
 						MapToolbar.addPoint(px6_c, newPoly, 2);
 						MapToolbar.addPoint(px6_d, newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti6;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi6)*1000))/1000) + ':';
 						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we6)*1000))/1000) + ':';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + te6;
 	
-						var wst_6i = formLineWidenAddAt(pid2,px6_a);
-						MapToolbar.addPoint(px6_a, MapToolbar.features["lineTab"][pid2], wst_6i + 1);
-	
-						var wst_6f = formLineWidenAddAt(pid2,px6_d);
-						MapToolbar.addPoint(px6_d, MapToolbar.features["lineTab"][pid2], wst_6f + 1);
 		
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_6i+1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_6i+1).sline = newPoly.id + ':0:0';
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).sline = newPoly.id + ':0:0';
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_6i+1).sline += ',' + newPoly.id + ':0:0';
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).sline += ',' + newPoly.id + ':0:0';
 						}
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_6i + 1).setDraggable(false);
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).setDraggable(false);
 	
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_6f + 1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_6f + 1).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 4).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 4).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_6f + 1).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 4).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_6f + 1).setDraggable(false);
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 4).setDraggable(false);
+						
+						pid6 = newPoly.id;
+						
+						formSide = pid3 + ':'+ pid5 + ',' + pid6 + ':' + pid4;
+
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+3).kdata.form = stopS + ',' + stopO;
+						addStation (staName,staID,MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).getPosition());
+						
 	
 						newPoly = null;							
 						
@@ -5709,10 +5805,21 @@ last update : 06 May 2014 12:00am (GMT 8+)
 				var te4 = parseFloat($('#form12_tf4').val());
 				var we4 = parseFloat($('#form12_wf4').val());	
 				
-				var ti = (ti1 >= ti2)? ti1 : ti2;
-				var tf = (te1 >= te2)? te1 : te2;
+				var ti = (ti1 >= ti2) ? ti1 : ti2;
+				var tf = (te1 >= te2) ? te1 : te2;
 				
 				var sL = ti + platform_length + tf;
+				
+				var formstr = ($('#dInsForm_BVEStr').val() != '- select -')? $('#dInsForm_BVEStr').val() : '';
+				var staName = $('#dInsForm_StaName').val();
+				var staID = $('#dInsForm_StaID').val();
+				var stopD = $('#dInsForm_StopDuration').val();
+				var stopS = (document.getElementById('dInsForm_StopSign').checked)? 1 : 0;
+				var fcar = $('#dInsForm_Cars').val();
+				var stopO = $('#dInsForm_StopOffset').val();
+				var stopT = (document.getElementById('dInsForm_TrainStop').checked)? 1 : 0;
+			
+				var formSide;
 				
 				var ptype = pid1.split('_')[0];
 				if (ptype == 'line') {
@@ -5735,11 +5842,15 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
 								var pxa = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti1, h1);
 								var pxb = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te1, h1);
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 			
 								var pxa2 = google.maps.geometry.spherical.computeOffset(pxa, wi1, h1-side);
 								var pxb2 = google.maps.geometry.spherical.computeOffset(pxb, -we1, h1+side);
@@ -5786,11 +5897,15 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
 								var pxa = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti1, h1);
 								var pxb = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te1, h1);
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 			
 								var pxa2 = google.maps.geometry.spherical.computeOffset(pxa, wi1, h1-side);
 								var pxb2 = google.maps.geometry.spherical.computeOffset(pxb, -we1, h1+side);
@@ -5826,7 +5941,9 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';	
 								
 							}
-						}					
+						}
+
+						var pid3, pid4;
 								
 						var px3_a0 = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti3, h1);
 						var px3_a = google.maps.geometry.spherical.computeOffset(px3_a0, wi3, h1-side);
@@ -5837,6 +5954,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.stopEditing();
 						MapToolbar.addPoint(px3_a, newPoly, 0);
 						MapToolbar.addPoint(px3_b, newPoly, 1);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + ':';
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + we3 + ':';
@@ -5860,6 +5979,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).setDraggable(false);
+						
+						pid3 = newPoly.id;
 	
 						newPoly = null;
 						
@@ -5867,6 +5988,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.stopEditing();
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition(), newPoly, 0);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 2).getPosition(), newPoly, 1);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 						
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + wi1 + ':' + ti1;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we1 + ':' + te1;
@@ -5901,6 +6024,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.stopEditing();
 						MapToolbar.addPoint(px4_a, newPoly, 0);
 						MapToolbar.addPoint(px4_b, newPoly, 1);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + wi4 + ':';
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we4 + ':';
@@ -5924,6 +6049,15 @@ last update : 06 May 2014 12:00am (GMT 8+)
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 1).setDraggable(false);
+						
+						pid4 = newPoly.id;
+						
+						formSide = pid1 + ':'+ pid3 + ',' + pid4 + ':' + pid2;
+
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 3).kdata.form = stopS + ',' + stopO;
+						addStation (staName,staID,MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).getPosition());
+						
 	
 						newPoly = null;
 						
@@ -5931,6 +6065,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.stopEditing();
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst_4i).getPosition(), newPoly, 0);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst_4f + 2).getPosition(), newPoly, 1);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 						
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + wi2 + ':' + ti2;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we2 + ':' + te2;
@@ -5990,10 +6126,21 @@ last update : 06 May 2014 12:00am (GMT 8+)
 				var te4 = parseFloat($('#form13_tf4').val());
 				var we4 = parseFloat($('#form13_wf4').val());	
 				
-				var ti = (ti3 >= ti4)? ti3 : ti4;
-				var tf = (te3 >= te4)? te3 : te4;
+				var ti = (ti3 >= ti4) ? ti3 : ti4;
+				var tf = (te3 >= te4) ? te3 : te4;
 				
 				var sL = ti + platform_length + tf;
+				
+				var formstr = ($('#dInsForm_BVEStr').val() != '- select -')? $('#dInsForm_BVEStr').val() : '';
+				var staName = $('#dInsForm_StaName').val();
+				var staID = $('#dInsForm_StaID').val();
+				var stopD = $('#dInsForm_StopDuration').val();
+				var stopS = (document.getElementById('dInsForm_StopSign').checked)? 1 : 0;
+				var fcar = $('#dInsForm_Cars').val();
+				var stopO = $('#dInsForm_StopOffset').val();
+				var stopT = (document.getElementById('dInsForm_TrainStop').checked)? 1 : 0;
+			
+				var formSide;
 				
 				var ptype = pid1.split('_')[0];
 				if (ptype == 'line') {
@@ -6008,6 +6155,9 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						var wst2;
 						var wed2;
 						
+						var px3_a;
+						var px3_d;
+						
 						if (howtoForm < 0 ) {
 							if (typeof MapToolbar.features["lineTab"][pid1].markers.getAt(idx-1) != 'undefined') {
 								h1 = google.maps.geometry.spherical.computeHeading(MapToolbar.features["lineTab"][pid1].markers.getAt(idx-1).getPosition(),MapToolbar.features["lineTab"][pid1].markers.getAt(idx).getPosition());	
@@ -6016,25 +6166,22 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
 								var pxa = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti1, h1);
 								var pxb = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te1, h1);
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 			
 								var pxa2 = google.maps.geometry.spherical.computeOffset(pxa, wi1, h1-side);
 								var pxb2 = google.maps.geometry.spherical.computeOffset(pxb, -we1, h1+side);
 			
 								MapToolbar.addPoint(pxa2, MapToolbar.features["lineTab"][pid1], (wst + 1));
 								MapToolbar.addPoint(pxb2, MapToolbar.features["lineTab"][pid1], (wst + 2));
-								
-								var image = new google.maps.MarkerImage('images/form_icon.png',
-									new google.maps.Size(6, 6),
-									new google.maps.Point(0, 0),
-									new google.maps.Point(3, 3));
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).setIcon(image);
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).setIcon(image);
-															
+																							
 								wst2 = formLineWidenAddAt(pid2,px0);
 								
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
@@ -6067,24 +6214,21 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
 								var pxa = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti1, h1);
 								var pxb = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te1, h1);
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 			
 								var pxa2 = google.maps.geometry.spherical.computeOffset(pxa, wi1, h1-side);
 								var pxb2 = google.maps.geometry.spherical.computeOffset(pxb, -we1, h1+side);
 			
 								MapToolbar.addPoint(pxa2, MapToolbar.features["lineTab"][pid1], (wst + 1));
 								MapToolbar.addPoint(pxb2, MapToolbar.features["lineTab"][pid1], (wst + 2));
-								
-								var image = new google.maps.MarkerImage('images/form_icon.png',
-									new google.maps.Size(6, 6),
-									new google.maps.Point(0, 0),
-									new google.maps.Point(3, 3));
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).setIcon(image);
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).setIcon(image);		
 								
 								wst2 = formLineWidenAddAt(pid2,px0);
 								
@@ -6108,13 +6252,17 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 							}
 						}	
+						
+						var pid3,pid4;
 
 						var ti3a = ti3 - ti1;
-						var te3a = te3 - te1;		
+						var te3a = te3 - te1;	
+						var wi3a = wi3 - wi1;
+						var we3a = we3 - we1;
 						var px3_a0 = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).getPosition(), ti3a, h1);
-						var px3_a = google.maps.geometry.spherical.computeOffset(px3_a0, wi3, h1-side);
+						var px3_a = google.maps.geometry.spherical.computeOffset(px3_a0, wi3a, h1-side);
 						var px3_b0 = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).getPosition(), -te3a, h1);
-						var px3_b = google.maps.geometry.spherical.computeOffset(px3_b0, -we3, h1+side);
+						var px3_b = google.maps.geometry.spherical.computeOffset(px3_b0, -we3a, h1+side);
 	
 						MapToolbar.initFeature('line');
 						MapToolbar.stopEditing();
@@ -6122,17 +6270,13 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px3_a, newPoly, 1);
 						MapToolbar.addPoint(px3_b, newPoly, 2);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).getPosition(), newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3a;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + ':';
 						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we3 + ':';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + (-1*side) + ':0:' + te3a;
-
-						//var wst_3i = formLineWidenAddAt(pid1,px3_a);
-						//MapToolbar.addPoint(px3_a, MapToolbar.features["lineTab"][pid1], wst_3i + 1);
-	
-						//var wst_3f = formLineWidenAddAt(pid1,px3_b);
-						//MapToolbar.addPoint(px3_b, MapToolbar.features["lineTab"][pid1], wst_3f + 1);
 	
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).sline == '') {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).sline = newPoly.id + ':0:0';
@@ -6147,13 +6291,59 @@ last update : 06 May 2014 12:00am (GMT 8+)
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).setDraggable(false);
+						
+						pid3 = newPoly.id;
 	
 						newPoly = null;
 						
+						var ti4a = ti4 - ti2;
+						var te4a = te4 - te2;
+						var wi4a = wi4 - wi2;
+						var we4a = we4 - we2;
+						var px4_a0 = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).getPosition(), ti4a, h1);
+						var px4_b0 = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).getPosition(), -te4a, h1);
+						var px4_a = google.maps.geometry.spherical.computeOffset(px4_a0, wi4a, h1+side);
+						var px4_b = google.maps.geometry.spherical.computeOffset(px4_b0, -we4a, h1-side);
+	
+						MapToolbar.initFeature('line');
+						MapToolbar.stopEditing();
+						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).getPosition(), newPoly, 0);
+						MapToolbar.addPoint(px4_a, newPoly, 1);
+						MapToolbar.addPoint(px4_b, newPoly, 2);
+						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).getPosition(), newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
+	
+						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':0:' + ti4a;
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we4 + ':';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + wi4 + ':';
+						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':0:' + te4a;
+	
+		
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).sline = newPoly.id + ':0:0';
+						} else {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).sline += ',' + newPoly.id + ':0:0';
+						}
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).setDraggable(false);
+	
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
+						} else {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
+						}						
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).setDraggable(false);
+						
+						pid4 = newPoly.id;
+												
+						newPoly = null;
+						//pid5
 						MapToolbar.initFeature('line');
 						MapToolbar.stopEditing();
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition(), newPoly, 0);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst+3).getPosition(), newPoly, 1);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 						
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + wi1 + ':' + ti1;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we1 + ':' + te1;
@@ -6171,54 +6361,15 @@ last update : 06 May 2014 12:00am (GMT 8+)
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst+3).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+3).setDraggable(false);
-						
-						newPoly = null;
-
-						var ti4a = ti4 - ti2;
-						var te4a = te4 - te2;
-						var px4_a0 = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).getPosition(), ti4a, h1);
-						var px4_b0 = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).getPosition(), -te4a, h1);
-						var px4_a = google.maps.geometry.spherical.computeOffset(px4_a0, wi4, h1+side);
-						var px4_b = google.maps.geometry.spherical.computeOffset(px4_b0, -we4, h1-side);
-	
-						MapToolbar.initFeature('line');
-						MapToolbar.stopEditing();
-						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).getPosition(), newPoly, 0);
-						MapToolbar.addPoint(px4_a, newPoly, 1);
-						MapToolbar.addPoint(px4_b, newPoly, 2);
-						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).getPosition(), newPoly, 3);
-	
-						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':0:' + ti4a;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we4 + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + wi4 + ':';
-						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':0:' + te4a;
-	
-						//var wst_4i = formLineWidenAddAt(pid2,px4_a);
-						//MapToolbar.addPoint(px4_a, MapToolbar.features["lineTab"][pid2], wst_4i + 1);
-	
-						//var wst_4f = formLineWidenAddAt(pid2,px4_b);
-						//MapToolbar.addPoint(px4_b, MapToolbar.features["lineTab"][pid2], wst_4f + 1);
-		
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).sline = newPoly.id + ':0:0';
-						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).sline += ',' + newPoly.id + ':0:0';
-						}
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).setDraggable(false);
-	
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
-						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
-						}						
-						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).setDraggable(false);
 	
 						newPoly = null;
-						
+						//pid6
 						MapToolbar.initFeature('line');
 						MapToolbar.stopEditing();
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).getPosition(), newPoly, 0);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+4).getPosition(), newPoly, 1);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 						
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + wi2 + ':' + ti2;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we2 + ':' + te2;
@@ -6238,6 +6389,22 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+3).setDraggable(false);
 						
 						newPoly = null;
+
+						MapToolbar.addPoint(px3_a0, MapToolbar.features["lineTab"][pid1], (wst + 2));
+						MapToolbar.addPoint(px3_b0, MapToolbar.features["lineTab"][pid1], (wst + 3));
+						
+						formSide = pid3 + ':'+ pid1 + ',' + pid2 + ':' + pid4;
+						
+						var image = new google.maps.MarkerImage('images/form_icon.png',
+								new google.maps.Size(6, 6),
+								new google.maps.Point(0, 0),
+								new google.maps.Point(3, 3));
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).setIcon(image);
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 3).setIcon(image);						
+
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 3).kdata.form = stopS + ',' + stopO;
+						addStation (staName,staID,MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).getPosition());
 						
 					}
 				
@@ -6278,10 +6445,21 @@ last update : 06 May 2014 12:00am (GMT 8+)
 				var te6 = parseFloat($('#form14_tf6').val());
 				var we6 = parseFloat($('#form14_wf6').val());				
 				
-				var ti = (ti3 >= ti4)? ti3 : ti4;
-				var tf = (te3 >= te4)? te3 : te4;
+				var ti = (ti3 >= ti4) ? ti3 : ti4;
+				var tf = (te3 >= te4) ? te3 : te4;
 				
 				var sL = ti + platform_length + tf;
+				
+				var formstr = ($('#dInsForm_BVEStr').val() != '- select -')? $('#dInsForm_BVEStr').val() : '';
+				var staName = $('#dInsForm_StaName').val();
+				var staID = $('#dInsForm_StaID').val();
+				var stopD = $('#dInsForm_StopDuration').val();
+				var stopS = (document.getElementById('dInsForm_StopSign').checked)? 1 : 0;
+				var fcar = $('#dInsForm_Cars').val();
+				var stopO = $('#dInsForm_StopOffset').val();
+				var stopT = (document.getElementById('dInsForm_TrainStop').checked)? 1 : 0;
+			
+				var formSide;
 				
 				var ptype = pid1.split('_')[0];
 				if (ptype == 'line') {
@@ -6304,16 +6482,13 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
-								
-								var image = new google.maps.MarkerImage('images/form_icon.png',
-									new google.maps.Size(6, 6),
-									new google.maps.Point(0, 0),
-									new google.maps.Point(3, 3));
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wst).setIcon(image);
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wed).setIcon(image);
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 															
 								wst2 = formLineWidenAddAt(pid2,px0);
 								
@@ -6332,16 +6507,13 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 								wst = idx;
 								wed = idx + 1;
+								if (document.getElementById('formcrackOp').checked) {
+									var crack = $('#formcrackID option:selected').val();
+									if (crack != '- select -') { MapToolbar.features["lineTab"][pid1].markers.getAt(wst).kdata.crack = crack; }
+								}
 								
-								var px0 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
-								var px1 = (offset < 0)? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
-								
-								var image = new google.maps.MarkerImage('images/form_icon.png',
-									new google.maps.Size(6, 6),
-									new google.maps.Point(0, 0),
-									new google.maps.Point(3, 3));
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wst).setIcon(image);
-								MapToolbar.features["lineTab"][pid1].markers.getAt(wed).setIcon(image);		
+								var px0 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 - side)) : google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , offset, (h1 + side));
+								var px1 = (offset < 0) ? google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 - side)): google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , offset, (h1 + side));
 								
 								wst2 = formLineWidenAddAt(pid2,px0);
 								
@@ -6350,7 +6522,9 @@ last update : 06 May 2014 12:00am (GMT 8+)
 								
 							}
 						}
-														
+						
+						var pid3, pid4, pid5, pid6;
+						
 						var px3_a = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti3, h1);
 						var px3_d = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te3, h1);	
 						var px3_b = google.maps.geometry.spherical.computeOffset(px3_a, wi3, h1-side);
@@ -6362,6 +6536,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px3_b, newPoly, 1);
 						MapToolbar.addPoint(px3_c, newPoly, 2);
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition(), newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + ':';
@@ -6380,8 +6556,46 @@ last update : 06 May 2014 12:00am (GMT 8+)
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wed).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wed).setDraggable(false);
+						
+						pid3 = newPoly.id;
 	
 						newPoly = null;
+						
+						var px4_a = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).getPosition() , ti4, h1);
+						var px4_d = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).getPosition() , -te4, h1);
+						var px4_b = google.maps.geometry.spherical.computeOffset(px4_a, wi4, h1+side);
+						var px4_c = google.maps.geometry.spherical.computeOffset(px4_d, -we4, h1-side);
+	
+						MapToolbar.initFeature('line');
+						MapToolbar.stopEditing();
+						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).getPosition(), newPoly, 0);
+						MapToolbar.addPoint(px4_b, newPoly, 1);
+						MapToolbar.addPoint(px4_c, newPoly, 2);
+						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).getPosition(), newPoly, 3);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
+	
+						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4;
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + ':';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + ':';
+						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + te4;
+	
+		
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+1).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+1).sline = newPoly.id + ':0:0';
+						} else {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+1).sline += ',' + newPoly.id + ':0:0';
+						}
+	
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+2).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+2).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
+						} else {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+2).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
+						}						
+						
+						pid4 = newPoly.id;
+	
+						newPoly = null;	
 						
 						var px5_a0 = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti5, h1);
 						var px5_b0 = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition() , -te5, h1);	
@@ -6393,6 +6607,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.stopEditing();
 						MapToolbar.addPoint(px5_a, newPoly, 0);
 						MapToolbar.addPoint(px5_b, newPoly, 1);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':' + wi5 + ':';
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + we5 + ':';
@@ -6416,45 +6632,11 @@ last update : 06 May 2014 12:00am (GMT 8+)
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_5f + 1).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_5f + 1).setDraggable(false);
+						
+						pid5 = newPoly.id;
 	
 						newPoly = null;
 						
-
-						var px4_a = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).getPosition() , ti4, h1);
-						var px4_d = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).getPosition() , -te4, h1);
-						var px4_b = google.maps.geometry.spherical.computeOffset(px4_a, wi4, h1+side);
-						var px4_c = google.maps.geometry.spherical.computeOffset(px4_d, -we4, h1-side);
-	
-						MapToolbar.initFeature('line');
-						MapToolbar.stopEditing();
-						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).getPosition(), newPoly, 0);
-						MapToolbar.addPoint(px4_b, newPoly, 1);
-						MapToolbar.addPoint(px4_c, newPoly, 2);
-						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).getPosition(), newPoly, 3);
-	
-						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + ':';
-						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + te4;
-	
-		
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+1).sline = newPoly.id + ':0:0';
-						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+1).sline += ',' + newPoly.id + ':0:0';
-						}
-						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4i + 1).setDraggable(false);
-	
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+2).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+2).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
-						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+2).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
-						}						
-						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4f + 1).setDraggable(false);
-	
-						newPoly = null;	
-
-
 						var px6_a0 = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).getPosition() , ti6, h1);
 						var px6_b0 = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).getPosition() , -te6, h1);
 						var px6_a = google.maps.geometry.spherical.computeOffset(px6_a0, wi6, h1+side);
@@ -6464,15 +6646,15 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						MapToolbar.stopEditing();
 						MapToolbar.addPoint(px6_a, newPoly, 0);
 						MapToolbar.addPoint(px6_b, newPoly, 1);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
 	
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi6)*1000))/1000) + ':';
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we6)*1000))/1000) + ':';
 	
 						var wst_6i = formLineWidenAddAt(pid2,px6_a);
-						MapToolbar.addPoint(px6_a0, MapToolbar.features["lineTab"][pid2], wst_6i + 1);
 	
 						var wst_6f = formLineWidenAddAt(pid2,px6_b);
-						MapToolbar.addPoint(px6_b0, MapToolbar.features["lineTab"][pid2], wst_6f + 1);
 		
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_5i+1).sline == '') {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_5i+1).sline = newPoly.id + ':0:0';
@@ -6487,6 +6669,24 @@ last update : 06 May 2014 12:00am (GMT 8+)
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_5f + 1).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst_5f + 1).setDraggable(false);
+						
+						pid6 = newPoly.id;
+						
+						formSide = pid3 + ':'+ pid5 + ',' + pid6 + ':' + pid4;
+						
+						MapToolbar.addPoint(px3_a, MapToolbar.features["lineTab"][pid1], (wst + 2));
+						MapToolbar.addPoint(px3_d, MapToolbar.features["lineTab"][pid1], (wst + 3));
+						
+						var image = new google.maps.MarkerImage('images/form_icon.png',
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3));
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).setIcon(image);
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 3).setIcon(image);		
+
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 3).kdata.form = stopS + ',' + stopO;
+						addStation (staName,staID,MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).getPosition());
 	
 						newPoly = null;							
 						
@@ -6502,9 +6702,39 @@ last update : 06 May 2014 12:00am (GMT 8+)
 
 		$('#form15_Insert').click(function() {
 			if ((typeof $('#dInsForm_pid').val() != 'undefined') && (typeof $('#dInsForm_idx').val() != 'undefined')) {
-				var pid = $('#dInsForm_pid').val();
+				var pid1 = $('#dInsForm_pid').val();
+				var pid2 = ($('#dInsForm_pid2').val() != '') ? $('#dInsForm_pid2').val() : '';
 				var idxSt = parseInt($('#form15_st').val());
 				var idxEd = parseInt($('#form15_ed').val());
+				
+				var formstr = ($('#dInsForm_BVEStr').val() != '- select -')? $('#dInsForm_BVEStr').val() : '';
+				var staName = $('#dInsForm_StaName').val();
+				var staID = $('#dInsForm_StaID').val();
+				var stopD = $('#dInsForm_StopDuration').val();
+				var stopS = (document.getElementById('dInsForm_StopSign').checked)? 1 : 0;
+				var fcar = $('#dInsForm_Cars').val();
+				var stopO = $('#dInsForm_StopOffset').val();
+				var stopT = (document.getElementById('dInsForm_TrainStop').checked)? 1 : 0;
+			
+				var formSide; 
+				
+				if (pid2 != '') {
+					formSide =  pid1 + ':' + pid2;
+				} else {
+					formSide = ($('#form15_pos').val() == 'L')?  ':' + pid1 : pid1 + ':';
+				}
+				
+				var image = new google.maps.MarkerImage('images/form_icon.png',
+						new google.maps.Size(6, 6),
+						new google.maps.Point(0, 0),
+						new google.maps.Point(3, 3));
+				MapToolbar.features["lineTab"][pid1].markers.getAt(idxSt).setIcon(image); // end
+				MapToolbar.features["lineTab"][pid1].markers.getAt(idxEd).setIcon(image); // st
+				
+				MapToolbar.features["lineTab"][pid1].markers.getAt(idxSt).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+				MapToolbar.features["lineTab"][pid1].markers.getAt(idxEd).kdata.form = stopS + ',' + stopO;
+				addStation (staName,staID,MapToolbar.features["lineTab"][pid1].markers.getAt(idxSt).getPosition());
+				
 				
 				$('#dialogInsertPlatform').dialog('close');
 			}
@@ -6560,6 +6790,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						var platLng = google.maps.geometry.spherical.computeOffset(odml, Math.abs(offset), h1 +  side);
 						MapToolbar.addPoint(platLng, newPoly, 1);
 						
+						newPoly.route = (MapToolbar.features["lineTab"][pid].route != '') ? MapToolbar.features["lineTab"][pid].route : '';
+						
 						if (MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).sline == '') {
 							MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).sline = newPoly.id + ':0:0';
 						} else {
@@ -6582,6 +6814,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 
 						platLng = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).getPosition(), Math.abs(offset), h1 +  side);
 						MapToolbar.addPoint(platLng, newPoly, 0);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid].route != '') ? MapToolbar.features["lineTab"][pid].route : '';
 
 						odml = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).getPosition(), swL, h1); 	 					
 						MapToolbar.addPoint(odml, newPoly, 1); //1st point on track 2 to turnout
@@ -6617,6 +6851,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 						var platLng = google.maps.geometry.spherical.computeOffset(odml, Math.abs(offset), h1 +  side);
 						MapToolbar.addPoint(platLng, newPoly, 1);
 						
+						newPoly.route = (MapToolbar.features["lineTab"][pid].route != '') ? MapToolbar.features["lineTab"][pid].route : '';
+						
 						if (MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).sline == '') {
 							MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).sline = newPoly.id + ':0:0';
 						} else {
@@ -6645,6 +6881,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 	 					MapToolbar.stopEditing();	
 						var platLng = google.maps.geometry.spherical.computeOffset(odml, Math.abs(offset), h1 +  side);
 						MapToolbar.addPoint(platLng, newPoly, 0);
+						
+						newPoly.route = (MapToolbar.features["lineTab"][pid].route != '') ? MapToolbar.features["lineTab"][pid].route : '';
 	 					
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).getPosition(), newPoly, 1); //1st point on track 2 to turnout
 						if (MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).sline == '') {
@@ -6752,12 +6990,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 		
 		$('#dInsFO_Fo').change(function() {
 			if (document.getElementById('dInsFO_Fo').value != '') {
-				for (i = 0; i < bveFOObjArr.length; i++) {					
-					if (bveFOObjArr[i][1] == document.getElementById('dInsFO_Fo').value) {
-						document.getElementById('dInsFO_foimg').src = 'images/' + bveFOObjArr[i][3];
-						break;
-					}					
-				}
+				var src = getObjectImage('flyover',$('#dInsFO_Fo').val());
+				document.getElementById('dInsFO_foimg').src='images/' + src;
 			}
 		});	
 		
@@ -6837,12 +7071,8 @@ last update : 06 May 2014 12:00am (GMT 8+)
 		
 		$('#dInsTun_tun').change(function() {
 			if (document.getElementById('dInsTun_tun').value != '') {
-				for (i = 0; i < bvetunnelObjArr.length; i++) {					
-					if (bvetunnelObjArr[i][1] == document.getElementById('dInsTun_tun').value) {
-						document.getElementById('dInsTun_tunImg').src = 'images/' + bvetunnelObjArr[i][3];
-						break;
-					}
-				}
+				var src = getObjectImage('tunnel',$('#dInsTun_tun').val());
+				document.getElementById('dInsTun_tunImg').src='images/' + src;
 			}
 		});		
 
@@ -7046,8 +7276,119 @@ last update : 06 May 2014 12:00am (GMT 8+)
 
 		$('#dLinkLine_KO').click(function() {
 			$('#dialogLinkLines').dialog('close');
-		});		
+		});	
+
+		$('#op_Update').click(function() {
+			//2do
+			if ($('#op_DevID').val() != '') {
+				$.cookie('developerID', $('#op_DevID').val(), { expires: 365 });
+				devID = $('#op_DevID').val();
+			} else {
+				$.cookie('developerID', "GB Maps", { expires: 365 });
+				devID = "GB Maps";
+			}
+			if ($('#op_DGauge').val() != '') {
+				$.cookie('defaulGauge', $('#op_DGauge').val(), { expires: 365 });
+				defaultGauge = parseInt($('#op_DGauge').val());
+			} else {
+				$.cookie('defaulGauge', "1067", { expires: 365 });
+				defaultGauge = 1067;
+			}
+			if ($('#op_Cant').val() != '') {
+				$.cookie('defaulCant', $('#op_Cant').val(), { expires: 365 });
+				defaultCant = parseInt($('#op_Cant').val());
+			} else {
+				$.cookie('defaulCant', "105", { expires: 365 });
+				defaultCant = 105;
+			}
+			if ($('#op_RailsPack').val() != '') {
+				$.cookie('railsPack', $('#op_RailsPack').val(), { expires: 365 });	
+			} else {
+				$.cookie('railsPack', "", { expires: 365 });				
+			}
+			if ($('#op_ObjectsPack').val() != '') {
+				$.cookie('objectsPack', $('#op_ObjectsPack').val(), { expires: 365 });				
+			} else {
+				$.cookie('objectsPack', "", { expires: 365 });
+			}
+			if (document.getElementById('op_api_3').checked) {
+				$.cookie('api', '3', { expires: 365 });	
+			} else if (document.getElementById('op_api_3exp').checked) {
+				$.cookie('api', '3.exp', { expires: 365 });	
+			} else if (document.getElementById('op_api_custom').checked) {
+				if ($('#op_APIv').val() != '') { 
+					$.cookie('api', $('#op_APIv').val(), { expires: 365 });	
+				} else {
+					$.cookie('api', "3.exp", { expires: 365 });
+				}
+			} else {
+				$.cookie('api', "3.exp", { expires: 365 });				
+			}
+			
+			alert("Setting updated.");
+			$('#dialogOptions').dialog('close');
+		});
+
+		$('#op_Cancel').click(function() {
+			$('#dialogOptions').dialog('close');
+		});	
+
+		$('#op_RouteColorUpdate').click(function() {
+			var color = $('#colorCodeHex').val();
+			var route = $('#routeColor_Routes option:selected').text();
+			
+			for(var pid in MapToolbar.features['lineTab'] ) {
+				if (typeof MapToolbar.features['lineTab'][pid].route != 'undefined') {
+					if (MapToolbar.features['lineTab'][pid].route == route) {
+						MapToolbar.features['lineTab'][pid].setOptions( {strokeColor: color} );
+
+					}
+				}
+			}			
+			
+			$('#dialogRouteColor').dialog('close');
+		});	
+
+		$('#op_RouteColorCancel').click(function() {
+			$('#dialogRouteColor').dialog('close');
+		});	
 		
-		//scriptLoaded();
+		$('#PLcrackID').change(function() {
+			var src = getObjectImage('crack',this.options[this.selectedIndex].value);
+			document.getElementById('PLcrackView').src='images/' + src;
+		});	
+
+		$('#PLcrackOp').click(function() {
+			if (document.getElementById('PLcrackOp').checked) {
+				$('#PLcrackID').prop('disabled', false);
+				var src = getObjectImage('crack',$('#PLcrackID').val());
+				document.getElementById('PLcrackView').src='images/' + src;
+			} else {
+				$('#PLcrackID').prop('disabled', true);
+				document.getElementById('PLcrackView').src= "images/transparent.png";
+			}
+		});	
+		
+		$('#poleOn').click(function() {
+			if (document.getElementById('poleOn').checked) {
+				$('#dms_poleindex').prop('disabled', false);
+				var pid = $('#dms_lineid').val(); // $('#').val();
+				var mIdx = $('#dms_markerindex').val();
+			
+				var x = document.getElementById("dms_poleindex");
+				for (var i = 0; i < x.length; i++) {
+					if (MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).kdata.pole == x.options[i].value) {
+						$("#dms_poleindex option[value=\'" + x.options[i].value + "\']").attr("selected", "selected");
+						break;
+					}
+				}
+				
+			} else {
+				$('#dms_poleindex').prop('disabled', true);
+			}			
+		});			
+
+		
+		scriptLoaded();
 				
 	});
