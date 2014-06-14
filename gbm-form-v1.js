@@ -1,4 +1,4 @@
-﻿/*
+/*
 GB Maps ギビマップ - © Karya IT (http://www.karyait.net.my/) 2012-2014. All rights reserved. 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
 without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -17,11 +17,29 @@ purpose : gb maps form generator
 type : release (under development)
 version : 1.0.0
 build : 
-last update : 06 May 2014 1:00pm (GMT 8+)
+last update : 15 June 2014 1:00pm (GMT 8+)
 
 */
 
-function formMaker(pid,idx,platform_length,howtoForm,formType) {
+function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
+
+	var formstr = ($('#dInsForm_BVEStr').val() != '- select -')? $('#dInsForm_BVEStr').val() : '';
+	var staName = $('#dInsForm_StaName').val();
+	var staID = $('#dInsForm_StaID').val();
+	var stopD = $('#dInsForm_StopDuration').val();
+	var stopS = (document.getElementById('dInsForm_StopSign').checked)? 1 : 0;
+	var fcar = $('#dInsForm_Cars').val();
+	var stopO = $('#dInsForm_StopOffset').val();
+	var stopT = (document.getElementById('dInsForm_TrainStop').checked)? 1 : 0;
+				
+//	if (!cekFormInput(formType)) {
+//		return false;
+//	}
+
+	if (cekStaID(staID)) {
+		alert('Station ID already exists.');
+		return false;
+	}
 
 	var ptype = pid.split('_')[0];
 	if (ptype != 'line') {
@@ -50,21 +68,24 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 						new google.maps.Size(6, 6),
 						new google.maps.Point(0, 0),
 						new google.maps.Point(3, 3));
-					MapToolbar.features["curveTab"][pid].markers.getAt(idx).setIcon(image);
-					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid).setIcon(image);
+					MapToolbar.features["curveTab"][pid].markers.getAt(idx).setIcon(image); // end
+					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid).setIcon(image); // st
+					
+					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+					MapToolbar.features["curveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+					addStation (staName,staID,MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid).getPosition());
 
 				} else {
 					var l_st = ld - platform_length;
 					var a_deg = (180 * l_st) / (Math.PI * Rc);
 
 					if (dir  > 0) {
-						var ha = (iB + a_deg >= 180)? iB + a_deg : iB + a_deg - 360;
+						var ha = (iB + a_deg <= 180) ? iB + a_deg : iB + a_deg - 360;
 						var e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
 						var addAt =  curveAddAt(pid,e1);	
 						MapToolbar.addPoint(e1, MapToolbar.features['curveTab'][pid], addAt);
-	
 					} else {
-						var ha = (iB - a_deg <= -180)? iB - a_deg + 360 : iB - a_deg ;
+						var ha = (iB - a_deg <= -180) ? iB - a_deg + 360 : iB - a_deg ;
 						var e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
 						var addAt =  curveAddAt(pid,e1);	
 						MapToolbar.addPoint(e1, MapToolbar.features['curveTab'][pid], addAt);
@@ -76,9 +97,12 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 						new google.maps.Point(0, 0),
 						new google.maps.Point(3, 3));
 					var cuvNewIdx = MapToolbar.features["curveTab"][pid].markers.getLength()-1;
-					MapToolbar.features["curveTab"][pid].markers.getAt(idx).setIcon(image);
-					MapToolbar.features["curveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);
+					MapToolbar.features["curveTab"][pid].markers.getAt(idx).setIcon(image); // end
+					MapToolbar.features["curveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image); // st
 
+					MapToolbar.features["curveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+					MapToolbar.features["curveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+					addStation (staName,staID,MapToolbar.features["curveTab"][pid].markers.getAt(idx).getPosition());
 				}
 			} else {
 				if (platform_length > (Lc-ld)) {
@@ -90,19 +114,22 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 						new google.maps.Point(0, 0),
 						new google.maps.Point(3, 3));
 					MapToolbar.features["curveTab"][pid].markers.getAt(idx).setIcon(image);
-					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid+1).setIcon(image);			
+					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid+1).setIcon(image);	
 
+					MapToolbar.features["curveTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid+1).kdata.form = stopS + ',' + stopO;					
+					addStation (staName,staID,MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid+1).getPosition());
 				} else {
 					var l_ed = ld + platform_length;
 					var a_deg = (180 * l_ed) / (Math.PI * Rc);
 
 					if (dir  > 0) {
-						var ha = (iB + a_deg >= 180)? iB + a_deg : iB + a_deg - 360;
+						var ha = (iB + a_deg <= 180) ? iB + a_deg : iB + a_deg - 360;
 						var e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
 						var addAt =  curveAddAt(pid,e1);	
 						MapToolbar.addPoint(e1, MapToolbar.features['curveTab'][pid], addAt);
 					} else {
-						var ha = (iB - a_deg <= -180)? iB - a_deg + 360 : iB - a_deg ;
+						var ha = (iB - a_deg <= -180) ? iB - a_deg + 360 : iB - a_deg ;
 						var e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
 						var addAt =  curveAddAt(pid,e1);	
 						MapToolbar.addPoint(e1, MapToolbar.features['curveTab'][pid], addAt);
@@ -115,6 +142,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 					var cuvNewIdx = MapToolbar.features["curveTab"][pid].markers.getLength()-1;
 					MapToolbar.features["curveTab"][pid].markers.getAt(idx).setIcon(image);
 					MapToolbar.features["curveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);
+
+					MapToolbar.features["curveTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+					MapToolbar.features["curveTab"][pid].markers.getAt(cuvNewIdx).markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+					addStation (staName,staID,MapToolbar.features["curveTab"][pid].markers.getAt(cuvNewIdx).markers.getAt(idx).getPosition());
 				}
 			}
 	
@@ -149,7 +180,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 			var deltaC = MapToolbar.features['tcurveTab'][pid].deltaC;
 		
 			var ld = MapToolbar.features['tcurveTab'][pid].markers.getAt(idx).ld;
-	 
+		
 			var dir = (MapToolbar.features['tcurveTab'][pid].Rc < 0) ? -1 : 1;
 			
 			if (howtoForm < 0 ) {
@@ -165,33 +196,72 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 					MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).setIcon(image);
 					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid).setIcon(image);
 
+					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+					MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+					addStation (staName,staID,MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid).getPosition());
+
 				} else {
-					if (ld <= Ls) { // on spiral curve
+					if (ld <= Ls) { // on 1st spiral curve start/end
 						var lenOnSpC = ld - platform_length;
-						/*	if (tctype == 'cubic') {
-						} else {
-						} */	
+						
+						var allPoints = MapToolbar.features['tcurveTab'][pid].getPath().getArray();
+						var arrD = new Array();
+						var sIdx = null;
+						var lastD; 
+											
+						for (var t = 0; t <= allPoints.length; t++) { 
+							arrD.push(allPoints[t]);
+							var curL = google.maps.geometry.spherical.computeLength(arrD);
+							if (curL <= lenOnSpC) {
+								sIdx = t;
+								lastD = curL;
+								//console.log(t + ':' + curL + '=' + lenOnSpC);
+							} else {
+								//console.log(t + ':' + curL + '=' + lenOnSpC);
+								if (lenOnSpC - lastD > curL - lenOnSpC) {
+									sIdx = t;
+									lastD = curL;													
+								}
+								break;
+							}
+						}
+											
+						var e1 = allPoints[sIdx];
 
-						alert('sorry! generation of endpoints on a spiral curve (by computation) is not supported in this version. please create endpoints manually.');
+						MapToolbar.addPoint(e1, MapToolbar.features['tcurveTab'][pid], sIdx);
+						
+						var image = new google.maps.MarkerImage('images/form_icon.png',
+								new google.maps.Size(6, 6),
+								new google.maps.Point(0, 0),
+								new google.maps.Point(3, 3));
+						var cuvNewIdx = MapToolbar.features["tcurveTab"][pid].markers.getLength()-1;
+						MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).setIcon(image);
+						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);
+						
+						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+						MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+						addStation (staName,staID,MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).getPosition());
+											
+						//alert('AAA.');
 
-					} else if (ld > Ls && ld < (Ls + Lc)) { // on circular curve
+					} else if (ld > Ls && ld < (Ls + Lc)) { // on circular curve start
 	
 						if (ld - platform_length > Ls) {
-							//form on circular curve only
+							//form on circular curve only start/end
 							var iB = google.maps.geometry.spherical.computeHeading(Cc,Tcst);
 		
-							var l_st = ld - platform_length;
+							var l_st = ld - Ls- platform_length;
 							var a_deg = (180 * l_st) / (Math.PI * Rc);
 
 							if (dir  > 0) {
-								var ha = (iB + a_deg >= 180)? iB + a_deg : iB + a_deg - 360;
+								var ha = (iB + a_deg <= 180) ? iB + a_deg : iB + a_deg - 360;
 								var e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
 								var addAt =  curveAddAt(pid,e1);	
 	
 								MapToolbar.addPoint(e1, MapToolbar.features['tcurveTab'][pid], addAt);
 	
 							} else {
-								var ha = (iB - a_deg <= -180)? iB - a_deg + 360 : iB - a_deg ;
+								var ha = (iB - a_deg <= -180) ? iB - a_deg + 360 : iB - a_deg ;
 								var e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
 								var addAt =  curveAddAt(pid,e1);	
 	
@@ -205,40 +275,116 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 								new google.maps.Point(3, 3));
 							var cuvNewIdx = MapToolbar.features["tcurveTab"][pid].markers.getLength()-1;
 							MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).setIcon(image);
-							MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);		
+							MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);	
+
+							MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+							MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+							addStation (staName,staID,MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).getPosition());
 		
 						} else {
-							//form cross between circular and spiral curve
-							var lenOnSpC = ld - Ls - platform_length;
-							/* if (tctype == 'cubic') {
-							} else {
-							} */
-							alert('sorry! generation of endpoints on a spiral curve (by computation) is not supported in this version. please create endpoints manually.');
+							//form cross between circular and spiral curve start on curve/end on 1 st spiral
+							var lenOnSpC = ld - platform_length;
+
+							var allPoints = MapToolbar.features['tcurveTab'][pid].getPath().getArray();
+							var arrD = new Array();
+							var sIdx = null;
+							var lastD; 
+											
+							for (var t = 0; t <= allPoints.length; t++) { 
+								arrD.push(allPoints[t]);
+								var curL = google.maps.geometry.spherical.computeLength(arrD);
+								if (curL <= lenOnSpC) {
+									sIdx = t;
+									lastD = curL;
+									//console.log(t + ':' + curL + '=' + lenOnSpC);
+								} else {
+									//console.log(t + ':' + curL + '=' + lenOnSpC);
+									if (lenOnSpC - lastD > curL - lenOnSpC) {
+										sIdx = t;
+										lastD = curL;													
+									}
+									break;
+								}
+							}
+											
+							var e1 = allPoints[sIdx];
+							MapToolbar.addPoint(e1, MapToolbar.features['tcurveTab'][pid], sIdx);
+						
+							var image = new google.maps.MarkerImage('images/form_icon.png',
+								new google.maps.Size(6, 6),
+								new google.maps.Point(0, 0),
+								new google.maps.Point(3, 3));
+							var cuvNewIdx = MapToolbar.features["tcurveTab"][pid].markers.getLength()-1;
+							MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).setIcon(image);
+							MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);
+							
+							MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+							MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+							addStation (staName,staID,MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).getPosition());
+							//alert('BBB.');
 						}
 	
-					} else { //on spiral curve after circular curve, ie at end of transition
+					} else { // start on 2nd spiral curve
 						var lenOnSpC = ld - platform_length;
 	
-						if (lenOnSpC < Lc + Ls) {
-							if (lenOnSpC < Ls) {
-								//start at 1 spiral
-								alert('sorry! generation of endpoints on a spiral curve (by computation) is not supported in this version. please create endpoints manually.');
+						if (lenOnSpC < Lc + Ls) { 
+							if (lenOnSpC < Ls) {  //end on 1 spiral
+														
+								var allPoints = MapToolbar.features['tcurveTab'][pid].getPath().getArray();
+								var arrD = new Array();
+								var sIdx = null;
+								var lastD; 
+											
+								for (var t = 0; t <= allPoints.length; t++) { 
+									arrD.push(allPoints[t]);
+									var curL = google.maps.geometry.spherical.computeLength(arrD);
+									if (curL <= lenOnSpC) {
+										sIdx = t;
+										lastD = curL;
+										//console.log(t + ':' + curL + '=' + lenOnSpC);
+									} else {
+										//console.log(t + ':' + curL + '=' + lenOnSpC);
+										if (lenOnSpC - lastD > curL - lenOnSpC) {
+											sIdx = t;
+											lastD = curL;													
+										}
+										break;
+									}
+								}
+											
+								var e1 = allPoints[sIdx];
+
+								MapToolbar.addPoint(e1, MapToolbar.features['tcurveTab'][pid], sIdx);
+						
+								var image = new google.maps.MarkerImage('images/form_icon.png',
+									new google.maps.Size(6, 6),
+									new google.maps.Point(0, 0),
+									new google.maps.Point(3, 3));
+								var cuvNewIdx = MapToolbar.features["tcurveTab"][pid].markers.getLength()-1;
+								MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).setIcon(image);
+								MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);
+
+								MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+								MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+								addStation (staName,staID,MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).getPosition());
+								//alert('CCCC.');
+								
 							} else {
-								//start at circular
+								//end on circular curve
 								var iB = google.maps.geometry.spherical.computeHeading(Cc,Tcst);
 		
 								var l_st = lenOnSpC - Ls;
 								var a_deg = (180 * l_st) / (Math.PI * Rc);
 
 								if (dir  > 0) {
-									var ha = (iB + a_deg >= 180)? iB + a_deg : iB + a_deg - 360;
+									var ha = (iB + a_deg <= 180) ? iB + a_deg : iB + a_deg - 360;
 									var e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
 									var addAt =  curveAddAt(pid,e1);	
 	
 									MapToolbar.addPoint(e1, MapToolbar.features['tcurveTab'][pid], addAt);
 	
 								} else {
-									var ha = (iB - a_deg <= -180)? iB - a_deg + 360 : iB - a_deg ;
+									var ha = (iB - a_deg <= -180) ? iB - a_deg + 360 : iB - a_deg ;
 									var e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
 									var addAt =  curveAddAt(pid,e1);	
 	
@@ -251,12 +397,53 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 									new google.maps.Point(3, 3));
 								var cuvNewIdx = MapToolbar.features["tcurveTab"][pid].markers.getLength()-1;
 								MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).setIcon(image);
-								MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);		
+								MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);	
+								
+								MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+								MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+								addStation (staName,staID,MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).getPosition());
 							}
 	
 						} else {
 							// start & end at 2 spiral
-							alert('sorry! generation of endpoints on a spiral curve (by computation) is not supported in this version. please create endpoints manually.');
+								var allPoints = MapToolbar.features['tcurveTab'][pid].getPath().getArray();
+								var arrD = new Array();
+								var sIdx = null;
+								var lastD; 
+											
+								for (var t = 0; t <= allPoints.length; t++) { 
+									arrD.push(allPoints[t]);
+									var curL = google.maps.geometry.spherical.computeLength(arrD);
+									if (curL <= lenOnSpC) {
+										sIdx = t;
+										lastD = curL;
+										//console.log(t + ':' + curL + '=' + lenOnSpC);
+									} else {
+										//console.log(t + ':' + curL + '=' + lenOnSpC);
+										if (lenOnSpC - lastD > curL - lenOnSpC) {
+											sIdx = t;
+											lastD = curL;													
+										}
+										break;
+									}
+								}
+											
+								var e1 = allPoints[sIdx];
+
+								MapToolbar.addPoint(e1, MapToolbar.features['tcurveTab'][pid], sIdx);
+						
+								var image = new google.maps.MarkerImage('images/form_icon.png',
+									new google.maps.Size(6, 6),
+									new google.maps.Point(0, 0),
+									new google.maps.Point(3, 3));
+								var cuvNewIdx = MapToolbar.features["tcurveTab"][pid].markers.getLength()-1;
+								MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).setIcon(image);
+								MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);	
+								
+								MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+								MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+								addStation (staName,staID,MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).getPosition());
+							//alert('DDDD.');
 						}
 					}
 				}
@@ -274,26 +461,70 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 						new google.maps.Point(3, 3));
 					MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).setIcon(image);
 					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid+1).setIcon(image);	
+					
+					MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid+1).kdata.form = stopS + ',' + stopO;
+					addStation (staName,staID,MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid+1).getPosition());
 
 				} else {
 					if (ld + platform_length < Ls) {
 						//start & end on 1st spiral curve
-						alert('sorry! generation of endpoints on a spiral curve (by computation) is not supported in this version. please create endpoints manually.');
+						var lenOnSpC = ld + platform_length;
+						
+						var allPoints = MapToolbar.features['tcurveTab'][pid].getPath().getArray();
+						var arrD = new Array();
+						var sIdx = null;
+						var lastD; 
+											
+						for (var t = 0; t <= allPoints.length; t++) { 
+							arrD.push(allPoints[t]);
+							var curL = google.maps.geometry.spherical.computeLength(arrD);
+							if (curL <= lenOnSpC) {
+								sIdx = t;
+								lastD = curL;
+								//console.log(t + ':' + curL + '=' + lenOnSpC);
+							} else {
+								//console.log(t + ':' + curL + '=' + lenOnSpC);
+								if (lenOnSpC - lastD > curL - lenOnSpC) {
+									sIdx = t;
+									lastD = curL;													
+								}
+								break;
+							}
+						}
+											
+						var e1 = allPoints[sIdx];
+
+						MapToolbar.addPoint(e1, MapToolbar.features['tcurveTab'][pid], sIdx);
+						
+						var image = new google.maps.MarkerImage('images/form_icon.png',
+								new google.maps.Size(6, 6),
+								new google.maps.Point(0, 0),
+								new google.maps.Point(3, 3));
+						var cuvNewIdx = MapToolbar.features["tcurveTab"][pid].markers.getLength()-1;
+						MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).setIcon(image);
+						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);
+						
+						MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;
+						addStation (staName,staID,MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).getPosition());
+
+						//alert('EEEE.');
 	
 					} else if (ld + platform_length <= Ls + Lc) {
-	
+						
 						var iB = google.maps.geometry.spherical.computeHeading(Cc,Tcst);
 						var l_st = ld - Ls + platform_length;
 						var a_deg = (180 * l_st) / (Math.PI * Rc);
 
 						if (dir  > 0) {
-							var ha = (iB + a_deg >= 180)? iB + a_deg : iB + a_deg - 360;
+							var ha = (iB + a_deg <= 180) ? iB + a_deg : iB + a_deg - 360;
 							var e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
 							var addAt =  curveAddAt(pid,e1);	
 							MapToolbar.addPoint(e1, MapToolbar.features['tcurveTab'][pid], addAt);
 	
 						} else {
-							var ha = (iB - a_deg <= -180)? iB - a_deg + 360 : iB - a_deg ;
+							var ha = (iB - a_deg <= -180) ? iB - a_deg + 360 : iB - a_deg ;
 							var e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
 							var addAt =  curveAddAt(pid,e1);	
 							MapToolbar.addPoint(e1, MapToolbar.features['tcurveTab'][pid], addAt);
@@ -306,11 +537,54 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 							new google.maps.Point(3, 3));
 						var cuvNewIdx = MapToolbar.features["tcurveTab"][pid].markers.getLength()-1;
 						MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).setIcon(image);
-						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);		
+						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);	
+
+						MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;
+						addStation (staName,staID,MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).getPosition());
 		
 					} else if (ld + platform_length < Lt) {
 						//end on 2nd spiral curve
-						alert('sorry! generation of endpoints on a spiral curve (by computation) is not supported in this version. please create endpoints manually.');
+						var lenOnSpC = ld + platform_length;
+						
+						var allPoints = MapToolbar.features['tcurveTab'][pid].getPath().getArray();
+						var arrD = new Array();
+						var sIdx = null;
+						var lastD; 
+											
+						for (var t = 0; t <= allPoints.length; t++) { 
+							arrD.push(allPoints[t]);
+							var curL = google.maps.geometry.spherical.computeLength(arrD);
+							if (curL <= lenOnSpC) {
+								sIdx = t;
+								lastD = curL;
+								//console.log(t + ':' + curL + '=' + lenOnSpC);
+							} else {
+								//console.log(t + ':' + curL + '=' + lenOnSpC);
+								if (lenOnSpC - lastD > curL - lenOnSpC) {
+									sIdx = t;
+									lastD = curL;													
+								}
+								break;
+							}
+						}
+											
+						var e1 = allPoints[sIdx];
+
+						MapToolbar.addPoint(e1, MapToolbar.features['tcurveTab'][pid], sIdx);
+						
+						var image = new google.maps.MarkerImage('images/form_icon.png',
+								new google.maps.Size(6, 6),
+								new google.maps.Point(0, 0),
+								new google.maps.Point(3, 3));
+						var cuvNewIdx = MapToolbar.features["tcurveTab"][pid].markers.getLength()-1;
+						MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).setIcon(image);
+						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);
+
+						MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;
+						addStation (staName,staID,MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).getPosition());
+						//alert('FFFF.');
 
 					}
 				}
@@ -340,6 +614,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 						new google.maps.Point(3, 3));
 					MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
 					MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
+					
+					MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+					MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+					addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).getPosition());
 				} else {
 					alert('unable to create platform');
 				}
@@ -357,6 +635,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 					MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
 					MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
 
+					MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+					MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+					addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).getPosition());
+
 				} else {
 					alert('unable to create platform');
 				}
@@ -365,7 +647,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 		} else {
 		
 			if (howtoForm < 0 ) {
-				//2do
+				
 				if (typeof MapToolbar.features["lineTab"][pid].markers.getAt(idx-1) != 'undefined') {
 					if (MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).bdata.tcurve != '') {
 						var tcv_pid = MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).bdata.tcurve;
@@ -381,6 +663,11 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 								new google.maps.Point(3, 3));
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
+							
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+							addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
+							
 						} else {
 							//overlapped with previous tcurve
 							
@@ -416,7 +703,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 							var lenOnC = platform_length - lenOnLine;
 
 							if (lenOnC >= Lt) {
-							//2do 22/4/2014
+							
 								if (typeof MapToolbar.features["lineTab"][pid].markers.getAt(idx-2) != 'undefined') {
 									if (MapToolbar.features["lineTab"][pid].markers.getAt(idx-2).bdata.tcurve != '') {
 										var tcv_pid2 = MapToolbar.features["lineTab"][pid].markers.getAt(idx-2).bdata.tcurve;
@@ -435,6 +722,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 												new google.maps.Point(3, 3));
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).setIcon(image);
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
+											
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).getPosition());
 		
 										} else {
 											alert('platform cross multi curve is not supported, please create platform manually');
@@ -457,6 +748,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 												new google.maps.Point(3, 3));
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).setIcon(image);
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
+											
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).getPosition());
 		
 										} else {
 											alert('platform cross multi curve is not supported, please create platform manually');
@@ -476,6 +771,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 												new google.maps.Point(3, 3));
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).setIcon(image);
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
+											
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).getPosition());
 		
 										} else {
 											var image = new google.maps.MarkerImage('images/form_icon.png',
@@ -484,6 +783,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 												new google.maps.Point(3, 3));
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).setIcon(image);
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
+											
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).getPosition());
 										}
 									}
 			
@@ -502,6 +805,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 											new google.maps.Point(3, 3));
 										MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).setIcon(image);
 										MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
+										
+										MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+										MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+										addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).getPosition());
 		
 									} else {
 										var image = new google.maps.MarkerImage('images/form_icon.png',
@@ -510,11 +817,54 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 											new google.maps.Point(3, 3));
 										MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
 										MapToolbar.features["lineTab"][pid].markers.getAt(idx-2).setIcon(image);
+										
+										MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+										MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+										addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).getPosition());
 									}
 								}
 								
 							} else if (Lt - lenOnC < Ls) {
-								alert('sorry! generation of endpoints on a spiral curve (by computation) is not supported in this version. please create endpoints manually.');
+								//end on 2nd spiral of prev trans curve
+								var allPoints = MapToolbar.features['tcurveTab'][tcv_pid].getPath().getArray();
+								var arrD = new Array();
+								var sIdx = null;
+								var lastD; 
+								var lenOnSpC = Lt - lenOnC;
+										
+								for (var t = 0; t <= allPoints.length; t++) { 
+									arrD.push(allPoints[t]);
+									var curL = google.maps.geometry.spherical.computeLength(arrD);
+									if (curL <= lenOnSpC) {
+										sIdx = t;
+										lastD = curL;
+										//console.log(t + ':' + curL + '=' + lenOnSpC);
+									} else {
+										//console.log(t + ':' + curL + '=' + lenOnSpC);
+										if (lenOnSpC - lastD > curL - lenOnSpC) {
+											sIdx = t;
+											lastD = curL;													
+										}
+										break;
+									}
+								}
+											
+								var e1 = allPoints[sIdx];
+
+								MapToolbar.addPoint(e1, MapToolbar.features['tcurveTab'][tcv_pid], sIdx);
+						
+								var image = new google.maps.MarkerImage('images/form_icon.png',
+									new google.maps.Size(6, 6),
+									new google.maps.Point(0, 0),
+									new google.maps.Point(3, 3));
+								var cuvNewIdx = MapToolbar.features["tcurveTab"][tcv_pid].markers.getLength()-1;
+								MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
+								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).setIcon(image);							
+							
+								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+								addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
+								//alert('GGGG.');
 			
 							} else if (Lt - lenOnC <= Ls + Lc) {
 								var lenOnCC = lenOnC - Ls;
@@ -523,13 +873,13 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 								var a_deg = (180 * l_st) / (Math.PI * Rc);
 
 								if (dir  > 0) {
-									var ha = (iB + a_deg >= 180)? iB + a_deg : iB + a_deg - 360;
+									var ha = (iB + a_deg <= 180) ? iB + a_deg : iB + a_deg - 360;
 									var e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
 									var addAt =  curveAddAt(tcv_pid,e1);	
 									MapToolbar.addPoint(e1, MapToolbar.features['tcurveTab'][tcv_pid], addAt);
 	
 								} else {
-									var ha = (iB - a_deg <= -180)? iB - a_deg + 360 : iB - a_deg ;
+									var ha = (iB - a_deg <= -180) ? iB - a_deg + 360 : iB - a_deg ;
 									var e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
 									var addAt =  curveAddAt(tcv_pid,e1);		
 									MapToolbar.addPoint(e1, MapToolbar.features['tcurveTab'][tcv_pid], addAt);
@@ -543,10 +893,52 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 								var cuvNewIdx = MapToolbar.features["tcurveTab"][tcv_pid].markers.getLength()-1;
 								MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
 								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).setIcon(image);
+								
+								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+								addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 
 							} else {
-			
-								alert('sorry! generation of endpoints on a spiral curve (by computation) is not supported in this version. please create endpoints manually.');
+								//end on 1st spiral of prev trans curve
+								var allPoints = MapToolbar.features['tcurveTab'][tcv_pid].getPath().getArray();
+								var arrD = new Array();
+								var sIdx = null;
+								var lastD; 
+								var lenOnSpC = Lt - lenOnC;
+								
+								for (var t = 0; t <= allPoints.length; t++) { 
+									arrD.push(allPoints[t]);
+									var curL = google.maps.geometry.spherical.computeLength(arrD);
+									if (curL <= lenOnSpC) {
+										sIdx = t;
+										lastD = curL;
+										//console.log(t + ':' + curL + '=' + lenOnSpC);
+									} else {
+										//console.log(t + ':' + curL + '=' + lenOnSpC);
+										if (lenOnSpC - lastD > curL - lenOnSpC) {
+											sIdx = t;
+											lastD = curL;													
+										}
+										break;
+									}
+								}
+											
+								var e1 = allPoints[sIdx];
+
+								MapToolbar.addPoint(e1, MapToolbar.features['tcurveTab'][tcv_pid], sIdx);
+						
+								var image = new google.maps.MarkerImage('images/form_icon.png',
+									new google.maps.Size(6, 6),
+									new google.maps.Point(0, 0),
+									new google.maps.Point(3, 3));
+								var cuvNewIdx = MapToolbar.features["tcurveTab"][tcv_pid].markers.getLength()-1;
+								MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
+								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).setIcon(image);							
+
+								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+								addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
+								//alert('HHHH.');
 			
 							}
 						}	
@@ -564,7 +956,11 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 								new google.maps.Point(0, 0),
 								new google.maps.Point(3, 3));
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
-							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);		
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);	
+
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+							addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 	
 						} else {
 		
@@ -585,13 +981,13 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 								var a_deg = (180 * lenOnCuv) / (Math.PI * Rc);
 
 								if (dir  > 0) {
-									var ha = (fB - a_deg >= -180)? fB - a_deg : fB - a_deg + 360;
+									var ha = (fB - a_deg >= -180) ? fB - a_deg : fB - a_deg + 360;
 									var e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
 									var addAt =  curveAddAt(cuv_pid,e1);	
 									MapToolbar.addPoint(e1, MapToolbar.features['curveTab'][cuv_pid], addAt);
 	
 								} else {
-									var ha = (fB + a_deg > 180)? fB + a_deg - 360 : fB + a_deg ;
+									var ha = (fB + a_deg > 180) ? fB + a_deg - 360 : fB + a_deg ;
 									var e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
 									var addAt =  curveAddAt(cuv_pid,e1);	
 									MapToolbar.addPoint(e1, MapToolbar.features['curveTab'][cuv_pid], addAt);
@@ -605,6 +1001,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 								var cuvNewIdx = MapToolbar.features["curveTab"][cuv_pid].markers.getLength()-1;
 								MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
 								MapToolbar.features["curveTab"][cuv_pid].markers.getAt(cuvNewIdx).setIcon(image);
+								
+								MapToolbar.features["curveTab"][cuv_pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+								addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 			
 							} else {
 								if (typeof MapToolbar.features["lineTab"][pid].markers.getAt(idx-2) != 'undefined') {
@@ -624,6 +1024,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 												new google.maps.Point(3, 3));
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).setIcon(image);
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
+
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).getPosition());
 		
 										} else {
 											alert('platform cross multi curve is not supported, please create platform manually');
@@ -644,6 +1048,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 												new google.maps.Point(3, 3));
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).setIcon(image);
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
+
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).getPosition());
 		
 										} else {
 											alert('platform cross multi curve is not supported, please create platform manually');
@@ -662,6 +1070,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 												new google.maps.Point(3, 3));
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).setIcon(image);
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
+											
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).getPosition());
 		
 										} else {
 											var image = new google.maps.MarkerImage('images/form_icon.png',
@@ -670,6 +1082,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 												new google.maps.Point(3, 3));
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx-2).setIcon(image);
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
+
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx-2).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).getPosition());
 										}
 	
 									}
@@ -689,6 +1105,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 								new google.maps.Point(3, 3));
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
+							
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+							addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 							
 						} else {
 							alert('unable to create platform')
@@ -713,7 +1133,11 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 								new google.maps.Point(0, 0),
 								new google.maps.Point(3, 3));
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
-							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);		
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
+
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+							addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 							
 						} else {
 							//overlapped with next tcurve
@@ -765,6 +1189,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 												new google.maps.Point(3, 3));
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
+
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 		
 										} else {
 											alert('platform cross multi curve is not supported, please create platform manually');
@@ -786,6 +1214,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 												new google.maps.Point(3, 3));
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
+
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 		
 										} else {
 											alert('platform cross multi curve is not supported, please create platform manually');
@@ -806,6 +1238,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 												new google.maps.Point(3, 3));
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
+											
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 		
 										} else {
 											var image = new google.maps.MarkerImage('images/form_icon.png',
@@ -814,6 +1250,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 												new google.maps.Point(3, 3));
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
+											
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 										}
 									}
 			
@@ -831,6 +1271,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 											new google.maps.Point(3, 3));
 										MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
 										MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
+										
+										MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+										MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+										addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 		
 									} else {
 										var image = new google.maps.MarkerImage('images/form_icon.png',
@@ -839,13 +1283,57 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 											new google.maps.Point(3, 3));
 										MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
 										MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
+										
+										MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+										MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+										addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 									}
 			
 								}
 		
 							} else if (lenOnC < Ls) {
-			
-								alert('sorry! generation of endpoints on a spiral curve (by computation) is not supported in this version. please create endpoints manually.');
+
+								//end on 1st spiral of next trans curve
+								var allPoints = MapToolbar.features['tcurveTab'][tcv_pid].getPath().getArray();
+								var arrD = new Array();
+								var sIdx = null;
+								var lastD; 
+								//var lenOnSpC = Lt - lenOnC;
+								
+								for (var t = 0; t <= allPoints.length; t++) { 
+									arrD.push(allPoints[t]);
+									var curL = google.maps.geometry.spherical.computeLength(arrD);
+									if (curL <= lenOnC) {
+										sIdx = t;
+										lastD = curL;
+										//console.log(t + ':' + curL + '=' + lenOnC);
+									} else {
+										//console.log(t + ':' + curL + '=' + lenOnC);
+										if (lenOnC - lastD > curL - lenOnC) {
+											sIdx = t;
+											lastD = curL;													
+										}
+										break;
+									}
+								}
+											
+								var e1 = allPoints[sIdx];
+
+								MapToolbar.addPoint(e1, MapToolbar.features['tcurveTab'][tcv_pid], sIdx);
+						
+								var image = new google.maps.MarkerImage('images/form_icon.png',
+									new google.maps.Size(6, 6),
+									new google.maps.Point(0, 0),
+									new google.maps.Point(3, 3));
+								var cuvNewIdx = MapToolbar.features["tcurveTab"][tcv_pid].markers.getLength()-1;
+								MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
+								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).setIcon(image);
+
+								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;
+								addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
+							
+								///alert('IIII.');
 			
 							} else if (lenOnC <= Ls + Lc) {
 								var l_ed = lenOnC - Ls;
@@ -853,13 +1341,13 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 								var a_deg = (180 * l_ed) / (Math.PI * Rc);
 
 								if (dir  > 0) {
-									var ha = (iB + a_deg >= 180)? iB + a_deg : iB + a_deg - 360;
+									var ha = (iB + a_deg <= 180) ? iB + a_deg : iB + a_deg - 360;
 									var e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
 									var addAt =  curveAddAt(tcv_pid,e1);	
 									MapToolbar.addPoint(e1, MapToolbar.features['tcurveTab'][tcv_pid], addAt);
 	
 								} else {
-									var ha = (iB - a_deg <= -180)? iB - a_deg + 360 : iB - a_deg ;
+									var ha = (iB - a_deg <= -180) ? iB - a_deg + 360 : iB - a_deg ;
 									var e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
 									var addAt =  curveAddAt(tcv_pid,e1);	
 									MapToolbar.addPoint(e1, MapToolbar.features['tcurveTab'][tcv_pid], addAt);
@@ -872,11 +1360,54 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 									new google.maps.Point(3, 3));
 								var cuvNewIdx = MapToolbar.features["tcurveTab"][tcv_pid].markers.getLength()-1;
 								MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
-								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).setIcon(image);			
+								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).setIcon(image);	
+
+								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;
+								addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 			
 							} else if (lenOnC <= Lt) {
-			
-								alert('sorry! generation of endpoints on a spiral curve (by computation) is not supported in this version. please create endpoints manually.');
+
+								var allPoints = MapToolbar.features['tcurveTab'][tcv_pid].getPath().getArray();
+								var arrD = new Array();
+								var sIdx = null;
+								var lastD; 
+								//var lenOnSpC = Lt - lenOnC;
+								
+								for (var t = 0; t <= allPoints.length; t++) { 
+									arrD.push(allPoints[t]);
+									var curL = google.maps.geometry.spherical.computeLength(arrD);
+									if (curL <= lenOnC) {
+										sIdx = t;
+										lastD = curL;
+										//console.log(t + ':' + curL + '=' + lenOnC);
+									} else {
+										//console.log(t + ':' + curL + '=' + lenOnC);
+										if (lenOnC - lastD > curL - lenOnC) {
+											sIdx = t;
+											lastD = curL;													
+										}
+										break;
+									}
+								}
+											
+								var e1 = allPoints[sIdx];
+
+								MapToolbar.addPoint(e1, MapToolbar.features['tcurveTab'][tcv_pid], sIdx);
+						
+								var image = new google.maps.MarkerImage('images/form_icon.png',
+									new google.maps.Size(6, 6),
+									new google.maps.Point(0, 0),
+									new google.maps.Point(3, 3));
+								var cuvNewIdx = MapToolbar.features["tcurveTab"][tcv_pid].markers.getLength()-1;
+								MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
+								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).setIcon(image);	
+
+								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;
+								
+								addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
+								//alert('JJJJ.');
 			
 							} else {
 								alert('Sorry, please create platform manually.');
@@ -897,7 +1428,11 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 								new google.maps.Point(0, 0),
 								new google.maps.Point(3, 3));
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
-							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);		
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
+
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+							addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 	
 						} else {
 		
@@ -919,13 +1454,13 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 								var a_deg = (180 * lenOnCuv) / (Math.PI * Rc);
 
 								if (dir  > 0) {
-									var ha = (iB + a_deg >= 180)? iB + a_deg : iB + a_deg - 360;
+									var ha = (iB + a_deg <= 180) ? iB + a_deg : iB + a_deg - 360;
 									var e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
 									var addAt =  curveAddAt(cuv_pid,e1);	
 									MapToolbar.addPoint(e1, MapToolbar.features['curveTab'][cuv_pid], addAt);
 	
 								} else {
-									var ha = (iB - a_deg <= -180)? iB - a_deg + 360 : iB - a_deg ;
+									var ha = (iB - a_deg <= -180) ? iB - a_deg + 360 : iB - a_deg ;
 									var e1 = google.maps.geometry.spherical.computeOffset(Cc, Rc, ha);
 									var addAt =  curveAddAt(cuv_pid,e1);	
 									MapToolbar.addPoint(e1, MapToolbar.features['curveTab'][cuv_pid], addAt);
@@ -939,6 +1474,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 								var cuvNewIdx = MapToolbar.features["curveTab"][cuv_pid].markers.getLength()-1;
 								MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
 								MapToolbar.features["curveTab"][cuv_pid].markers.getAt(cuvNewIdx).setIcon(image);
+								
+								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+								MapToolbar.features["curveTab"][cuv_pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;
+								addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 			
 							} else {
 								if (typeof MapToolbar.features["lineTab"][pid].markers.getAt(idx+2) != 'undefined') {
@@ -958,6 +1497,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 												new google.maps.Point(3, 3));
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
+											
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 		
 										} else {
 											alert('platform cross multi curve is not supported, please create platform manually');
@@ -978,6 +1521,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 												new google.maps.Point(3, 3));
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
+											
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 		
 										} else {
 											alert('platform cross multi curve is not supported, please create platform manually');
@@ -997,6 +1544,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 												new google.maps.Point(3, 3));
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
+
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 		
 										} else {
 											var image = new google.maps.MarkerImage('images/form_icon.png',
@@ -1005,6 +1556,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 												new google.maps.Point(3, 3));
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
+											
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 										}
 	
 									}
@@ -1023,6 +1578,10 @@ function formMaker(pid,idx,platform_length,howtoForm,formType) {
 								new google.maps.Point(3, 3));
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx).setIcon(image);
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
+							
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+							addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 
 						} else {
 							alert('unable to create platform')
@@ -1048,7 +1607,7 @@ function testForm(pid1,pid2,idx,howtoForm,sL) {
 				var cuvEdX = MapToolbar.features['tcurveTab'][tcv_pid].TL;
 								
 				if (pform_x0 < cuvEdX) {
-					alert('sorry! unable to create platform on curve.');
+					alert('sorry! unable to create this type of platform on curve.');
 					return { 'overlap' : true,'side': null,'offset': null };
 				}
 
@@ -1058,7 +1617,7 @@ function testForm(pid1,pid2,idx,howtoForm,sL) {
 				var cuvEdX = MapToolbar.features['curveTab'][cuv_pid].Lt;
 	
 				if (pform_x0 < cuvEdX) {
-					alert('sorry! unable to create platform on curve.');
+					alert('sorry! unable to create this type of platform on curve.');
 					return { 'overlap' : true,'side': null,'offset': null };
 				}
 			}							
@@ -1073,7 +1632,7 @@ function testForm(pid1,pid2,idx,howtoForm,sL) {
 				var cuvStX = MapToolbar.features['tcurveTab'][tcv_pid].TL;
 	
 				if (pform_x0 < cuvStX) {
-					alert('sorry! unable to create platform on curve.');
+					alert('sorry! unable to create this type of platform on curve.');
 					return { 'overlap' : true,'side': null,'offset': null };
 				}
 
@@ -1083,7 +1642,7 @@ function testForm(pid1,pid2,idx,howtoForm,sL) {
 				var cuvStX = MapToolbar.features['curveTab'][cuv_pid].Lt;
 	
 				if (pform_x0 < cuvStX) {
-					alert('sorry! unable to create platform on curve.');
+					alert('sorry! unable to create this type of platform on curve.');
 					return { 'overlap' : true,'side': null,'offset': null };
 				}
 			}
@@ -1092,7 +1651,7 @@ function testForm(pid1,pid2,idx,howtoForm,sL) {
 
 	for (var oi = idx; oi >= 0; oi--) {
 		if (MapToolbar.features["lineTab"][pid1].markers.getAt(oi).sline != '') {
-			if (MapToolbar.features["lineTab"][pid1].markers.getAt(oi).sline.indexOf($('#dpLTs_Line2').val()) >= 0) {
+			if (MapToolbar.features["lineTab"][pid1].markers.getAt(oi).sline.indexOf(pid2) >= 0) {
 						
 				var plines = MapToolbar.features["lineTab"][pid1].markers.getAt(oi).sline.split(',');
 				for (var a=0; a < plines.length;a++) {
@@ -1105,7 +1664,7 @@ function testForm(pid1,pid2,idx,howtoForm,sL) {
 								arrLineX = lineXdata.split(':'); 
 								if (arrLineX[0] == pid1) {
 									side = parseInt(arrLineX[1] );
-									offset = (side < 0)? (-1 * parseFloat(arrLineX[2])) : parseFloat(arrLineX[2]);
+									offset = (side < 0) ? (-1 * parseFloat(arrLineX[2])) : parseFloat(arrLineX[2]);
 									break;
 								}
 							}
