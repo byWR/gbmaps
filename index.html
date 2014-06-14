@@ -18,7 +18,7 @@ File : index.html
 type : release (under development)
 version : 1.0.0
 build : 
-last update : 18 Dec 2013 12:00am (GMT 8+)
+last update : 15 Jun 2014 12:00am (GMT 8+)
 
 -->
 <head>
@@ -26,22 +26,16 @@ last update : 18 Dec 2013 12:00am (GMT 8+)
   <title>GB Maps - ギビマップ v1.0.0</title>
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 	<link  type="text/css" rel="stylesheet" href="css/gb maps.css"/>  
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="script/jquery.cookie.js"></script>	
 	<script type="text/javascript" src="script/jquery.themeswitcher.js"></script>
 	<script type="text/javascript" src="script/jquery-lang.js" charset="utf-8"></script>
-	<script type="text/javascript" src="script/langpack/jp.js" charset="utf-8"></script>
-	<script type="text/javascript" src="script/langpack/my.js" charset="utf-8"></script>
-	<script type="text/javascript" src="script/langpack/hu.js" charset="utf-8"></script>
-	<script type="text/javascript" src="script/gbm-jq-v1.js"></script>
 	<script type="text/javascript" src="script/gbm-base-v1.js"></script>
-	<script type="text/javascript" src="script/gbm-func-v1.js"></script>
-	<script type="text/javascript" src="script/conv-openbve-v1.js"></script>
-	<script type="text/javascript" src="script/gbm-objects.js"></script>
-	<script type="text/javascript" src="script/gbm-form-v1.js"></script>
+
 	<script type="text/javascript">	
-		var defaultlangcookie = $.cookie('defaultlang'); 
+		var defaultlangcookie = $.cookie('defaultlang');
+		var apiV = $.cookie('api');
 
 		if ((defaultlangcookie != null && defaultlangcookie != "") && (typeof defaultlangcookie != "undefined")) {
 			var startlang = defaultlangcookie.split(",");
@@ -50,7 +44,7 @@ last update : 18 Dec 2013 12:00am (GMT 8+)
 				//google.load("maps", "3",{"callback" : initialize,"other_params":"sensor=false&libraries=geometry&key=AIzaSyB4aJCgrrHzuiEvnTS6mUZVyK7qOKvlLgA&language="+startlang[0]});
 				var script = document.createElement('script');
 				script.type = 'text/javascript';
-				script.src = 'https://maps.google.com/maps/api/js?v=3&sensor=false&libraries=geometry&key='+'AIzaSyB4aJCgrrHzuiEvnTS6mUZVyK7qOKvlLgA&language=' + startlang[0] + '&callback=initialize';
+				script.src = 'https://maps.googleapis.com/maps/api/js?v=' + apiV + '&sensor=false&libraries=geometry&key='+'AIzaSyB4aJCgrrHzuiEvnTS6mUZVyK7qOKvlLgA' + '&language=' + startlang[0] + '&callback=initialize';
 				script.id = "google-maps-script";
 				document.getElementsByTagName("head")[0].appendChild(script);
 
@@ -58,7 +52,7 @@ last update : 18 Dec 2013 12:00am (GMT 8+)
 				//google.load("maps", "3",{"callback" : initialize,"other_params":"sensor=false&libraries=geometry&key=AIzaSyB4aJCgrrHzuiEvnTS6mUZVyK7qOKvlLgA"});
 				var script = document.createElement('script');
 				script.type = 'text/javascript';
-				script.src = 'https://maps.google.com/maps/api/js?v=3&sensor=false&libraries=geometry&key='+'AIzaSyB4aJCgrrHzuiEvnTS6mUZVyK7qOKvlLgA' + '&callback=initialize';
+				script.src = 'https://maps.googleapis.com/maps/api/js?v=' + apiV + '&sensor=false&libraries=geometry&key='+'AIzaSyB4aJCgrrHzuiEvnTS6mUZVyK7qOKvlLgA' + '&callback=initialize';
 				script.id = "google-maps-script";
 				document.getElementsByTagName("head")[0].appendChild(script);
 		
@@ -68,7 +62,7 @@ last update : 18 Dec 2013 12:00am (GMT 8+)
 			//google.load("maps", "3",{"callback" : initialize,"other_params":"sensor=false&libraries=geometry&key=AIzaSyB4aJCgrrHzuiEvnTS6mUZVyK7qOKvlLgA"});
 			var script = document.createElement('script');
 			script.type = 'text/javascript';
-			script.src = 'https://maps.google.com/maps/api/js?v=3&sensor=false&libraries=geometry&key='+'AIzaSyB4aJCgrrHzuiEvnTS6mUZVyK7qOKvlLgA' + '&callback=initialize';
+			script.src = 'https://maps.googleapis.com/maps/api/js?v=' + apiV + '&sensor=false&libraries=geometry&key='+'AIzaSyB4aJCgrrHzuiEvnTS6mUZVyK7qOKvlLgA' + '&callback=initialize';
 			script.id = "google-maps-script";
 			document.getElementsByTagName("head")[0].appendChild(script);
 		}
@@ -86,9 +80,17 @@ last update : 18 Dec 2013 12:00am (GMT 8+)
 		}
  	}
 	</script>
+	<script type="text/javascript" src="script/gbm-func-v1.js"></script>
+	<script type="text/javascript" src="script/conv-openbve-v1.js"></script>
+	<script type="text/javascript" src="script/gbm-objects.js"></script>
+	<script type="text/javascript" src="script/gbm-form-v1.js"></script>
+	<script type="text/javascript" src="script/gbm-jq-v1.js"></script>
+	<script type="text/javascript" src="script/langpack/jp.js" charset="utf-8"></script>
+	<script type="text/javascript" src="script/langpack/my.js" charset="utf-8"></script>
+	<script type="text/javascript" src="script/langpack/hu.js" charset="utf-8"></script>
+	
 </head>
 <body>
-
 <!-- The frame used to measure the screen size -->
 <!-- <div id="frame"></div>  -->
 <div id="map"></div>
@@ -112,36 +114,36 @@ last update : 18 Dec 2013 12:00am (GMT 8+)
 	  	<li id="mMaddPoints"><span lang="en">Add Point</span></li>
 	    <li id="mOInvertLine"><span lang="en">Invert Line</span></li>
 		<li id="mOClearAll"><span lang="en">Clear All</span></li>
-		<li id="mOParallel"><span lang="en">Make two lines parallel</span></li>
+		<!-- <li id="mOParallel"><span lang="en">Make two lines parallel</span></li> -->
+		<li id="mMRouteColor"><span lang="en">Route Color ...</span></li>
     </ul>
   </li>
   <li><span lang="en">Build</span>
     <ul>
-    <li id="mMbuildBVE"><span lang="en">OpenBVE</span></li>
-    <li id="mMobjBVE">BVE 5 Trainsim</li>
+		<li id="mMbuildBVE"><span lang="en">OpenBVE</span></li>
+		<li id="mMobjBVE">BVE 5 Trainsim</li>
     </ul>
   </li> 
   <li><span lang="en">Help</span>
     <ul>
-    <li id="mMmanual"><span lang="en">Manual</span></li>
-    <li id="mMtroubleShooting"><span lang="en">Troubleshooting</span></li>
-    <li id="mMsystemRequirents"><span lang="en">System Requirements</span></li>
-    <li id="mMCredits"><span lang="en">Credits</span></li>
-    <li id="mMAbout"><span lang="en">Abouts</span></li>
+		<li id="mMmanual"><span lang="en">Manual</span></li>
+		<li id="mMtroubleShooting"><span lang="en">Troubleshooting</span></li>
+		<li id="mMsystemRequirents"><span lang="en">System Requirements</span></li>
+		<li id="mMCredits"><span lang="en">Credits</span></li>
+		<li id="mMAbout"><span lang="en">Abouts</span></li>
     </ul> 	
   </li>
 </ul>  
 <ul class="langmenu">  
   <li lang="en"><img src="images/language_balloon.png" width="16" height="16" align="top" /> <span id="bahasa">Language</span>
     <ul>
-    <li id="en" onClick="loadScript('en','en','English');">English</li>
-    <li id="jp" onClick="loadScript('ja','jp','日本語');">日本語</li>
-    <li id="my" onClick="loadScript('en','my','Bahasa Melayu');">Bahasa Melayu</li>
-    <li id="hu" onClick="loadScript('hu','hu','Magyar');">Magyar</li>
+		<li id="en" onClick="loadScript('en','en','English');">English</li>
+		<li id="jp" onClick="loadScript('ja','jp','日本語');">日本語</li>
+		<li id="my" onClick="loadScript('en','my','Bahasa Melayu');">Bahasa Melayu</li>
+		<li id="hu" onClick="loadScript('hu','hu','Magyar');">Magyar</li>
     </ul>
   </li> 
 </ul>
-
 <div id="drawingtools">
 <table border="0" cellspacing="1" cellpadding="0"><tr>
 <td><div id="hand_b" lang="en" title="Click to stop line or shape editing, OR to move the map." onclick="MapToolbar.stopEditing()" onmouseover="hoverButton('hand_b','hover');" onmouseout="hoverButton('hand_b','');" /></td>
@@ -155,50 +157,60 @@ last update : 18 Dec 2013 12:00am (GMT 8+)
 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 <td><div id="ruler_b" lang="en" title="Measure distance." onmouseover="hoverButton('ruler_b','hover');" onmouseout="hoverButton('ruler_b','');" onclick="MapToolbar.initFeature('ruler')" /></td>
 <td><div id="protractor_b" lang="en" title="Measure angle." onmouseover="hoverButton('protractor_b','hover');" onmouseout="hoverButton('protractor_b','');" onclick="MapToolbar.initFeature('protractor')" /></td>
+<!--
 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 <td><div id="undo_b" lang="en" title="Undo" onmouseover="hoverButton('undo_b','hover');" onmouseout="hoverButton('undo_b','');" /></td>
 <td>&nbsp;</td>
 <td><div id="redo_b" lang="en" title="Redo" onmouseover="hoverButton('redo_b','hover');" onmouseout="hoverButton('redo_b','');" /></td>
+-->
 </tr>
 </table>
 </div>
 <div id="sidemenu">
 <div id="accordion">
-	<h3><span lang="en">Objects List</span></h3>
+	<h3><span lang="en">Map Objects</span></h3>
 	<div>
 		<table width="100%" id ="featuretable" cellspacing="0" cellpadding="1">
 			<tbody id="featuretbody"></tbody>
 		</table>
 	</div>
-	<h3><span lang="en">Lines List</span></h3>
-	<div id="track_services">
-  <!-- <label><input type="checkbox" name="trackService" value="utaraline" id="trackService_0">Utara Line</label> -->
-  <br>
-	</div>	
-	<h3><span lang="en">BVE Rail Type</span></h3>
+	<h3><span lang="en">Routes</span></h3>
+	<div id="route_list"></div>	
+	<h3><span lang="en">Stations</span></h3>
+	<div id="station_list">
+
+	</div>
+ <h3><span lang="en">BVE Libraries</span></h3>
 	<div>
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
   	<tr>
     	<td><img src="images/transparent.png" width="1" height="180"></td>
-    	<td><img src="" alt="" id="railobjpx" ></td>
+    	<td><img src="" alt="" id="strpx" ></td>
   	</tr>
 		</table>
-		<select name="railindex" id="railindex" size="5" onchange="changeImgSrc('railobj',this.options[this.selectedIndex].value);">
+	<select name="railindex" id="railindex" onchange="changeImgSrc('railobj',this.options[this.selectedIndex].value);">
+     <option value="none" selected lang="en">- select -</option>
+    </select><br />
+	<select name="strBVE" id="strBVE" onchange="changeImgSrc('strobj',this.options[this.selectedIndex].value);">
+      <option value="none" selected lang="en">- select -</option>
+    </select><br />
+	<select name="sideObj" id="sideObj" onchange="changeImgSrc('sideObj',this.options[this.selectedIndex].value);">
+      <option value="none" selected lang="en">- select -</option>
+    </select><br />
+	<select name="grnObj" id="grnObj" onchange="changeImgSrc('grnobj',this.options[this.selectedIndex].value);">
       <option value="none" selected lang="en">- select -</option>
     </select>
-	</div>
+	</div>	
+<!--	
  <h3><span lang="en">Theme Selection</span></h3>
 	<div>
-<div id="switcher"></div>
-	</div>	
-	
- <h3><span lang="en">History</span></h3>
-	<div>
-
-	</div>		
+		<div id="switcher"></div>
+	</div>
+-->	
 </div>
 
 </div>
+<img src="images/transparent.png" width="1" height="1600">
 <br style="clear:both;" />
 <!-- ************************ Application dialog windows ********************************* -->
 <div id="dialogOpenFile" title="Open File" lang="en">
@@ -270,7 +282,56 @@ last update : 18 Dec 2013 12:00am (GMT 8+)
 </div>
 
 <div id="dialogOptions" title="Options">
-	<p>text text text text text text text </p>
+<table width="400" border="0" cellspacing="2" cellpadding="2">
+	  <tr>
+	    <td>Select theme:</td>
+	    <td><div id="switcher"></div></td>
+      </tr>
+	  <tr>
+	    <td>Developer ID</td>
+	    <td><input type="text" name="op_DevID" id="op_DevID" /></td>
+      </tr>
+	  <tr>
+	    <td>Default Gauge</td>
+	    <td><input name="op_DGauge" type="text" id="op_DGauge" />
+        mm</td>
+      </tr>
+	  <tr>
+	    <td>Default Cant Size</td>
+	    <td><input name="op_Cant" type="text" id="op_Cant" />
+        mm</td>
+      </tr>
+	  <tr>
+	    <td>Rails</td>
+	    <td><input name="op_RailsPack" type="text" id="op_RailsPack" readonly="readonly" /></td>
+      </tr>
+	  <tr>
+	    <td>Objects</td>
+	    <td><input name="op_ObjectsPack" type="text" id="op_ObjectsPack" readonly="readonly" /></td>
+      </tr>
+	  <tr>
+	    <td>Google Maps <br />
+	      Javascript <br />
+        API version</td>
+	    <td><input type="radio" name="radioAPIv" id="op_api_3" value="op_api_3" />
+	      default API version (latest)
+	        <br />
+	        <input type="radio" name="radioAPIv" id="op_api_3exp" value="op_api_exp" />
+        experimental API<br />
+        <input type="radio" name="radioAPIv" id="op_api_custom" value="op_api_custom" />
+        spesific version : 
+        <input name="op_APIv" type="text" id="op_APIv" value="3.15" size="8" /></td>
+      </tr>
+	  <tr>
+	    <td>&nbsp;</td>
+	    <td>Please refresh this page if you change the API version.</td>
+      </tr>
+	  <tr>
+	    <td>&nbsp;</td>
+	    <td align="right" valign="bottom"><input type="button" name="op_Update" id="op_Update" value="Update"/>
+        <input type="button" name="op_Cancel" id="op_Cancel" value="Cancel"/></td>
+      </tr>
+</table>
 </div>
 
 <div id="dialogDevInfo" title="Development Info">
@@ -421,14 +482,12 @@ Auto height (generate height per segment)</td>
     	<td valign="top" lang="en"><span lang="en">type of structure</span></td>
     	<td valign="top"><select name="railPitchStructure" id="railPitchStructure">
     	  <option lang="en">- select -</option>
+    	  <option value="bridge" lang="en">Bridge</option>
     	  <option value="cut" lang="en">Hill cut</option>
     	  <option value="dike" lang="en">Dike</option>
-    	  <option value="bridge" lang="en">Bridge</option>
     	  <option value="tunnel" lang="en">Tunnel</option>
     	  <option value="flyover" lang="en">Flyover</option>
-    	  <option value="underground" lang="en">Underground</option>
-    	  <option value="form" lang="en">Platform ????</option>
-        <option value="roadcross" lang="en">Road Crossing</option>
+    	  <!-- <option value="underground" lang="en">Underground</option> -->
   	    </select>
 
    	  <select name="PLstrListIndex" id="PLstrListIndex">
@@ -481,7 +540,7 @@ m</td>
   </tr>
   <tr>
     <td><span lang="en">Cant : </span></td>
-    <td><input type="text" id="sBtnRCCant" value="100" size="10" /> mm&nbsp;&nbsp;<img src="images/information_white.png" width="16" height="16" onclick="alert('Suggested value:\nJapan - conventional lines (narrow gauge 1067mm) : 105mm\nJapan - Shinkansen (standard gauge 1435mm) : 200mm');" ></td>
+    <td><input type="text" id="sBtnRCCant" value="105" size="10" /> mm&nbsp;&nbsp;<img src="images/information_white.png" width="16" height="16" onclick="alert('Suggested value:\nJapan - conventional lines (narrow gauge 1067mm) : 105mm\nJapan - Shinkansen (standard gauge 1435mm) : 200mm');" ></td>
   </tr>
   <tr>
     <td><span lang="en">Suggested curve radius : </span></td>
@@ -519,7 +578,7 @@ mm</td>
   </tr>
   <tr>
     <td>Cant : </td>
-    <td><input type="text" id="sBtnRtCCant" value="100" size="7" />
+    <td><input type="text" id="sBtnRtCCant" value="105" size="7" />
 mm</td>
     <td><img src="images/information_white.png" width="16" height="16" onclick="$('#dialogCantSize').dialog('open');" /></td>
     <td>Curve radius :</td>
@@ -551,7 +610,7 @@ m</td>
     <td><input name="tc_Tt" type="text" id="tc_Tt" size="10" readonly="readonly" /> m</td>
   </tr>
   <tr>
-    <td>Spiral curve length Lt : </td>
+    <td>Spiral curve length Ls : </td>
     <td><input name="tc_Lt" type="text" id="tc_Lt" size="10" readonly="readonly" /> m</td>
     <td>Circular curve length Lc : </td>
     <td><input name="tc_Lc" type="text" id="tc_Lc" size="10" readonly="readonly" /> m</td>
@@ -623,59 +682,66 @@ m</td>
 -->
 
 <div id="dialogParalelLine" title="Paralel Line ..." >
-<p><span lang="en">Please set parallel line offset in meters and select which direction you want to create the new line. To the left / to the right.</span></p>
-	<table border="0" cellspacing="0" cellpadding="2" width="100%">
-  	<tr>
-    	<td><span lang="en">Parallel line offset :</span></td>
-    	<td> <input type="text" name="sBtnPLineOffset" id="sBtnPLineOffset" value="3.8"/> meter</td>
-  	</tr>
-  	<tr>
-    	<td><span lang="en">Position : </span></td>
-    	<td><label><input type="radio" name="PLineDir" id="Right2Line" /> (+) to the right </label><br />
-          <label><input type="radio" name="PLineDir" id="Left2Line" /> (-) to the left</label>
-      </td>
-  	</tr>
-  	<tr>
-    	<td colspan="2"><span lang="en">(relative from starting point and move forward to the next point)</span><br /></td>
-  	</tr>
-		<tr>
-    	<td><span lang="en">Create new parallel line ...</span></td>
-    	<td>&nbsp;</td>
-    </tr>
-    <tr>
-    	<td valign="top">
-    	  <label>
-    	    <input name="PLCopyType" type="radio" id="PLCopyType_0" value="full_length" checked="checked" />
-    	    <span lang="en">whole line</span></label>
-	  	</td>
-    	<td valign="top"><label>
-    	  <input type="radio" name="PLCopyType" value="partial" id="PLCopyType_1" />
-   	    <span lang="en">between two point : </span><br />
-   	    <input type="text" name="m1" id="m1" readonly="readonly"/>
-    	<span lang="en"></span>to 
-    	<input type="text" name="m2" id="m2" readonly="readonly"/>
-    	</label><br /><span lang="en">(click two markers to select)</span></td>
-    </tr>  
-    	
-  	<tr>
-    	<td colspan="2">
-    		<p><input type="checkbox" name="plswAtStart" id="plswAtStart"><span lang="en">turnout (switch) from main line at start (start distance = 0), <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch length (25/50/75...) : </span><input type="text" name="pLstSwLength" id="pLstSwLength" value="100"/> <span lang="en">meter</span><br />
-    		<input type="checkbox" name="plswAtEnd" id="plswAtEnd"><span lang="en">turnout (switch) back to main lain at the end (end distance = 0), <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch length (25/50/75...) : </span><input type="text" name="pLedSwLength" id="pLedSwLength" value="100"/> <span lang="en">meter</span></p>
-    	</td>
-  	</tr>
-  	<!--
-  	<tr>
-    	<td colspan="2">
-    		<p><input type="checkbox" name="plswMainLineTurnOut0" id="plswMainLineTurnOut0"> turnout main line at start, <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="plswmainTOst0" id="plswmainTOst0"> turnout equally, turnout length : <input type="text" name="pLmainTOlength0" id="pLmainTOlength1" value=""/> meter<br />
-    		<input type="checkbox" name="plswMainLineTurnOut1" id="plswMainLineTurnOut1"> turnout main line at end, <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="plswmainTOst1" id="plswmainTOst1"> turnout equally, turnout length : <input type="text" name="pLmainTOlength0" id="pLmainTOlength1" value=""/> meter</p><hr />
-    	</td>
-  	</tr>
-  	-->  	
-  	<tr>
-    	<td><input type="hidden" id="PLbasePolyID" value="">&nbsp;</td>
-    	<td align="right"><input type="button" name="createParallelLine" id="createParallelLine" value="Create" onclick="parallel_line()" /></td>
-  	</tr> 	
- 	</table>		
+	<table width="500" border="0" cellspacing="0" cellpadding="0">
+	  <tr>
+	    <td width="179"><span lang="en">Parallel line offset</span> : </td>
+	    <td width="124"><input name="sBtnPLineOffset" type="text" id="sBtnPLineOffset" value="3.8" size="5"/>
+meter</td>
+	    <td width="197" rowspan="3"><img src="images/transparent.png" name="PLcrackView" id="PLcrackView" /></td>
+      </tr>
+	  <tr>
+	    <td><span lang="en">Position</span> : </td>
+	    <td><label>
+	      <input type="radio" name="PLineDir" id="Right2Line" />
+	      (+) to the right </label>
+          <br />
+          <label>
+            <input type="radio" name="PLineDir" id="Left2Line" />
+        (-) to the left</label></td>
+      </tr>
+	  <tr>
+	    <td>
+	      <input name="PLcrackOp" type="checkbox" id="PLcrackOp" value="crack" checked="checked" />
+<span lang="en">Cracks between tracks</span> : </td>
+	    <td><select name="PLcrackID" id="PLcrackID">
+	      <option value="transparent.png">- select -</option>
+        </select></td>
+      </tr>
+</table>
+	<p>Create new parallel line ...</p>
+	<table width="500" border="0" cellspacing="0" cellpadding="0">
+	  <tr>
+	    <td valign="top"><label>
+	      <input name="PLCopyType" type="radio" id="PLCopyType_0" value="full_length" checked="checked" />
+        <span lang="en">whole line</span></label></td>
+	    <td valign="top"><label>
+	      <input type="radio" name="PLCopyType" value="partial" id="PLCopyType_1" />
+	      <span lang="en">between two point : </span><br />
+	      <input type="text" name="m1" id="m1" readonly="readonly"/>
+	      <span lang="en">to</span>
+	      <input type="text" name="m2" id="m2" readonly="readonly"/>
+	      </label>
+          <br />
+        <span lang="en">(click two markers to select)</span></td>
+      </tr>
+	  <tr>
+	    <td colspan="2"><input type="checkbox" name="plswAtStart" id="plswAtStart" />
+	      <span lang="en">turnout (switch) from main line at start (start distance = 0), <br />
+	      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch length (25/50/75...) : </span>
+	      <input type="text" name="pLstSwLength" id="pLstSwLength" value="100"/>
+          <span lang="en">meter</span><br />
+          <input type="checkbox" name="plswAtEnd" id="plswAtEnd" />
+          <span lang="en">turnout (switch) back to main lain at the end (end distance = 0), <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch length (25/50/75...) : </span>
+          <input type="text" name="pLedSwLength" id="pLedSwLength" value="100"/>
+        <span lang="en">meter</span></td>
+      </tr>
+	  <tr>
+	    <td><input type="hidden" id="PLbasePolyID" value="" /></td>
+	    <td align="right"><input type="button" name="createParallelLine" id="createParallelLine" value="Create" onclick="parallel_line()" /></td>
+      </tr>
+</table>
+
 </div>
 
 <div id="dialogCombinePolyline" title="Combine two lines">
@@ -712,86 +778,65 @@ m</td>
 </div>
 
 <div id="dialogMarkerSetting" title="Marker Setting">
-		<div id="tabsMarkerSettingDialog">
-		<ul>
+	<div id="tabsMarkerSettingDialog">
+	<ul>
         <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-newmarkerdatails"><span lang="en">Marker</span></a></li>
         <li style="font-family: Tahoma, Geneva, sans-serif; font-size: 10px;"><a href="#tabs-currentmarkerdatails"><span lang="en">Raw Datas</span></a></li>
     </ul>
     <div id="tabs-newmarkerdatails">
-<table border="0" cellspacing="0" cellpadding="3">
+	<table border="0" cellspacing="0" cellpadding="3">
 	  <tr>
 	    <td><span lang="en">line id</span></td>
-	    <td><input type="text" name="dms_lineid" id="dms_lineid"></td>
+	    <td><input type="text" name="dms_lineid" id="dms_lineid" readonly="readonly" ></td>
 	    <td>&nbsp;</td>
 	    <td><span lang="en">marker no</span></td>
 	    <td><strong>
-	      <input type="text" name="dms_markerindex" id="dms_markerindex">
+	      <input name="dms_markerindex" type="text" id="dms_markerindex" size="6" readonly="readonly" >
 	    </strong></td>
       </tr>
 	  <tr>
-	    <td><span lang="en">track service</span></td>
-	    <td><input type="text" name="dms_service" id="dms_service"></td>
+	    <td><span lang="en">line name</span></td>
+	    <td><input type="text" name="dms_linename" id="dms_linename" readonly="readonly" /></td>
 	    <td>&nbsp;</td>
-	    <td colspan="2"><input type="checkbox" name="lockedmarker" id="lockedmarker">
-        <span lang="en"></span>Locked</td>
+	    <td><span lang="en">route name</span></td>
+	    <td><input type="text" name="dms_route" id="dms_route" readonly="readonly" /></td>
       </tr>
 	  <tr>
-	    <td><span lang="en">rail type</span></td>
-	    <td><select name="dms_railindex" id="dms_railindex">
-	      <option value="none" selected>- select -</option>
-        </select></td>
+	    <td><span lang="en">position</span></td>
+	    <td colspan="4"><textarea name="dms_position" cols="45" rows="2" readonly="readonly" id="dms_position"></textarea></td>
+	</tr>
+	  <tr>
+	    <td><span lang="en"></span></td>
+	    <td><input type="checkbox" name="lockedmarker" id="lockedmarker" />
+        <span lang="en">Locked</span></td>
 	    <td>&nbsp;</td>
-	    <td><span lang="en">pole type</span></td>
+	    <td><input type="checkbox" name="poleOn" id="poleOn"><span lang="en">pole</span></td>
 	    <td><select name="dms_poleindex" id="dms_poleindex">
 	      <option value="none" selected>- select -</option>
         </select></td>
       </tr>
-</table><br />
-<table border="0" cellspacing="0" cellpadding="2" id=width="100%">
 	  <tr>
-	    <td><span lang="en">structure OR</span></td>
-	    <td><select name="dms_GBstr" id="dms_GBstr">
-	      <option value="none" selected>- select -</option>
-</select></td>
-      </tr>
-	  <tr>
-	    <td><span lang="en">object type</span></td>
-	    <td><select name="dms_objtype" id="dms_objtype">
+	    <td><span lang="en">height</span></td>
+	    <td><input name="dms_height" type="text" id="dms_height" size="6" /> 
+	      m</td>
+	    <td>&nbsp;</td>
+	    <td><span lang="en">railindex</span></td>
+	    <td><select name="dms_railindex" id="dms_railindex">
 	      <option value="none" selected>- select -</option>
         </select></td>
-      </tr>
+  </tr>
 	  <tr>
-	    <td><span lang="en">object index</span></td>
-	    <td><select name="dms_objindex" id="dms_objindex">
-	      <option value="none" selected>- select -</option>
-        </select></td>
-      </tr>
-	  <tr>
-	    <td><span lang="en">distance to the left (optional)</span></td>
-	    <td><input type="text" name="dms_leftX" id="dms_leftX"></td>
-      </tr>
-	  <tr>
-	    <td><span lang="en">distance to the right (optional)</span></td>
-	    <td><input type="text" name="dms_rightX" id="dms_rightX"></td>
-      </tr>
-	  <tr>
-	    <td><span lang="en">height difference  (optional)</span></td>
-	    <td><input type="text" name="dms_heightX" id="dms_heightX"></td>
-      </tr>
-	  <tr>
-	    <td valign="top"><span lang="en">number of repeating  (optional)</span></td>
-	    <td valign="top"><input type="text" name="dms_repeatCount" id="dms_repeatCount">
-          <br><span lang="en">
-        + onward / - backward</span></td>
-      </tr>
-	  <tr>
-	    <td><span lang="en">distance between repeating object  (optional)</span></td>
-	    <td><input type="text" name="dms_repeatX" id="dms_repeatX"></td>
-      </tr>
+	    <td><span lang="en">pitch</span></td>
+	    <td><input name="dms_pitch" type="text" id="dms_pitch" size="6" /> 
+	      m</td>
+	    <td>&nbsp;</td>
+	    <td>&nbsp;</td>
+	    <td>&nbsp;</td>
+  </tr>
 </table><br />
 <table width="100%" border="0" cellpadding="2" cellspacing="0" id=width="100%">
 	  <tr>
-	    <td><span lang="en">remarks</span></td>
+	    <td><span lang="en">note</span></td>
 	    <td><textarea name="dms_note" cols="40" id="dms_note"></textarea></td>
   </tr>
 	  <tr>
@@ -805,64 +850,130 @@ m</td>
     </div>
     <div id="tabs-currentmarkerdatails">
 <img src="images/warning.png" width="16" height="16"><span lang="en">Warning ! Please edit with caution. Improper editing will broke the data consistency and  program failure.</span>
-	<table border="0" cellspacing="0" cellpadding="3">
-	  <tr>
+<div style="height:260px; width:500px; overflow:auto;">
+<table border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td>.lineX</td>
+    <td><label for="dms_tcurve"></label>
+      <textarea name="dms_lineX" cols="40" rows="2" id="dms_lineX"></textarea>
+      <img src="images/information.png" alt="" width="16" height="16" align="top" /></td>
+    <td><input type="button" name="dms_lineX_Upd" id="dms_lineX_Upd" value="Update" /></td>
+  </tr>
+  <tr>
+    <td>.sline</td>
+    <td><textarea name="dms_sline" cols="40" rows="2" id="dms_sline"></textarea>
+      <img src="images/information.png" alt="" width="16" height="16" align="top" /></td>
+    <td><input type="button" name="dms_sline_Upd" id="dms_sline_Upd" value="Update" /></td>
+  </tr>
+	<tr>
+	    <td><strong>.bdata</strong></td>
+	    <td colspan="2"><hr /></td>
+  </tr>  
+  <tr>
 	    <td>.curve</td>
-	    <td><label for="m.curve"></label>
-        <textarea name="m.curve" cols="40" id="m.curve"></textarea>
+	    <td>
+        <textarea name="dms_curve" cols="40" rows="2" id="dms_curve"></textarea>
         <img src="images/information.png" alt="" width="16" height="16" align="top"></td>
-	    <td><input type="button" name="btnBuildRoute3" id="btnBuildRoute3" value="Update"></td>
-      </tr>
+	    <td><input type="button" name="dms_curve_Upd" id="dms_curve_Upd" value="Update"></td>
+  </tr>
 	  <tr>
 	    <td>.tcurve</td>
-	    <td><textarea name="m.curve2" cols="40" id="m.curve2"></textarea>
+	    <td><textarea name="dms_tcurve" cols="40" rows="2" id="dms_tcurve"></textarea>
         <img src="images/information.png" alt="" width="16" height="16" align="top"></td>
-	    <td><input type="button" name="btnBuildRoute4" id="btnBuildRoute4" value="Update"></td>
+	    <td><input type="button" name="dms_tcurve_Upd" id="dms_tcurve_Upd" value="Update"></td>
       </tr>
 	  <tr>
-	    <td>.pitch</td>
-	    <td><input name="m.curve3" type="text" id="m.curve3" value="" size="40">
-        <img src="images/information.png" alt="" width="16" height="16" align="top"></td>
-	    <td><input type="button" name="btnBuildRoute5" id="btnBuildRoute5" value="Update"></td>
-      </tr>
-	  <tr>
-	    <td>.bve</td>
-	    <td><textarea name="m.curve4" cols="40" id="m.curve4"></textarea>
-        <img src="images/information.png" alt="" width="16" height="16" align="top"></td>
-	    <td><input type="button" name="btnBuildRoute6" id="btnBuildRoute6" value="Update"></td>
-      </tr>
-      <!--
-	  <tr>
-	    <td>.lineX</td>
-	    <td><input name="m.curve5" type="text" id="m.curve5" value="" size="40">
-        <img src="images/information.png" alt="" width="16" height="16" align="top"></td>
-	    <td><input type="button" name="btnBuildRoute7" id="btnBuildRoute7" value="Update"></td>
-      </tr>
-	  <tr>
-	    <td>.turn</td>
-	    <td><input name="m.curve6" type="text" id="m.curve6" value="" size="40">
-        <img src="images/information.png" alt="" width="16" height="16" align="top"></td>
-	    <td><input type="button" name="btnBuildRoute8" id="btnBuildRoute8" value="Update"></td>
-      </tr> -->
-	  <tr>
-	    <td>.sline</td>
-	    <td><input name="m.curve7" type="text" id="m.curve7" value="" size="40">
-        <img src="images/information.png" alt="" width="16" height="16" align="top"></td>
-	    <td><input type="button" name="btnBuildRoute9" id="btnBuildRoute9" value="Update"></td>
-      </tr>
-	  <tr>
-	    <td>.kit</td>
-	    <td><textarea name="m.curve9" cols="40" id="m.curve9"></textarea>
-        <img src="images/information.png" alt="" width="16" height="16" align="top"></td>
-	    <td><input type="button" name="btnBuildRoute11" id="btnBuildRoute11" value="Update"></td>
-      </tr>
-	  <tr>
-	    <td>.note</td>
-	    <td><textarea name="m.curve8" cols="40" id="m.curve8"></textarea>
-        <img src="images/information.png" alt="" width="16" height="16" align="top"></td>
-	    <td><input type="button" name="btnBuildRoute10" id="btnBuildRoute10" value="Update"></td>
-      </tr>
-</table> 	
+	    <td><strong>.kdata</strong></td>
+	    <td colspan="2"><hr /></td>
+  </tr>
+  <tr>
+    <td>.bridge</td>
+    <td><textarea name="dms_bridge" cols="40" rows="2" id="dms_bridge"></textarea>
+    <img src="images/information.png" alt="" width="16" height="16" align="top" /></td>
+    <td><input type="button" name="dms_bridge_Upd" id="dms_bridge_Upd" value="Update" /></td>
+  </tr>
+  <tr>
+    <td>.overbridge</td>
+    <td><textarea name="dms_overbridge" cols="40" rows="2" id="dms_overbridge"></textarea>
+    <img src="images/information.png" alt="" width="16" height="16" align="top" /></td>
+    <td><input type="button" name="dms_overbridge_Upd" id="dms_overbridge_Upd" value="Update" /></td>
+  </tr>
+  <tr>
+    <td>.river</td>
+    <td><textarea name="dms_river" cols="40" rows="2" id="dms_river"></textarea>
+    <img src="images/information.png" alt="" width="16" height="16" align="top" /></td>
+    <td><input type="button" name="dms_river_Upd" id="dms_river_Upd" value="Update" /></td>
+  </tr>
+  <tr>
+    <td>.ground</td>
+    <td><textarea name="dms_ground" cols="40" rows="2" id="dms_ground"></textarea>
+    <img src="images/information.png" alt="" width="16" height="16" align="top" /></td>
+    <td><input type="button" name="dms_ground_Upd" id="dms_ground_Upd" value="Update" /></td>
+  </tr>
+  <tr>
+    <td>.flyover</td>
+    <td><textarea name="dms_flyover" cols="40" rows="2" id="dms_flyover"></textarea>
+    <img src="images/information.png" alt="" width="16" height="16" align="top" /></td>
+    <td><input type="button" name="dms_flyover_Upd" id="dms_flyover_Upd" value="Update" /></td>
+  </tr>
+  <tr>
+    <td>.tunnel</td>
+    <td><textarea name="dms_tunnel" cols="40" rows="2" id="dms_tunnel"></textarea>
+    <img src="images/information.png" alt="" width="16" height="16" align="top" /></td>
+    <td><input type="button" name="dms_tunnel_Upd" id="dms_tunnel_Upd" value="Update" /></td>
+  </tr>
+  <tr>
+    <td>.pole</td>
+    <td><textarea name="dms_pole" cols="40" rows="2" id="dms_pole"></textarea>
+    <img src="images/information.png" alt="" width="16" height="16" align="top" /></td>
+    <td><input type="button" name="dms_pole_Upd" id="dms_pole_Upd" value="Update" /></td>
+  </tr>
+  <tr>
+    <td>.dike</td>
+    <td><textarea name="dms_dike" cols="40" rows="2" id="dms_dike"></textarea>
+    <img src="images/information.png" alt="" width="16" height="16" align="top" /></td>
+    <td><input type="button" name="dms_dike_Upd" id="dms_dike_Upd" value="Update" /></td>
+  </tr>
+  <tr>
+    <td>.cut</td>
+    <td><textarea name="dms_cut" cols="40" rows="2" id="dms_cut"></textarea>
+    <img src="images/information.png" alt="" width="16" height="16" align="top" /></td>
+    <td><input type="button" name="dms_cut_Upd" id="dms_cut_Upd" value="Update" /></td>
+  </tr>
+  <!--
+  <tr>
+    <td>.underground</td>
+    <td><textarea name="dms_underground" cols="40" rows="2" id="dms_underground"></textarea>
+    <img src="images/information.png" alt="" width="16" height="16" align="top" /></td>
+    <td><input type="button" name="dms_underground_Upd" id="dms_underground_Upd" value="Update" /></td>
+  </tr>
+  -->
+  <tr>
+    <td>.form</td>
+    <td><textarea name="dms_form" cols="40" rows="2" id="dms_form"></textarea>
+    <img src="images/information.png" alt="" width="16" height="16" align="top" /></td>
+    <td><input type="button" name="dms_form_Upd" id="dms_form_Upd" value="Update" /></td>
+  </tr>
+  <tr>
+    <td>.roadcross</td>
+    <td><textarea name="dms_roadcross" cols="40" rows="2" id="dms_roadcross"></textarea>
+    <img src="images/information.png" alt="" width="16" height="16" align="top" /></td>
+    <td><input type="button" name="dms_roadcross_Upd" id="dms_roadcross_Upd" value="Update" /></td>
+  </tr>
+  <tr>
+    <td>.crack</td>
+    <td><textarea name="dms_crack" cols="40" rows="2" id="dms_crack"></textarea>
+    <img src="images/information.png" alt="" width="16" height="16" align="top" /></td>
+    <td><input type="button" name="dms_crack_Upd" id="dms_crack_Upd" value="Update" /></td>
+  </tr>
+  <tr>
+    <td>.beacon</td>
+    <td><textarea name="dms_beacon" cols="40" rows="2" id="dms_beacon"></textarea>
+    <img src="images/information.png" alt="" width="16" height="16" align="top" /></td>
+    <td><input type="button" name="dms_beacon_Upd" id="dms_beacon_Upd" value="Update" /></td>
+  </tr>
+</table>
+</div>	
     </div>
 	</div>    	
 
@@ -879,17 +990,13 @@ m</td>
     <td><input type="text" name="dtsv_trackname" id="dtsv_trackname" size="30"></td>
   </tr>
   <tr>
-    <td><span lang="en">service</span></td>
-    <td><input type="text" name="dtsv_trackservice" id="dtsv_trackservice" size="50"></td>
+    <td><span lang="en">route</span></td>
+    <td><input type="text" name="dtsv_route" id="dtsv_route" size="50"></td>
   </tr>
   <tr>
-    <td><span lang="en">track number</span></td>
-    <td><input type="text" name="dtsv_tracknumber" id="dtsv_tracknumber"></td>
-  </tr>
-  <tr>
-    <td><span lang="en">track section</span></td>
-    <td><input type="text" name="dtsv_trackSection" id="dtsv_trackSection"></td>
-  </tr>
+    <td><span lang="en">description</span></td>
+    <td><textarea name="dtsv_desc" id="dtsv_desc" cols="45" rows="3"></textarea></td>
+  </tr>  
   <tr>
     <td><span lang="en">gauge</span></td>
     <td><input type="text" name="dtsv_trackGauge" id="dtsv_trackGauge"></td>
@@ -907,8 +1014,20 @@ m</td>
     </select></td>
   </tr>
   <tr>
+    <td><span lang="en">max speed</span></td>
+    <td><input type="text" name="dtsv_maxSpeed" id="dtsv_maxSpeed"> kph</td>
+  </tr>
+  <tr>
     <td><span lang="en">developer id</span></td>
     <td><input type="text" name="dtsv_devID" id="dtsv_devID" size="40"></td>
+  </tr>
+  <tr>
+    <td><span lang="en">target simulator</span></td>
+    <td><select name="dtsv_simBVE" id="dtsv_simBVE">
+    <option selected="selected">- select -</option>
+    <option value="bve5">BVE 5 Trainsim</option>
+    <option value="obve">OpenBVE</option>
+  </select></td>
   </tr>
   <tr>
     <td><span lang="en">remark</span></td>
@@ -935,9 +1054,17 @@ m</td>
 	    <td><input name="dbr_trackname" type="text" id="dbr_trackname" readonly="readonly"></td>
       </tr>
 	  <tr>
-	    <td><span lang="en">service</span></td>
-	    <td><input name="dbr_trackservice" type="text" id="dbr_trackservice" size="50"></td>
+	    <td><span lang="en">route</span></td>
+	    <td><input name="dbr_route" type="text" id="dbr_route" size="50" readonly="readonly"></td>
       </tr>
+	  <tr>
+	    <td><span lang="en">target simulator</span></td>
+	    <td><select name="dbr_simBVE" id="dbr_simBVE" readonly="readonly">
+			<option selected="selected">- select -</option>
+			<option value="bve5">BVE 5 Trainsim</option>
+			<option value="obve">OpenBVE</option>
+		</select></td>
+      </tr>	  
 	  <tr>
 	    <td><span lang="en">starting station</span></td>
 	    <td><select name="dbr_stationStart" id="dbr_stationStart">
@@ -949,10 +1076,6 @@ m</td>
 	    <td><select name="dbr_stationEnd" id="dbr_stationEnd">
 	      <option value="none" selected>- select -</option>
 	      </select></td>
-    </tr>
-	  <tr>
-	    <td><span lang="en">track number</span></td>
-	    <td><input name="dbr_tracknumber" type="text" id="dbr_tracknumber" readonly="readonly"></td>
     </tr>
 	  <tr>
 	    <td><span lang="en">gauge</span></td>
@@ -972,6 +1095,10 @@ m</td>
 	    </td>
     </tr>
 	  <tr>
+	    <td><span lang="en">max design speed</span></td>
+	    <td><input name="dbr_maxSpeed" type="text" id="dbr_maxSpeed" size="50" readonly="readonly"></td>
+      </tr>		
+	  <tr>
 	    <td><span lang="en">background</span></td>
 	    <td><select name="dbr_bg" id="dbr_bg">
 	      <option value="none" selected>- select -</option>
@@ -983,8 +1110,8 @@ m</td>
 	    <td><input name="dbr_devID" type="text" id="dbr_devID" size="50"></td>
       </tr>
 	  <tr>
-	    <td><span lang="en">remark</span></td>
-	    <td><input name="dbr_note" type="text" id="dbr_note" value="" size="50"></td>
+	    <td><span lang="en">Description</span></td>
+	    <td><input name="dbr_desc" type="text" id="dbr_desc" value="" size="50"></td>
       </tr>
 	  <tr>
 	    <td colspan="2"><hr /></td>
@@ -1024,12 +1151,42 @@ m</td>
     </tr>
 	</table>
 </div>
-<!--
-<div id="dialogOptions" title="Options">
-	<p>text text text text text text text </p>
-</div> -->
+
+<div id="dialogRouteColor" title="Route Color">
+<table width="480" border="0" cellspacing="2" cellpadding="2">
+	  <tr>
+	    <td colspan="2"><span lang="en">Select route</span> :
+          <select name="routeColor_Routes" id="routeColor_Routes">
+        </select></td>
+	    <td rowspan="5" align="right" valign="middle"><div id="swatch" class="ui-widget-content ui-corner-all"></div></td>
+      </tr>
+	  <tr>
+	    <td><span lang="en">Choose color</span> :</td>
+	    <td>&nbsp;</td>
+      </tr>
+	  <tr>
+	    <td><div id="red"></div></td>
+	    <td><input name="colorR" type="text" id="colorR" size="5" /></td>
+      </tr>
+	  <tr>
+	    <td><div id="green"></div></td>
+	    <td><input name="colorG" type="text" id="colorG" size="5" /></td>
+      </tr>
+	  <tr>
+	    <td><div id="blue"></div></td>
+	    <td><input name="colorB" type="text" id="colorB" size="5" /></td>
+      </tr>
+	  <tr>
+	    <td colspan="2" align="left"><span lang="en">Color Code</span> :
+        <input name="colorCodeHex" type="text" id="colorCodeHex" size="8" /></td>
+	    <td align="right"><input type="button" name="op_RouteColorUpdate" id="op_RouteColorUpdate" value="Update"/>
+        <input type="button" name="op_RouteColorCancel" id="op_RouteColorCancel" value="Cancel"/></td>
+      </tr>
+</table>
+</div>
+
 <div id="dialogInsertCrossing" title="Insert Crossing">
-<p><span lang="en"></span>Insert crossing at the selected point or line.<br />
+<p><span lang="en">Insert crossing at the selected point or line.</span><br />
 </p>
 <table width="400" border="0" cellspacing="0" cellpadding="3">
   <tr>
@@ -1254,8 +1411,8 @@ m</td>
 -->
 <div id="dialogWidenParallelGap" title="Spacing between parallel tracks">
 <p><span lang="en">Widening the distance between two parallel track center.<img src="images/trackgapwiden.png" width="303" height="153" align="absmiddle"></span></p>
-<div style="height:220px; width:600px; overflow:scroll;">
-  <table width="90%" border="0" cellspacing="0" cellpadding="3">
+<div style="height:220px; width:600px; overflow:auto;">
+  <table width="100%" border="0" cellspacing="0" cellpadding="3">
     <tr>
       <td><span lang="en">track 1 (<em>T<sub>1</sub></em>)</span></td>
       <td><input type="text" name="dpLTs_Line1" id="dpLTs_Line1" title="initially selected"></td>
@@ -1351,9 +1508,6 @@ m</td>
 </div>
 <table width="100%" border="0" cellpadding="3" cellspacing="0">
   <tr>
-    <td colspan="5"><hr size="1"></td>
-    </tr>
-  <tr>
     <td align="right">&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
@@ -1368,7 +1522,7 @@ m</td>
 <div id="dialogInsertPlatform" title="Insert platform">
 <table width="100%" border="0" cellspacing="0" cellpadding="3">
   <tr>
-    <td>Platform type :
+    <td>Type :
       <select name="MMchoosePlatform" id="MMchoosePlatform" onclick="changeFormType()">
         <option selected="selected">- select -</option>
         <option value="0">0) Single</option>
@@ -1379,7 +1533,7 @@ m</td>
         <option value="5">5) Left-Right 2 sides, 4 tracks - stop, bypass in middle</option>
         <option value="6">6) Left-Right 2 sides, 4 tracks - non stop, bypass in middle</option>
         <option value="7">7) Left-Right 4 sides, 4 tracks - stop on left</option>
-        <option value="8">8) Left-Right 4 sides, 4 tracks - stop in middle</option>        
+        <option value="8">8) Left-Right 4 sides, 4 tracks - stop in middle</option>
         <option value="9">9) Left-Right 4 sides, 6 tracks - stop on left 1</option>
         <option value="10">10) Left-Right 4 sides, 6 tracks - stop on right 1</option>
         <option value="11">11) Left-Right 4 sides, 6 tracks - bypass in middle 1</option>
@@ -1388,27 +1542,54 @@ m</td>
         <option value="14">14) Left-Right 4 sides, 6 tracks - bypass in middle 2</option>
         <option value="15">15) Manual</option>
     </select></td>
+    <td><span lang="en" id="form_2line">2nd line (parallel)</span> :
+    <input name="dInsForm_pid2" type="text" id="dInsForm_pid2" size="8" /></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="3">
+  <tr>
     <td>Create platform :
       <select name="howtocreateform" id="howtocreateform">
+        <option>- select -</option>
+        <option value="1" selected="selected">onward</option>
+        <option value="-1">backward</option>
+      </select>
+      <input type="hidden" id="dInsForm_pid" value="" />
+    <input type="hidden" id="dInsForm_idx" value="" /></td>
+    <td>Structure :
+      <select name="dInsForm_BVEStr" id="dInsForm_BVEStr">
         <option selected="selected">- select -</option>
-        <option value="1">onward from this point</option>
-        <option value="-1">backward from this point</option>
-    </select>
-	<input type="hidden" id="dInsForm_pid" value="">
-	<input type="hidden" id="dInsForm_idx" value="">
-	</td>
+</select></td>
+    <td>length (<em>P<sub>i</sub></em>) :
+      <input name="platform_length" type="text" id="platform_length" size="6" />
+m</td>
+    <td>width (<em>P<sub>w</sub></em>) :
+      <input name="platform_width" type="text" disabled="disabled" id="platform_width" readonly="readonly" size="6" />
+m <img title="calculate..." src="images/gtk_refresh.png" width="16" height="16" id="calcFormWidthImg" onclick="formWidth();" /></td>  
+  <tr>
+    <td>Station name :
+    <input type="text" name="dInsForm_StaName" id="dInsForm_StaName" /></td>
+    <td>Station ID :
+    <input name="dInsForm_StaID" type="text" id="dInsForm_StaID" size="8" /></td>
+    <td>Duration :
+      <input name="dInsForm_StopDuration" type="text" id="dInsForm_StopDuration" size="5" />
+sec</td>
+    <td><input name="dInsForm_StopSign" type="checkbox" id="dInsForm_StopSign" value="1" />
+Stop sign</td>
   </tr>
   <tr>
-    <td><span lang="en" id="form_2line">2nd line (parallel)</span> : <input name="dInsForm_pid2" type="text" id="dInsForm_pid2" /></td>
-    <td>
-  </td>  
-  <tr>
-    <td>platform length (<em>P<sub>i</sub></em>) : 
-      <input type="text" name="platform_length" id="platform_length" />
-m</td>
-    <td>platform width (<em>P<sub>w</sub></em>) : 
-      <input name="platform_width" type="text" disabled="disabled" id="platform_width" readonly="readonly" />
-m (estimated)</td>
+    <td><input name="formcrackOp" type="checkbox" id="formcrackOp" value="crack" checked="checked" />
+      <span lang="en">Cracks </span> :
+      <select name="formcrackID" id="formcrackID">
+        <option>- select -</option>
+    </select></td>
+    <td>Car(s) :
+      <input name="dInsForm_Cars" type="text" id="dInsForm_Cars" size="6" /></td>
+    <td>Stop offset :
+      <input name="dInsForm_StopOffset" type="text" id="dInsForm_StopOffset" size="5" />
+m </td>
+    <td><input name="dInsForm_TrainStop" type="checkbox" id="dInsForm_TrainStop" value="1" />
+Train Stop</td>
   </tr>
 </table>
 	
@@ -1422,8 +1603,8 @@ m (estimated)</td>
   <tr>
     <td valign="top">position</td>
     <td><select name="form0_pos" id="form0_pos">
-      <option value="left" selected="selected">Left</option>
-      <option value="right">Right</option>
+      <option value="L" selected="selected">Left</option>
+      <option value="R">Right</option>
     </select></td>
   </tr>
   <tr>
@@ -1463,23 +1644,23 @@ m (estimated)</td>
     <p><img src="images/form-middle-it1.png" width="455" height="101" /></p></td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 initial turnout  length (<em>t<sub>i1</sub></em>)</span></td>
+    <td><span lang="en">track 1 initial turnout length (<em>t<sub>i1</sub></em>)</span></td>
     <td><input name="form2_ti1" type="text" id="form2_ti1" value="50">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 initial turnout   width (<em>w<sub>i1</sub></em>)</span></td>
-    <td><input type="text" name="form2_wi1" id="form2_wi1">
+    <td><span lang="en">track 1 initial turnout width (<em>w<sub>i1</sub></em>)</span></td>
+    <td><input type="text" name="form2_wi1" id="form2_wi1" value="5.2">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 initial turnout  length (<em>t<sub>i2</sub></em>)</span></td>
+    <td><span lang="en">track 2 initial turnout length (<em>t<sub>i2</sub></em>)</span></td>
     <td><input name="form2_ti2" type="text" id="form2_ti2" value="50">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 initial turnout   width (<em>w<sub>i2</sub></em>)</span></td>
-    <td><input type="text" name="form2_wi2" id="form2_wi2">
+    <td><span lang="en">track 2 initial turnout width (<em>w<sub>i2</sub></em>)</span></td>
+    <td><input type="text" name="form2_wi2" id="form2_wi2" value="5.2">
 m</td>
   </tr>
   <tr>
@@ -1487,23 +1668,23 @@ m</td>
     <td>&nbsp;</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 end turnout  length (<em>t<sub>f1</sub></em>)</span></td>
+    <td><span lang="en">track 1 end turnout length (<em>t<sub>f1</sub></em>)</span></td>
     <td><input name="form2_tf1" type="text" id="form2_tf1" value="50">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 end turnout   width (<em>w<sub>f1</sub></em>)</span></td>
-    <td><input type="text" name="form2_wf1" id="form2_wf1">
+    <td><span lang="en">track 1 end turnout width (<em>w<sub>f1</sub></em>)</span></td>
+    <td><input type="text" name="form2_wf1" id="form2_wf1" value="5.2">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 end turnout  length (<em>t<sub>f2</sub></em>)</span></td>
+    <td><span lang="en">track 2 end turnout length (<em>t<sub>f2</sub></em>)</span></td>
     <td><input name="form2_tf2" type="text" id="form2_tf2" value="50">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 end turnout   width (<em>w<sub>f2</sub></em>)</span></td>
-    <td><input type="text" name="form2_wf2" id="form2_wf2">
+    <td><span lang="en">track 2 end turnout width (<em>w<sub>f2</sub></em>)</span></td>
+    <td><input type="text" name="form2_wf2" id="form2_wf2" value="5.2">
 m</td>
   </tr>
   <tr>
@@ -1523,43 +1704,43 @@ m</td>
     <td colspan="2"><img src="images/form-middle-wbypass.png" width="564" height="181"></td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 initial turnout  length (<em>t<sub>i1</sub></em>)</span></td>
-    <td><input name="form3_ti1" type="text" id="form3_ti1" value="100">
+    <td><span lang="en">track 1 initial turnout length (<em>t<sub>i1</sub></em>)</span></td>
+    <td><input name="form3_ti1" type="text" id="form3_ti1" value="50">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 initial turnout   width (<em>w<sub>i1</sub></em>)</span></td>
-    <td><input type="text" name="form3_wi1" id="form3_wi1">
+    <td><span lang="en">track 1 initial turnout width (<em>w<sub>i1</sub></em>)</span></td>
+    <td><input type="text" name="form3_wi1" id="form3_wi1" value="5.2">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 initial turnout  length (<em>t<sub>i2</sub></em>)</span></td>
-    <td><input name="form3_ti2" type="text" id="form3_ti2" value="100">
+    <td><span lang="en">track 2 initial turnout length (<em>t<sub>i2</sub></em>)</span></td>
+    <td><input name="form3_ti2" type="text" id="form3_ti2" value="50">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 initial turnout   width (<em>w<sub>i2</sub></em>)</span></td>
-    <td><input type="text" name="form3_wi2" id="form3_wi2">
+    <td><span lang="en">track 2 initial turnout width (<em>w<sub>i2</sub></em>)</span></td>
+    <td><input type="text" name="form3_wi2" id="form3_wi2" value="5.2">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 initial turnout  length (<em>t<sub>i3</sub></em>)</span></td>
-    <td><input name="form3_ti3" type="text" id="form3_ti3" value="200">
+    <td><span lang="en">track 3 initial turnout length (<em>t<sub>i3</sub></em>)</span></td>
+    <td><input name="form3_ti3" type="text" id="form3_ti3" value="100">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 initial turnout   width (<em>w<sub>i3</sub></em>)</span></td>
-    <td><input type="text" name="form3_wi3" id="form3_wi3">
+    <td><span lang="en">track 3 initial turnout width (<em>w<sub>i3</sub></em>)</span></td>
+    <td><input type="text" name="form3_wi3" id="form3_wi3" value="9">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 initial turnout  length (<em>t<sub>i4</sub></em>)</span></td>
-    <td><input name="form3_ti4" type="text" id="form3_ti4" value="200">
+    <td><span lang="en">track 4 initial turnout length (<em>t<sub>i4</sub></em>)</span></td>
+    <td><input name="form3_ti4" type="text" id="form3_ti4" value="100">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 initial turnout   width (<em>w<sub>i4</sub></em>)</span></td>
-    <td><input type="text" name="form3_wi4" id="form3_wi4">
+    <td><span lang="en">track 4 initial turnout width (<em>w<sub>i4</sub></em>)</span></td>
+    <td><input type="text" name="form3_wi4" id="form3_wi4" value="9">
 m</td>
   </tr>
   <tr>
@@ -1567,44 +1748,44 @@ m</td>
     <td>&nbsp;</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 end turnout  length (<em>t<sub>f1</sub></em>)</span></td>
-    <td><input name="form3_tf1" type="text" id="form3_tf1" value="100">
+    <td><span lang="en">track 1 end turnout length (<em>t<sub>f1</sub></em>)</span></td>
+    <td><input name="form3_tf1" type="text" id="form3_tf1" value="50">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 end turnout   width (<em>w<sub>f1</sub></em>)</span></td>
-    <td><input type="text" name="form3_wf1" id="form3_wf1">
+    <td><span lang="en">track 1 end turnout width (<em>w<sub>f1</sub></em>)</span></td>
+    <td><input type="text" name="form3_wf1" id="form3_wf1" value="5.2">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 end turnout  length (<em>t<sub>f2</sub></em>)</span></td>
-    <td><input name="form3_tf2" type="text" id="form3_tf2" value="100">
+    <td><span lang="en">track 2 end turnout length (<em>t<sub>f2</sub></em>)</span></td>
+    <td><input name="form3_tf2" type="text" id="form3_tf2" value="50">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 end turnout   width (<em>w<sub>f2</sub></em>)</span></td>
-    <td><input type="text" name="form3_wf2" id="form3_wf2">
+    <td><span lang="en">track 2 end turnout width (<em>w<sub>f2</sub></em>)</span></td>
+    <td><input type="text" name="form3_wf2" id="form3_wf2" value="5.2">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 end turnout  length (<em>t<sub>f3</sub></em>)</span></td>
-    <td><input name="form3_tf3" type="text" id="form3_tf3" value="200">
+    <td><span lang="en">track 3 end turnout length (<em>t<sub>f3</sub></em>)</span></td>
+    <td><input name="form3_tf3" type="text" id="form3_tf3" value="100">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 end turnout   width (<em>w<sub>f3</sub></em>)</span></td>
-    <td><input type="text" name="form3_wf3" id="form3_wf3">
+    <td><span lang="en">track 3 end turnout width (<em>w<sub>f3</sub></em>)</span></td>
+    <td><input type="text" name="form3_wf3" id="form3_wf3" value="9">
 m</td>
   </tr>
   
   <tr>
-    <td><span lang="en">track 4 end turnout  length (<em>t<sub>f4</sub></em>)</span></td>
-    <td><input name="form3_tf4" type="text" id="form3_tf4" value="200">
+    <td><span lang="en">track 4 end turnout length (<em>t<sub>f4</sub></em>)</span></td>
+    <td><input name="form3_tf4" type="text" id="form3_tf4" value="100">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 end turnout   width (<em>w<sub>f4</sub></em>)</span></td>
-    <td><input type="text" name="form3_wf4" id="form3_wf4">
+    <td><span lang="en">track 4 end turnout width (<em>w<sub>f4</sub></em>)</span></td>
+    <td><input type="text" name="form3_wf4" id="form3_wf4" value="9">
 m</td>
   </tr>
   <tr>
@@ -1624,43 +1805,43 @@ m</td>
     <td colspan="2"><img src="images/form-middle-wbypass-bypass.png" alt="" width="564" height="140"></td>
   </tr>
   <tr>
-  <td><span lang="en">track 1 initial turnout  length (<em>t<sub>i1</sub></em>)</span></td>
-    <td><input name="form4_ti1" type="text" id="form4_ti1" value="200">
+  <td><span lang="en">track 1 initial turnout length (<em>t<sub>i1</sub></em>)</span></td>
+    <td><input name="form4_ti1" type="text" id="form4_ti1" value="100">
     m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 initial turnout   width (<em>w<sub>i1</sub></em>)</span></td>
-    <td><input type="text" name="form4_wi1" id="form4_wi1">
+    <td><span lang="en">track 1 initial turnout width (<em>w<sub>i1</sub></em>)</span></td>
+    <td><input type="text" name="form4_wi1" id="form4_wi1" value="9">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 initial turnout  length (<em>t<sub>i2</sub></em>)</span></td>
-    <td><input name="form4_ti2" type="text" id="form4_ti2" value="200">
+    <td><span lang="en">track 2 initial turnout length (<em>t<sub>i2</sub></em>)</span></td>
+    <td><input name="form4_ti2" type="text" id="form4_ti2" value="100">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 initial turnout   width (<em>w<sub>i2</sub></em>)</span></td>
-    <td><input type="text" name="form4_wi2" id="form4_wi2">
+    <td><span lang="en">track 2 initial turnout width (<em>w<sub>i2</sub></em>)</span></td>
+    <td><input type="text" name="form4_wi2" id="form4_wi2" value="9">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 initial turnout  length (<em>t<sub>i3</sub></em>)</span></td>
-    <td><input name="form4_ti3" type="text" id="form4_ti3" value="100">
+    <td><span lang="en">track 3 initial turnout length (<em>t<sub>i3</sub></em>)</span></td>
+    <td><input name="form4_ti3" type="text" id="form4_ti3" value="50">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 initial turnout   width (<em>w<sub>i3</sub></em>)</span></td>
-    <td><input type="text" name="form4_wi3" id="form4_wi3">
+    <td><span lang="en">track 3 initial turnout width (<em>w<sub>i3</sub></em>)</span></td>
+    <td><input type="text" name="form4_wi3" id="form4_wi3" value="5.2">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 initial turnout  length (<em>t<sub>i4</sub></em>)</span></td>
-    <td><input name="form4_ti4" type="text" id="form4_ti4" value="100">
+    <td><span lang="en">track 4 initial turnout length (<em>t<sub>i4</sub></em>)</span></td>
+    <td><input name="form4_ti4" type="text" id="form4_ti4" value="50">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 initial turnout   width (<em>w<sub>i4</sub></em>)</span></td>
-    <td><input type="text" name="form4_wi4" id="form4_wi4">
+    <td><span lang="en">track 4 initial turnout width (<em>w<sub>i4</sub></em>)</span></td>
+    <td><input type="text" name="form4_wi4" id="form4_wi4" value="5.2">
 m</td>
   </tr>
   <tr>
@@ -1668,44 +1849,44 @@ m</td>
     <td>&nbsp;</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 end turnout  length (<em>t<sub>f1</sub></em>)</span></td>
-    <td><input name="form4_tf1" type="text" id="form4_tf1" value="200">
+    <td><span lang="en">track 1 end turnout length (<em>t<sub>f1</sub></em>)</span></td>
+    <td><input name="form4_tf1" type="text" id="form4_tf1" value="100">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 end turnout   width (<em>w<sub>f1</sub></em>)</span></td>
-    <td><input type="text" name="form4_wf1" id="form4_wf1">
+    <td><span lang="en">track 1 end turnout width (<em>w<sub>f1</sub></em>)</span></td>
+    <td><input type="text" name="form4_wf1" id="form4_wf1" value="9">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 end turnout  length (<em>t<sub>f2</sub></em>)</span></td>
-    <td><input name="form4_tf2" type="text" id="form4_tf2" value="200">
+    <td><span lang="en">track 2 end turnout length (<em>t<sub>f2</sub></em>)</span></td>
+    <td><input name="form4_tf2" type="text" id="form4_tf2" value="100">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 end turnout   width (<em>w<sub>f2</sub></em>)</span></td>
-    <td><input type="text" name="form4_wf2" id="form4_wf2">
+    <td><span lang="en">track 2 end turnout width (<em>w<sub>f2</sub></em>)</span></td>
+    <td><input type="text" name="form4_wf2" id="form4_wf2" value="9">
       m</td>
   </tr>
   <tr>
-<td><span lang="en">track 3 end turnout  length (<em>t<sub>f3</sub></em>)</span></td>
-    <td><input name="form4_tf3" type="text" id="form4_tf3" value="100">
+<td><span lang="en">track 3 end turnout length (<em>t<sub>f3</sub></em>)</span></td>
+    <td><input name="form4_tf3" type="text" id="form4_tf3" value="50">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 end turnout   width (<em>w<sub>f3</sub></em>)</span></td>
-    <td><input type="text" name="form4_wf3" id="form4_wf3">
+    <td><span lang="en">track 3 end turnout width (<em>w<sub>f3</sub></em>)</span></td>
+    <td><input type="text" name="form4_wf3" id="form4_wf3" value="5.2">
 m</td>
   </tr>
   
   <tr>
-    <td><span lang="en">track 4 end turnout  length (<em>t<sub>f4</sub></em>)</span></td>
-    <td><input name="form4_tf4" type="text" id="form4_tf4" value="100">
+    <td><span lang="en">track 4 end turnout length (<em>t<sub>f4</sub></em>)</span></td>
+    <td><input name="form4_tf4" type="text" id="form4_tf4" value="50">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 end turnout   width (<em>w<sub>f4</sub></em>)</span></td>
-    <td><input type="text" name="form4_wf4" id="form4_wf4">
+    <td><span lang="en">track 4 end turnout width (<em>w<sub>f4</sub></em>)</span></td>
+    <td><input type="text" name="form4_wf4" id="form4_wf4" value="5.2">
 m</td>
   </tr>
   <tr>
@@ -1725,23 +1906,23 @@ m</td>
     <td colspan="2"><img src="images/form2-2side-stop.png" width="413" height="209"></td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 initial turnout  length (<em>t<sub>i1</sub></em>)</span></td>
-    <td><input name="form5_ti1" type="text" id="form5_ti1" value="100">
+    <td><span lang="en">track 1 initial turnout length (<em>t<sub>i1</sub></em>)</span></td>
+    <td><input name="form5_ti1" type="text" id="form5_ti1" value="75">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 initial turnout   width (<em>w<sub>i1</sub></em>)</span></td>
-    <td><input type="text" name="form5_wi1" id="form5_wi1">
+    <td><span lang="en">track 1 initial turnout width (<em>w<sub>i1</sub></em>)</span></td>
+    <td><input type="text" name="form5_wi1" id="form5_wi1" value="4">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 initial turnout  length (<em>t<sub>i2</sub></em>)</span></td>
-    <td><input name="form5_ti2" type="text" id="form5_ti2" value="100">
+    <td><span lang="en">track 2 initial turnout length (<em>t<sub>i2</sub></em>)</span></td>
+    <td><input name="form5_ti2" type="text" id="form5_ti2" value="75">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 initial turnout   width (<em>w<sub>i2</sub></em>)</span></td>
-    <td><input type="text" name="form5_wi2" id="form5_wi2">
+    <td><span lang="en">track 2 initial turnout width (<em>w<sub>i2</sub></em>)</span></td>
+    <td><input type="text" name="form5_wi2" id="form5_wi2" value="4">
       m</td>
   </tr>
   <tr>
@@ -1749,23 +1930,23 @@ m</td>
     <td>&nbsp;</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 end turnout  length (<em>t<sub>f1</sub></em>)</span></td>
-    <td><input name="form5_tf1" type="text" id="form5_tf1" value="100">
+    <td><span lang="en">track 1 end turnout length (<em>t<sub>f1</sub></em>)</span></td>
+    <td><input name="form5_tf1" type="text" id="form5_tf1" value="75">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 end turnout   width (<em>w<sub>f1</sub></em>)</span></td>
-    <td><input type="text" name="form5_wf1" id="form5_wf1">
+    <td><span lang="en">track 1 end turnout width (<em>w<sub>f1</sub></em>)</span></td>
+    <td><input type="text" name="form5_wf1" id="form5_wf1" value="4">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 end turnout  length (<em>t<sub>f2</sub></em></span>)</td>
-    <td><input name="form5_tf2" type="text" id="form5_tf2" value="100">
+    <td><span lang="en">track 2 end turnout length (<em>t<sub>f2</sub></em></span>)</td>
+    <td><input name="form5_tf2" type="text" id="form5_tf2" value="75">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 end turnout   width (<em>w<sub>f2</sub></em>)</span></td>
-    <td><input type="text" name="form5_wf2" id="form5_wf2">
+    <td><span lang="en">track 2 end turnout width (<em>w<sub>f2</sub></em>)</span></td>
+    <td><input type="text" name="form5_wf2" id="form5_wf2" value="4">
       m</td>
   </tr>
   <tr>
@@ -1786,22 +1967,22 @@ m</td>
   </tr>
   <tr>
     <td><span lang="en">track 3 initial turnout length (<em>t<sub>i3</sub></em>)</span></td>
-    <td><input name="form6_ti3" type="text" id="form6_ti3" value="100">
+    <td><input name="form6_ti3" type="text" id="form6_ti3" value="75">
       m</td>
   </tr>
   <tr>
     <td><span lang="en">track 3 initial turnout width (<em>w<sub>i3</sub></em>)</span></td>
-    <td><input type="text" name="form6_wi3" id="form6_wi3">
+    <td><input type="text" name="form6_wi3" id="form6_wi3" value="4">
       m</td>
   </tr>
   <tr>
     <td><span lang="en">track 4 initial turnout length (<em>t<sub>i4</sub></em>)</span></td>
-    <td><input name="form6_ti4" type="text" id="form6_ti4" value="100">
+    <td><input name="form6_ti4" type="text" id="form6_ti4" value="75">
       m</td>
   </tr>
   <tr>
     <td><span lang="en">track 4 initial turnout width (<em>w<sub>i4</sub></em>)</span></td>
-    <td><input type="text" name="form6_wi4" id="form6_wi4">
+    <td><input type="text" name="form6_wi4" id="form6_wi4" value="4">
       m</td>
   </tr>
   <tr>
@@ -1809,23 +1990,23 @@ m</td>
     <td>&nbsp;</td>
   </tr>
   <tr>
-  <td><span lang="en">track 3 end turnout  length (<em>t<sub>f3</sub></em>)</span></td>
-    <td><input name="form6_tf3" type="text" id="form6_tf3" value="100">
+  <td><span lang="en">track 3 end turnout length (<em>t<sub>f3</sub></em>)</span></td>
+    <td><input name="form6_tf3" type="text" id="form6_tf3" value="75">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 end turnout   width (<em>w<sub>f3</sub></em>)</span></td>
-    <td><input type="text" name="form6_wf3" id="form6_wf3">
+    <td><span lang="en">track 3 end turnout width (<em>w<sub>f3</sub></em>)</span></td>
+    <td><input type="text" name="form6_wf3" id="form6_wf3" value="4">
 m</td>
   </tr> 
   <tr>
-    <td><span lang="en">track 4 end turnout  length (<em>t<sub>f4</sub></em>)</span></td>
-    <td><input name="form6_tf4" type="text" id="form6_tf4" value="100">
+    <td><span lang="en">track 4 end turnout length (<em>t<sub>f4</sub></em>)</span></td>
+    <td><input name="form6_tf4" type="text" id="form6_tf4" value="75">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 end turnout   width (<em>w<sub>f4</sub></em>)</span></td>
-    <td><input type="text" name="form6_wf4" id="form6_wf4">
+    <td><span lang="en">track 4 end turnout width (<em>w<sub>f4</sub></em>)</span></td>
+    <td><input type="text" name="form6_wf4" id="form6_wf4" value="4">
 m</td>
   </tr>
   <tr>
@@ -1845,23 +2026,23 @@ m</td>
     <td colspan="2"><img src="images/form2-4side-stop.png" alt="" width="412" height="259"></td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 initial turnout  length (<em>t<sub>i1</sub></em>)</span></td>
-    <td><input name="form7_ti1" type="text" id="form7_ti1" value="100">
+    <td><span lang="en">track 1 initial turnout length (<em>t<sub>i1</sub></em>)</span></td>
+    <td><input name="form7_ti1" type="text" id="form7_ti1" value="75">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 initial turnout   width (<em>w<sub>i1</sub></em>)</span></td>
-    <td><input type="text" name="form7_wi1" id="form7_wi1">
+    <td><span lang="en">track 1 initial turnout width (<em>w<sub>i1</sub></em>)</span></td>
+    <td><input type="text" name="form7_wi1" id="form7_wi1" value="11.2">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 initial turnout  length (<em>t<sub>i2</sub></em>)</span></td>
-    <td><input name="form7_ti2" type="text" id="form7_ti2" value="100">
+    <td><span lang="en">track 2 initial turnout length (<em>t<sub>i2</sub></em>)</span></td>
+    <td><input name="form7_ti2" type="text" id="form7_ti2" value="75">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 initial turnout   width (<em>w<sub>i2</sub></em>)</span></td>
-    <td><input type="text" name="form7_wi2" id="form7_wi2">
+    <td><span lang="en">track 2 initial turnout width (<em>w<sub>i2</sub></em>)</span></td>
+    <td><input type="text" name="form7_wi2" id="form7_wi2" value="11.2">
       m</td>
   </tr>
   <tr>
@@ -1869,23 +2050,23 @@ m</td>
     <td>&nbsp;</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 end turnout  length (<em>t<sub>f1</sub></em>)</span></td>
-    <td><input name="form7_tf1" type="text" id="form7_tf1" value="100">
+    <td><span lang="en">track 1 end turnout length (<em>t<sub>f1</sub></em>)</span></td>
+    <td><input name="form7_tf1" type="text" id="form7_tf1" value="75">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 end turnout   width (<em>w<sub>f1</sub></em>)</span></td>
-    <td><input type="text" name="form7_wf1" id="form7_wf1">
+    <td><span lang="en">track 1 end turnout width (<em>w<sub>f1</sub></em>)</span></td>
+    <td><input type="text" name="form7_wf1" id="form7_wf1" value="11.2">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 end turnout  length (<em>t<sub>f2</sub></em>)</span></td>
-    <td><input name="form7_tf2" type="text" id="form7_tf2" value="100">
+    <td><span lang="en">track 2 end turnout length (<em>t<sub>f2</sub></em>)</span></td>
+    <td><input name="form7_tf2" type="text" id="form7_tf2" value="75">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 end turnout   width (<em>w<sub>f2</sub></em>)</span></td>
-    <td><input type="text" name="form7_wf2" id="form7_wf2">
+    <td><span lang="en">track 2 end turnout width (<em>w<sub>f2</sub></em>)</span></td>
+    <td><input type="text" name="form7_wf2" id="form7_wf2" value="11.2">
       m</td>
   </tr>
   <tr>
@@ -1905,23 +2086,23 @@ m</td>
     <td colspan="2"><img src="images/form2-4side-bypass.png" width="413" height="259"></td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 initial turnout  length (<em>t<sub>i3</sub></em>)</span></td>
-    <td><input name="form8_ti3" type="text" id="form8_ti3" value="100">
+    <td><span lang="en">track 3 initial turnout length (<em>t<sub>i3</sub></em>)</span></td>
+    <td><input name="form8_ti3" type="text" id="form8_ti3" value="75">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 initial turnout   width (<em>w<sub>i3</sub></em>)</span></td>
-    <td><input type="text" name="form8_wi3" id="form8_wi3">
+    <td><span lang="en">track 3 initial turnout width (<em>w<sub>i3</sub></em>)</span></td>
+    <td><input type="text" name="form8_wi3" id="form8_wi3" value="11.2">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 initial turnout  length (<em>t<sub>i4</sub></em>)</span></td>
-    <td><input name="form8_ti4" type="text" id="form8_ti4" value="100">
+    <td><span lang="en">track 4 initial turnout length (<em>t<sub>i4</sub></em>)</span></td>
+    <td><input name="form8_ti4" type="text" id="form8_ti4" value="75">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 initial turnout   width (<em>w<sub>i4</sub></em>)</span></td>
-    <td><input type="text" name="form8_wi4" id="form8_wi4">
+    <td><span lang="en">track 4 initial turnout width (<em>w<sub>i4</sub></em>)</span></td>
+    <td><input type="text" name="form8_wi4" id="form8_wi4" value="11.2">
       m</td>
   </tr>
   <tr>
@@ -1929,24 +2110,24 @@ m</td>
     <td>&nbsp;</td>
   </tr>
   <tr>
-  <td><span lang="en">track 3 end turnout  length (<em>t<sub>f3</sub></em>)</span></td>
-    <td><input name="form8_tf3" type="text" id="form8_tf3" value="100">
+  <td><span lang="en">track 3 end turnout length (<em>t<sub>f3</sub></em>)</span></td>
+    <td><input name="form8_tf3" type="text" id="form8_tf3" value="75">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 end turnout   width (<em>w<sub>f3</sub></em>)</span></td>
-    <td><input type="text" name="form8_wf3" id="form8_wf3">
+    <td><span lang="en">track 3 end turnout width (<em>w<sub>f3</sub></em>)</span></td>
+    <td><input type="text" name="form8_wf3" id="form8_wf3" value="11.2">
 m</td>
   </tr>
   
   <tr>
-    <td><span lang="en">track 4 end turnout  length (<em>t<sub>f4</sub></em>)</span></td>
-    <td><input name="form8_tf4" type="text" id="form8_tf4" value="100">
+    <td><span lang="en">track 4 end turnout length (<em>t<sub>f4</sub></em>)</span></td>
+    <td><input name="form8_tf4" type="text" id="form8_tf4" value="75">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 end turnout   width (<em>w<sub>f4</sub></em>)</span></td>
-    <td><input type="text" name="form8_wf4" id="form8_wf4">
+    <td><span lang="en">track 4 end turnout width (<em>w<sub>f4</sub></em>)</span></td>
+    <td><input type="text" name="form8_wf4" id="form8_wf4" value="11.2">
 m</td>
   </tr>
   <tr>
@@ -1966,43 +2147,43 @@ m</td>
     <td colspan="2"><img src="images/form2f-4s-6t-st1.png" width="592" height="225"></td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 initial turnout  length (<em>t<sub>i1</sub></em>)</span></td>
+    <td><span lang="en">track 1 initial turnout length (<em>t<sub>i1</sub></em>)</span></td>
     <td><input name="form9_ti1" type="text" id="form9_ti1" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 initial turnout   width (<em>w<sub>i1</sub></em>)</span></td>
-    <td><input type="text" name="form9_wi1" id="form9_wi1">
+    <td><span lang="en">track 1 initial turnout width (<em>w<sub>i1</sub></em>)</span></td>
+    <td><input type="text" name="form9_wi1" id="form9_wi1" value="15.2">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 initial turnout  length (<em>t<sub>i2</sub></em>)</span></td>
+    <td><span lang="en">track 2 initial turnout length (<em>t<sub>i2</sub></em>)</span></td>
     <td><input name="form9_ti2" type="text" id="form9_ti2" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 initial turnout   width (<em>w<sub>i2</sub></em>)</span></td>
-    <td><input type="text" name="form9_wi2" id="form9_wi2">
+    <td><span lang="en">track 2 initial turnout width (<em>w<sub>i2</sub></em>)</span></td>
+    <td><input type="text" name="form9_wi2" id="form9_wi2" value="15.2">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 initial turnout  length (<em>t<sub>i3</sub></em>)</span></td>
-    <td><input name="form9_ti3" type="text" id="form9_ti3" value="100">
+    <td><span lang="en">track 3 initial turnout length (<em>t<sub>i3</sub></em>)</span></td>
+    <td><input name="form9_ti3" type="text" id="form9_ti3" value="50">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 initial turnout   width (<em>w<sub>i3</sub></em>)</span></td>
-    <td><input type="text" name="form9_wi3" id="form9_wi3">
+    <td><span lang="en">track 3 initial turnout width (<em>w<sub>i3</sub></em>)</span></td>
+    <td><input type="text" name="form9_wi3" id="form9_wi3"value="3.8">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 initial turnout  length (<em>t<sub>i4</sub></em>)</span></td>
-    <td><input name="form9_ti4" type="text" id="form9_ti4" value="100">
+    <td><span lang="en">track 4 initial turnout length (<em>t<sub>i4</sub></em>)</span></td>
+    <td><input name="form9_ti4" type="text" id="form9_ti4" value="50">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 initial turnout   width (<em>w<sub>i4</sub></em>)</span></td>
-    <td><input type="text" name="form9_wi4" id="form9_wi4">
+    <td><span lang="en">track 4 initial turnout width (<em>w<sub>i4</sub></em>)</span></td>
+    <td><input type="text" name="form9_wi4" id="form9_wi4"value="3.8">
       m</td>
   </tr>
   <tr>
@@ -2010,44 +2191,44 @@ m</td>
     <td>&nbsp;</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 end turnout  length (<em>t<sub>f1</sub></em>)</span></td>
-    <td><input name="form9_tf1" type="text" id="form9_tf1" value="100">
+    <td><span lang="en">track 1 end turnout length (<em>t<sub>f1</sub></em>)</span></td>
+    <td><input name="form9_tf1" type="text" id="form9_tf1" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 end turnout   width (<em>w<sub>f1</sub></em>)</span></td>
-    <td><input type="text" name="form9_wf1" id="form9_wf1">
+    <td><span lang="en">track 1 end turnout width (<em>w<sub>f1</sub></em>)</span></td>
+    <td><input type="text" name="form9_wf1" id="form9_wf1" value="15.2">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 end turnout  length (<em>t<sub>f2</sub></em>)</span></td>
-    <td><input name="form9_tf2" type="text" id="form9_tf2" value="100">
+    <td><span lang="en">track 2 end turnout length (<em>t<sub>f2</sub></em>)</span></td>
+    <td><input name="form9_tf2" type="text" id="form9_tf2" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 end turnout   width (<em>w<sub>f2</sub></em>)</span></td>
-    <td><input type="text" name="form9_wf2" id="form9_wf2">
+    <td><span lang="en">track 2 end turnout width (<em>w<sub>f2</sub></em>)</span></td>
+    <td><input type="text" name="form9_wf2" id="form9_wf2" value="15.2">
       m</td>
   </tr>
   <tr>
-<td><span lang="en">track 3 end turnout  length (<em>t<sub>f3</sub></em>)</span></td>
-    <td><input name="form9_tf3" type="text" id="form9_tf3" value="200">
+<td><span lang="en">track 3 end turnout length (<em>t<sub>f3</sub></em>)</span></td>
+    <td><input name="form9_tf3" type="text" id="form9_tf3" value="50">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 end turnout   width (<em>w<sub>f3</sub></em>)</span></td>
-    <td><input type="text" name="form9_wf3" id="form9_wf3">
+    <td><span lang="en">track 3 end turnout width (<em>w<sub>f3</sub></em>)</span></td>
+    <td><input type="text" name="form9_wf3" id="form9_wf3"value="3.8">
 m</td>
   </tr>
   
   <tr>
-    <td><span lang="en">track 4 end turnout  length (<em>t<sub>f4</sub></em>)</span></td>
-    <td><input name="form9_tf4" type="text" id="form9_tf4" value="200">
+    <td><span lang="en">track 4 end turnout length (<em>t<sub>f4</sub></em>)</span></td>
+    <td><input name="form9_tf4" type="text" id="form9_tf4" value="50">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 end turnout   width (<em>w<sub>f4</sub></em>)</span></td>
-    <td><input type="text" name="form9_wf4" id="form9_wf4">
+    <td><span lang="en">track 4 end turnout width (<em>w<sub>f4</sub></em>)</span></td>
+    <td><input type="text" name="form9_wf4" id="form9_wf4"value="3.8">
 m</td>
   </tr>
   <tr>
@@ -2067,43 +2248,43 @@ m</td>
     <td colspan="2"><img src="images/form2f-4s-6t-st2.png" width="592" height="268"></td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 initial turnout  length (<em>t<sub>i1</sub></em>)</span></td>
-    <td><input name="form10_ti1" type="text" id="form10_ti1" value="200">
+    <td><span lang="en">track 1 initial turnout length (<em>t<sub>i1</sub></em>)</span></td>
+    <td><input name="form10_ti1" type="text" id="form10_ti1" value="50">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 initial turnout   width (<em>w<sub>i1</sub></em>)</span></td>
-    <td><input type="text" name="form10_wi1" id="form10_wi1">
+    <td><span lang="en">track 1 initial turnout width (<em>w<sub>i1</sub></em>)</span></td>
+    <td><input type="text" name="form10_wi1" id="form10_wi1"value="3.8">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 initial turnout  length (<em>t<sub>i2</sub></em>)</span></td>
-    <td><input name="form10_ti2" type="text" id="form10_ti2" value="200">
+    <td><span lang="en">track 2 initial turnout length (<em>t<sub>i2</sub></em>)</span></td>
+    <td><input name="form10_ti2" type="text" id="form10_ti2" value="50">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 initial turnout   width (<em>w<sub>i2</sub></em>)</span></td>
-    <td><input type="text" name="form10_wi2" id="form10_wi2">
+    <td><span lang="en">track 2 initial turnout width (<em>w<sub>i2</sub></em>)</span></td>
+    <td><input type="text" name="form10_wi2" id="form10_wi2"value="3.8">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 initial turnout  length (<em>t<sub>i3</sub></em>)</span></td>
-    <td><input name="form10_ti3" type="text" id="form10_ti3" value="100">
+    <td><span lang="en">track 3 initial turnout length (<em>t<sub>i3</sub></em>)</span></td>
+    <td><input name="form10_ti3" type="text" id="form10_ti3" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 initial turnout   width (<em>w<sub>i3</sub></em>)</span></td>
-    <td><input type="text" name="form10_wi3" id="form10_wi3">
+    <td><span lang="en">track 3 initial turnout width (<em>w<sub>i3</sub></em>)</span></td>
+    <td><input type="text" name="form10_wi3" id="form10_wi3" value="15.2">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 initial turnout  length (<em>t<sub>i4</sub></em>)</span></td>
-    <td><input name="form10_ti4" type="text" id="form10_ti4" value="100">
+    <td><span lang="en">track 4 initial turnout length (<em>t<sub>i4</sub></em>)</span></td>
+    <td><input name="form10_ti4" type="text" id="form10_ti4" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 initial turnout   width (<em>w<sub>i4</sub></em>)</span></td>
-    <td><input type="text" name="form10_wi4" id="form10_wi4">
+    <td><span lang="en">track 4 initial turnout width (<em>w<sub>i4</sub></em>)</span></td>
+    <td><input type="text" name="form10_wi4" id="form10_wi4" value="15.2">
       m</td>
   </tr>
   <tr>
@@ -2111,44 +2292,44 @@ m</td>
     <td>&nbsp;</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 end turnout  length (<em>t<sub>f1</sub></em>)</span></td>
-    <td><input name="form10_tf1" type="text" id="form10_tf1" value="100">
+    <td><span lang="en">track 1 end turnout length (<em>t<sub>f1</sub></em>)</span></td>
+    <td><input name="form10_tf1" type="text" id="form10_tf1" value="50">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 end turnout   width (<em>w<sub>f1</sub></em>)</span></td>
-    <td><input type="text" name="form10_wf1" id="form10_wf1">
+    <td><span lang="en">track 1 end turnout width (<em>w<sub>f1</sub></em>)</span></td>
+    <td><input type="text" name="form10_wf1" id="form10_wf1"value="3.8">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 end turnout  length (<em>t<sub>f2</sub></em>)</span></td>
-    <td><input name="form10_tf2" type="text" id="form10_tf2" value="100">
+    <td><span lang="en">track 2 end turnout length (<em>t<sub>f2</sub></em>)</span></td>
+    <td><input name="form10_tf2" type="text" id="form10_tf2" value="50">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 end turnout   width (<em>w<sub>f2</sub></em>)</span></td>
-    <td><input type="text" name="form10_wf2" id="form10_wf2">
+    <td><span lang="en">track 2 end turnout width (<em>w<sub>f2</sub></em>)</span></td>
+    <td><input type="text" name="form10_wf2" id="form10_wf2"value="3.8">
       m</td>
   </tr>
   <tr>
-<td><span lang="en">track 3 end turnout  length (<em>t<sub>f3</sub></em>)</span></td>
+<td><span lang="en">track 3 end turnout length (<em>t<sub>f3</sub></em>)</span></td>
     <td><input name="form10_tf3" type="text" id="form10_tf3" value="200">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 end turnout   width (<em>w<sub>f3</sub></em>)</span></td>
-    <td><input type="text" name="form10_wf3" id="form10_wf3">
+    <td><span lang="en">track 3 end turnout width (<em>w<sub>f3</sub></em>)</span></td>
+    <td><input type="text" name="form10_wf3" id="form10_wf3" value="15.2">
 m</td>
   </tr>
   
   <tr>
-    <td><span lang="en">track 4 end turnout  length (<em>t<sub>f4</sub></em>)</span></td>
+    <td><span lang="en">track 4 end turnout length (<em>t<sub>f4</sub></em>)</span></td>
     <td><input name="form10_tf4" type="text" id="form10_tf4" value="200">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 end turnout   width (<em>w<sub>f4</sub></em>)</span></td>
-    <td><input type="text" name="form10_wf4" id="form10_wf4">
+    <td><span lang="en">track 4 end turnout width (<em>w<sub>f4</sub></em>)</span></td>
+    <td><input type="text" name="form10_wf4" id="form10_wf4" value="15.2">
 m</td>  </tr>
   <tr>
     <td valign="top">&nbsp;</td>
@@ -2167,43 +2348,43 @@ m</td>  </tr>
     <td colspan="2"><img src="images/form2f-4s-6t-bp.png" width="593" height="273"></td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 initial turnout  length (<em>t<sub>i3</sub></em>)</span></td>
+    <td><span lang="en">track 3 initial turnout length (<em>t<sub>i3</sub></em>)</span></td>
     <td><input name="form11_ti3" type="text" id="form11_ti3" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 initial turnout   width (<em>w<sub>i3</sub></em>)</span></td>
-    <td><input type="text" name="form11_wi3" id="form11_wi3">
+    <td><span lang="en">track 3 initial turnout width (<em>w<sub>i3</sub></em>)</span></td>
+    <td><input type="text" name="form11_wi3" id="form11_wi3" value="15.2">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 initial turnout  length (<em>t<sub>i4</sub></em>)</span></td>
+    <td><span lang="en">track 4 initial turnout length (<em>t<sub>i4</sub></em>)</span></td>
     <td><input name="form11_ti4" type="text" id="form11_ti4" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 initial turnout   width (<em>w<sub>i4</sub></em>)</span></td>
-    <td><input type="text" name="form11_wi4" id="form11_wi4">
+    <td><span lang="en">track 4 initial turnout width (<em>w<sub>i4</sub></em>)</span></td>
+    <td><input type="text" name="form11_wi4" id="form11_wi4" value="15.2">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 5 initial turnout  length (<em>t<sub>i5</sub></em>)</span></td>
-    <td><input name="form11_ti5" type="text" id="form11_ti5" value="100">
+    <td><span lang="en">track 5 initial turnout length (<em>t<sub>i5</sub></em>)</span></td>
+    <td><input name="form11_ti5" type="text" id="form11_ti5" value="50">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 5 initial turnout   width (<em>w<sub>i5</sub></em>)</span></td>
-    <td><input type="text" name="form11_wi5" id="form11_wi5">
+    <td><span lang="en">track 5 initial turnout width (<em>w<sub>i5</sub></em>)</span></td>
+    <td><input type="text" name="form11_wi5" id="form11_wi5"value="3.8">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 6 initial turnout  length (<em>t<sub>i6</sub></em>)</span></td>
-    <td><input name="form11_ti6" type="text" id="form11_ti6" value="100">
+    <td><span lang="en">track 6 initial turnout length (<em>t<sub>i6</sub></em>)</span></td>
+    <td><input name="form11_ti6" type="text" id="form11_ti6" value="50">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 6 initial turnout   width (<em>w<sub>i6</sub></em>)</span></td>
-    <td><input type="text" name="form11_wi6" id="form11_wi6">
+    <td><span lang="en">track 6 initial turnout width (<em>w<sub>i6</sub></em>)</span></td>
+    <td><input type="text" name="form11_wi6" id="form11_wi6"value="3.8">
       m</td>
   </tr>
   <tr>
@@ -2211,44 +2392,44 @@ m</td>  </tr>
     <td>&nbsp;</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 end turnout  length (<em>t<sub>f3</sub></em>)</span></td>
-    <td><input name="form11_tf3" type="text" id="form11_tf3" value="100">
+    <td><span lang="en">track 3 end turnout length (<em>t<sub>f3</sub></em>)</span></td>
+    <td><input name="form11_tf3" type="text" id="form11_tf3" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 end turnout   width (<em>w<sub>f3</sub></em>)</span></td>
-    <td><input type="text" name="form11_wf3" id="form11_wf3">
+    <td><span lang="en">track 3 end turnout width (<em>w<sub>f3</sub></em>)</span></td>
+    <td><input type="text" name="form11_wf3" id="form11_wf3" value="15.2">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 end turnout  length (<em>t<sub>f4</sub></em>)</span></td>
-    <td><input name="form11_tf4" type="text" id="form11_tf4" value="100">
+    <td><span lang="en">track 4 end turnout length (<em>t<sub>f4</sub></em>)</span></td>
+    <td><input name="form11_tf4" type="text" id="form11_tf4" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 end turnout   width (<em>w<sub>f4</sub></em>)</span></td>
-    <td><input type="text" name="form11_wf4" id="form11_wf4">
+    <td><span lang="en">track 4 end turnout width (<em>w<sub>f4</sub></em>)</span></td>
+    <td><input type="text" name="form11_wf4" id="form11_wf4" value="15.2">
       m</td>
   </tr>
   <tr>
-<td><span lang="en">track 5 end turnout  length (<em>t<sub>f5</sub></em>)</span></td>
-    <td><input name="form11_tf5" type="text" id="form11_tf5" value="200">
+<td><span lang="en">track 5 end turnout length (<em>t<sub>f5</sub></em>)</span></td>
+    <td><input name="form11_tf5" type="text" id="form11_tf5" value="50">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 5 end turnout   width (<em>w<sub>f5</sub></em>)</span></td>
-    <td><input type="text" name="form11_wf5" id="form11_wf5">
+    <td><span lang="en">track 5 end turnout width (<em>w<sub>f5</sub></em>)</span></td>
+    <td><input type="text" name="form11_wf5" id="form11_wf5"value="3.8">
 m</td>
   </tr>
   
   <tr>
-    <td><span lang="en">track 6 end turnout  length (<em>t<sub>f6</sub></em>)</span></td>
-    <td><input name="form11_tf6" type="text" id="form11_tf6" value="200">
+    <td><span lang="en">track 6 end turnout length (<em>t<sub>f6</sub></em>)</span></td>
+    <td><input name="form11_tf6" type="text" id="form11_tf6" value="50">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 6 end turnout   width (<em>w<sub>f6</sub></em>)</span></td>
-    <td><input type="text" name="form11_wf6" id="form11_wf6">
+    <td><span lang="en">track 6 end turnout width (<em>w<sub>f6</sub></em>)</span></td>
+    <td><input type="text" name="form11_wf6" id="form11_wf6"value="3.8">
 m</td>
   </tr>
   <tr>
@@ -2268,43 +2449,43 @@ m</td>
     <td colspan="2"><img src="images/form2-4s-6t-st1B.png" width="594" height="254"></td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 initial turnout  length (<em>t<sub>i1</sub></em>)</span></td>
+    <td><span lang="en">track 1 initial turnout length (<em>t<sub>i1</sub></em>)</span></td>
     <td><input name="form12_ti1" type="text" id="form12_ti1" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 initial turnout   width (<em>w<sub>i1</sub></em>)</span></td>
-    <td><input type="text" name="form12_wi1" id="form12_wi1">
+    <td><span lang="en">track 1 initial turnout width (<em>w<sub>i1</sub></em>)</span></td>
+    <td><input type="text" name="form12_wi1" id="form12_wi1" value="15.2">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 initial turnout  length (<em>t<sub>i2</sub></em>)</span></td>
+    <td><span lang="en">track 2 initial turnout length (<em>t<sub>i2</sub></em>)</span></td>
     <td><input name="form12_ti2" type="text" id="form12_ti2" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 initial turnout   width (<em>w<sub>i2</sub></em>)</span></td>
-    <td><input type="text" name="form12_wi2" id="form12_wi2">
+    <td><span lang="en">track 2 initial turnout width (<em>w<sub>i2</sub></em>)</span></td>
+    <td><input type="text" name="form12_wi2" id="form12_wi2" value="15.2">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 initial turnout  length (<em>t<sub>i3</sub></em>)</span></td>
-    <td><input name="form12_ti3" type="text" id="form12_ti3" value="100">
+    <td><span lang="en">track 3 initial turnout length (<em>t<sub>i3</sub></em>)</span></td>
+    <td><input name="form12_ti3" type="text" id="form12_ti3" value="50">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 initial turnout   width (<em>w<sub>i3</sub></em>)</span></td>
-    <td><input type="text" name="form12_wi3" id="form12_wi3">
+    <td><span lang="en">track 3 initial turnout width (<em>w<sub>i3</sub></em>)</span></td>
+    <td><input type="text" name="form12_wi3" id="form12_wi3"value="3.8">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 initial turnout  length (<em>t<sub>i4</sub></em>)</span></td>
-    <td><input name="form12_ti4" type="text" id="form12_ti4" value="100">
+    <td><span lang="en">track 4 initial turnout length (<em>t<sub>i4</sub></em>)</span></td>
+    <td><input name="form12_ti4" type="text" id="form12_ti4" value="50">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 initial turnout   width (<em>w<sub>i4</sub></em>)</span></td>
-    <td><input type="text" name="form12_wi4" id="form12_wi4">
+    <td><span lang="en">track 4 initial turnout width (<em>w<sub>i4</sub></em>)</span></td>
+    <td><input type="text" name="form12_wi4" id="form12_wi4"value="3.8">
       m</td>
   </tr>
   <tr>
@@ -2312,44 +2493,44 @@ m</td>
     <td>&nbsp;</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 end turnout  length (<em>t<sub>f1</sub></em>)</span></td>
-    <td><input name="form12_tf1" type="text" id="form12_tf1" value="100">
+    <td><span lang="en">track 1 end turnout length (<em>t<sub>f1</sub></em>)</span></td>
+    <td><input name="form12_tf1" type="text" id="form12_tf1" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 end turnout   width (<em>w<sub>f1</sub></em>)</span></td>
-    <td><input type="text" name="form12_wf1" id="form12_wf1">
+    <td><span lang="en">track 1 end turnout width (<em>w<sub>f1</sub></em>)</span></td>
+    <td><input type="text" name="form12_wf1" id="form12_wf1" value="15.2">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 end turnout  length (<em>t<sub>f2</sub></em>)</span></td>
-    <td><input name="form12_tf2" type="text" id="form12_tf2" value="100">
+    <td><span lang="en">track 2 end turnout length (<em>t<sub>f2</sub></em>)</span></td>
+    <td><input name="form12_tf2" type="text" id="form12_tf2" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 end turnout   width (<em>w<sub>f2</sub></em>)</span></td>
-    <td><input type="text" name="form12_wf2" id="form12_wf2">
+    <td><span lang="en">track 2 end turnout width (<em>w<sub>f2</sub></em>)</span></td>
+    <td><input type="text" name="form12_wf2" id="form12_wf2" value="15.2">
       m</td>
   </tr>
   <tr>
-<td><span lang="en">track 3 end turnout  length (<em>t<sub>f3</sub></em>)</span></td>
-    <td><input name="form12_tf3" type="text" id="form12_tf3" value="200">
+<td><span lang="en">track 3 end turnout length (<em>t<sub>f3</sub></em>)</span></td>
+    <td><input name="form12_tf3" type="text" id="form12_tf3" value="50">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 end turnout   width (<em>w<sub>f3</sub></em>)</span></td>
-    <td><input type="text" name="form12_wf3" id="form12_wf3">
+    <td><span lang="en">track 3 end turnout width (<em>w<sub>f3</sub></em>)</span></td>
+    <td><input type="text" name="form12_wf3" id="form12_wf3"value="3.8">
 m</td>
   </tr>
   
   <tr>
-    <td><span lang="en">track 4 end turnout  length (<em>t<sub>f4</sub></em>)</span></td>
-    <td><input name="form12_tf4" type="text" id="form12_tf4" value="200">
+    <td><span lang="en">track 4 end turnout length (<em>t<sub>f4</sub></em>)</span></td>
+    <td><input name="form12_tf4" type="text" id="form12_tf4" value="50">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 end turnout   width (<em>w<sub>f4</sub></em>)</span></td>
-    <td><input type="text" name="form12_wf4" id="form12_wf4">
+    <td><span lang="en">track 4 end turnout width (<em>w<sub>f4</sub></em>)</span></td>
+    <td><input type="text" name="form12_wf4" id="form12_wf4"value="3.8">
 m</td>
   </tr>
   <tr>
@@ -2369,43 +2550,43 @@ m</td>
     <td colspan="2"><img src="images/form2-4s-6t-st2B.png" width="592" height="268"></td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 initial turnout  length (<em>t<sub>i1</sub></em>)</span></td>
-    <td><input name="form13_ti1" type="text" id="form13_ti1" value="200">
+    <td><span lang="en">track 1 initial turnout length (<em>t<sub>i1</sub></em>)</span></td>
+    <td><input name="form13_ti1" type="text" id="form13_ti1" value="50">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 initial turnout   width (<em>w<sub>i1</sub></em>)</span></td>
-    <td><input type="text" name="form13_wi1" id="form13_wi1">
+    <td><span lang="en">track 1 initial turnout width (<em>w<sub>i1</sub></em>)</span></td>
+    <td><input type="text" name="form13_wi1" id="form13_wi1"value="3.8">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 initial turnout  length (<em>t<sub>i2</sub></em>)</span></td>
-    <td><input name="form13_ti2" type="text" id="form13_ti2" value="200">
+    <td><span lang="en">track 2 initial turnout length (<em>t<sub>i2</sub></em>)</span></td>
+    <td><input name="form13_ti2" type="text" id="form13_ti2" value="50">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 initial turnout   width (<em>w<sub>i2</sub></em>)</span></td>
-    <td><input type="text" name="form13_wi2" id="form13_wi2">
+    <td><span lang="en">track 2 initial turnout width (<em>w<sub>i2</sub></em>)</span></td>
+    <td><input type="text" name="form13_wi2" id="form13_wi2"value="3.8">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 initial turnout  length (<em>t<sub>i3</sub></em>)</span></td>
-    <td><input name="form13_ti3" type="text" id="form13_ti3" value="100">
+    <td><span lang="en">track 3 initial turnout length (<em>t<sub>i3</sub></em>)</span></td>
+    <td><input name="form13_ti3" type="text" id="form13_ti3" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 initial turnout   width (<em>w<sub>i3</sub></em>)</span></td>
-    <td><input type="text" name="form13_wi3" id="form13_wi3">
+    <td><span lang="en">track 3 initial turnout width (<em>w<sub>i3</sub></em>)</span></td>
+    <td><input type="text" name="form13_wi3" id="form13_wi3" value="15.2">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 initial turnout  length (<em>t<sub>i4</sub></em>)</span></td>
-    <td><input name="form13_ti4" type="text" id="form13_ti4" value="100">
+    <td><span lang="en">track 4 initial turnout length (<em>t<sub>i4</sub></em>)</span></td>
+    <td><input name="form13_ti4" type="text" id="form13_ti4" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 initial turnout   width (<em>w<sub>i4</sub></em>)</span></td>
-    <td><input type="text" name="form13_wi4" id="form13_wi4">
+    <td><span lang="en">track 4 initial turnout width (<em>w<sub>i4</sub></em>)</span></td>
+    <td><input type="text" name="form13_wi4" id="form13_wi4" value="15.2">
       m</td>
   </tr>
   <tr>
@@ -2413,44 +2594,44 @@ m</td>
     <td>&nbsp;</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 end turnout  length (<em>t<sub>f1</sub></em>)</span></td>
-    <td><input name="form13_tf1" type="text" id="form13_tf1" value="100">
+    <td><span lang="en">track 1 end turnout length (<em>t<sub>f1</sub></em>)</span></td>
+    <td><input name="form13_tf1" type="text" id="form13_tf1" value="50">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 1 end turnout   width (<em>w<sub>f1</sub></em>)</span></td>
-    <td><input type="text" name="form13_wf1" id="form13_wf1">
+    <td><span lang="en">track 1 end turnout width (<em>w<sub>f1</sub></em>)</span></td>
+    <td><input type="text" name="form13_wf1" id="form13_wf1"value="3.8">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 end turnout  length (<em>t<sub>f2</sub></em>)</span></td>
-    <td><input name="form13_tf2" type="text" id="form13_tf2" value="100">
+    <td><span lang="en">track 2 end turnout length (<em>t<sub>f2</sub></em>)</span></td>
+    <td><input name="form13_tf2" type="text" id="form13_tf2" value="50">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 2 end turnout   width (<em>w<sub>f2</sub></em>)</span></td>
-    <td><input type="text" name="form13_wf2" id="form13_wf2">
+    <td><span lang="en">track 2 end turnout width (<em>w<sub>f2</sub></em>)</span></td>
+    <td><input type="text" name="form13_wf2" id="form13_wf2"value="3.8">
       m</td>
   </tr>
   <tr>
-<td><span lang="en">track 3 end turnout  length (<em>t<sub>f3</sub></em>)</span></td>
+<td><span lang="en">track 3 end turnout length (<em>t<sub>f3</sub></em>)</span></td>
     <td><input name="form13_tf3" type="text" id="form13_tf3" value="200">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 end turnout   width (<em>w<sub>f3</sub></em>)</span></td>
-    <td><input type="text" name="form13_wf3" id="form13_wf3">
+    <td><span lang="en">track 3 end turnout width (<em>w<sub>f3</sub></em>)</span></td>
+    <td><input type="text" name="form13_wf3" id="form13_wf3" value="15.2">
 m</td>
   </tr>
   
   <tr>
-    <td><span lang="en">track 4 end turnout  length (<em>t<sub>f4</sub></em>)</span></td>
+    <td><span lang="en">track 4 end turnout length (<em>t<sub>f4</sub></em>)</span></td>
     <td><input name="form13_tf4" type="text" id="form13_tf4" value="200">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 end turnout   width (<em>w<sub>f4</sub></em>)</span></td>
-    <td><input type="text" name="form13_wf4" id="form13_wf4">
+    <td><span lang="en">track 4 end turnout width (<em>w<sub>f4</sub></em>)</span></td>
+    <td><input type="text" name="form13_wf4" id="form13_wf4" value="15.2">
 m</td>
   </tr>
   <tr>
@@ -2470,43 +2651,43 @@ m</td>
     <td colspan="2"><img src="images/form2-4s-6t-bypassB.png" width="593" height="271"></td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 initial turnout  length (<em>t<sub>i3</sub></em>)</span></td>
+    <td><span lang="en">track 3 initial turnout length (<em>t<sub>i3</sub></em>)</span></td>
     <td><input name="form14_ti3" type="text" id="form14_ti3" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 initial turnout   width (<em>w<sub>i3</sub></em>)</span></td>
-    <td><input type="text" name="form14_wi3" id="form14_wi3">
+    <td><span lang="en">track 3 initial turnout width (<em>w<sub>i3</sub></em>)</span></td>
+    <td><input type="text" name="form14_wi3" id="form14_wi3" value="15.2">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 initial turnout  length (<em>t<sub>i4</sub></em>)</span></td>
+    <td><span lang="en">track 4 initial turnout length (<em>t<sub>i4</sub></em>)</span></td>
     <td><input name="form14_ti4" type="text" id="form14_ti4" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 initial turnout   width (<em>w<sub>i4</sub></em>)</span></td>
-    <td><input type="text" name="form14_wi4" id="form14_wi4">
+    <td><span lang="en">track 4 initial turnout width (<em>w<sub>i4</sub></em>)</span></td>
+    <td><input type="text" name="form14_wi4" id="form14_wi4" value="15.2">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 5 initial turnout  length (<em>t<sub>i5</sub></em>)</span></td>
-    <td><input name="form14_ti5" type="text" id="form14_ti5" value="100">
+    <td><span lang="en">track 5 initial turnout length (<em>t<sub>i5</sub></em>)</span></td>
+    <td><input name="form14_ti5" type="text" id="form14_ti5" value="50">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 5 initial turnout   width (<em>w<sub>i5</sub></em>)</span></td>
-    <td><input type="text" name="form14_wi5" id="form14_wi5">
+    <td><span lang="en">track 5 initial turnout width (<em>w<sub>i5</sub></em>)</span></td>
+    <td><input type="text" name="form14_wi5" id="form14_wi5"value="3.8">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 6 initial turnout  length (<em>t<sub>i6</sub></em>)</span></td>
-    <td><input name="form14_ti6" type="text" id="form14_ti6" value="100">
+    <td><span lang="en">track 6 initial turnout length (<em>t<sub>i6</sub></em>)</span></td>
+    <td><input name="form14_ti6" type="text" id="form14_ti6" value="50">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 6 initial turnout   width (<em>w<sub>i6</sub></em>)</span></td>
-    <td><input type="text" name="form14_wi6" id="form14_wi6">
+    <td><span lang="en">track 6 initial turnout width (<em>w<sub>i6</sub></em>)</span></td>
+    <td><input type="text" name="form14_wi6" id="form14_wi6"value="3.8">
       m</td>
   </tr>
   <tr>
@@ -2514,44 +2695,44 @@ m</td>
     <td>&nbsp;</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 end turnout  length (<em>t<sub>f3</sub></em>)</span></td>
-    <td><input name="form14_tf3" type="text" id="form14_tf3" value="100">
+    <td><span lang="en">track 3 end turnout length (<em>t<sub>f3</sub></em>)</span></td>
+    <td><input name="form14_tf3" type="text" id="form14_tf3" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 3 end turnout   width (<em>w<sub>f3</sub></em>)</span></td>
-    <td><input type="text" name="form14_wf3" id="form14_wf3">
+    <td><span lang="en">track 3 end turnout width (<em>w<sub>f3</sub></em>)</span></td>
+    <td><input type="text" name="form14_wf3" id="form14_wf3" value="15.2">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 end turnout  length (<em>t<sub>f4</sub></em>)</span></td>
-    <td><input name="form14_tf4" type="text" id="form14_tf4" value="100">
+    <td><span lang="en">track 4 end turnout length (<em>t<sub>f4</sub></em>)</span></td>
+    <td><input name="form14_tf4" type="text" id="form14_tf4" value="200">
       m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 4 end turnout   width (<em>w<sub>f4</sub></em>)</span></td>
-    <td><input type="text" name="form14_wf4" id="form14_wf4">
+    <td><span lang="en">track 4 end turnout width (<em>w<sub>f4</sub></em>)</span></td>
+    <td><input type="text" name="form14_wf4" id="form14_wf4" value="15.2">
       m</td>
   </tr>
   <tr>
-<td><span lang="en">track 5 end turnout  length (<em>t<sub>f5</sub></em>)</span></td>
-    <td><input name="form14_tf5" type="text" id="form14_tf5" value="200">
+<td><span lang="en">track 5 end turnout length (<em>t<sub>f5</sub></em>)</span></td>
+    <td><input name="form14_tf5" type="text" id="form14_tf5" value="50">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 5 end turnout   width (<em>w<sub>f5</sub></em>)</span></td>
-    <td><input type="text" name="form14_wf5" id="form14_wf5">
+    <td><span lang="en">track 5 end turnout width (<em>w<sub>f5</sub></em>)</span></td>
+    <td><input type="text" name="form14_wf5" id="form14_wf5"value="3.8">
 m</td>
   </tr>
   
   <tr>
-    <td><span lang="en">track 6 end turnout  length (<em>t<sub>f6</sub></em>)</span></td>
-    <td><input name="form14_tf6" type="text" id="form14_tf6" value="200">
+    <td><span lang="en">track 6 end turnout length (<em>t<sub>f6</sub></em>)</span></td>
+    <td><input name="form14_tf6" type="text" id="form14_tf6" value="50">
 m</td>
   </tr>
   <tr>
-    <td><span lang="en">track 6 end turnout   width (<em>w<sub>f6</sub></em>)</span></td>
-    <td><input type="text" name="form14_wf6" id="form14_wf6">
+    <td><span lang="en">track 6 end turnout width (<em>w<sub>f6</sub></em>)</span></td>
+    <td><input type="text" name="form14_wf6" id="form14_wf6"value="3.8">
 m</td>
   </tr>
   <tr>
@@ -2578,6 +2759,13 @@ m</td>
   <tr>
     <td valign="top"><span lang="en">End Point</span></td>
     <td><input type="text" name="form15_ed" id="form15_ed" /></td>
+  </tr>
+  <tr>
+    <td valign="top">position</td>
+    <td><select name="form15_pos" id="form15_pos">
+      <option value="L" selected="selected">Left</option>
+      <option value="R">Right</option>
+    </select></td>
   </tr>
   <tr>
     <td valign="top">&nbsp;</td>
