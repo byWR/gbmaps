@@ -17,7 +17,7 @@ purpose : google maps drawing logic
 type : release (under development)
 version : 1.0.0
 build : 
-last update : 15 June 2014 12:00am (GMT 8+)
+last update : 03 July 2014 1:25pm (GMT 8+)
 
 */
 
@@ -98,9 +98,11 @@ var MapToolbar = {
 //reorder index of a poly markers array
 
 reindex:function(markers){
+	var pid;
 	markers.forEach(function(marker, index){
 		marker.index = index;
 		marker.title = marker.pid + '(' + index + ')';
+		pid = marker.pid;
 		// 2 test (14/1/2013)
 		if (marker.bdata.curve != '') {
 			var cuvid = marker.bdata.curve;
@@ -111,30 +113,55 @@ reindex:function(markers){
 			var tcuvid = marker.bdata.tcurve;
 			if (typeof MapToolbar.features['tcurveTab'][tcuvid] != 'undefined') {MapToolbar.features['tcurveTab'][tcuvid].mid = index; }
 		}
-		if (typeof marker.sline != 'undefined') {
-			if (marker.sline != '') {
-				/*
-				alert(marker.sline);
-				alert(typeof marker.sline);
-				if (marker.sline.indexOf(",") == 0) { 
-  					marker.sline = marker.sline.substring(1,marker.sline.length);
-  			}
-				*/
-  					/*
-  						var arrLine = marker.sline.split('§');
-  						for (p = 0; p < arrLine.length; p++) {
-  							var subArrL = arrLine[p].split(':');
-  							var lineName = subArrL[0];
-  							if (subArrL[2] == '0') {
-  							if (typeof MapToolbar.features["lineTab"][lineName] != 'undefined') { MapToolbar.features["lineTab"][lineName].markers.getAt(0).lineX = marker.pid + ':' + index; }
-  							} else if (subArrL[2] == '1') {
-  							if (typeof MapToolbar.features["lineTab"][lineName] != 'undefined') { MapToolbar.features["lineTab"][lineName].markers.getAt(MapToolbar.features["lineTab"][lineName].markers.length-1).turn = marker.pid + ':' + index; }
-  							}
-  						}
-  					*/			    		
+/*
+		if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(0).lineX != '') {
+			var bpid = MapToolbar.features['lineTab'][marker.pid].markers.getAt(0).lineX.split(':')[0];
+			var bpoly = MapToolbar.features['lineTab'][bpid];
+			if (typeof bpoly != 'undefined') {
+				MapToolbar.features['lineTab'][bpid].markers.forEach(function(bmarker, bindex){
+					if (bmarker.sline != '') {
+						var sLArr = bmarker.sline.split(':');
+						if (sLArr[0] == marker.pid && sLArr[1] == '1') {
+							bmarker.sline = sLArr[0] + ':' + sLArr[1] + ':' + index;
+							return;
+							//break;
+						}
+					}
+				});
 			}
-		}			    
-	});			
+		} */			    
+	});		
+		//cadangan 2/7/2014 : ???
+		if (MapToolbar.features['lineTab'][pid].lineX != '') {
+			//MapToolbar.features['lineTab'][marker.pid].lineX != 'baseline_pid1,baseline_pid2 ....'
+			for (i = 0; i < MapToolbar.features['lineTab'][pid].markers.length; i++) {
+				if (MapToolbar.features['lineTab'][pid].markers.getAt(i).lineX != '') {
+					var lineXarr = MapToolbar.features['lineTab'][pid].markers.getAt(i).lineX.split(':');
+					var bpid = lineXarr[0];
+					var bpoly = MapToolbar.features['lineTab'][bpid];
+					if (typeof bpoly != 'undefined') {
+						MapToolbar.features['lineTab'][bpid].markers.forEach(function(bmarker, bindex){
+							if (bmarker.sline != '') {
+								var sLArr = bmarker.sline.split(':');
+								if (sLArr[0] == pid) {
+									if (sLArr[1] == '0' && lineXarr[4] == '0') {
+										bmarker.sline = sLArr[0] + ':' + sLArr[1] + ':' + i;
+										//return;
+										//break;
+									} 
+									if (sLArr[1] == '1' && lineXarr[4] == '1') {
+										bmarker.sline = sLArr[0] + ':' + sLArr[1] + ':' + i;
+										return;
+										//break;
+									}
+								}
+							}
+						});
+						//break;
+					}
+				}
+			}			
+		} 	
 },
 
 //get point at middle distance between 2 point
@@ -169,7 +196,7 @@ currentFeature: null,
 					map: map,
 					draggable: true,
 					icon: image,
-					note: null, // any extra note 
+					note: '', // any extra note 
 					bdata: {height:'',railindex:'',pitch:'',curve:'',tcurve:''},
 					kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
 					sline: '',
@@ -238,7 +265,7 @@ currentFeature: null,
 					title: poly.id + '(' + index + ')',
 					draggable: false,
 					icon: image,
-					note: null, // any extra note 
+					note: '', // any extra note 
 					bdata: {height:'',pitch:''},
 					kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
 					sline: '',
@@ -291,7 +318,7 @@ currentFeature: null,
 				draggable: false,
 				icon: image,
 				title: poly.id + '(' + index + ')',
-				note: null, // any extra note 
+				note: '', // any extra note 
 				bdata: {height:'',pitch:''},
 				kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
 				sline: '',
@@ -396,8 +423,8 @@ currentFeature: null,
 			map: map,
 			draggable: true,
 			icon: image,
-			note: null, // any extra note 
-			kit:null // others data (reserved) by Karya IT
+			note: '', // any extra note 
+			kit:'' // others data (reserved) by Karya IT
 		});
 	  	marker.index = index;    
 	    path.insertAt(index, e);
@@ -468,11 +495,11 @@ currentFeature: null,
 			infoWindowTxt += '<td><img src="images/xfce4_settings.png" title="Setting" width="16" height="16" style="cursor: pointer;" onclick="markerSetting(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
 			infoWindowTxt += '</tr></table>';
 				
-				if (marker.note != null) { 
+		
 					if (marker.note != '') {
 						infoWindowTxt += '<br />Note : ' + marker.note;
 					}
-				}
+
 					
 				
 				if (marker.bdata.pitch != '') { 
@@ -692,11 +719,11 @@ currentFeature: null,
 			infoWindowTxt += '<td><img src="images/xfce4_settings.png" title="Setting" width="16" height="16" style="cursor: pointer;" onclick="markerSetting(\'' + marker.pid + '\',\''+ marker.index +'\');"></td>';
 			infoWindowTxt += '</tr></table>';
 				
-			if (marker.note != null) { 
+			 
 				if (marker.note != '') { 
 					infoWindowTxt += 'Note : ' + marker.note;
 				}
-			}
+		
 			if (marker.bdata.curve != '') {
 				infoWindowTxt += '<br />Curve : ' + marker.bdata.curve;
 			}
@@ -1280,8 +1307,39 @@ MapToolbar.Feature.prototype.poly = function(type) {
 				if (poly.bdata.gauge != '') { $('#dbr_trackGauge').val(poly.bdata.gauge); }
 				if (poly.bdata.desc != '') { $('#dbr_desc').val(poly.bdata.desc); }
 				if (poly.bdata.train != '') { $('#dbr_runningTrain').val(poly.bdata.train); }
-				if (poly.bdata.rail != '') { $('#dbr_railtypedefault').val(poly.bdata.rail); }
+				if (poly.bdata.railindex != '') { $('#dbr_railtypedefault').val(poly.bdata.railindex); }
 
+				var select1 = document.getElementById('dbr_stationStart');
+				var select2 = document.getElementById('dbr_stationEnd');
+				var stArr = [];
+				var polyLen = poly.markers.length;
+				
+				for (var i = 0; i < polyLen; i++) {
+					if (poly.markers.getAt(i).kdata.form != '') {
+						var f1 = poly.markers.getAt(i).kdata.form;
+						var f1arr = f1.split(',');
+						if (f1arr.length != 2) {
+							//var sta = {'id':f1arr[2],'name':f1arr[1]};
+							stArr.push({'id':f1arr[2],'name':f1arr[1]});
+						}
+					}
+				}
+			
+				for (var i = 0; i < stArr.length; i++) {
+					var opt = document.createElement('option');
+					opt.value = stArr[i].id;
+					opt.innerHTML = stArr[i].name;
+					select1.appendChild(opt);
+				}
+
+				for (var i = 0; i < stArr.length; i++) {
+					var opt = document.createElement('option');
+					opt.value = stArr[i].id;
+					opt.innerHTML = stArr[i].name;
+					select2.appendChild(opt);
+				}
+
+				
 				return false;
 			}
 			
@@ -1438,8 +1496,9 @@ MapToolbar.Feature.prototype.poly = function(type) {
 		poly.ptype = '';
 		poly.note = '';
 		poly.name = '';
-		poly.route = '';
+		poly.route = '';		
 		poly.bdata = {devID:'',maxSpeed:'',simBVE:'',gauge:'',desc:'',train:'',rail:''}; 
+		poly.lineX = '';
 		if (devID != '') {poly.bdata.devID = devID; }
 		if (defaultGauge != '') {poly.bdata.gauge = defaultGauge; }
 		poly.$el = MapToolbar.addFeatureEntry(poly.id);  	
@@ -1641,7 +1700,7 @@ MapToolbar.Feature.prototype.circle = function() {
 			 
 			 bulat.id = 'circle_'+ MapToolbar["circleCounter"];
 			 bulat.ptype = null;
-			 bulat.note = null;
+			 bulat.note = '';
 			 bulat.iwref = null;
 			 bulat.$el = MapToolbar.addFeatureEntry(bulat.id);  	
 			 MapToolbar.features["circleTab"][bulat.id] = bulat;		 		
@@ -1731,7 +1790,7 @@ MapToolbar.Feature.prototype.createMarker = function(point) {
 	++MapToolbar["dotMarkerCounter"];
 	marker.id = 'dotMarker_'+ MapToolbar["dotMarkerCounter"];
 	marker.ptype = null;
-	marker.note = null;
+	marker.note = '';
 	marker.iwref = null;
 	marker.$el = MapToolbar.addFeatureEntry(marker.id);	     
 	MapToolbar.updateMarker(marker, marker.$el, color);
