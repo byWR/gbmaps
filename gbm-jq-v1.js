@@ -18,7 +18,7 @@ purpose : gb maps functions based on jquery
 type : release (under development)
 version : 1.0.0
 build : 
-last update : 15 June 2014 12:00am (GMT 8+)
+last update : 05 July 2014 02:12pm (GMT 8+)
 
 */
 	
@@ -474,7 +474,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 		
 		$( "#dialogInsertRiver" ).dialog({ 
 			autoOpen: false, 
-			minWidth: 480
+			minWidth: 620
 		});
 		
 		$( "#dialogUpdateGround" ).dialog({ 
@@ -555,25 +555,25 @@ last update : 15 June 2014 12:00am (GMT 8+)
     					teks += ',';
     				}
     				
-    				if (MapToolbar.features[oType][oName].note != null) {
+    				if (MapToolbar.features[oType][oName].note != '') {
     					teks += ',' + MapToolbar.features[oType][oName].note.replace(',','-').replace('\n',' - ');
     				} else {
     					teks += ',';
     				}
 
-    				if (MapToolbar.features[oType][oName].name != null) {
+    				if (MapToolbar.features[oType][oName].name != '') {
     					teks += ',' + MapToolbar.features[oType][oName].name;
     				} else {
     					teks += ',';
     				}
 
-    				if (MapToolbar.features[oType][oName].route != null) {
+    				if (MapToolbar.features[oType][oName].route != '') {
     					teks += ',' + MapToolbar.features[oType][oName].route;
     				} else {
     					teks += ',';
     				}
 
-    				if (MapToolbar.features[oType][oName].kit != null) {
+    				if (MapToolbar.features[oType][oName].kit != '') {
     					teks += ',' + MapToolbar.features[oType][oName].kit;
     				} else {
     					teks += ',';
@@ -1057,19 +1057,101 @@ last update : 15 June 2014 12:00am (GMT 8+)
 		});
 		  
 		$('#mMbuildBVE').click(function() { 
-
+			
 			$('#dialogBuildRoute').dialog('open');
 		});
 		
 		$('#btnBuildRoute').click(function() { 
+			if ($('#dbr_lineid').val() =='') {
+				alert('lineid not defined');
+				return false;
+			}
+			
+			if ($('#dbr_trackname').val() =='') {
+				alert('trackname not defined');
+				return false;
+			}
+			
+			if ($('#dbr_route').val() =='') {
+				alert('route not defined');
+				return false;
+			}
+			
+			if ($('#dbr_simBVE').val() =='') {
+				alert('please choose target simulator');
+				return false;
+			}
+			
+			if ($('#dbr_trackGauge').val() =='') {
+				alert('gauge not defined');
+				return false;
+			}
+			
+			if ($('#dbr_railtypedefault').val() =='none') {
+				alert('default rail type not defined');
+				return false;
+			}
+						
 			$('#buildBVE').val('');
-			$('#dialogBuildBVERoute').dialog('open');	
-			var polyid = $('#dbr_lineid').val();
-			if (typeof polyid != 'undefined') {
-				if (polyid != '') {
-					generateRouteBVE4_OpenBVE(polyid);					
+			var pid = $('#dbr_lineid').val();
+			var routeId = $('#dbr_trackname').val();
+			var routeName = $('#dbr_route').val();
+			var gauge = $('#dbr_trackGauge').val();
+			var railtype = $('#dbr_railtypedefault option:selected').val();
+			var stIdx = -1;//($('#dbr_stationStart').val() != '')? : ;
+			var edIdx = -1;//($('#dbr_stationEnd').val() != '')? : ;
+			var train = $('#dbr_runningTrain').val();
+			var maxspeed = $('#dbr_maxSpeed').val();
+			var bg = $('#dbr_bg').val();
+			var kmstone = (document.getElementById('dbr_kmstone').checked) ? true : false;
+			var stsign = (document.getElementById('dbr_stnear_sign').checked) ? true : false;
+			var devID = $('#dbr_devID').val();
+			var desc = $('#dbr_desc').val();
+
+			var polyL = MapToolbar.features['lineTab'][pid];
+			var allPoints = polyL.getPath().getArray();		
+				
+			if ($('#dbr_stationStart').val() != '' && $('#dbr_stationEnd').val() != '') {
+				for (var i = 0; i < allPoints.length; i++)  { 
+					if (polyL.markers.getAt(i).kdata.form != '')  {
+						var formData = polyL.markers.getAt(i).kdata.form.split(':');
+						if (formData.length == 7) {
+							if ($('#dbr_stationStart').val() == formArr[2]) {
+								stIdx = i;
+								break;
+							}
+						} 
+					}
 				}
-			}			
+				for (var i = 0; i < allPoints.length; i++)  { 
+					if (polyL.markers.getAt(i).kdata.form != '')  {
+						var formData = polyL.markers.getAt(i).kdata.form.split(':');
+						if (formData.length == 7) {
+							if ($('#dbr_stationEnd').val() == formArr[2]) {
+								edIdx = i;
+								break;
+							}
+						} 
+					}
+				}
+				if (stIdx > edIdx) {
+					var no = stIdx;					
+					stIdx = edIdx;
+					edIdx = no;
+				} // correction st < ed always
+			} else {
+				stIdx = 0;
+				edIdx = allPoints.length -1;
+			}
+						
+			$('#dialogBuildBVERoute').dialog('open');	
+			
+			if ($('#dbr_simBVE').val() =='bve5') {
+				generateBVE5();
+			} else {
+				generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,maxspeed,bg,kmstone,stsign,devID,desc);	
+			}
+			
 		});
 
 		$('#mMmanual').click(function() {
@@ -1336,7 +1418,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
       	if (bverailobjArr[i][3] == 'st') { 
 			$('#dms_railindex').append($("<option></option>").attr("value", bverailobjArr[i][1]).text(bverailobjArr[i][2]));		
      		$('#dtsv_railtypedefault').append($("<option></option>").attr("value", bverailobjArr[i][1]).text(bverailobjArr[i][2]));
-     		$('#dbr_railtypedefault').append($("<option></option>").attr("value", bverailobjArr[i][1]).text(bverailobjArr[i][2]));
+     		$('#dbr_railtypedefault').append($("<option></option>").attr("value", bverailobjArr[i][1]).text(bverailobjArr[i][2].substr(0, 20)));
       	} 
       	if (bverailobjArr[i][3] == 'cv') {
      			$('#ddc_railindex').append($("<option></option>").attr("value", bverailobjArr[i][1]).text(bverailobjArr[i][2]));
@@ -1349,7 +1431,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
     	
     	for (var i=0; i < bvetrainDirArr.length; i++) {
     		$('#dtsv_runningTrain').append($("<option></option>").attr("value", bvetrainDirArr[i][4]).text(bvetrainDirArr[i][2]));
-    		$('#dbr_runningTrain').append($("<option></option>").attr("value", bvetrainDirArr[i][4]).text(bvetrainDirArr[i][2]));
+    		$('#dbr_runningTrain').append($("<option></option>").attr("value", bvetrainDirArr[i][4]).text(bvetrainDirArr[i][2].substr(0, 15)));
     	}
     	
     	for (var i=0; i < bvetunnelObjArr.length; i++) {
@@ -1402,21 +1484,24 @@ last update : 15 June 2014 12:00am (GMT 8+)
     	}
     	
     	for (var i=0; i < bvebveStrOjArr.length; i++) {
+		$('#grnObj').append($("<option></option>").attr("value", bvebveStrOjArr[i][4]).text(bvebveStrOjArr[i][2].substr(0, 25)));
+		
     		switch (bvebveStrOjArr[i][3]) {
 			case 'Ground':
-				$('#grnObj').append($("<option></option>").attr("value", bvebveStrOjArr[i][4]).text(bvebveStrOjArr[i][2].substr(0, 25)));
 				$('#dUpdG_object').append($("<option></option>").attr("value", bvebveStrOjArr[i][1]).text(bvebveStrOjArr[i][2]));
+				$('#dInsR_ground').append($("<option></option>").attr("value", bvebveStrOjArr[i][1]).text(bvebveStrOjArr[i][2]));
 				break;
 			case 'Background':
-				$('#grnObj').append($("<option></option>").attr("value", bvebveStrOjArr[i][4]).text(bvebveStrOjArr[i][2].substr(0, 25)));
+				$('#dbr_bg').append($("<option></option>").attr("value", bvebveStrOjArr[i][4]).text(bvebveStrOjArr[i][2].substr(0, 25)));
 				break;
 			case 'Beacon':
-				$('#grnObj').append($("<option></option>").attr("value", bvebveStrOjArr[i][4]).text(bvebveStrOjArr[i][2].substr(0, 25)));
 				break;
 			case 'River':
-				$('#grnObj').append($("<option></option>").attr("value", bvebveStrOjArr[i][1]).text(bvebveStrOjArr[i][2].substr(0, 25)));
 				$('#dInsB_river').append($("<option></option>").attr("value", bvebveStrOjArr[i][1]).text(bvebveStrOjArr[i][2]));
 				$('#dInsR_river').append($("<option></option>").attr("value", bvebveStrOjArr[i][1]).text(bvebveStrOjArr[i][2]));
+				break;
+			case 'RiverBank':
+				$('#dInsR_riverBank').append($("<option></option>").attr("value", bvebveStrOjArr[i][1]).text(bvebveStrOjArr[i][2]));
 				break;
 																
 			default:
@@ -1424,13 +1509,58 @@ last update : 15 June 2014 12:00am (GMT 8+)
     	}
 
     	for (var i=0; i < bvefreeObjArr.length; i++) {
-    		$('#sideObj').append($("<option></option>").attr("value", bvefreeObjArr[i][4]).text(bvefreeObjArr[i][2].substr(0, 25)));
-    		if (bvefreeObjArr[i][3] == 'Structure') {
-    			if (bvefreeObjArr[i][1].indexOf('overbridge') == 0) {
-    				$('#dInsOb_overbridge').append($("<option></option>").attr("value", bvefreeObjArr[i][1]).text(bvefreeObjArr[i][2]));
-    			}
-    		}
-    	}
+    		$('#sideObj').append($("<option></option>").attr("value", bvefreeObjArr[i][4]).text(bvefreeObjArr[i][2].substr(0, 25)));		
+   		switch (bvefreeObjArr[i][3]) {
+			case 'overbridge':
+				$('#dInsOb_overbridge').append($("<option></option>").attr("value", bvefreeObjArr[i][1]).text(bvefreeObjArr[i][2]));
+				break;
+			case 'building':
+				
+				break;
+			case 'house':
+				
+				break;
+			case 'tree':
+				
+				break;
+			case 'landscape':
+				
+				break;
+			case 'road':
+				
+				break;
+			case 'fence':
+				
+				break;
+			case 'train':
+				
+				break;
+			case 'others vehicle':
+				
+				break;
+			case 'sign':
+				
+				break;
+			case 'rail object':
+				
+				break;
+			case 'structure':
+				
+				break;
+			case 'machine':
+				
+				break;
+			case 'station object':
+				
+				break;
+			case 'others':
+				
+				break;
+			default:
+			
+				break;
+		}
+	}
 
     	for (var i=0; i < bvetrainObjArr.length; i++) {
     		$('#dtsv_runningTrain').append($("<option></option>").attr("value", bvetrainObjArr[i][4]).text(bvetrainObjArr[i][2]));
@@ -1455,26 +1585,26 @@ last update : 15 June 2014 12:00am (GMT 8+)
 		    //var cgsp = parseInt($('#setPHeightSt').val());
 		    
 		    for (i = 0; i < data.getNumberOfRows(); i++) {
-	  	  	if ((stH <= parseInt(data.getValue(i, 0))) && (edH >= parseInt(data.getValue(i, 0)))) {	  	  		 
-	  	  		if (document.getElementById('LPfixedHeight').checked) {
-	  	  			var nv = parseFloat(data.getValue(i, 2)) + h;
-	  	  			data.setValue(i, 2, nv);
-	  	  			if (i == data.getNumberOfRows() -1) {
-	  	  				$('#LLlastheight').val(nv);
-	  	  				$('#LLlastheightratio').val(h);
-	  					}	  	  			
-	  	  		}	  	  		 	  		
-	  	  	}    					
-	    	}
+				if ((stH <= parseInt(data.getValue(i, 0))) && (edH >= parseInt(data.getValue(i, 0)))) {	  	  		 
+					if (document.getElementById('LPfixedHeight').checked) {
+						var nv = parseFloat(data.getValue(i, 2)) + h;
+						data.setValue(i, 2, nv);
+						if (i == data.getNumberOfRows() -1) {
+							$('#LLlastheight').val(nv);
+							$('#LLlastheightratio').val(h);
+						}	  	  			
+					}	  	  		 	  		
+				}    					
+			}
 	    		    	
-	    	if (document.getElementById('LPfixedHeight').checked) {
-	    		// start point
-	    		for (j = 0; j < arrTE.length; j++) {
-	    		var td1 = arrTE[j].split(',');
+			if (document.getElementById('LPfixedHeight').checked) {
+				// start point
+				for (j = 0; j < arrTE.length; j++) {
+					var td1 = arrTE[j].split(',');
  					
  					if (parseInt(td1[0]) == 0) {
  						if (stH == parseInt(td1[0])) {
- 							if (typeof td1[3] == 'undefined') { 								
+ 							if (td1[3] == '') { 								
  								td1[3] = 'height:' + h;
  								arrTE[j] = td1.join(',');
  								//arrTE[j] = arrTE[j].replace('undefined',''); 						
@@ -1505,7 +1635,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
  						
  						if ((stH >= parseInt(td0[0])) && (stH <= parseInt(td1[0]))) {
  							if (stH == parseInt(td0[0])) {
- 								if (typeof td0[3] == 'undefined') { 								
+ 								if (td0[3] == '') { 								
  									td0[3] = 'height:' + h;
  									arrTE[j-1] = td0.join(',');
  									//arrTE[j-1] = arrTE[j-1].replace('undefined',''); 						
@@ -1531,7 +1661,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
  								}
  								
  							} else if (stH == parseInt(td1[0])) {
- 								if (typeof td1[3] == 'undefined') { 								
+ 								if (td1[3] == '') { 								
  									td1[3] = 'height:' + h;
  									arrTE[j] = td1.join(',');
  									//arrTE[j] = arrTE[j].replace('undefined',''); 						
@@ -1572,20 +1702,20 @@ last update : 15 June 2014 12:00am (GMT 8+)
  					
  					if (parseInt(td1[0]) == 0) {
  						if (edH == parseInt(td1[0])) {
- 							if (typeof td1[3] == 'undefined') { 								
- 								td1[3] = 'height:0';
+ 							if (td1[3] == '') { 								
+ 								td1[3] = 'height:' + h;
  								arrTE[j] = td1.join(',');
  								//arrTE[j] = arrTE[j].replace('undefined',''); 						
  								break; 								
  							} else {
  								if (td1[3].indexOf('height:') < 0) {
- 									td1[3] += '§height:0'; 
+ 									td1[3] += '§height:'+h; 
  								} else {
  									var ar0 = td1[3].split('§');
 									for (var a=0; a < ar0.length;a++) {
 										var ar1 = ar0[a].split(':');
 										if (ar1[0] == 'height') {
-											ar1[1] = 0; 
+											ar1[1] = h; 
 											ar0[a] = ar1.join(':');
 											break;
 										}
@@ -1603,20 +1733,20 @@ last update : 15 June 2014 12:00am (GMT 8+)
  						
  						if ((edH >= parseInt(td0[0])) && (edH <= parseInt(td1[0]))) {
  							if (edH == parseInt(td0[0])) {
- 								if (typeof td0[3] == 'undefined') { 								
- 									td0[3] = 'height:0';
+ 								if (td0[3] == '') { 								
+ 									td0[3] = 'height:' + h;
  									arrTE[j-1] = td0.join(',');
  									//arrTE[j-1] = arrTE[j-1].replace('undefined',''); 						
  									break; 								
  								} else {
  									if (td0[3].indexOf('height:') < 0) {
- 										td0[3] += '§height:0'; 
+ 										td0[3] += '§height:' + h; 
  									} else {
  										var ar0 = td0[3].split('§');
 										for (var a=0; a < ar0.length;a++) {
 											var ar1 = ar0[a].split(':');
 											if (ar1[0] == 'height') {
-												ar1[1] = 0; 
+												ar1[1] = h; 
 												ar0[a] = ar1.join(':');
 												break;
 											}
@@ -1629,20 +1759,20 @@ last update : 15 June 2014 12:00am (GMT 8+)
  								}
  								
  							} else if (edH == parseInt(td1[0])) {
- 								if (typeof td1[3] == 'undefined') { 								
- 									td1[3] = 'height:0';
+ 								if (td1[3] == '') { 								
+ 									td1[3] = 'height:' + h;
  									arrTE[j] = td1.join(',');
  									//arrTE[j] = arrTE[j].replace('undefined',''); 						
  									break; 								
  								} else {
  									if (td1[3].indexOf('height:') < 0) {
- 										td1[3] += '§height:0'; 
+ 										td1[3] += '§height:' + h; 
  									} else {
  										var ar0 = td1[3].split('§');
 										for (var a=0; a < ar0.length;a++) {
 											var ar1 = ar0[a].split(':');
 											if (ar1[0] == 'height') {
-												ar1[1] = 0; 
+												ar1[1] = h; 
 												ar0[a] = ar1.join(':');
 												break;
 											}
@@ -1655,7 +1785,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
  								} 
  								
  							} else {
- 								var artxt = edH.toString() + ',,,height:0,';
+ 								var artxt = edH.toString() + ',,,height:' + h + ',';
  								arrTE.splice(j,0,artxt);
  								break;
  							
@@ -1675,7 +1805,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 	  	  			for (j = 0; j < arrTE.length; j++) {
 	  	  				var td1 = arrTE[j].split(',');
 	  	  				if (parseInt(data.getValue(i, 0)) == parseInt(td1[0])) {
-	  	  					if (typeof td1[3] == 'undefined') { 								
+	  	  					if (td1[3] == '') { 								
  										td1[3] = 'height:' + th;
  										arrTE[j] = td1.join(',');
  										newPoint = false;					
@@ -1714,35 +1844,35 @@ last update : 15 June 2014 12:00am (GMT 8+)
 	  	  			}
 	  	  		}
 	    		}	
-				}
+			}
 	    	
-	    	$('#txtPitchDetails').val(arrTE.join('\n'));
-	    	//var cw = chart.chartArea.width; 
+			$('#txtPitchDetails').val(arrTE.join('\n'));
+			//var cw = chart.chartArea.width; 
   			chart.draw(data, {
-      		width: wd,
-        	height: 200,
-        	legend: 'none',
-        	titleY: 'Elevation (m)',
-        	titleX: 'Distance (m) + ' + $('#txtPitchStartPointAtM').val() + ' m'
+				width: wd,
+				height: 200,
+				legend: 'none',
+				titleY: 'Elevation (m)',
+				titleX: 'Distance (m) + ' + $('#txtPitchStartPointAtM').val() + ' m'
      		});	
      						
-			});
+		});
 		    		
 		$('#resetTHeight').click(function() {
 			$('#setPtHeight').val('');
 		 	$('#setPHeightSt').val('');
 		 	for (i = 0; i < data.getNumberOfRows(); i++) {
-  	 		var nv = parseFloat(data.getValue(i, 1));
-  	 		data.setValue(i, 2, nv);
-	  	}
+				var nv = parseFloat(data.getValue(i, 1));
+				data.setValue(i, 2, nv);
+			}
 	    				
-  		chart.draw(data, {
-      	width: wd,
-        height: 200,
-        legend: 'none',
-        titleY: 'Elevation (m)',
-        titleX: 'Distance (m) + ' + $('#txtPitchStartPointAtM').val() + ' m' 
-     	});
+			chart.draw(data, {
+				width: wd,
+				height: 200,
+				legend: 'none',
+				titleY: 'Elevation (m)',
+				titleX: 'Distance (m) + ' + $('#txtPitchStartPointAtM').val() + ' m' 
+			});
 		 });
 
 	  $('#setPitchAuto').click(function() {
@@ -2630,9 +2760,9 @@ last update : 15 June 2014 12:00am (GMT 8+)
 			if ($('#dtsv_trackGauge').val() != '') { poly.bdata.gauge = $('#dtsv_trackGauge').val(); }
 			if ($('#dtsv_desc').val() != '') { poly.bdata.desc = $('#dtsv_desc').val(); }
 			if ($('#dtsv_runningTrain').val() != '') { poly.bdata.train = $('#dtsv_runningTrain').val(); }			
-			if ($('#dtsv_railtypedefault').val() != '') { poly.bdata.rail = $('#dtsv_railtypedefault').val(); }			
+			if ($('#dtsv_railtypedefault').val() != '') { poly.bdata.railindex = $('#dtsv_railtypedefault').val(); }			
 	
-			if ($('#dtsv_note').val() != '') { poly.note = $('#dtsv_note').val(); } else { poly.note = null; }
+			if ($('#dtsv_note').val() != '') { poly.note = $('#dtsv_note').val(); } else { poly.note = ''; }
 			
 			linesRoute(pid,poly.route);
 			
@@ -2757,7 +2887,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 				
 					var strType = (start) ? 0 : 1;	
 				
-					MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).kdata.bridge = $('#dInsB_bridge').val() + ',' + strType + ',' + $('#dInsB_BL').val();
+					MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).kdata.bridge = $('#dInsB_bridge').val() + ':' + strType + ':' + $('#dInsB_BL').val();
 					var image = new google.maps.MarkerImage('images/bridge_icon.png',
 						new google.maps.Size(6, 6),
 						new google.maps.Point(0, 0),
@@ -2829,19 +2959,47 @@ last update : 15 June 2014 12:00am (GMT 8+)
 		$('#dInsR_OK').click(function() {
 			var pid = $('#dInsR_PID').val(); 
 			var mIdx = parseInt($('#dInsR_MID').val());
-			var rwidth = parseInt($('#dInsR_width').val());
+			var hwidth = parseInt($('#dInsR_width').val())/2;
+			var hh = 0;
 			
-			if (typeof MapToolbar.features["lineTab"][pid].markers.getAt(mIdx) != 'undefined') {
-				MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).kdata.river = $('#dInsR_river').val() + ',' + rwidth;
-				var image = new google.maps.MarkerImage('images/river_icon.png',
+			if (typeof MapToolbar.features["lineTab"][pid].markers.getAt(mIdx-1) != 'undefined') { 
+				hh = google.maps.geometry.spherical.computeHeading(MapToolbar.features["lineTab"][pid].markers.getAt(mIdx-1).getPosition(),MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).getPosition());;
+			} else if (typeof MapToolbar.features["lineTab"][pid].markers.getAt(mIdx+1) != 'undefined') {
+				hh = google.maps.geometry.spherical.computeHeading(MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).getPosition(),MapToolbar.features["lineTab"][pid].markers.getAt(mIdx+1).getPosition());;
+			}
+			
+			var r0 = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).getPosition(), -hwidth, hh);
+			var r1 = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).getPosition(), hwidth, hh);
+			var r2 = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).getPosition(), hwidth+50, hh);
+			
+			MapToolbar.addPoint(r0, MapToolbar.features["lineTab"][pid], mIdx);
+			MapToolbar.addPoint(r1, MapToolbar.features["lineTab"][pid], mIdx+2);
+			MapToolbar.addPoint(r2, MapToolbar.features["lineTab"][pid], mIdx+3);
+			
+			MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).kdata.ground = $('#dInsR_river').val();
+			MapToolbar.features["lineTab"][pid].markers.getAt(mIdx+1).note = 'river ' + $('#dInsR_width').val() + ' m';
+			MapToolbar.features["lineTab"][pid].markers.getAt(mIdx+2).kdata.ground = $('#dInsR_riverBank').val();
+			MapToolbar.features["lineTab"][pid].markers.getAt(mIdx+3).kdata.ground = $('#dInsR_ground').val();
+			
+			var image = new google.maps.MarkerImage('images/river_icon.png',
 					new google.maps.Size(6, 6),
 					new google.maps.Point(0, 0),
 					new google.maps.Point(3, 3));
-				MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).setIcon(image);
-				$('#dialogInsertRiver').dialog('close');
-			} else {
-				alert("marker index not defined");				
-			}
+			MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).setIcon(image);
+			var image = new google.maps.MarkerImage('images/ground8.png',
+					new google.maps.Size(8, 8),
+					new google.maps.Point(0, 0),
+					new google.maps.Point(4, 4));
+			MapToolbar.features["lineTab"][pid].markers.getAt(mIdx+2).setIcon(image);
+			var image = new google.maps.MarkerImage('images/ground8.png',
+					new google.maps.Size(8, 8),
+					new google.maps.Point(0, 0),
+					new google.maps.Point(4, 4));
+			MapToolbar.features["lineTab"][pid].markers.getAt(mIdx+3).setIcon(image);
+			
+			
+			$('#dialogInsertRiver').dialog('close');
+			
 		});
 
 		$('#dInsR_KO').click(function() {
@@ -2854,6 +3012,32 @@ last update : 15 June 2014 12:00am (GMT 8+)
 					if (bvebveStrOjArr[i][3] == 'River') {
 						if (bvebveStrOjArr[i][1] == document.getElementById('dInsR_river').value) {
 							document.getElementById('dInsR_riverImg').src = 'images/' + bvebveStrOjArr[i][4];
+							break;
+						} 
+					}					
+				}
+			}
+		});		
+
+		$('#dInsR_riverBank').change(function() {
+			if (document.getElementById('dInsR_riverBank').value != '') {
+				for (i = 0; i < bvebveStrOjArr.length; i++) {					
+					if (bvebveStrOjArr[i][3] == 'RiverBank') {
+						if (bvebveStrOjArr[i][1] == document.getElementById('dInsR_riverBank').value) {
+							document.getElementById('dInsR_riverBankImg').src = 'images/' + bvebveStrOjArr[i][4];
+							break;
+						} 
+					}					
+				}
+			}
+		});		
+
+		$('#dInsR_ground').change(function() {
+			if (document.getElementById('dInsR_ground').value != '') {
+				for (i = 0; i < bvebveStrOjArr.length; i++) {					
+					if (bvebveStrOjArr[i][3] == 'Ground') {
+						if (bvebveStrOjArr[i][1] == document.getElementById('dInsR_ground').value) {
+							document.getElementById('dInsR_groundImg').src = 'images/' + bvebveStrOjArr[i][4];
 							break;
 						} 
 					}					
@@ -2994,8 +3178,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 			
 			if (((Math.round(google.maps.geometry.spherical.computeDistanceBetween(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition(),MapToolbar.features["lineTab"][pid2].markers.getAt(wst2).getPosition())*100)/100) <= Math.abs(offset)) && ((Math.round(google.maps.geometry.spherical.computeDistanceBetween(MapToolbar.features["lineTab"][pid1].markers.getAt(wed+2).getPosition(),MapToolbar.features["lineTab"][pid2].markers.getAt(wed2).getPosition())*100)/100) <= Math.abs(offset))) {		
 				
-				MapToolbar.features["lineTab"][pid2].markers.getAt(wst2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-				MapToolbar.features["lineTab"][pid2].markers.getAt(wed2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';	
+				MapToolbar.features["lineTab"][pid2].markers.getAt(wst2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+				MapToolbar.features["lineTab"][pid2].markers.getAt(wed2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';	
 			
 				var pxc = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2).getPosition() , ti2, h1);
 				var pxd = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid2].markers.getAt(wed2).getPosition(), -te2, h1);
@@ -3006,15 +3190,15 @@ last update : 15 June 2014 12:00am (GMT 8+)
 				MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], (wst2 + 1));
 				MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], (wst2 + 2));
 								
-				MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';
-				MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';
+				MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';
+				MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';
 			
 			} else {
 				MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
 				MapToolbar.addPoint(px1, MapToolbar.features["lineTab"][pid2], wst2+2);
 				
-				MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-				MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
+				MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+				MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
 				
 				var pxc = google.maps.geometry.spherical.computeOffset(px0, ti2, h1);
 				var pxd = google.maps.geometry.spherical.computeOffset(px1, -te2, h1);
@@ -3025,8 +3209,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 				MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], wst2 + 2);
 				MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], wst2 + 3);		
 
-				MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + ':';
-				MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';				
+				MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + '::';
+				MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';				
 					
 			}
 			/*
@@ -3050,8 +3234,13 @@ last update : 15 June 2014 12:00am (GMT 8+)
 			var side = $('#form0_pos').val();				
 			var platform_length = parseInt($('#platform_length').val());
 			var howtoForm = parseInt($('#howtocreateform').val());
+			
+			if (cekStaID($('#dInsForm_StaID').val())) {
+				alert('Station ID already exists.');
+				return false;
+			}
 
-			var formSide = ($('#form0_pos').val() == 'L')?  ':' + pid : pid + ':';			
+			var formSide = ($('#form0_pos').val() == 'L')?  pid + ':L' : pid + ':R';			
 			
 			formMaker(pid,idx,platform_length,howtoForm,'form0',formSide);
 								
@@ -3059,6 +3248,11 @@ last update : 15 June 2014 12:00am (GMT 8+)
 		});
 		
 		$('#form1_Insert').click(function() {
+			if (cekStaID($('#dInsForm_StaID').val())) {
+				alert('Station ID already exists.');
+				return false;
+			}
+		
 			if ((typeof $('#dInsForm_pid').val() != 'undefined') && (typeof $('#dInsForm_idx').val() != 'undefined')) {
 				var pid = $('#dInsForm_pid').val();
 				var pid2 = $('#dInsForm_pid2').val();
@@ -3067,7 +3261,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 				var platform_length = parseInt($('#platform_length').val());
 				var howtoForm = parseInt($('#howtocreateform').val());
 				
-				var formSide  =  ':' + pid + ',' + pid2 + ':';
+				var formSide  =  pid + ':L' + '/' + pid2 + ':R';
 								
 				formMaker(pid,idx,platform_length,howtoForm,'form1',formSide);
 				
@@ -3076,6 +3270,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 		});
 
 		$('#form2_Insert').click(function() {
+			if (cekStaID($('#dInsForm_StaID').val())) {
+				alert('Station ID already exists.');
+				return false;
+			}
 			if ((typeof $('#dInsForm_pid').val() != 'undefined') && (typeof $('#dInsForm_idx').val() != 'undefined') && (typeof $('#dInsForm_pid2').val() != 'undefined')) {
 				var pid1 = $('#dInsForm_pid').val();
 				var pid2 = $('#dInsForm_pid2').val();
@@ -3145,8 +3343,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
 								MapToolbar.addPoint(px1, MapToolbar.features["lineTab"][pid2], wst2+2);
 				
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
 				
 								var pxc = google.maps.geometry.spherical.computeOffset(px0, ti2, h1);
 								var pxd = google.maps.geometry.spherical.computeOffset(px1, -te2, h1);
@@ -3157,8 +3355,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], wst2 + 2);
 								MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], wst2 + 3);		
 
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';	
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';	
 								
 								var image = new google.maps.MarkerImage('images/form_icon.png',
 									new google.maps.Size(6, 6),
@@ -3205,8 +3403,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
 								MapToolbar.addPoint(px1, MapToolbar.features["lineTab"][pid2], wst2+2);
 				
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
 				
 								var pxc = google.maps.geometry.spherical.computeOffset(px0, ti2, h1);
 								var pxd = google.maps.geometry.spherical.computeOffset(px1, -te2, h1);
@@ -3217,8 +3415,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], wst2 + 2);
 								MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], wst2 + 3);		
 
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';	
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';	
 								
 								var image = new google.maps.MarkerImage('images/form_icon.png',
 									new google.maps.Size(6, 6),
@@ -3246,6 +3444,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 		});
 
 		$('#form3_Insert').click(function() {
+			if (cekStaID($('#dInsForm_StaID').val())) {
+				alert('Station ID already exists.');
+				return false;
+			}
 			if ((typeof $('#dInsForm_pid').val() != 'undefined') && (typeof $('#dInsForm_idx').val() != 'undefined') && (typeof $('#dInsForm_pid2').val() != 'undefined')) {
 				var pid1 = $('#dInsForm_pid').val();
 				var pid2 = $('#dInsForm_pid2').val();
@@ -3333,7 +3535,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).setIcon(image);
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).setIcon(image);
 								
-								formSide = pid1 + ':' + pid2;;
+								formSide = pid1 + ':' + pid2;
 
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = stopS + ',' + stopO;
@@ -3345,8 +3547,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
 								MapToolbar.addPoint(px1, MapToolbar.features["lineTab"][pid2], wst2+2);
 				
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
 				
 								var pxc = google.maps.geometry.spherical.computeOffset(px0, ti2, h1);
 								var pxd = google.maps.geometry.spherical.computeOffset(px1, -te2, h1);
@@ -3357,8 +3559,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], wst2 + 2);
 								MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], wst2 + 3);		
 
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';	
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';	
 							
 							}
 						
@@ -3398,7 +3600,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).setIcon(image);
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).setIcon(image);	
 
-								formSide = pid1 + ':' + pid2;;
+								formSide = pid1 + ':' + pid2;
 
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = stopS + ',' + stopO;
@@ -3410,8 +3612,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
 								MapToolbar.addPoint(px1, MapToolbar.features["lineTab"][pid2], wst2+2);
 				
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
 				
 								var pxc = google.maps.geometry.spherical.computeOffset(px0, ti2, h1);
 								var pxd = google.maps.geometry.spherical.computeOffset(px1, -te2, h1);
@@ -3422,8 +3624,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], wst2 + 2);
 								MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], wst2 + 3);		
 
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';	
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';	
 								
 							}
 						}
@@ -3451,10 +3653,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px3_d, newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we3 + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we3 + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + (-1*side) + ':0:' + te3;
 
 	
@@ -3496,10 +3698,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px4_d, newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + te4;
 	
 						//var wst_4i = formLineWidenAddAt(pid2,px4_a);
@@ -3536,6 +3738,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 		});
 
 		$('#form4_Insert').click(function() {
+			if (cekStaID($('#dInsForm_StaID').val())) {
+				alert('Station ID already exists.');
+				return false;
+			}
 			if ((typeof $('#dInsForm_pid').val() != 'undefined') && (typeof $('#dInsForm_idx').val() != 'undefined') && (typeof $('#dInsForm_pid2').val() != 'undefined')) {
 				var pid1 = $('#dInsForm_pid').val();
 				var pid2 = $('#dInsForm_pid2').val();
@@ -3628,8 +3834,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
 								MapToolbar.addPoint(px1, MapToolbar.features["lineTab"][pid2], wst2+2);
 				
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
 				
 								var pxc = google.maps.geometry.spherical.computeOffset(px0, ti2, h1);
 								var pxd = google.maps.geometry.spherical.computeOffset(px1, -te2, h1);
@@ -3640,8 +3846,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], wst2 + 2);
 								MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], wst2 + 3);		
 
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';	
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';	
 							
 							}
 						
@@ -3683,8 +3889,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
 								MapToolbar.addPoint(px1, MapToolbar.features["lineTab"][pid2], wst2+2);
 				
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
 				
 								var pxc = google.maps.geometry.spherical.computeOffset(px0, ti2, h1);
 								var pxd = google.maps.geometry.spherical.computeOffset(px1, -te2, h1);
@@ -3695,8 +3901,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], wst2 + 2);
 								MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], wst2 + 3);		
 
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';	
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';	
 								
 							}
 						}
@@ -3722,11 +3928,11 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst+3).getPosition(), newPoly, 5);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3a;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + (Math.round((wi1/ti1) * ti3a * 1000)/1000) + ':' + ti3;
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + ':';
-						newPoly.markers.getAt(3).lineX = pid1 + ':' + (-1*side) + ':' + we3 + ':';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + '::';
+						newPoly.markers.getAt(3).lineX = pid1 + ':' + (-1*side) + ':' + we3 + '::';
 						newPoly.markers.getAt(4).lineX = pid1 + ':' + (-1*side) + ':' + (Math.round((we1/te1) * ti3a * 1000)/1000) + ':' + te3;
 						newPoly.markers.getAt(5).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3a;
 
@@ -3772,11 +3978,11 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+4).getPosition(), newPoly, 5);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4a;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + (Math.round((wi2/ti2) * ti4a * 1000)/1000) + ':' + ti4;
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + ':';
-						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + ':';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + '::';
+						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + '::';
 						newPoly.markers.getAt(4).lineX = pid1 + ':' + side + ':' + (Math.round((we2/te2) * ti4a * 1000)/1000) + ':' + te4;
 						newPoly.markers.getAt(5).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4a;
 	
@@ -3822,6 +4028,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 		});
 
 		$('#form5_Insert').click(function() {
+			if (cekStaID($('#dInsForm_StaID').val())) {
+				alert('Station ID already exists.');
+				return false;
+			}
 			if ((typeof $('#dInsForm_pid').val() != 'undefined') && (typeof $('#dInsForm_idx').val() != 'undefined') && (typeof $('#dInsForm_pid2').val() != 'undefined')) {
 				var pid1 = $('#dInsForm_pid').val();
 				var pid2 = $('#dInsForm_pid2').val();
@@ -3899,7 +4109,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).setIcon(image);
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).setIcon(image);
 								
-								formSide = ':'+ pid1 + ',' + pid2 + ':';
+								formSide = pid1+ ':L' + '/' + pid2 + ':R';
 
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = stopS + ',' + stopO;
@@ -3911,8 +4121,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
 								MapToolbar.addPoint(px1, MapToolbar.features["lineTab"][pid2], wst2+2);
 				
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
 				
 								var pxc = google.maps.geometry.spherical.computeOffset(px0, ti2, h1);
 								var pxd = google.maps.geometry.spherical.computeOffset(px1, -te2, h1);
@@ -3923,8 +4133,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], wst2 + 2);
 								MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], wst2 + 3);		
 
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';	
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';	
 							
 							}
 						
@@ -3961,7 +4171,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).setIcon(image);
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).setIcon(image);	
 
-								formSide = ':'+ pid1 + ',' + pid2 + ':';
+								formSide = pid1 + ':L' + '/' + pid2 + ':R';
 
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
 								MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = stopS + ',' + stopO;
@@ -3973,8 +4183,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
 								MapToolbar.addPoint(px1, MapToolbar.features["lineTab"][pid2], wst2+2);
 				
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
 				
 								var pxc = google.maps.geometry.spherical.computeOffset(px0, ti2, h1);
 								var pxd = google.maps.geometry.spherical.computeOffset(px1, -te2, h1);
@@ -3985,8 +4195,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], wst2 + 2);
 								MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], wst2 + 3);		
 
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';	
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';	
 								
 							}
 						}
@@ -4003,10 +4213,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst+3).getPosition(), newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti1;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi1 + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we1 + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi1 + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we1 + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + (-1*side) + ':0:' + te1;
 
 						//var wst_3i = formLineWidenAddAt(pid1,px3_a);
@@ -4044,10 +4254,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+4).getPosition(), newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':0:' + ti2;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + wi2 + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + we2 + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + wi2 + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + we2 + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':0:' + te2;
 
 	
@@ -4085,6 +4295,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 		});
 
 		$('#form6_Insert').click(function() {
+			if (cekStaID($('#dInsForm_StaID').val())) {
+				alert('Station ID already exists.');
+				return false;
+			}
 			if ((typeof $('#dInsForm_pid').val() != 'undefined') && (typeof $('#dInsForm_idx').val() != 'undefined') && (typeof $('#dInsForm_pid2').val() != 'undefined')) {
 				var pid1 = $('#dInsForm_pid').val();
 				var pid2 = $('#dInsForm_pid2').val();
@@ -4225,10 +4439,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition(), newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we3 + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we3 + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + (-1*side) + ':0:' + te3;
 	
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst).sline == '') {
@@ -4261,10 +4475,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).getPosition(), newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + te4;
 	
 						//var wst_4i = formLineWidenAddAt(pid2,px4_a);
@@ -4289,7 +4503,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						
 						pid4 = newPoly.id;
 						
-						formSide = ':'+ pid3 + ',' + pid4 + ':';
+						formSide = pid3+ ':L' + '/' + pid4 + ':R';
 
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).kdata.form = stopS + ',' + stopO;
@@ -4309,6 +4523,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 		});
 
 		$('#form7_Insert').click(function() {
+			if (cekStaID($('#dInsForm_StaID').val())) {
+				alert('Station ID already exists.');
+				return false;
+			}
 			if ((typeof $('#dInsForm_pid').val() != 'undefined') && (typeof $('#dInsForm_idx').val() != 'undefined') && (typeof $('#dInsForm_pid2').val() != 'undefined')) {
 				var pid1 = $('#dInsForm_pid').val();
 				var pid2 = $('#dInsForm_pid2').val();
@@ -4391,8 +4609,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
 								MapToolbar.addPoint(px1, MapToolbar.features["lineTab"][pid2], wst2+2);
 				
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
 				
 								var pxc = google.maps.geometry.spherical.computeOffset(px0, ti2, h1);
 								var pxd = google.maps.geometry.spherical.computeOffset(px1, -te2, h1);
@@ -4403,8 +4621,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], wst2 + 2);
 								MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], wst2 + 3);		
 
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';	
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';	
 							
 							}
 						
@@ -4446,8 +4664,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
 								MapToolbar.addPoint(px1, MapToolbar.features["lineTab"][pid2], wst2+2);
 				
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
 				
 								var pxc = google.maps.geometry.spherical.computeOffset(px0, ti2, h1);
 								var pxd = google.maps.geometry.spherical.computeOffset(px1, -te2, h1);
@@ -4458,8 +4676,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], wst2 + 2);
 								MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], wst2 + 3);		
 
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';	
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';	
 								
 							}
 						}
@@ -4476,10 +4694,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst+3).getPosition(), newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti1;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi1 + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we1 + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi1 + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we1 + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + (-1*side) + ':0:' + te1;
 
 						//var wst_3i = formLineWidenAddAt(pid1,px3_a);
@@ -4519,10 +4737,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+4).getPosition(), newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':0:' + ti2;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + wi2 + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + we2 + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + wi2 + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + we2 + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':0:' + te2;
 
 	
@@ -4548,7 +4766,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						
 						pid4 = newPoly.id;
 						
-						formSide = pid1 + ':'+ pid3 + ',' + pid4 + ':' + pid2;
+						formSide = pid1 + ':'+ pid3 + '/' + pid2 + ':' + pid4;
 
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = stopS + ',' + stopO;
@@ -4568,6 +4786,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 		});
 
 		$('#form8_Insert').click(function() {
+			if (cekStaID($('#dInsForm_StaID').val())) {
+				alert('Station ID already exists.');
+				return false;
+			}
 			if ((typeof $('#dInsForm_pid').val() != 'undefined') && (typeof $('#dInsForm_idx').val() != 'undefined') && (typeof $('#dInsForm_pid2').val() != 'undefined')) {
 				var pid1 = $('#dInsForm_pid').val();
 				var pid2 = $('#dInsForm_pid2').val();
@@ -4707,10 +4929,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition(), newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we3 + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we3 + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + (-1*side) + ':0:' + te3;
 	
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst).sline == '') {
@@ -4743,10 +4965,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).getPosition(), newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + te4;
 	
 						//var wst_4i = formLineWidenAddAt(pid2,px4_a);
@@ -4755,23 +4977,23 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						//var wst_4f = formLineWidenAddAt(pid2,px4_d);
 						//MapToolbar.addPoint(px4_d, MapToolbar.features["lineTab"][pid2], wst_4f + 1);
 		
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+1).sline = newPoly.id + ':0:0';
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst).sline = newPoly.id + ':0:0';
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+1).sline += ',' + newPoly.id + ':0:0';
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst).sline += ',' + newPoly.id + ':0:0';
 						}
 						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4i + 1).setDraggable(false);
 	
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+4).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+4).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wed).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wed).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+4).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wed).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
 						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4f + 1).setDraggable(false);
 
 						pid4 = newPoly.id;
 						
-						formSide = pid3 + ':'+ pid1 + ',' + pid2 + ':' + pid4;
+						formSide = pid1 + ':'+ pid3 + '/' + pid2 + ':' + pid4;
 
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).kdata.form = stopS + ',' + stopO;
@@ -4791,6 +5013,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 		});
 
 		$('#form9_Insert').click(function() {
+			if (cekStaID($('#dInsForm_StaID').val())) {
+				alert('Station ID already exists.');
+				return false;
+			}
 			if ((typeof $('#dInsForm_pid').val() != 'undefined') && (typeof $('#dInsForm_idx').val() != 'undefined') && (typeof $('#dInsForm_pid2').val() != 'undefined')) {
 				var pid1 = $('#dInsForm_pid').val();
 				var pid2 = $('#dInsForm_pid2').val();
@@ -4883,8 +5109,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
 								MapToolbar.addPoint(px1, MapToolbar.features["lineTab"][pid2], wst2+2);
 				
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
 				
 								var pxc = google.maps.geometry.spherical.computeOffset(px0, ti2, h1);
 								var pxd = google.maps.geometry.spherical.computeOffset(px1, -te2, h1);
@@ -4895,8 +5121,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], wst2 + 2);
 								MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], wst2 + 3);		
 
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';	
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';	
 							
 							}
 						
@@ -4938,8 +5164,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
 								MapToolbar.addPoint(px1, MapToolbar.features["lineTab"][pid2], wst2+2);
 				
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
 				
 								var pxc = google.maps.geometry.spherical.computeOffset(px0, ti2, h1);
 								var pxd = google.maps.geometry.spherical.computeOffset(px1, -te2, h1);
@@ -4950,8 +5176,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], wst2 + 2);
 								MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], wst2 + 3);		
 
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';	
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';	
 								
 							}
 						}
@@ -4977,11 +5203,11 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst+3).getPosition(), newPoly, 5);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3a;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + (Math.round((wi1/ti1) * ti3a * 1000)/1000) + ':' + ti3;
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + ':';
-						newPoly.markers.getAt(3).lineX = pid1 + ':' + (-1*side) + ':' + we3 + ':';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + '::';
+						newPoly.markers.getAt(3).lineX = pid1 + ':' + (-1*side) + ':' + we3 + '::';
 						newPoly.markers.getAt(4).lineX = pid1 + ':' + (-1*side) + ':' + (Math.round((we1/te1) * ti3a * 1000)/1000) + ':' + te3;
 						newPoly.markers.getAt(5).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3a;
 
@@ -5017,9 +5243,9 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px3_d, newPoly, 1);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-						
-						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':' + wi1 + ':';
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + we1 + ':';
+						newPoly.lineX = pid1;
+						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':' + wi1 + '::';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + we1 + '::';
 						
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(nIdx1).sline == '') {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(nIdx1).sline = newPoly.id + ':0:0';
@@ -5054,11 +5280,11 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+4).getPosition(), newPoly, 5);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4a;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + (Math.round((wi2/ti2) * ti4a * 1000)/1000) + ':' + ti4;
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + ':';
-						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + ':';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + '::';
+						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + '::';
 						newPoly.markers.getAt(4).lineX = pid1 + ':' + side + ':' + (Math.round((we2/te2) * ti4a * 1000)/1000) + ':' + te4;
 						newPoly.markers.getAt(5).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4a;
 	
@@ -5084,7 +5310,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						
 						pid4 = newPoly.id;
 						
-						formSide = pid1 + ':'+ pid3 + ',' + pid4 + ':' + pid2;
+						formSide = pid1 + ':'+ pid3 + '/' + pid2 + ':' + pid4;
 
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 3).kdata.form = stopS + ',' + stopO;
@@ -5099,9 +5325,9 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px4_d, newPoly, 1);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-						
-						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + wi2 + ':';
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we2 + ':';
+						newPoly.lineX = pid1;
+						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + wi2 + '::';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we2 + '::';
 						
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(nIdx1).sline == '') {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(nIdx1).sline = newPoly.id + ':0:0';
@@ -5127,6 +5353,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 		});
 
 		$('#form10_Insert').click(function() {
+			if (cekStaID($('#dInsForm_StaID').val())) {
+				alert('Station ID already exists.');
+				return false;
+			}
 			if ((typeof $('#dInsForm_pid').val() != 'undefined') && (typeof $('#dInsForm_idx').val() != 'undefined') && (typeof $('#dInsForm_pid2').val() != 'undefined')) {
 				var pid1 = $('#dInsForm_pid').val();
 				var pid2 = $('#dInsForm_pid2').val();
@@ -5219,8 +5449,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
 								MapToolbar.addPoint(px1, MapToolbar.features["lineTab"][pid2], wst2+2);
 				
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
 				
 								var pxc = google.maps.geometry.spherical.computeOffset(px0, ti2, h1);
 								var pxd = google.maps.geometry.spherical.computeOffset(px1, -te2, h1);
@@ -5231,8 +5461,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], wst2 + 2);
 								MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], wst2 + 3);		
 
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';	
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';	
 							
 							}
 						
@@ -5277,8 +5507,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
 								MapToolbar.addPoint(px1, MapToolbar.features["lineTab"][pid2], wst2+2);
 				
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
 				
 								var pxc = google.maps.geometry.spherical.computeOffset(px0, ti2, h1);
 								var pxd = google.maps.geometry.spherical.computeOffset(px1, -te2, h1);
@@ -5289,8 +5519,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], wst2 + 2);
 								MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], wst2 + 3);		
 
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';	
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';	
 								
 							}
 						}
@@ -5314,10 +5544,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px3_d, newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we3 + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we3 + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + (-1*side) + ':0:' + te3;
 
 	
@@ -5366,10 +5596,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px4_d, newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + te4;
 	
 						var wst_4i = formLineWidenAddAt(pid2,px4_a);
@@ -5396,7 +5626,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						
 						newPoly = null;							
 						
-						formSide = pid3 + ':'+ pid1 + ',' + pid2 + ':' + pid4;
+						formSide = pid1 + ':'+ pid3 + '/' + pid2 + ':' + pid4;
 
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 3).kdata.form = stopS + ',' + stopO;
@@ -5410,9 +5640,9 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 6).getPosition(), newPoly, 1);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-						
-						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':' + wi1 + ':';
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + we1 + ':';
+						newPoly.lineX = pid1;
+						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':' + wi1 + '::';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + we1 + '::';
 						
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 3).sline == '') {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 3).sline = newPoly.id + ':0:0';
@@ -5434,9 +5664,9 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst_4i+4).getPosition(), newPoly, 1);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-						
-						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + wi2 + ':';
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we2 + ':';
+						newPoly.lineX = pid1;	
+						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + wi2 + '::';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we2 + '::';
 						
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 3).sline == '') {
 							MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3i + 3).sline = newPoly.id + ':0:0';
@@ -5463,6 +5693,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 		});
 
 		$('#form11_Insert').click(function() {
+			if (cekStaID($('#dInsForm_StaID').val())) {
+				alert('Station ID already exists.');
+				return false;
+			}
 			if ((typeof $('#dInsForm_pid').val() != 'undefined') && (typeof $('#dInsForm_idx').val() != 'undefined') && (typeof $('#dInsForm_pid2').val() != 'undefined')) {
 				var pid1 = $('#dInsForm_pid').val();
 				var pid2 = $('#dInsForm_pid2').val();
@@ -5613,10 +5847,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition(), newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we3 + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we3 + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + (-1*side) + ':0:' + te3;
 	
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst).sline == '') {
@@ -5649,23 +5883,23 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).getPosition(), newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + te4;
 			
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+1).sline = newPoly.id + ':0:0';
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst).sline = newPoly.id + ':0:0';
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+1).sline += ',' + newPoly.id + ':0:0';
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst).sline += ',' + newPoly.id + ':0:0';
 						}
 						//MapToolbar.features["lineTab"][pid1].markers.getAt(wst_4i + 1).setDraggable(false);
 	
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+4).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+4).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wed).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wed).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+4).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wed).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
 						
 						pid4 = newPoly.id;
@@ -5694,10 +5928,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px5_d, newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti5;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi5 + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we5 + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi5 + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we5 + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + (-1*side) + ':0:' + te5;
 							
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst+1).sline == '') {
@@ -5734,10 +5968,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px6_d, newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti6;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi6)*1000))/1000) + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we6)*1000))/1000) + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi6)*1000))/1000) + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we6)*1000))/1000) + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + te6;
 	
 		
@@ -5757,7 +5991,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						
 						pid6 = newPoly.id;
 						
-						formSide = pid3 + ':'+ pid5 + ',' + pid6 + ':' + pid4;
+						formSide = pid3 + ':'+ pid5 + '/' + pid4 + ':' + pid6;
 
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst+3).kdata.form = stopS + ',' + stopO;
@@ -5778,6 +6012,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 		});
 
 		$('#form12_Insert').click(function() {
+			if (cekStaID($('#dInsForm_StaID').val())) {
+				alert('Station ID already exists.');
+				return false;
+			}
 			if ((typeof $('#dInsForm_pid').val() != 'undefined') && (typeof $('#dInsForm_idx').val() != 'undefined') && (typeof $('#dInsForm_pid2').val() != 'undefined')) {
 				var pid1 = $('#dInsForm_pid').val();
 				var pid2 = $('#dInsForm_pid2').val();
@@ -5870,8 +6108,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
 								MapToolbar.addPoint(px1, MapToolbar.features["lineTab"][pid2], wst2+2);
 				
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
 				
 								var pxc = google.maps.geometry.spherical.computeOffset(px0, ti2, h1);
 								var pxd = google.maps.geometry.spherical.computeOffset(px1, -te2, h1);
@@ -5882,8 +6120,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], wst2 + 2);
 								MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], wst2 + 3);		
 
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';	
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';	
 							
 							}
 						
@@ -5925,8 +6163,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
 								MapToolbar.addPoint(px1, MapToolbar.features["lineTab"][pid2], wst2+2);
 				
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
 				
 								var pxc = google.maps.geometry.spherical.computeOffset(px0, ti2, h1);
 								var pxd = google.maps.geometry.spherical.computeOffset(px1, -te2, h1);
@@ -5937,8 +6175,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], wst2 + 2);
 								MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], wst2 + 3);		
 
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';	
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';	
 								
 							}
 						}
@@ -5956,9 +6194,9 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px3_b, newPoly, 1);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
-						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + ':';
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + we3 + ':';
+						newPoly.lineX = pid1;
+						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + '::';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + we3 + '::';
 
 						var wst_3i = formLineWidenAddAt(pid1,px3_a);
 						MapToolbar.addPoint(px3_a, MapToolbar.features["lineTab"][pid1], wst_3i + 1);
@@ -5990,7 +6228,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst_3f + 2).getPosition(), newPoly, 1);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-						
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + wi1 + ':' + ti1;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we1 + ':' + te1;
 						
@@ -6026,9 +6264,9 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px4_b, newPoly, 1);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
-						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + wi4 + ':';
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we4 + ':';
+						newPoly.lineX = pid1;
+						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + wi4 + '::';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we4 + '::';
 	
 						var wst_4i = formLineWidenAddAt(pid2,px4_a);
 						MapToolbar.addPoint(px4_a, MapToolbar.features["lineTab"][pid2], wst_4i + 1);
@@ -6052,7 +6290,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						
 						pid4 = newPoly.id;
 						
-						formSide = pid1 + ':'+ pid3 + ',' + pid4 + ':' + pid2;
+						formSide = pid1 + ':'+ pid3 + '/' + pid2 + ':' + pid4;
 
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 2).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 3).kdata.form = stopS + ',' + stopO;
@@ -6067,7 +6305,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst_4f + 2).getPosition(), newPoly, 1);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-						
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + wi2 + ':' + ti2;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we2 + ':' + te2;
 						
@@ -6099,6 +6337,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 		});
 
 		$('#form13_Insert').click(function() {
+			if (cekStaID($('#dInsForm_StaID').val())) {
+				alert('Station ID already exists.');
+				return false;
+			}
 			if ((typeof $('#dInsForm_pid').val() != 'undefined') && (typeof $('#dInsForm_idx').val() != 'undefined') && (typeof $('#dInsForm_pid2').val() != 'undefined')) {
 				var pid1 = $('#dInsForm_pid').val();
 				var pid2 = $('#dInsForm_pid2').val();
@@ -6187,8 +6429,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
 								MapToolbar.addPoint(px1, MapToolbar.features["lineTab"][pid2], wst2+2);
 				
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
 				
 								var pxc = google.maps.geometry.spherical.computeOffset(px0, ti2, h1);
 								var pxd = google.maps.geometry.spherical.computeOffset(px1, -te2, h1);
@@ -6199,8 +6441,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], wst2 + 2);
 								MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], wst2 + 3);		
 
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';	
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';	
 							
 							}
 						
@@ -6235,8 +6477,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(px0, MapToolbar.features["lineTab"][pid2], wst2+1);
 								MapToolbar.addPoint(px1, MapToolbar.features["lineTab"][pid2], wst2+2);
 				
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + '::';
 				
 								var pxc = google.maps.geometry.spherical.computeOffset(px0, ti2, h1);
 								var pxd = google.maps.geometry.spherical.computeOffset(px1, -te2, h1);
@@ -6247,8 +6489,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.addPoint(pxc2, MapToolbar.features["lineTab"][pid2], wst2 + 2);
 								MapToolbar.addPoint(pxd2, MapToolbar.features["lineTab"][pid2], wst2 + 3);		
 
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + ':';
-								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + ':';	
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi2)*1000))/1000) + '::';
+								MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we2)*1000))/1000) + '::';	
 								
 							}
 						}	
@@ -6272,10 +6514,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst+2).getPosition(), newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3a;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we3 + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we3 + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + (-1*side) + ':0:' + te3a;
 	
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst + 1).sline == '') {
@@ -6313,10 +6555,11 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+3).getPosition(), newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
+						
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':0:' + ti4a;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we4 + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + wi4 + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we4 + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + wi4 + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':0:' + te4a;
 	
 		
@@ -6344,7 +6587,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wst+3).getPosition(), newPoly, 1);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-						
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + wi1 + ':' + ti1;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we1 + ':' + te1;
 						
@@ -6370,7 +6613,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+4).getPosition(), newPoly, 1);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-						
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + wi2 + ':' + ti2;
 						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + we2 + ':' + te2;
 						
@@ -6393,7 +6636,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px3_a0, MapToolbar.features["lineTab"][pid1], (wst + 2));
 						MapToolbar.addPoint(px3_b0, MapToolbar.features["lineTab"][pid1], (wst + 3));
 						
-						formSide = pid3 + ':'+ pid1 + ',' + pid2 + ':' + pid4;
+						formSide = pid1 + ':'+ pid3 + '/' + pid2 + ':' + pid4;
 						
 						var image = new google.maps.MarkerImage('images/form_icon.png',
 								new google.maps.Size(6, 6),
@@ -6418,6 +6661,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 		});
 
 		$('#form14_Insert').click(function() {
+			if (cekStaID($('#dInsForm_StaID').val())) {
+				alert('Station ID already exists.');
+				return false;
+			}
 			if ((typeof $('#dInsForm_pid').val() != 'undefined') && (typeof $('#dInsForm_idx').val() != 'undefined') && (typeof $('#dInsForm_pid2').val() != 'undefined')) {
 				var pid1 = $('#dInsForm_pid').val();
 				var pid2 = $('#dInsForm_pid2').val();
@@ -6538,10 +6785,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid1].markers.getAt(wed).getPosition(), newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':0:' + ti3;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we3 + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + (-1*side) + ':' + we3 + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + (-1*side) + ':0:' + te3;
 	
 						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst).sline == '') {
@@ -6558,7 +6805,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.features["lineTab"][pid1].markers.getAt(wed).setDraggable(false);
 						
 						pid3 = newPoly.id;
-	
+						
 						newPoly = null;
 						
 						var px4_a = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+1).getPosition() , ti4, h1);
@@ -6574,27 +6821,27 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid2].markers.getAt(wst2+2).getPosition(), newPoly, 3);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
+						newPoly.lineX = pid1;
 						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + ti4;
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + ':';
-						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + ':';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi4)*1000))/1000) + '::';
+						newPoly.markers.getAt(2).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we4)*1000))/1000) + '::';
 						newPoly.markers.getAt(3).lineX = pid1 + ':' + side + ':' + Math.abs(offset) + ':' + te4;
 	
 		
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+1).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+1).sline = newPoly.id + ':0:0';
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst).sline = newPoly.id + ':0:0';
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+1).sline += ',' + newPoly.id + ':0:0';
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wst).sline += ',' + newPoly.id + ':0:0';
 						}
 	
-						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+2).sline == '') {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+2).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
+						if (MapToolbar.features["lineTab"][pid1].markers.getAt(wed).sline == '') {
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wed).sline = newPoly.id + ':1:' + (newPoly.markers.length-1);
 						} else {
-							MapToolbar.features["lineTab"][pid1].markers.getAt(wst2+2).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
+							MapToolbar.features["lineTab"][pid1].markers.getAt(wed).sline += ',' + newPoly.id + ':1:' + (newPoly.markers.length-1);
 						}						
 						
 						pid4 = newPoly.id;
-	
+						
 						newPoly = null;	
 						
 						var px5_a0 = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid1].markers.getAt(wst).getPosition() , ti5, h1);
@@ -6609,9 +6856,9 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px5_b, newPoly, 1);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
-						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':' + wi5 + ':';
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + we5 + ':';
+						newPoly.lineX = pid1;
+						newPoly.markers.getAt(0).lineX = pid1 + ':' + (-1*side) + ':' + wi5 + '::';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + we5 + '::';
 						
 						var wst_5i = formLineWidenAddAt(pid1,px5_a);
 						MapToolbar.addPoint(px5_a0, MapToolbar.features["lineTab"][pid1], wst_5i + 1);
@@ -6648,9 +6895,9 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(px6_b, newPoly, 1);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid1].route != '') ? MapToolbar.features["lineTab"][pid1].route : '';
-	
-						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi6)*1000))/1000) + ':';
-						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we6)*1000))/1000) + ':';
+						newPoly.lineX = pid1;
+						newPoly.markers.getAt(0).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+wi6)*1000))/1000) + '::';
+						newPoly.markers.getAt(1).lineX = pid1 + ':' + side + ':' + ((Math.round((Math.abs(offset)+we6)*1000))/1000) + '::';
 	
 						var wst_6i = formLineWidenAddAt(pid2,px6_a);
 	
@@ -6672,7 +6919,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						
 						pid6 = newPoly.id;
 						
-						formSide = pid3 + ':'+ pid5 + ',' + pid6 + ':' + pid4;
+						formSide = pid3 + ':'+ pid5 + '/' + pid4 + ':' + pid6;
 						
 						MapToolbar.addPoint(px3_a, MapToolbar.features["lineTab"][pid1], (wst + 2));
 						MapToolbar.addPoint(px3_d, MapToolbar.features["lineTab"][pid1], (wst + 3));
@@ -6701,6 +6948,10 @@ last update : 15 June 2014 12:00am (GMT 8+)
 		});
 
 		$('#form15_Insert').click(function() {
+			if (cekStaID($('#dInsForm_StaID').val())) {
+				alert('Station ID already exists.');
+				return false;
+			}
 			if ((typeof $('#dInsForm_pid').val() != 'undefined') && (typeof $('#dInsForm_idx').val() != 'undefined')) {
 				var pid1 = $('#dInsForm_pid').val();
 				var pid2 = ($('#dInsForm_pid2').val() != '') ? $('#dInsForm_pid2').val() : '';
@@ -6721,7 +6972,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 				if (pid2 != '') {
 					formSide =  pid1 + ':' + pid2;
 				} else {
-					formSide = ($('#form15_pos').val() == 'L')?  ':' + pid1 : pid1 + ':';
+					formSide = ($('#form15_pos').val() == 'L')?  pid1 + ':L' : pid1 + ':R';
 				}
 				
 				var image = new google.maps.MarkerImage('images/form_icon.png',
@@ -6791,7 +7042,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(platLng, newPoly, 1);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid].route != '') ? MapToolbar.features["lineTab"][pid].route : '';
-						
+						newPoly.lineX = pid;
 						if (MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).sline == '') {
 							MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).sline = newPoly.id + ':0:0';
 						} else {
@@ -6804,8 +7055,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.features["lineTab"][pid].markers.getAt(mIdx+1).sline += ',' + newPoly.id + ':1:1' ;
 						}	
 						
-						newPoly.markers.getAt(0).lineX = pid + ':' + side + ':0:' + swL;
-						newPoly.markers.getAt(1).lineX = pid + ':' + side + ':' + Math.abs(offset) + ':';					
+						newPoly.markers.getAt(0).lineX = pid + ':' + side + ':0:' + swL + ':0';
+						newPoly.markers.getAt(1).lineX = pid + ':' + side + ':' + Math.abs(offset) + '::1';					
 						
 						newPoly = null;
 
@@ -6816,7 +7067,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(platLng, newPoly, 0);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid].route != '') ? MapToolbar.features["lineTab"][pid].route : '';
-
+						newPoly.lineX = pid;
 						odml = google.maps.geometry.spherical.computeOffset(MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).getPosition(), swL, h1); 	 					
 						MapToolbar.addPoint(odml, newPoly, 1); //1st point on track 2 to turnout
 						
@@ -6832,8 +7083,8 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.features["lineTab"][pid].markers.getAt(mIdx+1).sline += ',' + newPoly.id + ':1:1' ;
 						}	
 						
-						newPoly.markers.getAt(0).lineX = pid + ':' + side + ':' + Math.abs(offset) + ':' + swL;	
-						newPoly.markers.getAt(1).lineX = pid + ':' + side + ':0:' ;
+						newPoly.markers.getAt(0).lineX = pid + ':' + side + ':' + Math.abs(offset) + ':' + swL + ':0';	
+						newPoly.markers.getAt(1).lineX = pid + ':' + side + ':0::1' ;
 						
 						
 						newPoly = null;		
@@ -6852,7 +7103,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(platLng, newPoly, 1);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid].route != '') ? MapToolbar.features["lineTab"][pid].route : '';
-						
+						newPoly.lineX = pid;
 						if (MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).sline == '') {
 							MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).sline = newPoly.id + ':0:0';
 						} else {
@@ -6865,9 +7116,9 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.features["lineTab"][pid].markers.getAt(mIdx+1).sline += ',' + newPoly.id + ':1:1' ;
 						}	
 						
-						newPoly.markers.getAt(0).lineX = pid + ':' + side + ':0:' + swL;
-						newPoly.markers.getAt(1).lineX = pid + ':' + side + ':' + Math.abs(offset) + ':';							
-			
+						newPoly.markers.getAt(0).lineX = pid + ':' + side + ':0:' + swL + ':0';
+						newPoly.markers.getAt(1).lineX = pid + ':' + side + ':' + Math.abs(offset) + '::1';
+						
 						newPoly = null;
 						break;
 						
@@ -6883,7 +7134,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.addPoint(platLng, newPoly, 0);
 						
 						newPoly.route = (MapToolbar.features["lineTab"][pid].route != '') ? MapToolbar.features["lineTab"][pid].route : '';
-	 					
+	 					newPoly.lineX = pid;
 						MapToolbar.addPoint(MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).getPosition(), newPoly, 1); //1st point on track 2 to turnout
 						if (MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).sline == '') {
 							MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).sline = newPoly.id + ':0:0';
@@ -6897,8 +7148,9 @@ last update : 15 June 2014 12:00am (GMT 8+)
 								MapToolbar.features["lineTab"][pid].markers.getAt(mIdx+1).sline += ',' + newPoly.id + ':1:1' ;
 						}	
 						
-						newPoly.markers.getAt(0).lineX = pid + ':' + side + ':' + Math.abs(offset) + ':' + swL;	
-						newPoly.markers.getAt(1).lineX = pid + ':' + side + ':0:' ;					
+						newPoly.markers.getAt(0).lineX = pid + ':' + side + ':' + Math.abs(offset) + ':' + swL + ':0';	
+						newPoly.markers.getAt(1).lineX = pid + ':' + side + ':0::1' ;					
+						
 						
 						newPoly = null;						
 						break;
@@ -7049,7 +7301,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 					
 					var strType = (start) ? 0: 1;
 					
-					MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).kdata.tunnel = $('#dInsTun_tun').val() + ',' + strType;
+					MapToolbar.features["lineTab"][pid].markers.getAt(mIdx).kdata.tunnel = $('#dInsTun_tun').val() + ':' + strType;
 					
 					var image = new google.maps.MarkerImage('images/tunnel_icon.png',
 						new google.maps.Size(6, 6),
@@ -7171,7 +7423,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						}						
 						
 						//new format 4 v1.0.0
-						MapToolbar.features["lineTab"][pid2].markers.getAt(mi1L2).lineX = pid1 + ':' + side + ':' + Xcc2a + ':';
+						MapToolbar.features["lineTab"][pid2].markers.getAt(mi1L2).lineX = pid1 + ':' + side + ':' + Xcc2a + '::0';
 						// data format lineX = (base line):(side direction):(offset distance):(switch length opsyenal)
 						
 						//2nd point
@@ -7227,7 +7479,7 @@ last update : 15 June 2014 12:00am (GMT 8+)
 							alert(Hab + ' : ' + Hcc2 + '<br />' + (Hab-90) + ' : ' + Hcc2 + '<br />' + (Hab+90) + ' : ' + Hcc2);	
 						}								
 						//new format 4 v1.0.0
-						MapToolbar.features["lineTab"][pid2].markers.getAt(mi2L2).lineX = pid1 + ':' + side + ':' + Xcc2a + ':';
+						MapToolbar.features["lineTab"][pid2].markers.getAt(mi2L2).lineX = pid1 + ':' + side + ':' + Xcc2a + '::1';
 						
 						
 						// data format sline = '(side line 1):(0=start,>0 end):index,(side line 1):(0=start,>0 end):index,,,,....';
@@ -7260,8 +7512,14 @@ last update : 15 June 2014 12:00am (GMT 8+)
 						MapToolbar.features["lineTab"][pid1].markers.getAt(addAtIndex1).setDraggable(false);
 						MapToolbar.features["lineTab"][pid1].markers.getAt(addAtIndex2).setDraggable(false);		
 						MapToolbar.features["lineTab"][pid2].markers.getAt(mi1L2).setDraggable(false);
-						MapToolbar.features["lineTab"][pid2].markers.getAt(mi2L2).setDraggable(false);					
-			
+						MapToolbar.features["lineTab"][pid2].markers.getAt(mi2L2).setDraggable(false);							
+						 
+						if (MapToolbar.features['lineTab'][pid2].lineX != '') {
+							MapToolbar.features["lineTab"][pid2].lineX += ',' + pid1;
+						} else {
+							MapToolbar.features["lineTab"][pid2].lineX = pid1;
+						}
+						
 						$('#dialogLinkLines').dialog('close');
 					} else {
 						alert('Please state each line indexs');
