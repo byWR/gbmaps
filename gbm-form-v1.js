@@ -17,7 +17,7 @@ purpose : gb maps form generator
 type : release (under development)
 version : 1.0.0
 build : 
-last update : 15 June 2014 1:00pm (GMT 8+)
+last update : 30 June 2014 11:51am (GMT 8+)
 
 */
 
@@ -35,11 +35,6 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 //	if (!cekFormInput(formType)) {
 //		return false;
 //	}
-
-	if (cekStaID(staID)) {
-		alert('Station ID already exists.');
-		return false;
-	}
 
 	var ptype = pid.split('_')[0];
 	if (ptype != 'line') {
@@ -72,7 +67,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid).setIcon(image); // st
 					
 					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-					MapToolbar.features["curveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+					MapToolbar.features["curveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;;
 					addStation (staName,staID,MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid).getPosition());
 
 				} else {
@@ -101,7 +96,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 					MapToolbar.features["curveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image); // st
 
 					MapToolbar.features["curveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-					MapToolbar.features["curveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+					MapToolbar.features["curveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;;
 					addStation (staName,staID,MapToolbar.features["curveTab"][pid].markers.getAt(idx).getPosition());
 				}
 			} else {
@@ -117,7 +112,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid+1).setIcon(image);	
 
 					MapToolbar.features["curveTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid+1).kdata.form = stopS + ',' + stopO;					
+					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid+1).kdata.form = stopS + ',' + stopO;;					
 					addStation (staName,staID,MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid+1).getPosition());
 				} else {
 					var l_ed = ld + platform_length;
@@ -144,7 +139,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 					MapToolbar.features["curveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);
 
 					MapToolbar.features["curveTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-					MapToolbar.features["curveTab"][pid].markers.getAt(cuvNewIdx).markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+					MapToolbar.features["curveTab"][pid].markers.getAt(cuvNewIdx).markers.getAt(idx).kdata.form = stopS + ',' + stopO;;
 					addStation (staName,staID,MapToolbar.features["curveTab"][pid].markers.getAt(cuvNewIdx).markers.getAt(idx).getPosition());
 				}
 			}
@@ -197,7 +192,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid).setIcon(image);
 
 					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-					MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+					MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;;
 					addStation (staName,staID,MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid).getPosition());
 
 				} else {
@@ -239,7 +234,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);
 						
 						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-						MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+						MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;;
 						addStation (staName,staID,MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).getPosition());
 											
 						//alert('AAA.');
@@ -278,7 +273,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 							MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);	
 
 							MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-							MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+							MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;;
 							addStation (staName,staID,MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).getPosition());
 		
 						} else {
@@ -319,7 +314,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 							MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);
 							
 							MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-							MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+							MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;;
 							addStation (staName,staID,MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).getPosition());
 							//alert('BBB.');
 						}
@@ -365,7 +360,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 								MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);
 
 								MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-								MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+								MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;;
 								addStation (staName,staID,MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).getPosition());
 								//alert('CCCC.');
 								
@@ -400,7 +395,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 								MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);	
 								
 								MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-								MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+								MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;;
 								addStation (staName,staID,MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).getPosition());
 							}
 	
@@ -441,7 +436,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 								MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);	
 								
 								MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-								MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+								MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;;
 								addStation (staName,staID,MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).getPosition());
 							//alert('DDDD.');
 						}
@@ -463,7 +458,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid+1).setIcon(image);	
 					
 					MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid+1).kdata.form = stopS + ',' + stopO;
+					MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid+1).kdata.form = stopS + ',' + stopO;;
 					addStation (staName,staID,MapToolbar.features["lineTab"][line_pid].markers.getAt(line_mid+1).getPosition());
 
 				} else {
@@ -506,7 +501,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);
 						
 						MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;
+						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;;
 						addStation (staName,staID,MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).getPosition());
 
 						//alert('EEEE.');
@@ -540,7 +535,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);	
 
 						MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;
+						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;;
 						addStation (staName,staID,MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).getPosition());
 		
 					} else if (ld + platform_length < Lt) {
@@ -582,7 +577,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).setIcon(image);
 
 						MapToolbar.features["tcurveTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;
+						MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;;
 						addStation (staName,staID,MapToolbar.features["tcurveTab"][pid].markers.getAt(cuvNewIdx).getPosition());
 						//alert('FFFF.');
 
@@ -616,7 +611,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 					MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
 					
 					MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-					MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+					MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;;
 					addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).getPosition());
 				} else {
 					alert('unable to create platform');
@@ -636,7 +631,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 					MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
 
 					MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-					MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+					MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;;
 					addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).getPosition());
 
 				} else {
@@ -665,7 +660,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
 							
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;;
 							addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 							
 						} else {
@@ -724,7 +719,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
 											
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;;
 											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).getPosition());
 		
 										} else {
@@ -750,7 +745,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
 											
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;;
 											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).getPosition());
 		
 										} else {
@@ -773,7 +768,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
 											
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;;
 											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).getPosition());
 		
 										} else {
@@ -785,7 +780,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
 											
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;;
 											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).getPosition());
 										}
 									}
@@ -807,7 +802,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 										MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
 										
 										MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-										MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+										MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;;
 										addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).getPosition());
 		
 									} else {
@@ -819,7 +814,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 										MapToolbar.features["lineTab"][pid].markers.getAt(idx-2).setIcon(image);
 										
 										MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-										MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+										MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;;
 										addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).getPosition());
 									}
 								}
@@ -862,7 +857,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).setIcon(image);							
 							
 								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;;
 								addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 								//alert('GGGG.');
 			
@@ -895,7 +890,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).setIcon(image);
 								
 								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;;
 								addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 
 							} else {
@@ -936,7 +931,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).setIcon(image);							
 
 								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;;
 								addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 								//alert('HHHH.');
 			
@@ -959,7 +954,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);	
 
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;;
 							addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 	
 						} else {
@@ -1003,7 +998,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 								MapToolbar.features["curveTab"][cuv_pid].markers.getAt(cuvNewIdx).setIcon(image);
 								
 								MapToolbar.features["curveTab"][cuv_pid].markers.getAt(cuvNewIdx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;
+								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = stopS + ',' + stopO;;
 								addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 			
 							} else {
@@ -1026,7 +1021,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
 
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;;
 											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).getPosition());
 		
 										} else {
@@ -1050,7 +1045,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
 
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;;
 											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).getPosition());
 		
 										} else {
@@ -1072,7 +1067,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
 											
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;;
 											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx-1).getPosition());
 		
 										} else {
@@ -1084,7 +1079,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
 
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx-2).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;;
 											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).getPosition());
 										}
 	
@@ -1107,7 +1102,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
 							
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;;
 							addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 							
 						} else {
@@ -1136,7 +1131,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
 
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;;
 							addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 							
 						} else {
@@ -1191,7 +1186,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
 
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;;
 											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 		
 										} else {
@@ -1216,7 +1211,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
 
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;;
 											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 		
 										} else {
@@ -1240,7 +1235,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
 											
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;;
 											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 		
 										} else {
@@ -1252,7 +1247,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
 											
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;;
 											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 										}
 									}
@@ -1273,7 +1268,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 										MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
 										
 										MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-										MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+										MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;;
 										addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 		
 									} else {
@@ -1285,7 +1280,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 										MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
 										
 										MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-										MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+										MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;;
 										addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 									}
 			
@@ -1330,7 +1325,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).setIcon(image);
 
 								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;
+								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;;
 								addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 							
 								///alert('IIII.');
@@ -1363,7 +1358,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).setIcon(image);	
 
 								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;
+								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;;
 								addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 			
 							} else if (lenOnC <= Lt) {
@@ -1404,7 +1399,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).setIcon(image);	
 
 								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;
+								MapToolbar.features["tcurveTab"][tcv_pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;;
 								
 								addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 								//alert('JJJJ.');
@@ -1431,7 +1426,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
 
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;;
 							addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 	
 						} else {
@@ -1476,7 +1471,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 								MapToolbar.features["curveTab"][cuv_pid].markers.getAt(cuvNewIdx).setIcon(image);
 								
 								MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-								MapToolbar.features["curveTab"][cuv_pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;
+								MapToolbar.features["curveTab"][cuv_pid].markers.getAt(cuvNewIdx).kdata.form = stopS + ',' + stopO;;
 								addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 			
 							} else {
@@ -1499,7 +1494,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
 											
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;;
 											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 		
 										} else {
@@ -1523,7 +1518,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
 											
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;;
 											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 		
 										} else {
@@ -1546,7 +1541,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
 
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;;
 											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 		
 										} else {
@@ -1558,7 +1553,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).setIcon(image);
 											
 											MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;
+											MapToolbar.features["lineTab"][pid].markers.getAt(idx+2).kdata.form = stopS + ',' + stopO;;
 											addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 										}
 	
@@ -1580,7 +1575,7 @@ function formMaker(pid,idx,platform_length,howtoForm,formType,formSide) {
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).setIcon(image);
 							
 							MapToolbar.features["lineTab"][pid].markers.getAt(idx).kdata.form = formstr + ',' + staName + ',' + staID + ',' + stopD + ',' + stopT + ',' + fcar + ',' + formSide;
-							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;
+							MapToolbar.features["lineTab"][pid].markers.getAt(idx+1).kdata.form = stopS + ',' + stopO;;
 							addStation (staName,staID,MapToolbar.features["lineTab"][pid].markers.getAt(idx).getPosition());
 
 						} else {
