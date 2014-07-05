@@ -17,7 +17,7 @@ purpose : CSS
 type : release (under development)
 version : 1.0.0
 build : 
-last update : 18 Dec 2013 12:00am (GMT 8+)
+last update : 17 June 2014 10:07pm (GMT 8+)
 
 */
 
@@ -183,7 +183,7 @@ ul.langmenu {
 	padding: 0;
 	list-style: none;
 	position: fixed;
-	left: 120px;
+	left: 110px;
 	top: 5px;
 }
 ul.langmenu li {
@@ -272,7 +272,7 @@ li:hover li a:hover  { background: #95A9B1; }
 }
 
 #sidemenu {
-	width: 230px;
+	width: 240px;
 	height: 96%;
 	float:right;
 	/* background-image: url(../images/sidebg.png); */
@@ -302,7 +302,7 @@ li:hover li a:hover  { background: #95A9B1; }
 
 #drawingtools {
 	position: fixed;
-	left: 400px;
+	left: 520px;
 	top: 1px;
 	margin: 0;
 	padding: 0;
