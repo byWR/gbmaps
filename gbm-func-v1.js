@@ -17,7 +17,7 @@ purpose : gb maps function library
 type : release (under development)
 version : 1.0.0
 build : 
-last update : 15 June 2014 12:00am (GMT 8+)
+last update : 04 July 2014 07:01am (GMT 8+)
 
 */
 
@@ -309,7 +309,7 @@ function splitPolyline(polyid,tmpLat,tmpLng) {
 	for (var i = 0; i < currPolyPathLength; i++) {
 		if ( i < tmppolypath1.length) {
 			var pno = 'line_' + no;
-			if (poly2split.markers.getAt(i).note != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).note = poly2split.markers.getAt(i).note;} 
+			if (poly2split.markers.getAt(i).note != '') {MapToolbar.features["lineTab"][pno].markers.getAt(i).note = poly2split.markers.getAt(i).note;} 
 			
 			$.each(poly2split.markers.getAt(i).bdata, function(key, value){
 				if (poly2split.markers.getAt(i).bdata[key] != '') {
@@ -344,7 +344,7 @@ function splitPolyline(polyid,tmpLat,tmpLng) {
 			var j = i - tmppolypath1.length; // double cek
 			var pno = 'line_' + (no + 1);
 			if (i < currPolyPathLength+1 ) {
-				if (poly2split.markers.getAt(i).note != null) {MapToolbar.features["lineTab"][pno].markers.getAt(j+1).note = poly2split.markers.getAt(i).note;}  
+				if (poly2split.markers.getAt(i).note != '') {MapToolbar.features["lineTab"][pno].markers.getAt(j+1).note = poly2split.markers.getAt(i).note;}  
 				
 				$.each(poly2split.markers.getAt(i).bdata, function(key, value){
 					if (poly2split.markers.getAt(i).bdata[key] != '') {
@@ -497,7 +497,7 @@ function combine2polyline() {
 			var newPLength = newPoly.getPath().getArray().length;
 			
 			for (var i = 0; i < poly1Path.length; i++) {
-				if (poly1.markers.getAt(i).note != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i).note = poly1.markers.getAt(i).note;}  
+				if (poly1.markers.getAt(i).note != '') {MapToolbar.features["lineTab"][pno].markers.getAt(i).note = poly1.markers.getAt(i).note;}  
 								
 				$.each(poly1.markers.getAt(i).bdata, function(key, value){
 					if (poly1.markers.getAt(i).bdata[key] != '') {
@@ -532,7 +532,7 @@ function combine2polyline() {
 	
 			for (var i = 0; i < poly2Path.length; i++) {
 				if (i+ix < newPLength ) {
-					if (poly2.markers.getAt(i).note != null) {MapToolbar.features["lineTab"][pno].markers.getAt(i+ix+1).note = poly2.markers.getAt(i).note;}  
+					if (poly2.markers.getAt(i).note != '') {MapToolbar.features["lineTab"][pno].markers.getAt(i+ix+1).note = poly2.markers.getAt(i).note;}  
 
 					$.each(poly2.markers.getAt(i).bdata, function(key, value){
 						if (poly2.markers.getAt(i).bdata[key] != '') {
@@ -610,7 +610,7 @@ function invertpolyline(pid) {
 			}
 						
 			for (var i = polyPath.length-1; i >= 0; i--) {
-				if (poly.markers.getAt(i).note != null) {polyR.markers.getAt(polyPath.length-1-i).note = poly.markers.getAt(i).note;}  
+				if (poly.markers.getAt(i).note != '') {polyR.markers.getAt(polyPath.length-1-i).note = poly.markers.getAt(i).note;}  
 				
 				$.each(poly.markers.getAt(i).bdata, function(key, value){
 					if (poly.markers.getAt(i).bdata[key] != '') {
@@ -676,12 +676,15 @@ function parallel_line() {
 		}
 				
 		if ((currMod == 'parallel_line') && (polyBaseLine.id.split('_')[0] == 'line')) {		
-			var side = -90; // default value, left
+			var side = 90; // default value, right
 			var offset = parseFloat(document.getElementById('sBtnPLineOffset').value); // default value
 			
 			if (document.getElementById('sBtnPLineOffset').value > 0) {
 				if (document.getElementById('Right2Line').checked) {
 					side = 90; 
+				}
+				if (document.getElementById('Left2Line').checked) {
+					side = -90; 
 				}
 				
 				var polyPath = polyBaseLine.getPath().getArray();
@@ -710,8 +713,10 @@ function parallel_line() {
 					var crack = $('#PLcrackID option:selected').val();
 					if (crack != '- select -') { polyBaseLine.markers.getAt(sP-1).kdata.crack = crack; }
 				}
-				newPoly.route = (polyBaseLine.route != '') ? polyBaseLine.route : '';
-	 			
+				
+				newPoly.route = (polyBaseLine.route != '') ? polyBaseLine.route : '';	 			
+				newPoly.lineX = polyid; // new feature 3/7/2014 *** for non parallel side line
+				
 				for (var i = sP; i <= eP; i++) {
 	 				var h1 = google.maps.geometry.spherical.computeHeading(polyPath[i-1],polyPath[i]);
 	 				var platLng;
@@ -729,13 +734,13 @@ function parallel_line() {
 							MapToolbar.addPoint(platLng, newPoly, 1);
 							
 							//new format 4 v1.0.0
-							newPoly.markers.getAt(0).lineX = polyid + ':' + side + ':' + startOffset + ':' + stSwlength;
-							newPoly.markers.getAt(1).lineX = polyid + ':' + side + ':' + offset + ':';
+							newPoly.markers.getAt(0).lineX = polyid + ':' + side + ':' + startOffset + ':' + stSwlength + ':0';
+							newPoly.markers.getAt(1).lineX = polyid + ':' + side + ':' + offset + '::';
 						} else {
 							platLng = google.maps.geometry.spherical.computeOffset(polyPath[i-1], offset, h1 +  side);
 							MapToolbar.addPoint(platLng, newPoly, 0);
 							//new format 4 v1.0.0
-							newPoly.markers.getAt(0).lineX = polyid + ':' + side + ':' + offset + ':';
+							newPoly.markers.getAt(0).lineX = polyid + ':' + side + ':' + offset + '::0';
 						}
 						// data format lineX = (base line):(side direction):(offset distance):(switch length opsyenal)
 
@@ -766,14 +771,14 @@ function parallel_line() {
 		 					MapToolbar.addPoint(polyPath[i], newPoly, plength+1);
 							
 							//new format 4 v1.0.0
-							newPoly.markers.getAt(newPoly.markers.length-2).lineX = polyid + ':' + side + ':' + offset + ':';
-							newPoly.markers.getAt(newPoly.markers.length-1).lineX = polyid + ':' + side + ':' + endOffset + ':' + edSwlength;
+							newPoly.markers.getAt(newPoly.markers.length-2).lineX = polyid + ':' + side + ':' + offset + '::';
+							newPoly.markers.getAt(newPoly.markers.length-1).lineX = polyid + ':' + side + ':' + endOffset + ':' + edSwlength + ':1';
 								
 						} else {
 							platLng = google.maps.geometry.spherical.computeOffset(polyPath[i], offset, h1 + side);
 		 					MapToolbar.addPoint(platLng, newPoly, newPoly.markers.length);	
 							//new format 4 v1.0.0
-							newPoly.markers.getAt(newPoly.markers.length-1).lineX = polyid + ':' + side + ':' + offset + ':';
+							newPoly.markers.getAt(newPoly.markers.length-1).lineX = polyid + ':' + side + ':' + offset + '::1';
 						}
 							
 						if (polyBaseLine.markers.getAt(i).sline == '') {
@@ -920,7 +925,7 @@ function prelinepitch(polyid) {
 					path.push(allPoints[k]);
 					
 					var note = '', pit = '', bdata = '', kit = '';
-					if (epoly.markers.getAt(k).note != null) { note = epoly.markers.getAt(k).note; } 
+					if (epoly.markers.getAt(k).note != '') { note = epoly.markers.getAt(k).note; } 
 					
 					$.each(epoly.markers.getAt(k).bdata, function(key, value){
 						if (epoly.markers.getAt(k).bdata[key] != '') {
@@ -1005,7 +1010,7 @@ function prelinepitch(polyid) {
 							var note = '', pit = '', bdata = '', kit = '';
 							
 							//curve start marker index 0
-							if (tcpoly.markers.getAt(0).note != null) { note = tcpoly.markers.getAt(0).note; } 
+							if (tcpoly.markers.getAt(0).note != '') { note = tcpoly.markers.getAt(0).note; } 
 							if (tcpoly.markers.getAt(0).bdata.pitch != '') { 
 								pit = tcpoly.markers.getAt(0).bdata.pitch; 
 							}
@@ -1031,7 +1036,7 @@ function prelinepitch(polyid) {
 							
 							//curve end marker index 1
 							note = ''; pit = ''; bdata = ''; kit = '';
-							if (tcpoly.markers.getAt(1).note != null) { note = tcpoly.markers.getAt(1).note; } 
+							if (tcpoly.markers.getAt(1).note != '') { note = tcpoly.markers.getAt(1).note; } 
 							if (tcpoly.markers.getAt(1).bdata.pitch != '') { 
 								pit = tcpoly.markers.getAt(1).bdata.pitch; 
 							}
@@ -1056,7 +1061,7 @@ function prelinepitch(polyid) {
 
 							//curve end marker index 1
 							note = ''; pit = ''; bdata = ''; kit = '';
-							if (tcpoly.markers.getAt(1).note != null) { note = tcpoly.markers.getAt(1).note; } 
+							if (tcpoly.markers.getAt(1).note != '') { note = tcpoly.markers.getAt(1).note; } 
 							if (tcpoly.markers.getAt(1).bdata.pitch != '') { 
 								pit = tcpoly.markers.getAt(1).bdata.pitch; 
 							}
@@ -1081,7 +1086,7 @@ function prelinepitch(polyid) {
 
 							//curve end marker index 1
 							note = ''; pit = ''; bdata = ''; kit = '';
-							if (tcpoly.markers.getAt(1).note != null) { note = tcpoly.markers.getAt(1).note; } 
+							if (tcpoly.markers.getAt(1).note != '') { note = tcpoly.markers.getAt(1).note; } 
 							if (tcpoly.markers.getAt(1).bdata.pitch != '') { 
 								pit = tcpoly.markers.getAt(1).bdata.pitch; 
 							}
@@ -1107,7 +1112,7 @@ function prelinepitch(polyid) {
 							for (var c = 5; c < tcpoly.markers.length; c++) {
 								if (typeof tcpoly.markers.getAt(c).ld != 'undefined')  {
 									note = ''; pit = ''; bdata = ''; kit = '';
-									if (tcpoly.markers.getAt(c).note != null) { note = tcpoly.markers.getAt(c).note; } 
+									if (tcpoly.markers.getAt(c).note != '') { note = tcpoly.markers.getAt(c).note; } 
 									
 									if (tcpoly.markers.getAt(c).bdata.pitch != '') { 
 										pit = tcpoly.markers.getAt(c).bdata.pitch; 
@@ -1209,7 +1214,7 @@ function prelinepitch(polyid) {
 							var note = '', pit = '', bdata = '', kit = '';
 							
 							//curve start marker index 0
-							if (tcpoly.markers.getAt(0).note != null) { note = tcpoly.markers.getAt(0).note; } 
+							if (tcpoly.markers.getAt(0).note != '') { note = tcpoly.markers.getAt(0).note; } 
 							if (tcpoly.markers.getAt(0).bdata.pitch != '') { 
 								pit = tcpoly.markers.getAt(0).bdata.pitch; 
 							}
@@ -1235,7 +1240,7 @@ function prelinepitch(polyid) {
 							
 							//curve end marker index 1
 							note = ''; pit = ''; bdata = ''; kit = '';
-							if (tcpoly.markers.getAt(1).note != null) { note = tcpoly.markers.getAt(1).note; } 
+							if (tcpoly.markers.getAt(1).note != '') { note = tcpoly.markers.getAt(1).note; } 
 							if (tcpoly.markers.getAt(1).bdata.pitch != '') { 
 								pit = tcpoly.markers.getAt(1).bdata.pitch; 
 							}
@@ -1260,7 +1265,7 @@ function prelinepitch(polyid) {
 
 							//curve end marker index 1
 							note = ''; pit = ''; bdata = ''; kit = '';
-							if (tcpoly.markers.getAt(1).note != null) { note = tcpoly.markers.getAt(1).note; } 
+							if (tcpoly.markers.getAt(1).note != '') { note = tcpoly.markers.getAt(1).note; } 
 							if (tcpoly.markers.getAt(1).bdata.pitch != '') { 
 								pit = tcpoly.markers.getAt(1).bdata.pitch; 
 							}
@@ -1285,7 +1290,7 @@ function prelinepitch(polyid) {
 
 							//curve end marker index 1
 							note = ''; pit = ''; bdata = ''; kit = '';
-							if (tcpoly.markers.getAt(1).note != null) { note = tcpoly.markers.getAt(1).note; } 
+							if (tcpoly.markers.getAt(1).note != '') { note = tcpoly.markers.getAt(1).note; } 
 							if (tcpoly.markers.getAt(1).bdata.pitch != '') { 
 								pit = tcpoly.markers.getAt(1).bdata.pitch; 
 							}
@@ -1311,7 +1316,7 @@ function prelinepitch(polyid) {
 							for (var c = 5; c < tcpoly.markers.length; c++) {
 								if (typeof tcpoly.markers.getAt(c).ld != 'undefined')  {
 									note = ''; pit = ''; bdata = ''; kit = '';
-									if (tcpoly.markers.getAt(c).note != null) { note = tcpoly.markers.getAt(c).note; } 
+									if (tcpoly.markers.getAt(c).note != '') { note = tcpoly.markers.getAt(c).note; } 
 									
 									if (tcpoly.markers.getAt(c).bdata.pitch != '') { 
 										pit = tcpoly.markers.getAt(c).bdata.pitch; 
@@ -1442,7 +1447,7 @@ function prelinepitch(polyid) {
 							var note = '', pit = '', bdata = '', kit = '';
 							
 							//curve start marker index 0
-							if (cpoly.markers.getAt(0).note != null) { note = cpoly.markers.getAt(0).note; } 
+							if (cpoly.markers.getAt(0).note != '') { note = cpoly.markers.getAt(0).note; } 
 							if (cpoly.markers.getAt(0).bdata.pitch != '') { 
 								pit = cpoly.markers.getAt(0).bdata.pitch; 
 							}
@@ -1469,7 +1474,7 @@ function prelinepitch(polyid) {
 							
 							//curve end marker index 1
 							note = ''; pit = ''; bdata = ''; kit = '';
-							if (cpoly.markers.getAt(1).note != null) { note = cpoly.markers.getAt(1).note; } 
+							if (cpoly.markers.getAt(1).note != '') { note = cpoly.markers.getAt(1).note; } 
 							if (cpoly.markers.getAt(1).bdata.pitch != '') { 
 								pit = cpoly.markers.getAt(1).bdata.pitch; 
 							}
@@ -1496,7 +1501,7 @@ function prelinepitch(polyid) {
 							for (var c = 3; c < cpoly.markers.length; c++) {
 								if (typeof cpoly.markers.getAt(c).ld != 'undefined')  {
 									note = ''; pit = ''; bdata = ''; kit = '';
-									if (cpoly.markers.getAt(c).note != null) { note = cpoly.markers.getAt(c).note; } 
+									if (cpoly.markers.getAt(c).note != '') { note = cpoly.markers.getAt(c).note; } 
 									
 									if (cpoly.markers.getAt(c).bdata.pitch != '') { 
 										pit = cpoly.markers.getAt(c).bdata.pitch; 
@@ -1760,10 +1765,10 @@ function drawRailCurve() {
 							map: map,
 							icon: image,
 							title: curve.id + ' start point : ' + extp[0] ,
-							note: null, // any extra note 
+							note: '', // any extra note 
 							bdata: {height:'',pitch:''},
 							kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
-							sline: null,
+							sline: '',
 				
 							ld:0, // distance on circumference from curve start point 
 							pid:curve.id
@@ -1783,10 +1788,10 @@ function drawRailCurve() {
 				    map: map,
 				    icon: image,
 				    title: curve.id + ' end point : ' + extp[extp.length-1],
-				    note: null, // any extra note 
+				    note: '', // any extra note 
 					bdata: {height:'',pitch:''},
 					kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
-					sline: null,
+					sline: '',
 				
 					ld:Lc, // distance on circumference from curve start point 
 					pid:curve.id
@@ -1807,7 +1812,7 @@ function drawRailCurve() {
 				    title: curve.id + ' center point : ' + Cc ,
 					bdata: {height:'',pitch:''},
 					kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
-					sline: null,
+					sline: '',
 				
 					ld:null, // distance on circumference from curve start point 
 					pid:curve.id
@@ -1886,7 +1891,7 @@ function drawRailTransitionCurve() {
 	
 	var polyL = MapToolbar.features["lineTab"][pid];	
 	
-	if ((polyL.markers.getAt(mid).note != '') && (polyL.markers.getAt(mid).note != null)) {
+	if ((polyL.markers.getAt(mid).note != '') && (polyL.markers.getAt(mid).note != '')) {
 		var str = polyL.markers.getAt(mid).note;				
 		if (str.indexOf('tcurve') >= 0) {
 			var arr = str.split('§');
@@ -2326,7 +2331,7 @@ function drawRailTransitionCurve() {
 	tcurve.pid = pid;
 	tcurve.mid = mid;
 	tcurve.tctype = (document.getElementById('tc_cubic_parabola').checked) ? 'cubic' : 'halfsine';
-	tcurve.note = null; 
+	tcurve.note = ''; 
 	tcurve.Rc = Rc * dir,
  	tcurve.cant = cant;
  	tcurve.Vd = v_ds;
@@ -2361,7 +2366,7 @@ function drawRailTransitionCurve() {
 	MapToolbar.features['tcurveTab'][tcurve.id] = tcurve;
 
 	
-	MapToolbar.features["lineTab"][pid].markers.getAt(mid).note = null ;
+	MapToolbar.features["lineTab"][pid].markers.getAt(mid).note = '' ;
 	MapToolbar.features["lineTab"][pid].markers.getAt(mid).bdata.tcurve = tcurve.id; 
 	
 	var e1 = new google.maps.LatLng(tarr[0]),      
@@ -2376,7 +2381,7 @@ function drawRailTransitionCurve() {
 			icon: image,
 			bdata: {height:'',pitch:''},
 			kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
-			sline: null,
+			sline: '',
 				
 			ld:0, // distance on circumference from curve start point 
 			pid : tcurve.id,
@@ -2398,7 +2403,7 @@ function drawRailTransitionCurve() {
 			icon: image,
 			bdata: {height:'',pitch:''},
 			kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
-			sline: null,
+			sline: '',
 				
 			ld: 2*Ls + Lc,  
 			pid : tcurve.id,
@@ -2419,7 +2424,7 @@ function drawRailTransitionCurve() {
 			icon: image,
 			bdata: {height:'',pitch:''},
 			kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
-			sline: null,
+			sline: '',
 				
 			ld:null,  
 			pid : tcurve.id,
@@ -2440,7 +2445,7 @@ function drawRailTransitionCurve() {
 			icon: image,
 			bdata: {height:'',pitch:''},
 			kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
-			sline: null,
+			sline: '',
 				
 			ld:Ls,  
 			pid : tcurve.id,
@@ -2461,7 +2466,7 @@ function drawRailTransitionCurve() {
 			icon: image,
 			bdata: {height:'',pitch:''},
 			kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
-			sline: null,
+			sline: '',
 				
 			ld:Ls + Lc,  
 			pid : tcurve.id,
@@ -2512,7 +2517,6 @@ function drawRailTransitionCurve() {
     $('#dialogRailTransitionCurve').dialog('close');
 	$('#tnote').html('');	
 }
-
 
 function intersection_angle(h1,h2) {
 	//http://stackoverflow.com/questions/16180595/find-the-angle-between-two-bearings 
@@ -2870,12 +2874,12 @@ function ReloadPolyline (loadPoly,rd, n, rowsData, i, quickScan) {
   if (xD[2] != '') { 
  		loadPoly.markers.getAt(n-9).note = xD[2]; 
   } else {
-  	loadPoly.markers.getAt(n-9).note = null; 
+  	loadPoly.markers.getAt(n-9).note = ''; 
   } 
   if (xD[3] != '') {
   	loadPoly.markers.getAt(n-9).pitch = xD[3]; 
   } else {
-  	loadPoly.markers.getAt(n-9).pitch = null; 
+  	loadPoly.markers.getAt(n-9).pitch = ''; 
   }
   if (xD[4] != '') {
   	loadPoly.markers.getAt(n-9).bdata = xD[4]; 
@@ -2898,24 +2902,24 @@ function ReloadPolyline (loadPoly,rd, n, rowsData, i, quickScan) {
   if (xD[7] != '') {
   	loadPoly.markers.getAt(n-9).tcurve = xD[7]; 
   } else {
-  	loadPoly.markers.getAt(n-9).tcurve = null; 
+  	loadPoly.markers.getAt(n-9).tcurve = ''; 
   }
   
   if (xD[8] != '') {
   	loadPoly.markers.getAt(n-9).lineX = xD[8]; 
   } else {
-  	loadPoly.markers.getAt(n-9).lineX = null; 
+  	loadPoly.markers.getAt(n-9).lineX = ''; 
   }
   if (xD[9] != '') {
   	loadPoly.markers.getAt(n-9).turn = xD[9]; 
   } else {
-  	loadPoly.markers.getAt(n-9).turn = null; 
+  	loadPoly.markers.getAt(n-9).turn = ''; 
   }
   
   if (xD[10] != '') {
   	loadPoly.markers.getAt(n-9).sline = xD[10]; 
   } else {
-  	loadPoly.markers.getAt(n-9).sline = null; 
+  	loadPoly.markers.getAt(n-9).sline = ''; 
   }
 
 
@@ -2941,13 +2945,13 @@ function ReloadPolyline (loadPoly,rd, n, rowsData, i, quickScan) {
 					loadNextPoly = MapToolbar.features["lineTab"][newPID];
 	 													
 					if (rd[1] != '') { loadNextPoly.ptype = rd[1]; } else { loadNextPoly.ptype = null; }
-					if (rd[2] != '') { loadNextPoly.note = rd[2]; } else { loadNextPoly.note = null; }
-	 				if (rd[3] != '') { loadNextPoly.name = rd[3]; } else { loadNextPoly.name = null; }
-	 				if (rd[4] != '') { loadNextPoly.route = rd[4]; } else { loadNextPoly.route = null; }
-	 				if (rd[5] != '') { loadNextPoly.trackno = rd[5]; } else { loadNextPoly.trackno = null; }
-	 				if (rd[6] != '') { loadNextPoly.tracksection = rd[6]; } else { loadNextPoly.tracksection = null; }
-	 				if (rd[7] != '') { loadNextPoly.trackbve = rd[7]; } else { loadNextPoly.trackbve = null; }
-	 				if (rd[8] != '') { loadNextPoly.kit = rd[8]; } else { loadNextPoly.kit = null; }
+					if (rd[2] != '') { loadNextPoly.note = rd[2]; } else { loadNextPoly.note = ''; }
+	 				if (rd[3] != '') { loadNextPoly.name = rd[3]; } else { loadNextPoly.name = ''; }
+	 				if (rd[4] != '') { loadNextPoly.route = rd[4]; } else { loadNextPoly.route = ''; }
+	 				if (rd[5] != '') { loadNextPoly.trackno = rd[5]; } else { loadNextPoly.trackno = ''; }
+	 				if (rd[6] != '') { loadNextPoly.tracksection = rd[6]; } else { loadNextPoly.tracksection = ''; }
+	 				if (rd[7] != '') { loadNextPoly.trackbve = rd[7]; } else { loadNextPoly.trackbve = ''; }
+	 				if (rd[8] != '') { loadNextPoly.kit = rd[8]; } else { loadNextPoly.kit = ''; }
 	 															
 	 				//2do nanti
 	 				if (rd[1] == 'pl_rail') {
@@ -2991,7 +2995,7 @@ var curveRef = [];
 
 function reloadCurve(polyL,mi,rowsData, i, quickScan) {
 	if ((typeof polyL.markers.getAt(mi).curve != 'undefined') && quickScan[4]) {
-		if ((polyL.markers.getAt(mi).curve != null) && (polyL.markers.getAt(mi).curve != '')) {
+		if ((polyL.markers.getAt(mi).curve != '') && (polyL.markers.getAt(mi).curve != '')) {
 			/* 
 			0	' curve:'+ curve.id + 
 			1 '§radius:' + preR * dir + 
@@ -3057,7 +3061,7 @@ function reloadCurve(polyL,mi,rowsData, i, quickScan) {
 			curve.pid = polyL.id;
 			curve.mid = mi;
 			curve.ctype = null;
-			curve.note = null; 
+			curve.note = ''; 
 			curve.$el = MapToolbar.addFeatureEntry(curve.id);
 			curve.markers = new google.maps.MVCArray;	     
 			MapToolbar.features['curveTab'][curve.id] = curve;
@@ -3084,11 +3088,11 @@ function reloadCurve(polyL,mi,rowsData, i, quickScan) {
 					map: map,
 					icon: image,
 					title: curve.id + ' start point : ' + extp[0] ,
-					note: null, // any extra note 
-					pitch: null, // track pitch
+					note: '', // any extra note 
+					pitch: '', // track pitch
 					bdata: null, // various bve data
-					lineX:null, // non parallel line distance
-					turn:null, // main line non curve turning
+					lineX:'', // non parallel line distance
+					turn:'', // main line non curve turning
 					kit:'curve:start:'+curve.id, // others data (reserved) by Karya IT
 					pid: curve.id
 				});
@@ -3107,11 +3111,11 @@ function reloadCurve(polyL,mi,rowsData, i, quickScan) {
 					map: map,
 					icon: image,
 					title: curve.id + ' end point : ' + extp[extp.length-1] ,
-					note: null, // any extra note 
-					pitch: null, // track pitch
+					note: '', // any extra note 
+					pitch: '', // track pitch
 					bdata: null, // various bve data
-					lineX:null, // non parallel line distance
-					turn:null, // main line non curve turning
+					lineX:'', // non parallel line distance
+					turn:'', // main line non curve turning
 					kit:'curve:end:'+curve.id, // others data (reserved) by Karya IT
 					pid: curve.id
 				});
@@ -3181,7 +3185,7 @@ function reloadTCurve(polyL,mi,rowsData, i, quickScan) {
 	//alert("m(- -)m ... sorry, this feature (reloadTCurve) is not available in this release. ie. no code defined yet.");
 	
 	if ((typeof polyL.markers.getAt(mi).tcurve != 'undefined') && quickScan[5]) {
-		if ((polyL.markers.getAt(mi).tcurve != null) && (polyL.markers.getAt(mi).tcurve != '')) {
+		if ((polyL.markers.getAt(mi).tcurve != '') && (polyL.markers.getAt(mi).tcurve != '')) {
 			// 2 do in future
 		}
 	}	
@@ -3394,13 +3398,13 @@ function reloaddotMarker(rowsData,i, quickScan) {
 					loadPoly = MapToolbar.features["lineTab"][newPID];
 	 													
 	 				if (rd[1] != '') { loadPoly.ptype = rd[1]; } else { loadPoly.ptype = null; }
-	 				if (rd[2] != '') { loadPoly.note = rd[2]; } else { loadPoly.note = null; }
-	 				if (rd[3] != '') { loadPoly.name = rd[3]; } else { loadPoly.name = null; }
-	 				if (rd[4] != '') { loadPoly.route = rd[4]; } else { loadPoly.route = null; }
-	 				if (rd[5] != '') { loadPoly.trackno = rd[5]; } else { loadPoly.trackno = null; }
-	 				if (rd[6] != '') { loadPoly.tracksection = rd[6]; } else { loadPoly.tracksection = null; }
-	 				if (rd[7] != '') { loadPoly.trackbve = rd[7]; } else { loadPoly.trackbve = null; }
-	 				if (rd[8] != '') { loadPoly.kit = rd[8]; } else { loadPoly.kit = null; }
+	 				if (rd[2] != '') { loadPoly.note = rd[2]; } else { loadPoly.note = ''; }
+	 				if (rd[3] != '') { loadPoly.name = rd[3]; } else { loadPoly.name = ''; }
+	 				if (rd[4] != '') { loadPoly.route = rd[4]; } else { loadPoly.route = ''; }
+	 				if (rd[5] != '') { loadPoly.trackno = rd[5]; } else { loadPoly.trackno = ''; }
+	 				if (rd[6] != '') { loadPoly.tracksection = rd[6]; } else { loadPoly.tracksection = ''; }
+	 				if (rd[7] != '') { loadPoly.trackbve = rd[7]; } else { loadPoly.trackbve = ''; }
+	 				if (rd[8] != '') { loadPoly.kit = rd[8]; } else { loadPoly.kit = ''; }
 	 															
 	 				//2do nanti
 	 				if (rd[1] == 'pl_rail') {
@@ -3980,7 +3984,7 @@ function presetMarkerNote(pid, mid) {
 	
 	if (typeof poli != 'undefined') {
 		
-		if (poli.markers.getAt(mid).note != null) {
+		if (poli.markers.getAt(mid).note != '') {
 			$('#mnote').val(poli.markers.getAt(mid).note);
 		} else {
 			$('#mnote').val(''); 
@@ -4014,13 +4018,13 @@ function setMarkerNote() {
 	} else {
 		switch (pid.split('_')[0]) {
 			case 'line':
-				if (confirm('remove note from this point?')) { MapToolbar.features["lineTab"][pid].markers.getAt(midx).note = null; alert('done');}
+				if (confirm('remove note from this point?')) { MapToolbar.features["lineTab"][pid].markers.getAt(midx).note = ''; alert('done');}
 				break;
 			case 'curve':
-				if (confirm('remove note from this point?')) { MapToolbar.features["curveTab"][pid].markers.getAt(midx).note = null; alert('done');}
+				if (confirm('remove note from this point?')) { MapToolbar.features["curveTab"][pid].markers.getAt(midx).note = ''; alert('done');}
 				break;
 			case 'tcurve':
-				if (confirm('remove note from this point?')) { MapToolbar.features["tcurveTab"][pid].markers.getAt(midx).note = null; alert('done');}
+				if (confirm('remove note from this point?')) { MapToolbar.features["tcurveTab"][pid].markers.getAt(midx).note = ''; alert('done');}
 				break;	
 			default:
 				// default statements
@@ -4035,13 +4039,13 @@ function resetMarkerNote() {
 	
 	switch (pid.split('_')[0]) {
 			case 'line':
-				if (confirm('remove note from this point?')) { MapToolbar.features["lineTab"][pid].markers.getAt(midx).note = null; alert('note has be remove from point ' + midx + ' on line ' + pid + '.');}
+				if (confirm('remove note from this point?')) { MapToolbar.features["lineTab"][pid].markers.getAt(midx).note = ''; alert('note has be remove from point ' + midx + ' on line ' + pid + '.');}
 				break;
 			case 'curve':
-				if (confirm('remove note from this point?')) { MapToolbar.features["curveTab"][pid].markers.getAt(midx).note = null; alert('note has be remove from point ' + midx + ' on line ' + pid + '.');}
+				if (confirm('remove note from this point?')) { MapToolbar.features["curveTab"][pid].markers.getAt(midx).note = ''; alert('note has be remove from point ' + midx + ' on line ' + pid + '.');}
 				break;
 			case 'tcurve':
-				if (confirm('remove note from this point?')) { MapToolbar.features["tcurveTab"][pid].markers.getAt(midx).note = null; alert('note has be remove from point ' + midx + ' on line ' + pid + '.');}
+				if (confirm('remove note from this point?')) { MapToolbar.features["tcurveTab"][pid].markers.getAt(midx).note = ''; alert('note has be remove from point ' + midx + ' on line ' + pid + '.');}
 				break;	
 			default:
 				// default statements
@@ -4118,7 +4122,7 @@ function markerSetting(pid,midx) {
 	if (MapToolbar.features[type][pid].markers.getAt(midx).bdata.railindex != '') {
 		$('#dms_railindex').val(MapToolbar.features[type][pid].markers.getAt(midx).bdata.railindex);
 	} else {
-		$('#dms_railindex').val(MapToolbar.features[type][pid].bdata.rail);
+		$('#dms_railindex').val(MapToolbar.features[type][pid].bdata.railindex);
 	}
 
 	$('#dms_position').val(MapToolbar.features[type][pid].markers.getAt(midx).position.toString());
@@ -4164,10 +4168,10 @@ function polylineSetting(pid) {
 	if (poly.bdata.gauge != '') { $('#dtsv_trackGauge').val(poly.bdata.gauge); } else { $('#dtsv_trackGauge').val('');}
 	if (poly.bdata.desc != '') { $('#dtsv_desc').val(poly.bdata.desc); } else { $('#dtsv_desc').val('');}
 	if (poly.bdata.train != '') { $('#dtsv_runningTrain').val(poly.bdata.train); } else { $('#dtsv_runningTrain').val('');}
-	if (poly.bdata.rail != '') { $('#dtsv_railtypedefault').val(poly.bdata.rail); } else { $('#dtsv_railtypedefault').val('');}
+	if (poly.bdata.railindex != '') { $('#dtsv_railtypedefault').val(poly.bdata.railindex); } else { $('#dtsv_railtypedefault').val('');}
 	
 	
-	if ((poly.note != null) && (poly.note != '')) { $('#dtsv_note').val(poly.note); }
+	if ((poly.note != '') && (poly.note != '')) { $('#dtsv_note').val(poly.note); }
 	
 	$('#dialogTrackSetting').dialog('open');
 } 
@@ -4939,9 +4943,18 @@ function updateBdata(tab,pid,mid,arr0) {
 			case 'tunnel' :
 				var arr3 = arr2[1].split(':'); //contoh : "end" "DarkTunnel01"
 				if (arr3[0] == 'start') {
-					MapToolbar.features[tab][pid].markers.getAt(mid).kdata.tunnel = arr3[1] + ',0'; 
-				} else {
-					MapToolbar.features[tab][pid].markers.getAt(mid).kdata.tunnel = arr3[1] + ',1'; 
+					if (MapToolbar.features[tab][pid].markers.getAt(mid).kdata.tunnel == '') {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.tunnel = arr3[1] + ':0'; 
+					} else {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.tunnel += ',' + arr3[1] + ':0'; 
+					}
+
+				} else {				
+					if (MapToolbar.features[tab][pid].markers.getAt(mid).kdata.tunnel == '') {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.tunnel = arr3[1] + ':1'; 
+					} else {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.tunnel += ',' + arr3[1] + ':1'; 
+					}
 				}
 				var image = new google.maps.MarkerImage('images/tunnel_icon.png',
 						new google.maps.Size(6, 6),
@@ -4951,10 +4964,18 @@ function updateBdata(tab,pid,mid,arr0) {
 				break;
 			case 'bridge' :
 				var arr3 = arr2[1].split(':'); //contoh : "end" "DarkTunnel01"
-				if (arr3[0] == 'start') {
-					MapToolbar.features[tab][pid].markers.getAt(mid).kdata.bridge = arr3[1] + ',0'; 
+				if (arr3[0] == 'start') {				
+					if (MapToolbar.features[tab][pid].markers.getAt(mid).kdata.bridge == '') {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.bridge = arr3[1] + ':0'; 
+					} else {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.bridge += ',' + arr3[1] + ':0'; 
+					}
 				} else {
-					MapToolbar.features[tab][pid].markers.getAt(mid).kdata.bridge = arr3[1] + ',1'; 
+					if (MapToolbar.features[tab][pid].markers.getAt(mid).kdata.bridge == '') {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.bridge = arr3[1] + ':1'; 
+					} else {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.bridge += ',' + arr3[1] + ':1';
+					}
 				}
 				var image = new google.maps.MarkerImage('images/bridge_icon.png',
 						new google.maps.Size(6, 6),
@@ -4965,9 +4986,17 @@ function updateBdata(tab,pid,mid,arr0) {
 			case 'cut' :
 				var arr3 = arr2[1].split(':'); //contoh : "end" "DarkTunnel01"
 				if (arr3[0] == 'start') {
-					MapToolbar.features[tab][pid].markers.getAt(mid).kdata.cut = arr3[1] + ',0'; 
+					if (MapToolbar.features[tab][pid].markers.getAt(mid).kdata.cut == '') {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.cut = arr3[1] + ':0';
+					} else {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.cut += ',' + arr3[1] + ':0';
+					}
 				} else {
-					MapToolbar.features[tab][pid].markers.getAt(mid).kdata.cut = arr3[1] + ',1'; 
+					if (MapToolbar.features[tab][pid].markers.getAt(mid).kdata.cut == '') {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.cut = arr3[1] + ':1';
+					} else {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.cut += ',' + arr3[1] + ':1';
+					}			 
 				}
 				var image = new google.maps.MarkerImage('images/hillcut_icon.png',
 						new google.maps.Size(6, 6),
@@ -4978,9 +5007,17 @@ function updateBdata(tab,pid,mid,arr0) {
 			case 'dike' :
 				var arr3 = arr2[1].split(':'); //contoh : "end" "DarkTunnel01"
 				if (arr3[0] == 'start') {
-					MapToolbar.features[tab][pid].markers.getAt(mid).kdata.dike = arr3[1] + ',0'; 
-				} else {
-					MapToolbar.features[tab][pid].markers.getAt(mid).kdata.dike = arr3[1] + ',1'; 
+					if (MapToolbar.features[tab][pid].markers.getAt(mid).kdata.dike == '') {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.dike = arr3[1] + ':0';
+					} else {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.dike += ',' + arr3[1] + ':0';
+					}
+				} else {					 
+					if (MapToolbar.features[tab][pid].markers.getAt(mid).kdata.dike == '') {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.dike = arr3[1] + ':1';
+					} else {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.dike += ',' + arr3[1] + ':1';
+					}
 				}
 				var image = new google.maps.MarkerImage('images/dike_icon.png',
 						new google.maps.Size(6, 6),
@@ -4990,10 +5027,18 @@ function updateBdata(tab,pid,mid,arr0) {
 				break;
 			case 'flyover' :
 				var arr3 = arr2[1].split(':'); //contoh : "end" "DarkTunnel01"
-				if (arr3[0] == 'start') {
-					MapToolbar.features[tab][pid].markers.getAt(mid).kdata.flyover = arr3[1] + ',0'; 
-				} else {
-					MapToolbar.features[tab][pid].markers.getAt(mid).kdata.flyover = arr3[1] + ',1'; 
+				if (arr3[0] == 'start') {					 
+					if (MapToolbar.features[tab][pid].markers.getAt(mid).kdata.flyover == '') {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.flyover = arr3[1] + ':0';
+					} else {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.flyover += ',' + arr3[1] + ':0';
+					}
+				} else {					 
+					if (MapToolbar.features[tab][pid].markers.getAt(mid).kdata.flyover == '') {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.flyover = arr3[1] + ':1';
+					} else {
+						MapToolbar.features[tab][pid].markers.getAt(mid).kdata.flyover += ',' + arr3[1] + ':1';
+					}	
 				}
 				var image = new google.maps.MarkerImage('images/flyover_icon.png',
 						new google.maps.Size(6, 6),
@@ -5043,7 +5088,6 @@ function setKTxtEv(key,txt) {
 	return ktxt;
 }
 
-
 function addStation (staName,staID,latlng) {
 	var dahada = false;
 
@@ -5081,7 +5125,6 @@ function updateStation (staID) {
 }
 
 function removeStation(staID) {
-
 	var stlist = document.getElementById('station_list');
 	for (var i = 0; i < stlist.childElementCount; i++) {
 		if (stlist.children[i].firstElementChild.getAttribute("value") == staID) {
