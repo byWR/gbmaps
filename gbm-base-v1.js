@@ -17,7 +17,7 @@ purpose : google maps drawing logic
 type : release (under development)
 version : 1.0.0
 build : 
-last update : 03 July 2014 1:25pm (GMT 8+)
+last update : 25 July 2014 1:25pm (GMT 8+)
 
 */
 
@@ -98,7 +98,7 @@ var MapToolbar = {
 //reorder index of a poly markers array
 
 reindex:function(markers){
-	var pid;
+	var pid = markers.getAt(0).pid;
 	markers.forEach(function(marker, index){
 		marker.index = index;
 		marker.title = marker.pid + '(' + index + ')';
@@ -132,11 +132,13 @@ reindex:function(markers){
 		} */			    
 	});		
 		//cadangan 2/7/2014 : ???
+	if (pid.split('_')[0] == 'line') {
 		if (MapToolbar.features['lineTab'][pid].lineX != '') {
 			//MapToolbar.features['lineTab'][marker.pid].lineX != 'baseline_pid1,baseline_pid2 ....'
+			
 			for (i = 0; i < MapToolbar.features['lineTab'][pid].markers.length; i++) {
 				if (MapToolbar.features['lineTab'][pid].markers.getAt(i).lineX != '') {
-					var lineXarr = MapToolbar.features['lineTab'][pid].markers.getAt(i).lineX.split(':');
+					var lineXarr = MapToolbar.features['lineTab'][pid].markers.getAt(i).lineX.split(':'); // data format lineX = (base line):(side direction):(offset distance):(switch length opsyenal):(baseline marker uid)
 					var bpid = lineXarr[0];
 					var bpoly = MapToolbar.features['lineTab'][bpid];
 					if (typeof bpoly != 'undefined') {
@@ -144,13 +146,13 @@ reindex:function(markers){
 							if (bmarker.sline != '') {
 								var sLArr = bmarker.sline.split(':');
 								if (sLArr[0] == pid) {
-									if (sLArr[1] == '0' && lineXarr[4] == '0') {
-										bmarker.sline = sLArr[0] + ':' + sLArr[1] + ':' + i;
+									if (sLArr[1] == '0' && lineXarr[4] == bmarker.uid) {
+										bmarker.sline = sLArr[0] + ':' + sLArr[1] + ':' + i + ':' + sLArr[3];
 										//return;
 										//break;
 									} 
-									if (sLArr[1] == '1' && lineXarr[4] == '1') {
-										bmarker.sline = sLArr[0] + ':' + sLArr[1] + ':' + i;
+									if (sLArr[1] == '1' && lineXarr[4] == bmarker.uid) {
+										bmarker.sline = sLArr[0] + ':' + sLArr[1] + ':' + i + ':' + sLArr[3];
 										return;
 										//break;
 									}
@@ -161,7 +163,8 @@ reindex:function(markers){
 					}
 				}
 			}			
-		} 	
+		} 		
+	}
 },
 
 //get point at middle distance between 2 point
@@ -196,6 +199,7 @@ currentFeature: null,
 					map: map,
 					draggable: true,
 					icon: image,
+					uid: genUiD(e.toString()), //unique id - new feature start on 24/7/2014
 					note: '', // any extra note 
 					bdata: {height:'',railindex:'',pitch:'',curve:'',tcurve:''},
 					kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
@@ -647,7 +651,7 @@ currentFeature: null,
 					
 			// var infoWindowTxt = 'Line ID : ' + marker.pid + '    Marker index : ' + marker.index + '<br>Distance from start : ' + Math.round(Lpoly) + 'm (polyline) / ' + Math.round(LwCurve) + ' m (with curve correction) / ' + Math.round(LwPitch) + ' m (with pitch correction) / ';
 			
-			var infoWindowTxt = 'Distance at marker index : ' + marker.index + ', on line : ' + marker.pid + '.<br />';
+			var infoWindowTxt = 'Distance at marker index : ' + marker.index + ' (' + marker.uid + '), on line : ' + marker.pid + '.<br />';
 			infoWindowTxt += 'Polyline distance : ';
 			if (Lpoly < 1000) {
 				infoWindowTxt += Lpoly.toFixed(2) + ' m.<br />';
