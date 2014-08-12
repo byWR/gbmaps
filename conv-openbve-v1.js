@@ -1,4 +1,4 @@
-﻿/*
+/*
 GB Maps ギビマップ - © Karya IT (http://www.karyait.net.my/) 2012-2014. All rights reserved. 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
 without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -18,7 +18,7 @@ purpose : open bve route builder, data conversion function
 type : release (under development)
 version : 1.0.0
 build : 
-last update : 05 July 2014 03:21pm (GMT 8+)
+last update : 12 August 2014 09:53pm (GMT 8+)
 
 */
 	//BVE object list
@@ -54,7 +54,7 @@ last update : 05 July 2014 03:21pm (GMT 8+)
 	var GBcrack = [];
 	
 	// BVE route structure
-	var paralellTrack = [];   	// paralellTrack[0] = [RailIndex,X,Y,pid]; // data : railindex, x-distance from main track, y-height --- 2 study
+	var paralellTrack = [];   // paralellTrack[0] = [RailIndex,X,Y,pid,bsti]; // data : railindex, x-distance from main track, y-height, pid (sideline pid), bsti : index on base line where sideline start (new 08-08-2014)
 	var teks = '';
 	var defaultRailIndex = 0;
 	var mainTrkArr = [];
@@ -140,7 +140,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		}			
 	}
 	catch(err) {
-		teks += "[Error] : error in creating background list." + "\n" + err.message;
+		teks += "[Error] : error in creating background list." + "\n" + err.message + ". \n";
 	}	
 	
 	teks +='\nWith Structure\n';
@@ -156,7 +156,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		}
 	}
 	catch(err) {
-		teks += "[Error] : error in creating rail list." + "\n" + err.message;
+		teks += "[Error] : error in creating rail list." + "\n" + err.message + ". \n";
 	}	
 
 	no = 0;
@@ -189,7 +189,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		}		
 	}
 	catch(err) {
-		teks += "[Error] : error in creating dike list." + "\n" + err.message;
+		teks += "[Error] : error in creating dike list." + "\n" + err.message + ". \n";
 	}	
 	
 	no = 0;
@@ -297,7 +297,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		}		
 	}
 	catch(err) {
-		teks += "[Error] : error in creating tunnel list." + "\n" + err.message;
+		teks += "[Error] : error in creating tunnel list." + "\n" + err.message + ". \n";
 	}	
 
 	try {
@@ -333,7 +333,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		} 		
 	}
 	catch(err) {
-		teks += "[Error] : error in creating flyover list." + "\n" + err.message;
+		teks += "[Error] : error in creating flyover list." + "\n" + err.message + ". \n";
 	}	
 
 	try {
@@ -371,7 +371,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		}
 	}
 	catch(err) {
-		teks += "[Error] : error in creating bridge (wall) list." + "\n" + err.message;
+		teks += "[Error] : error in creating bridge (wall) list." + "\n" + err.message + ". \n";
 	}	
 	
 	
@@ -460,7 +460,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		} 			
 	}
 	catch(err) {
-		teks += "[Error] : error in creating underground list." + "\n" + err.message;
+		teks += "[Error] : error in creating underground list." + "\n" + err.message + ". \n";
 	}	
  
  	try {
@@ -491,7 +491,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		}  		
 	}
 	catch(err) {
-		teks += "[Error] : error in creating hill cut list." + "\n" + err.message;
+		teks += "[Error] : error in creating hill cut list." + "\n" + err.message + ". \n";
 	}
 	
 	no = 0;
@@ -505,7 +505,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		}		
 	}
 	catch(err) {
-		teks += "[Error] : error in creating crack list." + "\n" + err.message;
+		teks += "[Error] : error in creating crack list." + "\n" + err.message + ". \n";
 	}	
 	
 	var np =[0,0,0,0];
@@ -519,7 +519,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		}		
 	}
 	catch(err) {
-		teks += "[Error] : error in creating pole list." + "\n" + err.message;
+		teks += "[Error] : error in creating pole list." + "\n" + err.message + ". \n";
 	}	
 
 	try {
@@ -622,7 +622,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		
 	}
 	catch(err) {
-		teks += "[Error] : error in creating platform list." + "\n" + err.message;
+		teks += "[Error] : error in creating platform list." + "\n" + err.message + ". \n";
 	}
 
 		
@@ -637,7 +637,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		}		
 	}
 	catch(err) {
-		teks += "[Error] : error in creating ground list." + "\n" + err.message;
+		teks += "[Error] : error in creating ground list." + "\n" + err.message + ". \n";
 	}	
 
 	try {
@@ -650,7 +650,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		}		
 	}
 	catch(err) {
-		teks += "[Error] : error in creating river list." + "\n" + err.message;
+		teks += "[Error] : error in creating river list." + "\n" + err.message + ". \n";
 	}	
 
 	try {
@@ -663,7 +663,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		}		
 	}
 	catch(err) {
-		teks += "[Error] : error in creating river bank list." + "\n" + err.message;
+		teks += "[Error] : error in creating river bank list." + "\n" + err.message + ". \n";
 	}	
 		
 	no = 0;
@@ -677,7 +677,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		}		
 	}
 	catch(err) {
-		teks += "[Error] : error in creating beacon list." + "\n" + err.message;
+		teks += "[Error] : error in creating beacon list." + "\n" + err.message + ". \n";
 	}	
 	
 	try {
@@ -724,7 +724,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		}		
 	}
 	catch(err) {
-		teks += "[Error] : error in creating bridge (FreeObj) list" + "\n" + err.message;
+		teks += "[Error] : error in creating bridge (FreeObj) list" + "\n" + err.message + ". \n";
 	}	
 	
 	try {
@@ -746,7 +746,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		}		
 	}
 	catch(err) {
-		teks += "[Error] : error in creating wallL and wallR list." + "\n" + err.message;
+		teks += "[Error] : error in creating wallL and wallR list." + "\n" + err.message + ". \n";
 	}	
 
 	try {
@@ -782,7 +782,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		}		
 	}
 	catch(err) {
-		teks += "[Error] : error in creating road crossing list." + "\n" + err.message;
+		teks += "[Error] : error in creating road crossing list." + "\n" + err.message + ". \n";
 	} 
   
 	try {
@@ -795,7 +795,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		}		
 	}
 	catch(err) {
-		teks += "[Error] : error in creating FreeObj list." + "\n" + err.message;
+		teks += "[Error] : error in creating FreeObj list." + "\n" + err.message + ". \n";
 	}  			
 	
     	
@@ -841,7 +841,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		if (polyL.markers.getAt(i).sline != '') {
 			ProcessSLine(polyL.markers.getAt(i).sline, Math.round(currX),stIdx,edIdx,i);		
 		}	
-		
+				
 		try {
 			if (polyL.markers.getAt(i).bdata.curve != '') {
 			// ************ on curve section ************
@@ -913,13 +913,28 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 				}
 			} else {
 				// ************ on straight line section ************	
+				if (i > 0 && i < allPoints.length-1) {
+					var m0 = polyL.markers.getAt(i-1).getPosition();
+					var m1 = polyL.markers.getAt(i).getPosition();
+					var m2 = polyL.markers.getAt(i+1).getPosition();
+					var h1 = google.maps.geometry.spherical.computeHeading(m0,m1);
+					var h2 = google.maps.geometry.spherical.computeHeading(m1,m2);
+					var fic = intersection_angle(h1,h2);
+					var intAngleDeg = fic.angle;
+					var dir = fic.direction;
+					var delta = 180 - intAngleDeg;
+					var ratio = dir * Math.tan(delta.toRad());
+					turnTxt(ratio,currX);
+				}
+
 				if (i >= stIdx && i <= edIdx) {
 					if (i == stIdx) {
 						mainTrkArr.push([Math.round(currX),'.RailType 0;' + defaultRailIndex  + ', ; .height 1,']);
 				
 					} else if (i == edIdx) {
-						mainTrkArr.push([Math.round(currX),'']);
-						noteTrkArr.push([Math.round(currX),'************ End of Track ************']);
+						var crX = Math.round(currX/25)*25;
+						mainTrkArr.push([crX,'']);
+						noteTrkArr.push([crX,'************ End of Track ************']);
 				
 					} else {
 			
@@ -946,7 +961,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 			
 		}
 		catch(err) {
-			teks += "[Error] : error in creating track at distance " + Math.round(currX) + "\n" + err.message;
+			teks += "[Error] : error in creating track at distance " + Math.round(currX) + "\n" + err.message + ". \n";
 		}		
  	    
 		persen = Math.round(((i+1)/allPoints.length)*100);
@@ -995,7 +1010,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 			
 		}
 		catch(err) {
-			teks += "[Error] : error updating main track item." + "\n" + err.message;
+			teks += "[Error] : error updating main track item." + "\n" + err.message + ". \n";
 		}	
 		persen = Math.round((m/mainTrkArr.length-1)*100);
 		$( "#progressbarBuildBVE4O" ).progressbar({
@@ -1035,7 +1050,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 			}			
 		}
 		catch(err) {
-			teks += "[Error] : error in pre sorting main track." + "\n" + err.message;
+			teks += "[Error] : error in pre sorting main track." + "\n" + err.message + ". \n";
 		}	
 
 		persen = Math.round((s/subTrkArr.length-1)*100);
@@ -1082,7 +1097,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		
 	}
 	catch(err) {
-		teks += "[Error] : error in inserting note to distance." + "\n" + err.message;
+		teks += "[Error] : error in inserting note to distance." + "\n" + err.message + ". \n";
 	}	
 	
 	//final sort if above failed
@@ -1106,7 +1121,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		} while (sorted < tmpTrkStrArr.length -1);		
 	}
 	catch(err) {
-		teks += "[Error] : error in sorting track section." + "\n" + err.message;
+		teks += "[Error] : error in sorting track section." + "\n" + err.message + ". \n";
 	}	
 
 							
@@ -1566,7 +1581,7 @@ function ProcesskData(kdata,currX,pid,idx) {
   			if (bvebveStrOjArr[g1][1] == kdata.ground) {
   				for (gr = 0; gr < Ground.length; gr++) {
   					if (Ground[gr] == bvebveStrOjArr[g1][5].replace(/[/]/g,'\\')) {
-  						subTrkArr.push([ currX, '.Ground ' + gr ]);
+  						subTrkArr.push([ crX, '.Ground ' + gr ]);
   						break;
   					}
   				}
@@ -1876,11 +1891,11 @@ function ProcesskData(kdata,currX,pid,idx) {
 							for (wI = 0; wI < WallL.length; wI++) {
 								if (bvecutObjArr[g][4].replace(/[/]/g,'\\') ==  WallL[wI]) {																
 									if (bvecutObjArr[g][5] != '') {
-										subTrkArr.push([currX, '.Wall 0;0;'+ wI]);
+										subTrkArr.push([crX, '.Wall 0;0;'+ wI]);
 										GBcut[0] = 0;
 										GBcut[1] = 0;
 									} else {
-										subTrkArr.push([currX, '.Wall 0;-1;'+ wI]);
+										subTrkArr.push([crX, '.Wall 0;-1;'+ wI]);
 										GBcut[0] = 0;
 									}
 									break;
@@ -1902,21 +1917,21 @@ function ProcesskData(kdata,currX,pid,idx) {
 							}
 							for (wI = 0; wI < WallL.length; wI++) {
 								if (bvecutObjArr[g][4].replace(/[/]/g,'\\') ==  WallL[wI]) {
-									subTrkArr.push([currX, ' .Wall ' + leftestIndex + ';-1;'+ wI]);
+									subTrkArr.push([crX, ' .Wall ' + leftestIndex + ';-1;'+ wI]);
 									GBcut[0] = leftestIndex;														
 									break;
 								}
 							}
 							for (wI = 0; wI < WallR.length; wI++) {
 								if (bvecutObjArr[g][5].replace(/[/]/g,'\\') == WallR[wI]) {
-									subTrkArr.push([currX, '.Wall ' + rightestIndex + ';1;'+ wI]);
+									subTrkArr.push([crX, '.Wall ' + rightestIndex + ';1;'+ wI]);
 									GBcut[1] = rightestIndex;
 									break;
 								}
 							}
 						}
 						if ((typeof GBcut[0] != 'undefined') || (typeof GBcut[1] != 'undefined')) {
-							GBcut[2] = currX; // initial distance
+							GBcut[2] = crX; // initial distance
 						}	
 							
 						break;
@@ -1927,16 +1942,16 @@ function ProcesskData(kdata,currX,pid,idx) {
  									
 				if ((typeof GBcut[0] != 'undefined') && (typeof GBcut[1] != 'undefined')) {
 					if (( GBcut[0] == 0) && ( GBcut[1] == 0)) {
-						subTrkArr.push([currX, '.WallEnd 0']);
+						subTrkArr.push([crX, '.WallEnd 0']);
 					} else {
-						subTrkArr.push([currX, '.WallEnd ' + GBcut[0] + ', .WallEnd ' + GBcut[1]]);
+						subTrkArr.push([crX, '.WallEnd ' + GBcut[0] + ', .WallEnd ' + GBcut[1]]);
 					}
 				} else { 									
 					if (typeof GBcut[0] != 'undefined') {
-						subTrkArr.push([currX, '.WallEnd ' + GBcut[0]]);
+						subTrkArr.push([crX, '.WallEnd ' + GBcut[0]]);
 					}
 					if (typeof GBcut[1] != 'undefined') {
-						subTrkArr.push([currX, '.WallEnd ' + GBcut[1]]);
+						subTrkArr.push([crX, '.WallEnd ' + GBcut[1]]);
 					}
 				}
 				GBcut = [];
@@ -1983,12 +1998,23 @@ function ProcesskData(kdata,currX,pid,idx) {
 			var formSideArr = formArr[6].split('/');
 			
 			for (fs = 0; fs < formSideArr.length; fs++) {
-				var formSide = formSideArr[fs].split(':');
-				if (formSide[0] == pid) {
-					door = '1';
-				} else {
+				var formSide = formSideArr[fs].split(':');				
+				if (formSide[0] == pid && formSide[1] == 'L') {
 					door = '-1';
-				}					
+					break;
+				} else if (formSide[0] == pid && formSide[1] == 'R') {
+					door = '1';
+					break;
+				} else {					
+					if (formSide[0] == pid) {
+						door = '1';
+						break;
+					} 
+					if (formSide[1] == pid) {
+						door = '-1';
+						break;
+					}					
+				}
 			}
 			
 			subTrkArr.push([ crX, '.sta ' + formArr[1] + ';  ' + stop + '; ; ' + passAlarm + '; ' + door + '; 0; 0; ; ' + formArr[3] + '; 100;test_route\\salam.wav, ']);
@@ -2173,9 +2199,9 @@ function ProcessSLine(sline,currX,stIdx,edIdx,cIdx) {
 	
 	for (li = 0; li < linesArr.length; li++) {
 		var sArr = linesArr[li].split(':');
-		//sline = '(side line 1):(0=start,>0 end):index,(side line 1):(0=start,>0 end):index,,,,....';
-		//newPoly.markers.getAt(0).lineX = polyid + ':' + side + ':' + startOffset + ':' + stSwlength;
-		//newPoly.markers.getAt(newPoly.markers.length-1).lineX = polyid + ':' + side + ':' + endOffset + ':' + edSwlength;
+		//sline = '(side line 1 id):(0=start,>0 end):index:sideline_uid,(side line 2 id):(0=start,>0 end):index:sideline_uid,,,,....';
+		//newPoly.markers.getAt(0).lineX = baseline_id + ':' + side + ':' + startOffset + ':' + stSwlength + ':' + baseline_uid;
+		//newPoly.markers.getAt(newPoly.markers.length-1).lineX = baseline_id + ':' + side + ':' + endOffset + ':' + edSwlength + ':' + baseline_uid;
 		try {
 			if (typeof MapToolbar.features['lineTab'][sArr[0]] != 'undefined') {
 				var s_polyL = MapToolbar.features['lineTab'][sArr[0]];
@@ -2206,12 +2232,12 @@ function ProcessSLine(sline,currX,stIdx,edIdx,cIdx) {
 						}
 						while ( n*25 < stSwlength ) {
 							//currOffset = side*stOffset + side*(Math.round(turnoutratio * n * 25 * 100) / 100);
-							currOffset = Math.round((side*stOffset + side * turnoutratio * n * 25)* 100) / 100;
+							currOffset = Math.round((side*stOffset + side * turnoutratio * n * 25)* 1000) / 1000;
 							if (cIdx >= stIdx && cIdx <= edIdx) { subTrkArr.push([(crX + n*25), '.Rail ' + railIdx + ';' + currOffset + ';0;' + defaultRailIndex]); }
 							n ++;
 						}
-						if (cIdx >= stIdx && cIdx <= edIdx) { subTrkArr.push([(crX + n*25),'.Rail ' + railIdx + ';' + offs2 + ';0;' + defaultRailIndex]); }
-						paralellTrack.push([railIdx,offs2,0,sArr[0]]);
+						//if (cIdx >= stIdx && cIdx <= edIdx) { subTrkArr.push([(crX + n*25),'.Rail ' + railIdx + ';' + offs2 + ';0;' + defaultRailIndex]); }
+						paralellTrack.push([railIdx,offs2,0,sArr[0],parseInt(sArr[2])]);
 									
 					} else {
 						var railIdx = 1;  											
@@ -2223,52 +2249,106 @@ function ProcessSLine(sline,currX,stIdx,edIdx,cIdx) {
 							}
 						}
 						if (cIdx >= stIdx && cIdx <= edIdx) { subTrkArr.push([ crX, '.Rail ' + railIdx + ';' + side*stOffset + ';0;' + defaultRailIndex ]); }
-						paralellTrack.push([railIdx,side*stOffset,0,sArr[0]]);
+						paralellTrack.push([railIdx,side*stOffset,0,sArr[0],parseInt(sArr[2])]);
 					}
 					
 				} else {
 					var endOffset = parseFloat(lXarr[2]);
-					var edSwlength = (lXarr[3] != '') ? parseFloat(lXarr[3]) : 0;
-					var side = (parseFloat(lXarr[1]) < 0) ? -1 : 1;
-					//alert(endOffset + ' / ' + edSwlength);
+					//var edSwlength = (lXarr[3] != '') ? parseFloat(lXarr[3]) : 0;
+					var side0 = (parseFloat(lXarr[1]) < 0) ? -1 : 1;
+					var si0 = 0;
+					var si1 = parseInt(sArr[2]);	
 					
-					if (edSwlength != 0) {
-						var lXarr2 = s_polyL.markers.getAt(parseInt(sArr[2])-1).lineX.split(':');		
-						var n = edSwlength/25;
-						var currOffset = side*endOffset;
-						var turnoutratio = (parseFloat(lXarr2[2])-endOffset) / edSwlength;
-						var railIdx = -1;
-					
-						for (p = 0; p < paralellTrack.length; p++) {
-							if (paralellTrack[p][3] == sArr[0]) {
-								railIdx = paralellTrack[p][0];
-								paralellTrack.splice(p, 1);
-								break;						
-							}
+					for (p = 0; p < paralellTrack.length; p++) {
+						if (paralellTrack[p][3] == sArr[0]) {
+							railIdx = paralellTrack[p][0];
+							si0 = paralellTrack[p][4] + 1;
+							paralellTrack.splice(p, 1);
+							break;						
 						}
-					
-						while ( n*25 > 0 ) {
-							//currOffset = side*endOffset + side*(Math.round(turnoutratio * n * 25 * 100) / 100);
-							currOffset = Math.round((side*endOffset + side*turnoutratio * n * 25)* 100) / 100;
-							if (cIdx >= stIdx && cIdx <= edIdx) { subTrkArr.push([(crX - (n*25)),'.Rail ' + railIdx + ';' + currOffset + ';0;' + defaultRailIndex]); }
-							n --;
-						}  							
-						if (cIdx >= stIdx && cIdx <= edIdx) { subTrkArr.push([ crX, '.RailEnd ' + railIdx + ';' + side*endOffset + ';0;' + defaultRailIndex]); }
-									
-					} else {
-					
-						for (p = 0; p < paralellTrack.length; p++) {
-							if (paralellTrack[p][3] == sArr[0]) {
-								railIdx = paralellTrack[p][0];
-								paralellTrack.splice(p, 1);
-								break;						
-							}
-						}
-						//2do extent side line processing
-						//setTimeout(function(){ code 2 run }, milliseconds);
+					}
 						
-						if (cIdx >= stIdx && cIdx <= edIdx) { subTrkArr.push([ crX, '.RailEnd ' + railIdx + ';' + side*endOffset + ';0,']); }
-					}			
+					//sline = '(side line 1 id):(0=start,>0 end):index:sideline_uid,   (side line 2 id):(0=start,>0 end):index:sideline_uid,,,,....';
+					//newPoly.markers.getAt(0).lineX = baseline_id + ':' + side + ':' + startOffset + ':' + stSwlength + ':' + baseline_uid;
+					//newPoly.markers.getAt(newPoly.markers.length-1).lineX = baseline_id + ':' + side + ':' + endOffset + ':' + edSwlength + ':' + baseline_uid;	
+												
+					for (i = si0; i < si1; i++) {
+						var sLxD = 0;
+						if (s_polyL.markers.getAt(i).lineX != '') {							
+							var slDarr = s_polyL.markers.getAt(i).lineX.split(':');
+							
+							if (slDarr[4] != '') {
+								for (j=0;j< MapToolbar.features['lineTab'][lXarr[0]].markers.getLength();j++) {
+									if (slDarr[4] == MapToolbar.features['lineTab'][lXarr[0]].markers.getAt(j).uid) {
+										sLxD = getTrackDistanceFromStart(lXarr[0],j).LwPitch;
+										sLxD = Math.round(sLxD/25)*25;
+										break;
+									}
+								}
+							} else {
+								var e1 = s_polyL.markers.getAt(i).getPosition();
+								var j = formLineWidenAddAt(lXarr[0], e1);
+								var preD = getTrackDistanceFromStart(lXarr[0],j).LwPitch;
+
+								var Hca = google.maps.geometry.spherical.computeHeading(e1,MapToolbar.features['lineTab'][lXarr[0]].markers.getAt(j+1).getPosition());
+								var Hab = google.maps.geometry.spherical.computeHeading(MapToolbar.features['lineTab'][lXarr[0]].markers.getAt(j).getPosition(),MapToolbar.features['lineTab'][lXarr[0]].markers.getAt(j+1).getPosition());
+								var Hcb = google.maps.geometry.spherical.computeHeading(e1,MapToolbar.features['lineTab'][lXarr[0]].markers.getAt(j+1).getPosition());
+								var Hba = google.maps.geometry.spherical.computeHeading(MapToolbar.features['lineTab'][lXarr[0]].markers.getAt(j+1).getPosition(),MapToolbar.features['lineTab'][lXarr[0]].markers.getAt(j).getPosition());
+					
+								var Xac = google.maps.geometry.spherical.computeDistanceBetween(MapToolbar.features['lineTab'][lXarr[0]].markers.getAt(j).getPosition(),e1);
+								var Xbc = google.maps.geometry.spherical.computeDistanceBetween(MapToolbar.features['lineTab'][lXarr[0]].markers.getAt(j+1).getPosition(),e1);
+								var Xab = google.maps.geometry.spherical.computeDistanceBetween(MapToolbar.features['lineTab'][lXarr[0]].markers.getAt(j).getPosition(),MapToolbar.features['lineTab'][lXarr[0]].markers.getAt(j+1).getPosition());
+					
+								var angleA = intersection_angle(Hca,Hab).angle ;
+								var angleB = intersection_angle(Hcb,Hba).angle ; 
+					
+								var Xcc2a = Xac * Math.sin(angleA.toRad());
+								var Xcc2b = Xbc * Math.sin(angleB.toRad()); 
+					
+								var Xac2 = Math.abs(Xac * Math.cos(angleA.toRad()));
+								var Xbc2 = Math.abs(Xbc * Math.cos(angleB.toRad()));
+								
+								sLxD = preD + Xac2;
+								sLxD = Math.round(sLxD/25)*25;
+							}
+							
+
+							var stOffset = parseFloat(s_polyL.markers.getAt(i).lineX.split(':')[2]);
+							var stSwlength = (slDarr[3] != '') ? parseFloat(slDarr[3]) : 0; 
+							var side = (parseFloat(slDarr[1]) < 0) ? -1 : 1;
+								
+							if (stSwlength != 0) {
+								var lXarr2 = s_polyL.markers.getAt(i+1).lineX.split(':'); // .getAt(1).lineX = pid1 + ':' + (-1*side) + ':' + wi3 + ':';
+								var n = 0;
+								var currOffset = side*stOffset;					 
+								var turnoutratio = (parseFloat(lXarr2[2])-stOffset) / stSwlength;
+									
+								while ( n*25 < stSwlength ) {
+									//currOffset = side*stOffset + side*(Math.round(turnoutratio * n * 25 * 100) / 100);
+									currOffset = Math.round((side*stOffset + side * turnoutratio * n * 25)* 1000) / 1000;
+									if (cIdx >= stIdx && cIdx <= edIdx) { subTrkArr.push([(sLxD + n*25), '.Rail ' + railIdx + ';' + currOffset + ';0;' + defaultRailIndex]); }
+									n ++;
+								}								
+							} else {
+								if (cIdx >= stIdx && cIdx <= edIdx) { subTrkArr.push([ sLxD, '.Rail ' + railIdx + ';' + side*stOffset + ';0;' + defaultRailIndex ]); }
+							}	
+							
+								
+						} else {
+								
+						}	
+						/*
+						if (s_polyL.markers.getAt(i).curve != '') {
+							
+						} else {
+
+						} */
+					}
+					
+					//2do extent side line processing
+					//setTimeout(function(){ code 2 run }, milliseconds);
+						
+					if (cIdx >= stIdx && cIdx <= edIdx) { subTrkArr.push([ crX, '.RailEnd ' + railIdx + ';' + side0*endOffset + ';0,']); }				
 				}
 			} else {
 				alert(sArr[0] + ' not defined.');
@@ -2276,19 +2356,20 @@ function ProcessSLine(sline,currX,stIdx,edIdx,cIdx) {
 			
 		}
 		catch(err) {
-			teks += "[Error] : error in processing side line, on line " + sArr[0] + ' at distance ' + crX + ". \n" + err.message;
+			teks += "[Error] : error in processing side line, on line " + sArr[0] + ' at distance ' + crX + ". \n" + err.message + ". \n";
 		}		
 	}	
 }
 
 
 function turnTxt(turn,currX) {
-	var slope = parseFloat(turn);
-	slope = Math.round(slope * 1000) / 1000;
-	if (isNaN(slope)) { alert(turn); return false; }
+	var slope = Math.round(turn * 1000) / 1000;
+	//if (isNaN(slope)) { alert(turn); return false; }
+	var crX = Math.round(currX/25)*25;
   
-  var tmpTxt = '.Turn ' + slope;
-
-	subTrkArr.push([currX, tmpTxt]);	
+	var tmpTxt = '.Turn ' + slope;
+	if (slope == 0 || (slope > 0 && slope >= 1) || (slope < 0 && slope <= -1)) { return false; }
+	
+	subTrkArr.push([crX, tmpTxt]);	
 }
 
