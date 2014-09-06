@@ -17,7 +17,7 @@ purpose : google maps drawing logic
 type : release (under development)
 version : 1.0.0
 build : 
-last update : 25 July 2014 1:25pm (GMT 8+)
+last update : 05 September 2014 9:24pm (GMT 8+)
 
 */
 
@@ -83,7 +83,7 @@ var geocoder;
 var elevator;
 
 var chart;
-var gbmStrArr = new Array();
+var gbmStrArr = [];
 //google.maps.visualRefresh = true;
 
 $.lang = new jquery_lang_js();
@@ -99,40 +99,42 @@ var MapToolbar = {
 
 reindex:function(markers){
 	var pid = markers.getAt(0).pid;
-	markers.forEach(function(marker, index){
-		marker.index = index;
-		marker.title = marker.pid + '(' + index + ')';
-		pid = marker.pid;
-		// 2 test (14/1/2013)
-		if (marker.bdata.curve != '') {
-			var cuvid = marker.bdata.curve;
-			if (typeof MapToolbar.features['curveTab'][cuvid] != 'undefined') {MapToolbar.features['curveTab'][cuvid].mid = index; }
+	var ptype = pid.split('_')[0];
+	
+	//cadangan 2/7/2014 : ???
+	if (ptype == 'line') {
+		markers.forEach(function(marker, index){
+			marker.index = index;
+			marker.title = marker.pid + '(' + index + ')';
+			pid = marker.pid;
+			// 2 test (14/1/2013)
+			if (marker.bdata.curve != '') {
+				var cuvid = marker.bdata.curve;
+				if (typeof MapToolbar.features['curveTab'][cuvid] != 'undefined') {MapToolbar.features['curveTab'][cuvid].mid = index; }
 
-		}
-		if (marker.bdata.tcurve != '') {
-			var tcuvid = marker.bdata.tcurve;
-			if (typeof MapToolbar.features['tcurveTab'][tcuvid] != 'undefined') {MapToolbar.features['tcurveTab'][tcuvid].mid = index; }
-		}
-/*
-		if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(0).lineX != '') {
-			var bpid = MapToolbar.features['lineTab'][marker.pid].markers.getAt(0).lineX.split(':')[0];
-			var bpoly = MapToolbar.features['lineTab'][bpid];
-			if (typeof bpoly != 'undefined') {
-				MapToolbar.features['lineTab'][bpid].markers.forEach(function(bmarker, bindex){
-					if (bmarker.sline != '') {
-						var sLArr = bmarker.sline.split(':');
-						if (sLArr[0] == marker.pid && sLArr[1] == '1') {
-							bmarker.sline = sLArr[0] + ':' + sLArr[1] + ':' + index;
-							return;
-							//break;
-						}
-					}
-				});
 			}
-		} */			    
-	});		
-		//cadangan 2/7/2014 : ???
-	if (pid.split('_')[0] == 'line') {
+			if (marker.bdata.tcurve != '') {
+				var tcuvid = marker.bdata.tcurve;
+				if (typeof MapToolbar.features['tcurveTab'][tcuvid] != 'undefined') {MapToolbar.features['tcurveTab'][tcuvid].mid = index; }
+			}
+			/*
+			if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(0).lineX != '') {
+				var bpid = MapToolbar.features['lineTab'][marker.pid].markers.getAt(0).lineX.split(':')[0];
+				var bpoly = MapToolbar.features['lineTab'][bpid];
+				if (typeof bpoly != 'undefined') {
+					MapToolbar.features['lineTab'][bpid].markers.forEach(function(bmarker, bindex){
+						if (bmarker.sline != '') {
+							var sLArr = bmarker.sline.split(':');
+							if (sLArr[0] == marker.pid && sLArr[1] == '1') {
+								bmarker.sline = sLArr[0] + ':' + sLArr[1] + ':' + index;
+								return;
+								//break;
+							}
+						}
+					});
+				}
+			} */			    
+		});	
 		if (MapToolbar.features['lineTab'][pid].lineX != '') {
 			//MapToolbar.features['lineTab'][marker.pid].lineX != 'baseline_pid1,baseline_pid2 ....'
 			
@@ -181,261 +183,283 @@ currentFeature: null,
 
 //add a point to a poly, 'e' can be a click event or a latLng object
 
-    addPoint : function(e, poly, index) {
-    	var ptype = poly.id.split('_')[0];
-    	
-    	if (ptype == 'line') {
-		var e = (typeof e.latLng != 'undefined') ? e.latLng : e,
-			image = new google.maps.MarkerImage('images/square.png',
-					new google.maps.Size(7, 7),
-					new google.maps.Point(0, 0),
-					new google.maps.Point(3, 3)), 
-					path = poly.getPath(),
-					index = (typeof index != 'undefined') ? index : path.length,
-					markers = (poly.markers) ? poly.markers : new google.maps.MVCArray, 
-			marker = new google.maps.Marker({
-					position: e,
-					title: poly.id + '(' + index + ')',
-					map: map,
-					draggable: true,
-					icon: image,
-					uid: genUiD(e.toString()), //unique id - new feature start on 24/7/2014
-					note: '', // any extra note 
-					bdata: {height:'',railindex:'',pitch:'',curve:'',tcurve:''},
-					kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
-					sline: '',
-					lineX: '',
-					gdata: {lastpitch:'',lastheight:'',lastheightratio:''},
-					pid: poly.id
-		    });
-	  	marker.index = index;    
-	    	path.insertAt(index, e);
-	    	markers.insertAt(index, marker)
-	    	if(arguments[2]){
-		    	MapToolbar.reindex(markers);	
-	    	}
-    	} else if (ptype == 'ruler' || ptype == 'protractor') {
-		var e = (typeof e.latLng != 'undefined') ? e.latLng : e,
-			image = new google.maps.MarkerImage('images/ruler-marker.png',
-					new google.maps.Size(7, 7),
-					new google.maps.Point(0, 0),
-					new google.maps.Point(3, 3)), 
-					path = poly.getPath(),
-					index = (typeof index != 'undefined') ? index : path.length,
-					markers = (poly.markers) ? poly.markers : new google.maps.MVCArray, 
-			marker = new google.maps.Marker({
-					position: e,
-					title: poly.id + '(' + index + ')',
-					map: map,
-					draggable: true,
-					icon: image,
-					pid: poly.id
-				});
-			marker.index = index;    
-	    	path.insertAt(index, e);
-	    	markers.insertAt(index, marker)
-	    	if(arguments[2]){
-		    	MapToolbar.reindex(markers);	
-	    	}
-			
-			if (ptype == 'ruler') {
-				if (markers.length >=2) {
-					MapToolbar.select("hand_b");
-				}
-			} else {
-				if (markers.length >=3) {
-					MapToolbar.select("hand_b");
-					var image = {					
-						path: google.maps.SymbolPath.CIRCLE,
-						scale: 8,
-						strokeColor: '#C80000',
-						strokeWeight: 2};
-					markers.getAt(1).setIcon(image); 
-				}
-			}
-			
-		} else if (ptype == 'curve') {
-			var e = (typeof e.latLng != 'undefined') ? e.latLng : e,
-				image = new google.maps.MarkerImage('images/bullet_add.png',
-				new google.maps.Size(5, 5),
+addPoint : function(e, poly, index) {
+	var ptype = poly.id.split('_')[0];
+	
+	if (ptype == 'line') {
+	var e = (typeof e.latLng != 'undefined') ? e.latLng : e,
+		image = new google.maps.MarkerImage('images/square.png',
+				new google.maps.Size(7, 7),
 				new google.maps.Point(0, 0),
 				new google.maps.Point(3, 3)), 
 				path = poly.getPath(),
 				index = (typeof index != 'undefined') ? index : path.length,
 				markers = (poly.markers) ? poly.markers : new google.maps.MVCArray, 
-				marker = new google.maps.Marker({
-					position: e,
-					map: map,
-					title: poly.id + '(' + index + ')',
-					draggable: false,
-					icon: image,
-					note: '', // any extra note 
-					bdata: {height:'',pitch:''},
-					kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
-					sline: '',
-					lineX: '',
-					ld:null, // distance on circumference from curve start point 
-					pid:poly.id
-				});
-			
-				marker.index = index;    
-				path.insertAt(index, e);
-				markers.insertAt(index, marker)
-				if(arguments[2]){
-					MapToolbar.reindex(markers);	
-				}
-
-				//for (i=0; i < MapToolbar.features["lineTab"][poly.pid].markers.length; i++){
-					// if ((MapToolbar.features["lineTab"][poly.pid].markers.getAt(i).bdata.curve) != '') {
-	    			
-	    			
-	    			//if (MapToolbar.features["lineTab"][poly.pid].markers.getAt(i).bdata.curve == poly.id) {
-		
-				var rd = poly.Rc;  // retrive curve radius
-				var Cc = poly.Cc;  // retrive curve center coordinate
-				var arL = poly.Lc; // retrive arc length
-				var x1 = poly.st;  // retrive curve start coordinate
-				var ch1 = google.maps.geometry.spherical.computeHeading(x1,Cc);
-				var ch2 = google.maps.geometry.spherical.computeHeading(Cc,e);
-				var anC = intersection_angle(ch1,ch2).angle;
-	 		   	
-				var xL = Math.abs((anC/360) * 2 * Math.PI * rd); //anC.toRad() * Math.PI * rd;
-				marker.ld = xL;
-				marker.note = 'cmi:'+ index; // curve marker @ marker id on curve
-	    				//break;
-	    			//}
-	    		//}
-	    	// }
-	    	
-		} else if (ptype == 'tcurve') {
-			var e = (typeof e.latLng != 'undefined') ? e.latLng : e,
-			    image = new google.maps.MarkerImage('images/bullet_add_2.png',
-			    new google.maps.Size(5, 5),
+		marker = new google.maps.Marker({
+				position: e,
+				title: poly.id + '(' + index + ')',
+				map: map,
+				draggable: true,
+				icon: image,
+				uid: genUiD(e.toString()), //unique id for marker - new feature start on 24/7/2014
+				note: '', // any extra note 
+				bdata: {height:'',railindex:'',pitch:'',curve:'',tcurve:''},
+				kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
+				sline: '',
+				lineX: '',
+				gdata: {lastpitch:'',lastheight:'',lastheightratio:''},
+				pid: poly.id
+		});
+	marker.index = index;    
+		path.insertAt(index, e);
+		markers.insertAt(index, marker)
+		if(arguments[2]){
+			MapToolbar.reindex(markers);	
+		}
+	} else if (ptype == 'ruler' || ptype == 'protractor') {
+	var e = (typeof e.latLng != 'undefined') ? e.latLng : e,
+		image = new google.maps.MarkerImage('images/ruler-marker.png',
+				new google.maps.Size(7, 7),
 				new google.maps.Point(0, 0),
-			    new google.maps.Point(3, 3)), 
+				new google.maps.Point(3, 3)), 
 				path = poly.getPath(),
 				index = (typeof index != 'undefined') ? index : path.length,
 				markers = (poly.markers) ? poly.markers : new google.maps.MVCArray, 
-				marker = new google.maps.Marker({
+		marker = new google.maps.Marker({
+				position: e,
+				title: poly.id + '(' + index + ')',
+				map: map,
+				draggable: true,
+				icon: image,
+				pid: poly.id
+			});
+		marker.index = index;    
+		path.insertAt(index, e);
+		markers.insertAt(index, marker)
+		if(arguments[2]){
+			MapToolbar.reindex(markers);	
+		}
+		
+		if (ptype == 'ruler') {
+			if (markers.length >=2) {
+				MapToolbar.select("hand_b");
+			}
+		} else {
+			if (markers.length >=3) {
+				MapToolbar.select("hand_b");
+				var image = {					
+					path: google.maps.SymbolPath.CIRCLE,
+					scale: 8,
+					strokeColor: '#C80000',
+					strokeWeight: 2};
+				markers.getAt(1).setIcon(image); 
+			}
+		}
+		
+	} else if (ptype == 'curve') {
+		var imgS = "images/curve-sign.png";
+		var imgE = "images/curve-sign2.png";
+		var imgC = "images/bullet_white.png";
+		var imgP = "images/bullet_arrow_down.png";
+		
+		var img = '';
+		if (typeof index != 'undefined') {
+			if (index == 1) {
+				img = imgE;
+			} else if (index == 2) {
+				img = imgC;
+			} else {
+				img = imgP;
+			}
+		} else {
+			img = imgS;
+		}
+		
+		var e = (typeof e.latLng != 'undefined') ? e.latLng : e,
+			image = new google.maps.MarkerImage(img,
+			new google.maps.Size(5, 5),
+			new google.maps.Point(0, 0),
+			new google.maps.Point(3, 3)), 
+			path = poly.getPath(),
+			index = poly.markers.length,
+			markers = (poly.markers) ? poly.markers : new google.maps.MVCArray, 
+			marker = new google.maps.Marker({
 				position: e,
 				map: map,
+				title: poly.id + '(' + index + ')',
 				draggable: false,
 				icon: image,
-				title: poly.id + '(' + index + ')',
 				note: '', // any extra note 
 				bdata: {height:'',pitch:''},
 				kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
 				sline: '',
 				lineX: '',
-				pid: poly.id
-		    });
+				gdata: {lastpitch:'',lastheight:'',lastheightratio:''},
+				ld:'', // distance on circumference from curve start point 
+				pid:poly.id
+			});
+		
 			marker.index = index;    
-	    	path.insertAt(index, e);
-	    	markers.insertAt(index, marker)
-	    	if(arguments[2]){
-		    	MapToolbar.reindex(markers);	
-	    	}
-			//2do 4Feb2014************************************
-			var Rc = poly.Rc;  // retrive curve radius
-			var Cc = poly.Cc;  // retrive curve center coordinate
-			var Ls = poly.Ls;
-			var Lc = poly.Lc;
-			var K = poly.K;
-			var Lt = Lc + 2 * Ls; // retrive arc length
-			
-			var ts1 = poly.Ttst;  // retrive curve coordinate
-			var tc1 = poly.Tcst;  // retrive curve coordinate
-			var tc2 = poly.Tced;  // retrive curve coordinate
-			var ts2 = poly.Tted;  // retrive curve coordinate
-			var h1 = poly.h1;
-			var h2 = poly.h2;
-			
-			var kp1 = google.maps.geometry.spherical.computeOffset(ts1, K, h1);
-			var kp2 = google.maps.geometry.spherical.computeOffset(ts2, -K, h2);
-			
-			var delta0 = poly.delta;
-			var theta0 = poly.theta;
-			var deltaS0 = poly.deltaS;
-			var deltaC0 = poly.deltaC;
-			var tctype = poly.tctype;
-			var lineId = poly.pid;
-			var l_idx = poly.mid;
-			var TotalX = poly.TotalX;
-			var TotalY = poly.TotalY;
-			
-			var ch1 = google.maps.geometry.spherical.computeHeading(kp1,Cc);
-			var ch2 = google.maps.geometry.spherical.computeHeading(Cc,e);
-			var delta = intersection_angle(ch1,ch2).angle;
-			
-			var xL = 0;
-			
-			var biP = MapToolbar.features["lineTab"][lineId].markers.getAt(l_idx-1).position;
-			var isP = MapToolbar.features["lineTab"][lineId].markers.getAt(l_idx).position;
-			var aiP = MapToolbar.features["lineTab"][lineId].markers.getAt(l_idx+1).position;
-			
-			if (delta <= deltaS0) {
-				var h_ac = google.maps.geometry.spherical.computeHeading(e,ts1);
-				var h_ab = google.maps.geometry.spherical.computeHeading(ts1,isP);
-				var alfa = intersection_angle(h_ac,h_ab).angle;
-				var x_ac = google.maps.geometry.spherical.computeDistanceBetween(e,ts1);
-				
-				if (tctype == 'cubic') {
-					xL = x_ac * Math.cos(alfa.toRad()); //base on assumption x=l	
-				} else {
-				//base on assumption x/X = l/L
-					var x = x_ac * Math.cos(alfa.toRad()); 
-					xL = (x * Ls)/ TotalX;
-				}
-				marker.ld = xL;	
-				
-			} else if (delta <= deltaS0 + deltaC0) {
-			
-				var delta1 = delta - deltaS0;
-				xL = Math.abs((delta1/360) * 2 * Math.PI * Rc); //anC.toRad() * Math.PI * rd;
-				marker.ld = xL + Ls;
-				
-			} else {
-				var h_ac = google.maps.geometry.spherical.computeHeading(e,ts2);
-				var h_ab = google.maps.geometry.spherical.computeHeading(ts2,isP);
-				var alfa = intersection_angle(h_ac,h_ab).angle;
-				var x_ac = google.maps.geometry.spherical.computeDistanceBetween(e,ts2);				
-			
-				if (tctype == 'cubic') {
-					xL = x_ac * Math.cos(alfa.toRad()); //base on assumption x=l					
-				} else {
-					//base on assumption x/X = l/L
-					var x = x_ac * Math.cos(alfa.toRad()); 
-					xL = (x * Ls)/ TotalX;		
-				}
-				marker.ld = Lt - xL;
-			}
+			//path.insertAt(index, e);
+			markers.insertAt(index, marker)
+			/*if(arguments[2]){
+				MapToolbar.reindex(markers);	
+			}*/
 
-	 		marker.note = 'cmi:'+ index; // curve marker @ marker id on curve
+			//for (i=0; i < MapToolbar.features["lineTab"][poly.pid].markers.length; i++){
+				// if ((MapToolbar.features["lineTab"][poly.pid].markers.getAt(i).bdata.curve) != '') {
+				
+				
+				//if (MapToolbar.features["lineTab"][poly.pid].markers.getAt(i).bdata.curve == poly.id) {
+	
+			var rd = poly.Rc;  // retrive curve radius
+			var Cc = poly.Cc;  // retrive curve center coordinate
+			var arL = poly.Lc; // retrive arc length
+			var x1 = poly.st;  // retrive curve start coordinate
+			var ch1 = google.maps.geometry.spherical.computeHeading(x1,Cc);
+			var ch2 = google.maps.geometry.spherical.computeHeading(Cc,e);
+			var anC = intersection_angle(ch1,ch2).angle;
 			
-	    } else if (ptype == 'shape') {
-			var e = (typeof e.latLng != 'undefined') ? e.latLng : e,
-			image = new google.maps.MarkerImage('images/square.png',
-			new google.maps.Size(7, 7),
-		  	new google.maps.Point(0, 0),
+			var xL = Math.abs((anC/360) * 2 * Math.PI * rd); //anC.toRad() * Math.PI * rd;
+			marker.ld = xL;
+			marker.note = 'cmi:'+ index; // curve marker @ marker id on curve
+					//break;
+				//}
+			//}
+		// }
+		
+	} else if (ptype == 'tcurve') {
+		var e = (typeof e.latLng != 'undefined') ? e.latLng : e,
+			image = new google.maps.MarkerImage('images/bullet_arrow_down.png',
+			new google.maps.Size(5, 5),
+			new google.maps.Point(0, 0),
 			new google.maps.Point(3, 3)), 
 			path = poly.getPath(),
-			index = (typeof index != 'undefined') ? index : path.length,
+			index = poly.markers.length,
 			markers = (poly.markers) ? poly.markers : new google.maps.MVCArray, 
-		    marker = new google.maps.Marker({
+			marker = new google.maps.Marker({
+			position: e,
+			map: map,
+			draggable: false,
+			icon: image,
+			title: poly.id + '(' + index + ')',
+			note: '', // any extra note 
+			bdata: {height:'',pitch:''},
+			kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
+			sline: '',
+			lineX: '',
+			gdata: {lastpitch:'',lastheight:'',lastheightratio:''},
+			ld:'', // distance on circumference from curve start point 
+			pid: poly.id
+		});
+		marker.index = index;    
+		//path.insertAt(index, e);
+		markers.insertAt(index, marker)
+		/* if(arguments[2]){
+			MapToolbar.reindex(markers);	
+		} */
+		//2do 4Feb2014************************************
+		var Rc = poly.Rc;  // retrive curve radius
+		var Cc = poly.Cc;  // retrive curve center coordinate
+		var Ls = poly.Ls;
+		var Lc = poly.Lc;
+		var K = poly.K;
+		var Lt = Lc + 2 * Ls; // retrive arc length
+		
+		var ts1 = poly.Ttst;  // retrive curve coordinate
+		var tc1 = poly.Tcst;  // retrive curve coordinate
+		var tc2 = poly.Tced;  // retrive curve coordinate
+		var ts2 = poly.Tted;  // retrive curve coordinate
+		var h1 = poly.h1;
+		var h2 = poly.h2;
+		
+		var kp1 = google.maps.geometry.spherical.computeOffset(ts1, K, h1);
+		var kp2 = google.maps.geometry.spherical.computeOffset(ts2, -K, h2);
+		
+		var delta0 = poly.delta;
+		var theta0 = poly.theta;
+		var deltaS0 = poly.deltaS;
+		var deltaC0 = poly.deltaC;
+		var tctype = poly.tctype;
+		var lineId = poly.pid;
+		var l_idx = poly.mid;
+		var TotalX = poly.TotalX;
+		var TotalY = poly.TotalY;
+		
+		var ch1 = google.maps.geometry.spherical.computeHeading(kp1,Cc);
+		var ch2 = google.maps.geometry.spherical.computeHeading(Cc,e);
+		var delta = intersection_angle(ch1,ch2).angle;
+		
+		var xL = 0;
+		
+		var biP = MapToolbar.features["lineTab"][lineId].markers.getAt(l_idx-1).position;
+		var isP = MapToolbar.features["lineTab"][lineId].markers.getAt(l_idx).position;
+		var aiP = MapToolbar.features["lineTab"][lineId].markers.getAt(l_idx+1).position;
+		
+		if (delta <= deltaS0) {
+			var h_ac = google.maps.geometry.spherical.computeHeading(e,ts1);
+			var h_ab = google.maps.geometry.spherical.computeHeading(ts1,isP);
+			var alfa = intersection_angle(h_ac,h_ab).angle;
+			var x_ac = google.maps.geometry.spherical.computeDistanceBetween(e,ts1);
+			
+			if (tctype == 'cubic') {
+				xL = x_ac * Math.cos(alfa.toRad()); //base on assumption x=l	
+			} else {
+			//base on assumption x/X = l/L
+				var x = x_ac * Math.cos(alfa.toRad()); 
+				xL = (x * Ls)/ TotalX;
+			}
+			marker.ld = xL;	
+			
+		} else if (delta <= deltaS0 + deltaC0) {
+		
+			var delta1 = delta - deltaS0;
+			xL = Math.abs((delta1/360) * 2 * Math.PI * Rc); //anC.toRad() * Math.PI * rd;
+			marker.ld = xL + Ls;
+			
+		} else {
+			var h_ac = google.maps.geometry.spherical.computeHeading(e,ts2);
+			var h_ab = google.maps.geometry.spherical.computeHeading(ts2,isP);
+			var alfa = intersection_angle(h_ac,h_ab).angle;
+			var x_ac = google.maps.geometry.spherical.computeDistanceBetween(e,ts2);				
+		
+			if (tctype == 'cubic') {
+				xL = x_ac * Math.cos(alfa.toRad()); //base on assumption x=l					
+			} else {
+				//base on assumption x/X = l/L
+				var x = x_ac * Math.cos(alfa.toRad()); 
+				xL = (x * Ls)/ TotalX;		
+			}
+			marker.ld = Lt - xL;
+		}
+
+		marker.note = 'cmi:'+ index; // curve marker @ marker id on curve
+		
+	} else if (ptype == 'shape') {
+		var e = (typeof e.latLng != 'undefined') ? e.latLng : e,
+		image = new google.maps.MarkerImage('images/square.png',
+		new google.maps.Size(7, 7),
+		new google.maps.Point(0, 0),
+		new google.maps.Point(3, 3)), 
+		path = poly.getPath(),
+		index = (typeof index != 'undefined') ? index : path.length,
+		markers = (poly.markers) ? poly.markers : new google.maps.MVCArray, 
+		marker = new google.maps.Marker({
 			position: e,
 			//title: poly.id + '(' + index + ')',
 			map: map,
 			draggable: true,
 			icon: image,
+			pid: poly.id,
 			note: '', // any extra note 
 			kit:'' // others data (reserved) by Karya IT
 		});
-	  	marker.index = index;    
-	    path.insertAt(index, e);
-	    markers.insertAt(index, marker)
-	    if(arguments[2]){
-		    MapToolbar.reindex(markers);	
-	    }				
+		marker.index = index;    
+		path.insertAt(index, e);
+		markers.insertAt(index, marker)
+		if(arguments[2]){
+			MapToolbar.reindex(markers);	
+		}				
 	} else {
 		alert('no code defined...');
 	}
@@ -444,29 +468,34 @@ currentFeature: null,
 //right click on a polymarker will delete it
 
 	google.maps.event.addListener(marker, 'rightclick', function() {
-		if (!(marker.pid.split('_')[0] == 'ruler' || marker.pid.split('_')[0] == 'protractor')) {
-			if (marker.kdata.form != '') {
-				var formArr = marker.kdata.form.split(',');
-				if (formArr.length == 7) {
-					removeStation(formArr[2]);
+		var ppid = marker.pid;
+		var ptype = marker.pid.split('_')[0];
+		if (!(ptype == 'ruler' || ptype == 'protractor')) {
+			if (ptype == 'line') {
+				if (marker.kdata.form != '') {
+					var formArr = marker.kdata.form.split('¤');
+					if (formArr.length == 7) {
+						removeStation(formArr[2]);
+					}
 				}
 			}
 			marker.setMap(null);
 			markers.removeAt(marker.index);
 			path.removeAt(marker.index);
-			MapToolbar.reindex(markers);			
 			if(markers.getLength() == 0){
-				MapToolbar.removeFeature(poly.id); 
+				MapToolbar.removeFeature(ppid); 
 				// cadangan store data parallelto line apa pada index x dan y
 				// gunakan data ini utk update attribut .sline pada polyline asal
-			}	
+			} else {
+				MapToolbar.reindex(markers);
+			}			
 		}
 	});
 	    
 	    
 	google.maps.event.addListener(marker, 'click', function(mEvent) {
-	   
-		if ((marker.pid.split('_')[0] == 'curve') || (marker.pid.split('_')[0] == 'tcurve')) {
+		var ptype = marker.pid.split('_')[0];
+		if ((ptype == 'curve') || (ptype == 'tcurve')) {
 			//var distance = getTrackDistanceFromStart(marker.pid,marker.index);
 			//var length = distance.polyline;
 			//var actual = distance.line;
@@ -526,7 +555,7 @@ currentFeature: null,
         
 				infowindow.open(map);	
 				
-		} else if (marker.pid.split('_')[0] == 'line') {
+		} else if (ptype == 'line') {
 	    	if ($('#dialogParalelLine').dialog('isOpen') == true) {
 	    		if (document.getElementById('PLCopyType_0').checked) {
 	    			if ($('#m1').val() != '') { $('#m1').val(''); }
@@ -626,22 +655,22 @@ currentFeature: null,
 	    		return;  			
 	    	}
 
-		if ($('#dialogInsertPlatform').dialog('isOpen') == true) {
-	    		if (marker.pid == $('#dInsForm_pid').val()) {
-	    			if ($('#form15_st').val() == '') {
-	    				$('#form15_st').val(marker.index);
-	    			} else {
-	    				$('#form15_ed').val(marker.index);
-	    				if (parseInt($('#form15_ed').val()) < parseInt($('#form15_st').val())) {
-	    					var no1 = parseInt($('#form15_st').val());
-	    					var no2 = parseInt($('#form15_ed').val());
-	    					$('#form15_st').val(no2);
-	    					$('#form15_ed').val(no1);
-	    				}	    					
-	    			}		    					
-	    		} 				
-			return false;  			
-		}			
+			if ($('#dialogInsertPlatform').dialog('isOpen') == true) {
+					if (marker.pid == $('#dInsForm_pid').val()) {
+						if ($('#form15_st').val() == '') {
+							$('#form15_st').val(marker.index);
+						} else {
+							$('#form15_ed').val(marker.index);
+							if (parseInt($('#form15_ed').val()) < parseInt($('#form15_st').val())) {
+								var no1 = parseInt($('#form15_st').val());
+								var no2 = parseInt($('#form15_ed').val());
+								$('#form15_st').val(no2);
+								$('#form15_ed').val(no1);
+							}	    					
+						}		    					
+					} 				
+				return false;  			
+			}			
 
 	    	var distance = getTrackDistanceFromStart(marker.pid,marker.index);
 			var Lpoly = distance.Lpoly;
@@ -760,7 +789,7 @@ currentFeature: null,
         
 			infowindow.open(map);	
 
-		} else if (marker.pid.split('_')[0] == 'ruler') { 
+		} else if (ptype == 'ruler') { 
 		
 			var poly =MapToolbar.features['rulerTab'][marker.pid];
 			var length = google.maps.geometry.spherical.computeLength(poly.getPath());;
@@ -777,7 +806,7 @@ currentFeature: null,
 			
 			infowindow.open(map);
 				
-		} else if (marker.pid.split('_')[0] == 'protractor') {
+		} else if (ptype == 'protractor') {
 			if (marker.index = 1) {
 				var poly =MapToolbar.features['protractorTab'][marker.pid];
 				var m0 = poly.markers.getAt(0).getPosition();
@@ -795,7 +824,9 @@ currentFeature: null,
 				});
 				infowindow.open(map);						
 			}
-		} 
+		} else {
+			//polygon
+		}		
 	});
 			
 /*
@@ -803,81 +834,84 @@ currentFeature: null,
 				MapToolbar.currentlyDragging = true;
 	  	})
 */		
-      google.maps.event.addListener(marker, 'position_changed', function() {
- 				path.setAt(marker.index, marker.getPosition());
+    google.maps.event.addListener(marker, 'position_changed', function() {
+		path.setAt(marker.index, marker.getPosition());
 
-				//2do testing removing unalign curve, tcurve n sline : 21/3/2014 				
-			  if (marker.bdata.curve != '') {
-					var cuvid = marker.bdata.curve;
-					if (typeof MapToolbar.features["curveTab"][cuvid] != 'undefined') { MapToolbar.removeFeature(cuvid); }
-			  }
-			  if (marker.bdata.tcurve != '') {
- 					var tcuvid = marker.bdata.tcurve;								
-					if (typeof MapToolbar.features["tcurveTab"][tcuvid] != 'undefined') { MapToolbar.removeFeature(tcuvid); }
-			  } 
-			  /*
-		    if (marker.sline != '') {
-			  	if (marker.sline.indexOf(',') == 0) { 
- 						marker.sline = marker.sline.substring(1,marker.sline.length);
- 					}
- 					var arrLine = marker.sline.split(',');
- 					for (p = 0; p < arrLine.length; p++) {
- 						var subArrL = arrLine[p].split(':');
- 						var lineID = subArrL[0];
- 						if (typeof MapToolbar.features["lineTab"][lineID] != 'undefined') { MapToolbar.removeFeature(lineID); }
- 					}			    		
-		    }
-			  */ 
-			  if (typeof MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1) != 'undefined') { 					
- 					if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).bdata.curve != '') {
- 						var cuvid = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).bdata.curve;
-						if (typeof MapToolbar.features["curveTab"][cuvid] != 'undefined') { MapToolbar.removeFeature(cuvid); }
- 			  	}
- 					if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).bdata.tcurve != '') {
- 						var tcuvid = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).bdata.tcurve;
-						if (typeof MapToolbar.features["tcurveTab"][tcuvid] != 'undefined') { MapToolbar.removeFeature(tcuvid); }
- 			  	}
- 			  	/*
-		    	if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).sline != '') {
-			  		if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).sline.indexOf(',') == 0) { 
- 							MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).sline = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).sline.substring(1,marker.sline.length);
- 						}
- 						var arrLine = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).sline.split(',');
- 						for (p = 0; p < arrLine.length; p++) {
- 							var subArrL = arrLine[p].split(':');
- 							var lineID = subArrL[0];
- 							if (typeof MapToolbar.features["lineTab"][lineID] != 'undefined') { MapToolbar.removeFeature(lineID); }
- 						}			    		
-		    	} 	
-		    	*/		  
+		if (marker.pid.split('_')[0] == 'line') {
+			//2do testing removing unalign curve, tcurve n sline : 21/3/2014 				
+			if (marker.bdata.curve != '') {
+				var cuvid = marker.bdata.curve;
+				if (typeof MapToolbar.features["curveTab"][cuvid] != 'undefined') { MapToolbar.removeFeature(cuvid); }
+			}
+			if (marker.bdata.tcurve != '') {
+				var tcuvid = marker.bdata.tcurve;								
+				if (typeof MapToolbar.features["tcurveTab"][tcuvid] != 'undefined') { MapToolbar.removeFeature(tcuvid); }
+			} 
+			/*
+			if (marker.sline != '') {
+				if (marker.sline.indexOf(',') == 0) { 
+					marker.sline = marker.sline.substring(1,marker.sline.length);
 				}
- 			  if (typeof MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1) != 'undefined') {
- 			  	if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).bdata.curve != '') {
- 						var cuvid = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).bdata.curve;
-						if (typeof MapToolbar.features["curveTab"][cuvid] != 'undefined') { MapToolbar.removeFeature(cuvid); }
- 			  	}  			  	
- 			  	if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).bdata.tcurve != '') {
- 						var tcuvid = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).bdata.tcurve;
-						if (typeof MapToolbar.features["tcurveTab"][tcuvid] != 'undefined') { MapToolbar.removeFeature(tcuvid); }
- 			  	}
- 			  	/*
-		    	if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).sline != '') {
-			  		if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).sline.indexOf(',') == 0) { 
- 							MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).sline = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).sline.substring(1,marker.sline.length);
- 						}
- 						var arrLine = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).sline.split(',');
- 						for (p = 0; p < arrLine.length; p++) {
- 							var subArrL = arrLine[p].split(':');
- 							var lineID = subArrL[0];
- 							if (typeof MapToolbar.features["lineTab"][lineID] != 'undefined') { MapToolbar.removeFeature(lineID); }
- 						}			    		
-		    	} 	
-		    	*/		  	
- 			  }			  
- 			  
-	  	})
+				var arrLine = marker.sline.split('¤');
+				for (p = 0; p < arrLine.length; p++) {
+					var subArrL = arrLine[p].split(':');
+					var lineID = subArrL[0];
+					if (typeof MapToolbar.features["lineTab"][lineID] != 'undefined') { MapToolbar.removeFeature(lineID); }
+				}			    		
+			}
+			*/ 
+			if (typeof MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1) != 'undefined') { 					
+				if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).bdata.curve != '') {
+					var cuvid = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).bdata.curve;
+					if (typeof MapToolbar.features["curveTab"][cuvid] != 'undefined') { MapToolbar.removeFeature(cuvid); }
+				}
+				if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).bdata.tcurve != '') {
+					var tcuvid = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).bdata.tcurve;
+					if (typeof MapToolbar.features["tcurveTab"][tcuvid] != 'undefined') { MapToolbar.removeFeature(tcuvid); }
+			}
+			/*
+			if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).sline != '') {
+				if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).sline.indexOf(',') == 0) { 
+						MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).sline = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).sline.substring(1,marker.sline.length);
+					}
+					var arrLine = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index-1).sline.split('¤');
+					for (p = 0; p < arrLine.length; p++) {
+						var subArrL = arrLine[p].split(':');
+						var lineID = subArrL[0];
+						if (typeof MapToolbar.features["lineTab"][lineID] != 'undefined') { MapToolbar.removeFeature(lineID); }
+					}			    		
+			} 	
+			*/		  
+			}
+			if (typeof MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1) != 'undefined') {
+				if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).bdata.curve != '') {
+					var cuvid = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).bdata.curve;
+					if (typeof MapToolbar.features["curveTab"][cuvid] != 'undefined') { MapToolbar.removeFeature(cuvid); }
+				}  			  	
+				if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).bdata.tcurve != '') {
+					var tcuvid = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).bdata.tcurve;
+					if (typeof MapToolbar.features["tcurveTab"][tcuvid] != 'undefined') { MapToolbar.removeFeature(tcuvid); }
+				}
+				/*
+				if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).sline != '') {
+					if (MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).sline.indexOf(',') == 0) { 
+							MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).sline = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).sline.substring(1,marker.sline.length);
+						}
+						var arrLine = MapToolbar.features['lineTab'][marker.pid].markers.getAt(marker.index+1).sline.split('¤');
+						for (p = 0; p < arrLine.length; p++) {
+							var subArrL = arrLine[p].split(':');
+							var lineID = subArrL[0];
+							if (typeof MapToolbar.features["lineTab"][lineID] != 'undefined') { MapToolbar.removeFeature(lineID); }
+						}			    		
+				} 	
+				*/		  	
+			}		
+		}
+			  
+		  
+	})
 				
-	    google.maps.event.addListener(marker, 'dragend', function() {
+	google.maps.event.addListener(marker, 'dragend', function() {
 			//MapToolbar.currentlyDragging = false;
 			if (!(marker.pid.split('_')[0] == 'ruler' || marker.pid.split('_')[0] == 'protractor')) {
 		    path.setAt(marker.index, marker.getPosition());
@@ -897,7 +931,7 @@ currentFeature: null,
 		    }			
 			}
 			
-	    });
+	});
 
     },	
     
@@ -1065,7 +1099,7 @@ currentFeature: null,
 		    		MapToolbar.features['lineTab'][pid].markers.getAt(Mid+1).setDraggable(true);
 		    	}
 		    			    	
-		      feature.markers.forEach(function(marker, index){
+				feature.markers.forEach(function(marker, index){
 				    marker.setMap(null);
 			    });		     
 			    feature.setMap(null);
@@ -1096,28 +1130,35 @@ currentFeature: null,
 			    feature.setMap(null);
 				break;
 			case "ruler":
+				feature.markers.forEach(function(marker, index){
+					marker.setMap(null);
+				});			
 				feature.setMap(null);
 		    	break;
 			case "protractor":
+				feature.markers.forEach(function(marker, index){
+					marker.setMap(null);
+				});	
 				feature.setMap(null);
 		    	break;
 		  default:
-			  feature.markers.forEach(function(marker, index){
+			feature.markers.forEach(function(marker, index){
+				if (type == 'line') {
 			    	//2do remove parallel line, tcurve, curve and all reference including object that created
 		    		if (marker.sline != '') {
-			    		if (marker.sline.indexOf(',') == 0) { 
+			    		if (marker.sline.indexOf('¤') == 0) { 
  						marker.sline = marker.sline.substring(1,marker.sline.length);
- 					}
- 					var arrLine = marker.sline.split(',');
- 					for (p = 0; p < arrLine.length; p++) {
- 						var subArrL = arrLine[p].split(':');
- 						var lineName = subArrL[0];
- 						if (subArrL[1] == '0') {
- 							if (typeof MapToolbar.features["lineTab"][lineName] != 'undefined') { MapToolbar.removeFeature(lineName); }
- 						} else if (subArrL[1] == '1') {
- 							// do nothing
- 						}
- 					}			    		
+						}
+						var arrLine = marker.sline.split('¤');
+						for (p = 0; p < arrLine.length; p++) {
+							var subArrL = arrLine[p].split(':');
+							var lineName = subArrL[0];
+							if (subArrL[1] == '0') {
+								if (typeof MapToolbar.features["lineTab"][lineName] != 'undefined') { MapToolbar.removeFeature(lineName); }
+							} else if (subArrL[1] == '1') {
+								// do nothing
+							}
+						}			    		
 		    		}
 			    	
 			    	if (marker.bdata.curve != '') {
@@ -1128,12 +1169,15 @@ currentFeature: null,
  					var tcuvid = marker.bdata.tcurve;								
 					if (typeof MapToolbar.features["tcurveTab"][tcuvid] != 'undefined') { MapToolbar.removeFeature(tcuvid); }
 			    	}
-			    	
+				}
 				marker.setMap(null);
 			});
-			var route = feature.route;
+			if (type == 'line') { 
+				var route = feature.route;
+				removeRoute(route);
+			}
 			feature.setMap(null);
-			removeRoute(route);
+			
 			break;
 	    }
 	    MapToolbar.select('hand_b');
@@ -1195,18 +1239,19 @@ currentFeature: null,
     		MapToolbar.currentFeature = MapToolbar.features[type + 'Tab'][featureName]; 
     		var point = MapToolbar.currentFeature.getPath().getAt(MapToolbar.currentFeature.getPath().length-1);
     	}else if(type == 'dotMarker'){
-    		MapToolbar.currentFeature = null;
+    		MapToolbar.currentFeature = MapToolbar.features[type + 'Tab'][featureName];
  			var point = MapToolbar.features[type + 'Tab'][featureName].getPosition();   		
     	}else if(type == 'circle' || type == 'rectangle'){
-    		MapToolbar.currentFeature = null;
-    		var RCobj = MapToolbar.features[type + 'Tab'][featureName];
+    		MapToolbar.currentFeature = MapToolbar.features[type + 'Tab'][featureName];
+    		var RCobj = MapToolbar.currentFeature;
     		RCobj.setEditable(true);    		 
     		google.maps.event.addListenerOnce(RCobj, 'bounds_changed', function(mEvent) {
     			RCobj.setEditable(false);
+				MapToolbar.select("hand_b");
    			});
     	}
     	MapToolbar.select(type + '_b');
-			map.setCenter(point);
+		map.setCenter(point);
 			
     },
 
@@ -1321,7 +1366,7 @@ MapToolbar.Feature.prototype.poly = function(type) {
 				for (var i = 0; i < polyLen; i++) {
 					if (poly.markers.getAt(i).kdata.form != '') {
 						var f1 = poly.markers.getAt(i).kdata.form;
-						var f1arr = f1.split(',');
+						var f1arr = f1.split('¤');
 						if (f1arr.length != 2) {
 							//var sta = {'id':f1arr[2],'name':f1arr[1]};
 							stArr.push({'id':f1arr[2],'name':f1arr[1]});
@@ -1357,6 +1402,16 @@ MapToolbar.Feature.prototype.poly = function(type) {
 				}
 			}
 			
+			if ( currMod == 'join_line') {
+				if (typeof $('#pline1name').val() == 'undefined') {
+					$('#pline1name').val(poly.id);	
+				} else {
+					if ($('#pline1name').val() != poly.id) {
+						$('#pline2name').val(poly.id);
+					}
+				}
+			}			
+			
 			var path = poly.getPath();
 			var midx = path.length;
 			
@@ -1388,7 +1443,7 @@ MapToolbar.Feature.prototype.poly = function(type) {
 			var lng0 = mEvent.latLng.lng();
 			
 			infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="2"><tr>' +
-    	'<td width="24"><img src="images/edit-line.png" width="20" height="20" title="Edit line" style="cursor: pointer;" onclick="MapToolbar.setMapCenter(\'' + poly.id + '\');"></td>';
+			'<td width="24"><img src="images/edit-line.png" width="20" height="20" title="Edit line" style="cursor: pointer;" onclick="MapToolbar.setMapCenter(\'' + poly.id + '\');"></td>';
     	 
 			infoWindowTxt += '<td width="24"><img src="images/remove line.png" width="20" height="20" title="Remove line" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\''+ poly.id + '\');"></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td>'; 
     	
@@ -1407,6 +1462,13 @@ MapToolbar.Feature.prototype.poly = function(type) {
 			infoWindowTxt += '<td><img src="images/xfce4_settings.png" title="Setting" width="16" height="16" style="cursor: pointer;" onclick="polylineSetting(\'' + poly.id + '\');"></td>';
 			
 			infoWindowTxt += '</tr></table>';
+			
+			// ***** 2 test
+			//var uid = poly.uid;
+			//var pid = poly.id;
+			//infoWindowTxt += '<br />' + pid + ' : ' + (typeof MapToolbar.features["lineTab"][pid]);
+			//infoWindowTxt += '<br />' + uid + ' : ' + (typeof MapToolbar.features["lineTab"][uid]);
+			// **** test end
 
 			var infowindow = new google.maps.InfoWindow({
 				content: infoWindowTxt,
@@ -1465,7 +1527,7 @@ MapToolbar.Feature.prototype.poly = function(type) {
 				   	
 			infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="3"><tr><td><img src="images/polygon-edit.png" title="Edit polygon" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.setMapCenter(\'' + poly.id + '\');">' + ' Edit' + '</td>';
 			infoWindowTxt += '<td><img src="images/polygon-remove.png" title="Remove line" style="cursor: pointer;" width="20" height="20" onclick="MapToolbar.removeFeature(\''+ poly.id + '\');">' + ' Remove' + '</td>';
-			infoWindowTxt += '<td><img src="images/note_todo_list.png" title="Properties" style="cursor: pointer;" width="16" height="16" onclick="alert(\''+ poly.id + '\');">' + ' Properties' + '</td></tr></table>';
+			infoWindowTxt += '<td><img src="images/note_todo_list.png" title="Properties" style="cursor: pointer;" width="16" height="16" onclick="alert(\'No code defined, this feature still not yet planned.\');">' + ' Properties' + '</td></tr></table>';
 
 			var infowindow = new google.maps.InfoWindow({
 				content: infoWindowTxt,
@@ -1474,18 +1536,6 @@ MapToolbar.Feature.prototype.poly = function(type) {
         
 			infowindow.open(map);   
 		}
-		
-		
-		if ( currMod == 'join_line') {
-			if (typeof $('#pline1name').val() == 'undefined') {
-				$('#pline1name').val(poly.id);	
-			} else {
-				if ($('#pline1name').val() != poly.id) {
-					$('#pline2name').val(poly.id);
-				}
-			}
-		} 
-
 		
 	});  
 
@@ -1497,53 +1547,54 @@ MapToolbar.Feature.prototype.poly = function(type) {
 	if(!poly.$el){
 		++MapToolbar[type+"Counter"];
 		poly.id = type + '_'+ MapToolbar[type+"Counter"];
-		poly.ptype = '';
+		poly.ptype = (type=='line') ? 'line' : 'shape';
 		poly.note = '';
 		poly.name = '';
-		poly.route = '';		
-		poly.bdata = {devID:'',maxSpeed:'',simBVE:'',gauge:'',desc:'',train:'',rail:''}; 
-		poly.lineX = '';
-		if (devID != '') {poly.bdata.devID = devID; }
-		if (defaultGauge != '') {poly.bdata.gauge = defaultGauge; }
+		poly.uid = genUiD(poly.id); //unique id for polyline - new feature start on 01/9/2014
+		if(type=='line'){ poly.route = '';}		
+		if(type=='line'){ poly.bdata = {devID:'',maxSpeed:'',simBVE:'',gauge:'',desc:'',train:'',rail:''}; }
+		if(type=='line'){ poly.lineX = ''; }
+		if(type=='line'){ if (devID != '') {poly.bdata.devID = devID; } }
+		if(type=='line'){ if (defaultGauge != '') {poly.bdata.gauge = defaultGauge; } }
 		poly.$el = MapToolbar.addFeatureEntry(poly.id);  	
 		MapToolbar.features[type+"Tab"][poly.id] = poly;		
-		newPoly = poly; 
+		if(type=='line') { newPoly = poly; }
 	}
 }
 
 MapToolbar.Feature.prototype.dotMarker = function() {
-		var marker,	
-		self = this;    
+	var marker,	
+	self = this;    
   	if(MapToolbar.isSelected(MapToolbar.buttons.$dotMarker)) return;
   	MapToolbar.select("dotMarker_b"); 
-		var listener = google.maps.event.addListener(map, "click", function(arg) {
-     console.log(MapToolbar.currentFeature);
-	  if (arg && arg.latLng) {
-	    MapToolbar.select("hand_b");
-	    google.maps.event.removeListener(listener);
-	    self.createMarker(arg.latLng, true);
-	  }
+	var listener = google.maps.event.addListener(map, "click", function(arg) {
+		//console.log(MapToolbar.currentFeature);
+		if (arg && arg.latLng) {
+			MapToolbar.select("hand_b");
+			google.maps.event.removeListener(listener);
+			self.createMarker(arg.latLng, true);
+		}
 	});
 }
 
-var bucu = 0;
-var rect;
-var latlng1, latlng2;
-
 MapToolbar.Feature.prototype.rectangle = function() {  
-	// by : Karya IT (Mac 2012), Okt 2012 
+	// by : Karya IT (Mac 2012), Okt 2012 , updated : 3 Sept 2014
 	// based on : Google Maps API v3
-	// url : http://www.karyait.net.my/
-	// ver. : 1.5.0
+	// url : http://gbmaps.karyait.net.my/
+	// ver. : 2.0.0
 	// purpose : draw rectengle
-	
+	var rect,	
+	bucu = 0,
+	latlng1,
+	latlng2,
+	self = this;	
+		
   	if(MapToolbar.isSelected(MapToolbar.buttons.$rectangle)) return;
   	MapToolbar.select("rectangle_b");  	
         
-  	console.log(MapToolbar.currentFeature);
+  	//console.log(MapToolbar.currentFeature);
 
-	var listener = google.maps.event.addListener(map, 'click', function(mEvent) {
-			
+	var listener = google.maps.event.addListener(map, 'click', function(mEvent) {			
 		if (bucu == 0) {
 			bucu ++;
 			latlng1 = mEvent.latLng;
@@ -1560,217 +1611,37 @@ MapToolbar.Feature.prototype.rectangle = function() {
 					latlng1 = tlng1;
 					latlng2 = tlng2;
 			}
-				
-  			var rect = new google.maps.Rectangle({
-	     		strokeColor: "#FF0000",
-       		strokeOpacity: 0.8,
-       		strokeWeight: 1,
-       		editable: false,
-       		fillOpacity: 0.0,
-       		map: map
-       	});
      	 			
- 		var latLngBounds = new google.maps.LatLngBounds(latlng1, latlng2);
- 		rect.setBounds(latLngBounds);
-	
-		var color = MapToolbar.getColor(false),
-					rect,
-					self = this,
-					el = "rectangle_b";
-			
-		++MapToolbar["rectangleCounter"];
-			 
-		rect.id = 'rectangle_'+ MapToolbar["rectangleCounter"];
-		rect.ptype = null;
-		rect.iwref = null;
-		rect.data = null;
-		rect.$el = MapToolbar.addFeatureEntry(rect.id);  	
-		MapToolbar.features["rectangleTab"][rect.id] = rect;		 		
+			var latLngBounds = new google.maps.LatLngBounds(latlng1, latlng2);
 
-
-		MapToolbar.select("hand_b");
-		google.maps.event.removeListener(listener);
-		bucu = 0;
-		    
-		google.maps.event.addListener(rect, "click", function(mEvent){
-	     	//alert(mEvent.latLng.toString());
-	     	var sw = rect.getBounds().getSouthWest();
-	     	var ne = rect.getBounds().getNorthEast();
-	     		     		
-	     	var trpoly = []; 
-	     		
-	     		trpoly.push(ne);
-	     		trpoly.push(new google.maps.LatLng(ne.lat(), sw.lng()));
-	     		trpoly.push(sw);
-	     		trpoly.push(new google.maps.LatLng(sw.lat(), ne.lng()));
-	     		
-					var area = google.maps.geometry.spherical.computeArea(trpoly);
-					var rheight = google.maps.geometry.spherical.computeDistanceBetween(ne, new google.maps.LatLng(sw.lat(), ne.lng()));
-					var rwidth = google.maps.geometry.spherical.computeDistanceBetween(ne, new google.maps.LatLng(ne.lat(), sw.lng()));
-					
-					var infoWindowTxt = 'Rectangle Id : ' + rect.id + '<br />' + 'Area : ';
-					var lat0 = mEvent.latLng.lat();
-					var lng0 = mEvent.latLng.lng();
-			
-					if (area < 1000) {
-						infoWindowTxt += area.toFixed(2) + ' m' + String.fromCharCode(178) ;
-					} else {
-						infoWindowTxt += (area/1000).toFixed(2) + ' km' + String.fromCharCode(178) ;
-					}	
-		
-					infoWindowTxt += '<br />' + 'Width : ';
-					
-					if (rwidth < 1000) {
-						infoWindowTxt += rwidth.toFixed(2) + ' m';
-					} else {
-						infoWindowTxt += (rwidth/1000).toFixed(6) + ' km';
-					}
-			
-					infoWindowTxt += '<br />' + 'Height : ';
-					
-					if (rheight < 1000) {
-						infoWindowTxt += rheight.toFixed(2) + ' m.';
-					} else {
-						infoWindowTxt += (rheight/1000).toFixed(6) + ' km.';
-					}
-					
-					infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="3"><tr><td>';
-					infoWindowTxt += '<img src="images/rectangle_edit.png" title="Edit rectangle" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.setMapCenter(\'' + rect.id + '\');">' + 'Edit' + '</td><td>';
-					infoWindowTxt += '<img src="images/rectangle_remove.png" title="Remove rectangle" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\'' + rect.id + '\');">' + 'Remove' + '</td><td>';
-					infoWindowTxt += '<img src="images/note_todo_list.png" title="Properties" width="20" height="20" style="cursor: pointer;" onclick="alert(\'' + rect.id + '\');">' + 'Properties' + '</td></tr></table>';
-  /*
-	   			infoWindowTxt += '<select name="menu_rc_type" id="menu_rc_type" style="font-size:10px" onchange="setRectangleType(\''+ rect.id + '\');"><option> - select - </option>';
-  				if (rect.ptype == 'rc_building') {infoWindowTxt += '<option value="rc_building" selected>Building</option>'; } else {infoWindowTxt += '<option value="rc_building">Building</option>';}
-  				if (rect.ptype == 'rc_house') {infoWindowTxt += '<option value="rc_house" selected>House</option>'; } else {infoWindowTxt += '<option value="rc_house">House</option>'; }
-  				if (rect.ptype == 'rc_landscape') {infoWindowTxt += '<option value="rc_landscape" selected>Landscape</option>'; } else {infoWindowTxt += '<option value="rc_landscape">Landscape</option>'; }
-  				if (rect.ptype == 'rc_field') {infoWindowTxt += '<option value="rc_field" selected>Field</option>'; } else {infoWindowTxt += '<option value="rc_field">Field</option>'; }
-  				if (rect.ptype == 'rc_structure') {infoWindowTxt += '<option value="rc_structure" selected>Structure</option>'; } else {infoWindowTxt += '<option value="rc_structure">Structure</option>'; }
-  				if (rect.ptype == 'rc_object') {infoWindowTxt += '<option value="rc_object" selected>Custom Object</option>'; } else {infoWindowTxt += '<option value="rc_object">Custom Object</option>'; }
-  		
-  				infoWindowTxt += '</select>';
-	   	*/
-	   			var infowindow = new google.maps.InfoWindow({
-          		  content: infoWindowTxt,
-            		position: mEvent.latLng
-        		});
-        
-      		infowindow.open(map);    
-	    		//alert("Area : " + area + "\nWidth : " + rwidth + "\nHeight : " + rheight);
-	     });
-		 
-		 google.maps.event.addListener(rect, "bounds_changed", function(mEvent){
 			MapToolbar.select("hand_b");
-	     });
-		 
-			} else {
-		    MapToolbar.select("hand_b");
-		    google.maps.event.removeListener(listener);				
-			}
+			google.maps.event.removeListener(listener);
+			bucu = 0;
+			self.createRectangle(latLngBounds, true);
+			
+		}
     });
 
 }
 
 MapToolbar.Feature.prototype.circle = function() {
-	// by : Karya IT (Mac 2012) 
+	// by : Karya IT (Mac 2012) , updated : 3 Sept 2014
 	// based on : Google Maps API v3
-	// url : http://www.karyait.net.my/
-	// ver. : 1.0.0
+	// url : http://gbmaps.karyait.net.my/
+	// ver. : 2.0.0
 	// purpose : draw circle
+	
+	var bulat,
+	self = this;	
 	
   	if(MapToolbar.isSelected(MapToolbar.buttons.$circle)) return;
   	MapToolbar.select("circle_b"); 
-  	//MapToolbar.currentFeature = circle;	
-  	      
-  	console.log(MapToolbar.currentFeature);
 
-		var listener = google.maps.event.addListener(map, 'click', function(mEvent) {
-			var bulat = new google.maps.Circle({
-	    	//strokeColor: "#0FF000",
-      	strokeOpacity: 0.8,
-       	strokeWeight: 1,
-       	editable: false,
-       	fillOpacity: 0.0,
-       	center: mEvent.latLng,
-       	radius: 100,
-       	map: map
-       });
-
-			var color = MapToolbar.getColor(false),
-				bulat,
-				self = this,
-				el = "circle_b";
-			
-			 ++MapToolbar["circleCounter"];
-			 
-			 bulat.id = 'circle_'+ MapToolbar["circleCounter"];
-			 bulat.ptype = null;
-			 bulat.note = '';
-			 bulat.iwref = null;
-			 bulat.$el = MapToolbar.addFeatureEntry(bulat.id);  	
-			 MapToolbar.features["circleTab"][bulat.id] = bulat;		 		
-
-		   MapToolbar.select("hand_b");
-		   google.maps.event.removeListener(listener);
-		   
-		   google.maps.event.addListener(bulat, "click", function(mEvent){
-	     		//alert(mEvent.latLng.toString());
-	    		//alert(bulat.getRadius() + "\n" + bulat.getCenter().toString());
-	    		//alert("jejari : " + bulat.getRadius() + "\n" + "luas : " + (Math.PI * bulat.getRadius() * bulat.getRadius()));
-	    		
-			 var infoWindowTxt = 'Circle Id : ' + bulat.id + '<br />' + 'Area : ';
-			 var lat0 = mEvent.latLng.lat();
-			 var lng0 = mEvent.latLng.lng();
-
-			 var area = Math.PI * bulat.getRadius() * bulat.getRadius();
-			 var radius = bulat.getRadius();
-			 var pusat = DecInDeg(bulat.getCenter());
-			
-			 if (area < 1000) {
-			 		infoWindowTxt += area.toFixed(2) + ' m' + String.fromCharCode(178) ;
-			 } else {
-					infoWindowTxt += (area/1000).toFixed(2) + ' km' + String.fromCharCode(178) ;
-			 }	
-		
-			 infoWindowTxt += '<br />' + 'Radius : ';
-					
-			 if (radius < 1000) {
-			 		infoWindowTxt += radius.toFixed(2) + ' m.';
-			 } else {
-					infoWindowTxt += (radius/1000).toFixed(6) + ' km.';
-			 }
-			 
-			 infoWindowTxt += '<br />' + 'Center : ' + pusat;
-			
-			 infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="3"><tr><td>';
-			 infoWindowTxt += '<img src="images/circle-edit.png" title="Edit circle" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.setMapCenter(\'' + bulat.id + '\');">' + 'Edit' + '</td><td>';
-			 infoWindowTxt += '<img src="images/circle-remove.png" title="Remove circle" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\'' + bulat.id + '\');">' + 'Remove' + '</td><td>';
-			 infoWindowTxt += '<img src="images/note_todo_list.png" title="Properties" width="20" height="20" style="cursor: pointer;" onclick="alert(\'' + bulat.id + '\');">' + 'Properties' + '</td></tr></table>';
-  /*
-			 infoWindowTxt += '<select name="menu_cc_type" id="menu_cc_type" style="font-size:10px" onchange="setRectangleType(\''+ bulat.id + '\');"><option> - select - </option>';
-			 if (bulat.ptype == 'cc_building') {infoWindowTxt += '<option value="cc_building" selected>Building</option>'; } else {infoWindowTxt += '<option value="cc_building">Building</option>';}
-			 if (bulat.ptype == 'cc_house') {infoWindowTxt += '<option value="cc_house" selected>House</option>'; } else {infoWindowTxt += '<option value="cc_house">House</option>'; }
-			 if (bulat.ptype == 'cc_landscape') {infoWindowTxt += '<option value="cc_landscape" selected>Landscape</option>'; } else {infoWindowTxt += '<option value="cc_landscape">Landscape</option>'; }
-			 if (bulat.ptype == 'cc_field') {infoWindowTxt += '<option value="cc_field" selected>Field</option>'; } else {infoWindowTxt += '<option value="cc_field">Field</option>'; }
-			 if (bulat.ptype == 'cc_structure') {infoWindowTxt += '<option value="cc_structure" selected>Structure</option>'; } else {infoWindowTxt += '<option value="cc_structure">Structure</option>'; }
-			 if (bulat.ptype == 'cc_object') {infoWindowTxt += '<option value="cc_object" selected>Custom Object</option>'; } else {infoWindowTxt += '<option value="cc_object">Custom Object</option>'; }
-  		*/
-			 infoWindowTxt += '</select>';
-	   	
-			 var infowindow = new google.maps.InfoWindow({
-			 		content: infoWindowTxt,
-			 		position: mEvent.latLng
-			 });
-        
-			 infowindow.open(map);  	    		
-	     });	
-
-		 google.maps.event.addListener(bulat, "radius_changed", function(mEvent){
-			MapToolbar.select("hand_b");
-	     });
-		 
-		 google.maps.event.addListener(bulat, "center_changed", function(mEvent){
-			MapToolbar.select("hand_b");
-	     });		 
+	var listener = google.maps.event.addListener(map, 'click', function(mEvent) {
+	
+		MapToolbar.select("hand_b");
+		google.maps.event.removeListener(listener);	
+		self.createCircle(mEvent.latLng, 100, true);
     });
 }
 
@@ -1793,9 +1664,10 @@ MapToolbar.Feature.prototype.createMarker = function(point) {
 		    
 	++MapToolbar["dotMarkerCounter"];
 	marker.id = 'dotMarker_'+ MapToolbar["dotMarkerCounter"];
-	marker.ptype = null;
+	marker.uid = genUiD(marker.id); //unique id  new feature start on 01/9/2014
+	marker.ptype = 'dotMarker';
 	marker.note = '';
-	marker.iwref = null;
+	marker.iwref = '';
 	marker.$el = MapToolbar.addFeatureEntry(marker.id);	     
 	MapToolbar.updateMarker(marker, marker.$el, color);
 	MapToolbar.features['dotMarkerTab'][marker.id] = marker;
@@ -1816,18 +1688,9 @@ MapToolbar.Feature.prototype.createMarker = function(point) {
 		
 		infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="3"><tr><td>';
 		infoWindowTxt += '<img src="images/marker_remove.png" title="Remove marker" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\'' + marker.id + '\');">' + 'Remove' + '</td><td>&nbsp;</td><td>';
-		infoWindowTxt += '<img src="images/note_todo_list.png" title="Properties" width="16" height="16" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\'' + marker.id + '\');">' + 'Properties' + '</td><td>&nbsp;</td><td>';
-  /*
-		infoWindowTxt += '<select name="menu_m_type" id="menu_m_type" style="font-size:10px" onchange="setMarkerType(\''+ marker.id + '\');"><option> - select - </option>';
-		if (marker.ptype == 'm_stopsign') {infoWindowTxt += '<option value="m_stopsign" selected>Stop Sign</option>'; } else {infoWindowTxt += '<option value="m_stopsign">Stop Sign</option>';}
-		if (marker.ptype == 'm_rail_start') {infoWindowTxt += '<option value="m_rail_start" selected>Rail Start</option>'; } else {infoWindowTxt += '<option value="m_rail_start">Rail Start</option>'; }
-		if (marker.ptype == 'm_rail_end') {infoWindowTxt += '<option value="m_rail_end" selected>Rail End</option>'; } else {infoWindowTxt += '<option value="m_rail_end">Rail End</option>'; }
-		if (marker.ptype == 'm_tree') {infoWindowTxt += '<option value="m_tree" selected>Tree</option>'; } else {infoWindowTxt += '<option value="m_tree">Tree</option>'; }
-		if (marker.ptype == 'm_traffic_signal') {infoWindowTxt += '<option value="m_traffic_signal" selected>Traffic Signal</option>'; } else {infoWindowTxt += '<option value="m_traffic_signal">Traffic Signal</option>'; }
-		if (marker.ptype == 'm_object') {infoWindowTxt += '<option value="m_object" selected>Custom Object</option>'; } else {infoWindowTxt += '<option value="m_object">Custom Object</option>'; }
-  		*/
-		//infoWindowTxt += '</select></td></tr></table>';
-	   	infoWindowTxt += '</td></tr></table>';
+		infoWindowTxt += '<img src="images/note_todo_list.png" title="Properties" width="16" height="16" style="cursor: pointer;" onclick="alert(\'No code defined, this feature still not yet planned.\');">' + 'Properties' + '</td><td>&nbsp;</td>';
+ 
+	   	infoWindowTxt += '</tr></table>';
 		var infowindow = new google.maps.InfoWindow({
 			content: infoWindowTxt,
 			position: mEvent.latLng
@@ -1855,7 +1718,8 @@ MapToolbar.Feature.prototype.createLine = function(opts, path) {
 	    strokeColor: opts.strokeColor,
 	    geodesic: true
 	}), self = this;  
-	poly.setPath(new google.maps.MVCArray(path));
+	// poly.setPath(new google.maps.MVCArray(path)); remove on 27 August 2014
+	poly.setPath(path);
 	return poly;
 }
 
@@ -1865,7 +1729,8 @@ MapToolbar.Feature.prototype.createruler = function(opts, path) {
 	    strokeColor: opts.strokeColor,
 	    geodesic: true
 	}), self = this;  
-	poly.setPath(new google.maps.MVCArray(path));
+	//poly.setPath(new google.maps.MVCArray(path));
+	poly.setPath(path);
 	return poly;
 }
 
@@ -1875,8 +1740,158 @@ MapToolbar.Feature.prototype.createprotractor = function(opts, path) {
 	    strokeColor: opts.strokeColor,
 	    geodesic: true
 	}), self = this;  
-	poly.setPath(new google.maps.MVCArray(path));
+	//poly.setPath(new google.maps.MVCArray(path));
+	poly.setPath(path);
 	return poly;
+}
+
+MapToolbar.Feature.prototype.createRectangle = function(latLngBounds) {
+  	var rect = new google.maps.Rectangle({
+		strokeColor: MapToolbar.getColor(true),
+		strokeOpacity: 0.8,
+		strokeWeight: 1,
+		bounds: latLngBounds,
+		map: map,
+		editable: true,
+		fillOpacity: 0.0
+    }),
+	el = "rectangle_b";
+		
+		
+	++MapToolbar["rectangleCounter"];
+	 
+	rect.id = 'rectangle_'+ MapToolbar["rectangleCounter"];
+	rect.uid = genUiD(rect.id); //unique id  new feature start on 01/9/2014
+	rect.ptype = 'rectangle';
+	
+	rect.iwref = '';
+	rect.data = '';
+	rect.note = '';
+	rect.$el = MapToolbar.addFeatureEntry(rect.id);  	
+	MapToolbar.features["rectangleTab"][rect.id] = rect;
+	
+	google.maps.event.addListener(rect, "click", function(mEvent){
+		//alert(mEvent.latLng.toString());
+		var sw = rect.getBounds().getSouthWest();
+		var ne = rect.getBounds().getNorthEast();
+						
+		var trpoly = []; 
+			
+		trpoly.push(ne);
+		trpoly.push(new google.maps.LatLng(ne.lat(), sw.lng()));
+		trpoly.push(sw);
+		trpoly.push(new google.maps.LatLng(sw.lat(), ne.lng()));
+			
+		var area = google.maps.geometry.spherical.computeArea(trpoly);
+		var rheight = google.maps.geometry.spherical.computeDistanceBetween(ne, new google.maps.LatLng(sw.lat(), ne.lng()));
+		var rwidth = google.maps.geometry.spherical.computeDistanceBetween(ne, new google.maps.LatLng(ne.lat(), sw.lng()));
+		
+		var infoWindowTxt = 'Rectangle Id : ' + rect.id + '<br />' + 'Area : ';
+		var lat0 = mEvent.latLng.lat();
+		var lng0 = mEvent.latLng.lng();
+
+		if (area < 1000) {
+			infoWindowTxt += area.toFixed(2) + ' m' + String.fromCharCode(178) ;
+		} else {
+			infoWindowTxt += (area/1000).toFixed(2) + ' km' + String.fromCharCode(178) ;
+		}	
+
+		infoWindowTxt += '<br />' + 'Width : ';
+		
+		if (rwidth < 1000) {
+			infoWindowTxt += rwidth.toFixed(2) + ' m';
+		} else {
+			infoWindowTxt += (rwidth/1000).toFixed(6) + ' km';
+		}
+
+		infoWindowTxt += '<br />' + 'Height : ';
+		
+		if (rheight < 1000) {
+			infoWindowTxt += rheight.toFixed(2) + ' m.';
+		} else {
+			infoWindowTxt += (rheight/1000).toFixed(6) + ' km.';
+		}
+		
+		infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="3"><tr><td>';
+		//infoWindowTxt += '<img src="images/rectangle_edit.png" title="Edit rectangle" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.setMapCenter(\'' + rect.id + '\');">' + 'Edit' + '</td><td>';
+		infoWindowTxt += '<img src="images/rectangle_remove.png" title="Remove rectangle" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\'' + rect.id + '\');">' + 'Remove' + '</td><td>';
+		infoWindowTxt += '<img src="images/note_todo_list.png" title="Properties" width="20" height="20" style="cursor: pointer;" onclick="alert(\'No code defined, this feature still not yet planned.\');">' + 'Properties' + '</td></tr></table>';
+
+		var infowindow = new google.maps.InfoWindow({
+		  content: infoWindowTxt,
+			position: mEvent.latLng
+		});
+	
+		infowindow.open(map);    
+			//alert("Area : " + area + "\nWidth : " + rwidth + "\nHeight : " + rheight);
+	 });	
+
+	return rect;
+}
+
+MapToolbar.Feature.prototype.createCircle = function(pusat, radius) {
+	var bulat = new google.maps.Circle({
+		strokeColor: MapToolbar.getColor(true),
+		strokeOpacity: 0.8,
+		strokeWeight: 1,
+		editable: true,
+		map: map,
+		fillOpacity: 0.0,
+		center: pusat,
+		radius: radius
+	}),
+	el = "circle_b";
+	
+	++MapToolbar["circleCounter"];
+	 
+	bulat.id = 'circle_'+ MapToolbar["circleCounter"];
+	bulat.uid = genUiD(bulat.id); //unique id  new feature start on 01/9/2014
+	bulat.ptype = 'circle';
+	bulat.note = '';
+	bulat.iwref = '';
+	bulat.$el = MapToolbar.addFeatureEntry(bulat.id);  	
+	MapToolbar.features["circleTab"][bulat.id] = bulat;		 		
+
+	   
+	google.maps.event.addListener(bulat, "click", function(mEvent){		
+		var infoWindowTxt = 'Circle Id : ' + bulat.id + '<br />' + 'Area : ';
+		var lat0 = mEvent.latLng.lat();
+		var lng0 = mEvent.latLng.lng();
+
+		var area = Math.PI * bulat.getRadius() * bulat.getRadius();
+		var radius = bulat.getRadius();
+		var pusat = DecInDeg(bulat.getCenter());
+		
+		if (area < 1000) {
+			infoWindowTxt += area.toFixed(2) + ' m' + String.fromCharCode(178) ;
+		} else {
+			infoWindowTxt += (area/1000).toFixed(2) + ' km' + String.fromCharCode(178) ;
+		}	
+	
+		infoWindowTxt += '<br />' + 'Radius : ';
+				
+		if (radius < 1000) {
+			infoWindowTxt += radius.toFixed(2) + ' m.';
+		} else {
+			infoWindowTxt += (radius/1000).toFixed(6) + ' km.';
+		}
+		 
+		infoWindowTxt += '<br />' + 'Center : ' + pusat;
+		
+		infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="3"><tr><td>';
+		//infoWindowTxt += '<img src="images/circle-edit.png" title="Edit circle" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.setMapCenter(\'' + bulat.id + '\');">' + 'Edit' + '</td><td>';
+		infoWindowTxt += '<img src="images/circle-remove.png" title="Remove circle" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\'' + bulat.id + '\');">' + 'Remove' + '</td><td>';
+		infoWindowTxt += '<img src="images/note_todo_list.png" title="Properties" width="20" height="20" style="cursor: pointer;" onclick="alert(\'No code defined, this feature still not yet planned.\');">' + 'Properties' + '</td></tr></table>';
+	
+		 var infowindow = new google.maps.InfoWindow({
+				content: infoWindowTxt,
+				position: mEvent.latLng
+		 });
+	
+		 infowindow.open(map);  	    		
+	 });
+		 
+	return bulat;
 }
 
 // ****************************************************************************
