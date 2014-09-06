@@ -18,30 +18,21 @@ purpose : open bve route builder, data conversion function
 type : release (under development)
 version : 1.0.0
 build : 
-last update : 12 August 2014 09:53pm (GMT 8+)
+last update : 31 August 2014 02:43pm (GMT 8+)
 
 */
 	//BVE object list
-	var Rail = new Array();
-	var Pole = new Array();
-	var DikeL = new Array();
-	var DikeR = new Array();
-	var WallL = new Array();
-	var WallR = new Array();
-	var Ground = new Array();
-	var Beacon = new Array();
-	var FormL = new Array();
-	var FormR = new Array();
-	var FormCL = new Array();
-	var FormCR = new Array();
-	var RoofL = new Array();
-	var RoofR = new Array();
-	var RoofCL = new Array();
-	var RoofCR = new Array();
-	var CrackL = new Array();
-	var CrackR = new Array();
-	var FreeObj = new Array();
-	var BackGround = new Array();
+	var Rail = [];
+	var Pole = [];
+	var Dike = [];
+	var Wall = [];
+	var Ground = [];
+	var Beacon = [];
+	var Form = [];
+	var Roof = [];
+	var Crack = [];
+	var FreeObj = [];
+	var BackGround = [];
 	
 	// GB Maps structure 
 	var GBtunnel = [];
@@ -65,34 +56,34 @@ last update : 12 August 2014 09:53pm (GMT 8+)
 function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,maxspeed,bg,kmstone,stsign,devID,desc)
 {	
 	
-	FreeObj[0] = 'gb_maps\\km_p\\m_curve.csv'; //curve sign
+	FreeObj[0] = ['gb_maps\\km_p\\m_curve.csv',0,-1]; //curve sign
 	
-	FreeObj[1] = 'gb_maps\\km_p\\sloop_down-up.csv'; //menurun opp. mendaki
-	FreeObj[2] = 'gb_maps\\km_p\\sloop_level-up.csv'; //level opp. mendaki
-	FreeObj[3] = 'gb_maps\\km_p\\sloop_down-level.csv'; //menurun opp. level
-	FreeObj[4] = 'gb_maps\\km_p\\sloop_up-level.csv'; //mendaki opp. level
-	FreeObj[5] = 'gb_maps\\km_p\\sloop_level-down.csv'; //level opp. menurun
-	FreeObj[6] = 'gb_maps\\km_p\\sloop_up-down.csv'; //mendaki opp. menurun
-	FreeObj[7] = 'gb_maps\\km_p\\sloop_up-up.csv'; //mendaki-mendaki, lain2 ratio
-	FreeObj[8] = 'gb_maps\\km_p\\sloop_down-down.csv'; //menurun-menurun, lain2 ratio
+	FreeObj[1] = ['gb_maps\\km_p\\sloop_down-up.csv',0,-1]; //menurun opp. mendaki
+	FreeObj[2] = ['gb_maps\\km_p\\sloop_level-up.csv',0,-1]; //level opp. mendaki
+	FreeObj[3] = ['gb_maps\\km_p\\sloop_down-level.csv',0,-1]; //menurun opp. level
+	FreeObj[4] = ['gb_maps\\km_p\\sloop_up-level.csv',0,-1]; //mendaki opp. level
+	FreeObj[5] = ['gb_maps\\km_p\\sloop_level-down.csv',0,-1]; //level opp. menurun
+	FreeObj[6] = ['gb_maps\\km_p\\sloop_up-down.csv',0,-1]; //mendaki opp. menurun
+	FreeObj[7] = ['gb_maps\\km_p\\sloop_up-up.csv',0,-1]; //mendaki-mendaki, lain2 ratio
+	FreeObj[8] = ['gb_maps\\km_p\\sloop_down-down.csv',0,-1]; //menurun-menurun, lain2 ratio
 	
-	FreeObj[9] = 'gb_maps\\km_p\\kmp.csv'; //kilometer mark
-	FreeObj[10] = 'gb_maps\\km_p\\500mp.csv'; //500 meter mark
-	FreeObj[11] = 'gb_maps\\km_p\\100mp.csv'; //100 meter mark
+	FreeObj[9] = ['gb_maps\\km_p\\kmp.csv',0,-1]; //kilometer mark
+	FreeObj[10] = ['gb_maps\\km_p\\500mp.csv',0,-1]; //500 meter mark
+	FreeObj[11] = ['gb_maps\\km_p\\100mp.csv',0,-1]; //100 meter mark
 	
-	FreeObj[12] = 'gb_maps\\Symbol_Tr_Al\\s_begin.csv'; //S start sign
-	FreeObj[13] = 'gb_maps\\Symbol_Tr_Al\\s_cancel.csv'; //S cancel sign
-	FreeObj[14] = 'gb_maps\\Symbol_Tr_Al\\sta_near.csv'; //station near sign
-	FreeObj[15] = 'gb_maps\\Symbol_Tr_Al\\start_wr.csv'; //
-	FreeObj[16] = 'gb_maps\\Symbol_Tr_Al\\stop_through.csv'; //
-	FreeObj[17] = 'gb_maps\\Symbol_Tr_Al\\whistle.csv'; //whistle sign
+	FreeObj[12] = ['gb_maps\\Symbol_Tr_Al\\s_begin.csv',0,-1]; //S start sign
+	FreeObj[13] = ['gb_maps\\Symbol_Tr_Al\\s_cancel.csv',0,-1]; //S cancel sign
+	FreeObj[14] = ['gb_maps\\Symbol_Tr_Al\\stap.csv',0,-1]; //station near sign
+	FreeObj[15] = ['gb_maps\\Symbol_Tr_Al\\start_wr.csv',0,-1]; //
+	FreeObj[16] = ['gb_maps\\Symbol_Tr_Al\\stop_through.csv',0,-1]; //
+	FreeObj[17] = ['gb_maps\\Symbol_Tr_Al\\whistle.csv',0,-1]; //whistle sign
 	
-	FreeObj[18] = 'gb_maps\\rail\\stop\\stop_01.csv'; //stop mark
-	FreeObj[19] = 'gb_maps\\rail\\stop\\stop_02.csv'; //stop mark
-	FreeObj[20] = 'gb_maps\\rail\\stop\\stop_03.csv'; //stop ballast
+	FreeObj[18] = ['gb_maps\\rail\\stop\\stop_01.csv',0,-1]; //stop mark
+	FreeObj[19] = ['gb_maps\\rail\\stop\\stop_02.csv',0,-1]; //stop mark
+	FreeObj[20] = ['gb_maps\\rail\\stop\\stop_03.csv',0,-1]; //stop ballast
 	
 	
-	Pole[0] = ['0; 0','test_route\\pole_2.csv'];
+	Pole[0] = ['test_route\\pole_2.csv',0,-1,'0'];
 	
 	teks ='With Route\n';
 	
@@ -128,14 +119,10 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 	}
 	
 
-	teks +='\nWith Texture\n';
-	no = 0;
 	try {
 		for (i = 0; i < bvebveStrOjArr.length; i++) {		
 			if (bvebveStrOjArr[i][3] == 'Background') {
-				teks += '.Background(' + no + ') ' + bvebveStrOjArr[i][5].replace(/[/]/g,'\\') + ',,\n';
-				BackGround.push(bvebveStrOjArr[i][5].replace(/[/]/g,'\\'));
-				no++;
+				BackGround.push([bvebveStrOjArr[i][5].replace(/[/]/g,'\\'),0,-1]);
 			}		
 		}			
 	}
@@ -143,15 +130,15 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		teks += "[Error] : error in creating background list." + "\n" + err.message + ". \n";
 	}	
 	
-	teks +='\nWith Structure\n';
 
 	try {
 		for (i = 0; i < bverailobjArr.length; i++) {
-			teks += '.Rail(' + bverailobjArr[i][0] + ') ' + bverailobjArr[i][6].replace(/[/]/g,'\\') + ',,\n';
-			Rail.push(bverailobjArr[i][6].replace(/[/]/g,'\\'));
-			
+			Rail.push([bverailobjArr[i][6].replace(/[/]/g,'\\'),0,-1]);
 			if (railtype != '') {
-				if ( railtype == bverailobjArr[i][1] ) { defaultRailIndex = i; }
+				if ( railtype == bverailobjArr[i][1] ) { 
+					defaultRailIndex = i; 
+					Rail[i][1]++;
+				}
 			}
 		}
 	}
@@ -160,32 +147,28 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 	}	
 
 	no = 0;
-
+	//2do 18/8/2014 cek logik ok ke tak
 	try {
 		//['0','DefaultDike','Default Dike','dike02.png','seto_down/dike/dikel.csv','seto_down/dike/diker.csv']  	
 		for (var i=0; i < bvedikeObjArr.length; i++) {
-			var addno = false;
-			if (typeof bvedikeObjArr[i][4] != 'undefined') {
-				if (bvedikeObjArr[i][4] != '') {
-					var csvfile = bvedikeObjArr[i][4].replace(/[/]/g,'\\');
-					if (DikeL.indexOf(csvfile) < 0) {
-						DikeL.push(csvfile);
-						teks += '.DikeL(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
-					} 							
+			var dikeL = '';
+			var dikeR = '';
+			var add = true;
+			if (typeof bvedikeObjArr[i][4] != 'undefined' && typeof bvedikeObjArr[i][5] != 'undefined') {
+				if (bvedikeObjArr[i][4] != '' || bvedikeObjArr[i][5] != '') {
+					dikeL = bvedikeObjArr[i][4].replace(/[/]/g,'\\');
+					dikeR = bvedikeObjArr[i][5].replace(/[/]/g,'\\');
+					for (j=0;j<Dike.length;j++) {
+						if (Dike[j][0] == dikeL && Dike[j][1] == dikeR) {
+							add = false;
+							break;
+						}
+					}
+					if (add) {
+						Dike.push([dikeL,dikeR,0,-1]);
+					}					
 				}									
 			}
-			if (typeof bvedikeObjArr[i][5] != 'undefined') {
-				if (bvedikeObjArr[i][5] != '') {
-					var csvfile = bvedikeObjArr[i][5].replace(/[/]/g,'\\');
-					if (DikeR.indexOf(csvfile) < 0) {
-						DikeR.push(csvfile);
-						teks += '.DikeR(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
-					} 							
-				}									
-			}
-			if (addno) { no++;}
 		}		
 	}
 	catch(err) {
@@ -201,97 +184,104 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		//8-10 'test_route/tunnel_le/ntunnel1l.csv','test_route/tunnel_le/ntunnel1r.csv','0',
 		//11-13 'test_route/tunnel_le/tunnel1l.csv','test_route/tunnel_le/tunnel1r.csv','100',
 		//14-15 'test_route/tunnel_le/tunnel1le.csv','test_route/tunnel_le/tunnel1re.csv'];
-		
+	
 			if (typeof bvetunnelObjArr[i][4] != 'undefined') { //tunnel entrance
 				if (bvetunnelObjArr[i][4] != '') {
 					var csvfile = bvetunnelObjArr[i][4].replace(/[/]/g,'\\');
-					if (FreeObj.indexOf(csvfile) < 0) {
-						FreeObj.push(csvfile);
-						//teks += '.FreeObj(' + (FreeObj.length-1) + ') ' + csvfile + ',,\n';					
+					var add = true;
+					for (j=0;j<FreeObj.length;j++) {
+						if (FreeObj[j][0] == csvfile) {
+							add = false;
+							break;
+						}
+					}
+					if (add) {
+						FreeObj.push([csvfile,0,-1]);
 					} 							
 				}							
 			}
 			if (typeof bvetunnelObjArr[i][5] != 'undefined') { //tunnel exit
 				if (bvetunnelObjArr[i][5] != '') {
 					var csvfile = bvetunnelObjArr[i][5].replace(/[/]/g,'\\');
-					if (FreeObj.indexOf(csvfile) < 0) {
-						FreeObj.push(csvfile);
-						//teks += '.FreeObj(' + (FreeObj.length-1) + ') ' + csvfile + ',,\n';					
-					} 							
+					var add = true;
+					for (j=0;j<FreeObj.length;j++) {
+						if (FreeObj[j][0] == csvfile) {
+							add = false;
+							break;
+						}
+					}
+					if (add) {
+						FreeObj.push([csvfile,0,-1]);
+					}
 				}							
 			}
-			if ((typeof bvetunnelObjArr[i][6] != 'undefined') && (typeof bvetunnelObjArr[i][7] != 'undefined'))  { 
-				if ((bvetunnelObjArr[i][6] != '') && (bvetunnelObjArr[i][7] != '')) {
-					var csvfile = bvetunnelObjArr[i][6].replace(/[/]/g,'\\');
-					var addno = false;
-					if (WallL.indexOf(csvfile) < 0) {
-						WallL.push(csvfile);
-						teks += '.WallL(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
+			
+			if (typeof bvetunnelObjArr[i][6] != 'undefined' && typeof bvetunnelObjArr[i][7] != 'undefined') {
+				if (bvetunnelObjArr[i][6] != '' || bvetunnelObjArr[i][7] != '') {
+					var WallL = bvetunnelObjArr[i][6].replace(/[/]/g,'\\');
+					var WallR = bvetunnelObjArr[i][7].replace(/[/]/g,'\\');
+					var add = true;
+					for (j=0;j<Wall.length;j++) {
+						if (Wall[j][0] == WallL && Wall[j][1] == WallR) {
+							add = false;
+							break;
+						}
 					}
-					csvfile = bvetunnelObjArr[i][7].replace(/[/]/g,'\\');
-					if (WallR.indexOf(csvfile) < 0) {
-						WallR.push(csvfile);
-						teks += '.WallR(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
-					}
-					if (addno) { no++;}
-				}
-			}
-			if ((typeof bvetunnelObjArr[i][8] != 'undefined') && (typeof bvetunnelObjArr[i][9] != 'undefined'))  { 
-				if ((bvetunnelObjArr[i][8] != '') && (bvetunnelObjArr[i][9] != '')) {
-					var csvfile = bvetunnelObjArr[i][8].replace(/[/]/g,'\\');
-					var addno = false;
-					if (WallL.indexOf(csvfile) < 0) {
-						WallL.push(csvfile);
-						teks += '.WallL(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
-					}
-					csvfile = bvetunnelObjArr[i][9].replace(/[/]/g,'\\');
-					if (WallR.indexOf(csvfile) < 0) {
-						WallR.push(csvfile);
-						teks += '.WallR(' + no + ') ' + csvfile + ',,\n';			
-						addno = true;	
-					}
-					if (addno) { no++;}
-				}
+					if (add) {
+						Wall.push([WallL,WallR,0,-1]);
+					}					
+				}									
 			}
 			
-			if ((typeof bvetunnelObjArr[i][11] != 'undefined') && (typeof bvetunnelObjArr[i][12] != 'undefined'))  { 
-				if ((bvetunnelObjArr[i][11] != '') && (bvetunnelObjArr[i][12] != '')) {
-					var csvfile = bvetunnelObjArr[i][11].replace(/[/]/g,'\\');
-					var addno = false;
-					if (WallL.indexOf(csvfile) < 0) {
-						WallL.push(csvfile);
-						teks += '.WallL(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
+			if (typeof bvetunnelObjArr[i][8] != 'undefined' && typeof bvetunnelObjArr[i][9] != 'undefined') {
+				if (bvetunnelObjArr[i][8] != '' || bvetunnelObjArr[i][9] != '') {
+					var WallL = bvetunnelObjArr[i][8].replace(/[/]/g,'\\');
+					var WallR = bvetunnelObjArr[i][9].replace(/[/]/g,'\\');
+					var add = true;
+					for (j=0;j<Wall.length;j++) {
+						if (Wall[j][0] == WallL && Wall[j][1] == WallR) {
+							add = false;
+							break;
+						}
 					}
-					csvfile = bvetunnelObjArr[i][12].replace(/[/]/g,'\\');
-					if (WallR.indexOf(csvfile) < 0) {
-						WallR.push(csvfile);
-						teks += '.WallR(' + no + ') ' + csvfile + ',,\n';		
-						addno = true;			
-					}
-					if (addno) { no++;}
-				}
+					if (add) {
+						Wall.push([WallL,WallR,0,-1]);
+					}					
+				}									
 			}
-			if ((typeof bvetunnelObjArr[i][14] != 'undefined') && (typeof bvetunnelObjArr[i][15] != 'undefined'))  { 
-				if ((bvetunnelObjArr[i][14] != '') && (bvetunnelObjArr[i][15] != '')) {
-					var csvfile = bvetunnelObjArr[i][14].replace(/[/]/g,'\\');
-					var addno = false;
-					if (WallL.indexOf(csvfile) < 0) {
-						WallL.push(csvfile);
-						teks += '.WallL(' + no + ') ' + csvfile + ',,\n';		
-						addno = true;			
+			
+			if (typeof bvetunnelObjArr[i][11] != 'undefined' && typeof bvetunnelObjArr[i][12] != 'undefined') {
+				if (bvetunnelObjArr[i][11] != '' || bvetunnelObjArr[i][12] != '') {
+					var WallL = bvetunnelObjArr[i][11].replace(/[/]/g,'\\');
+					var WallR = bvetunnelObjArr[i][12].replace(/[/]/g,'\\');
+					var add = true;
+					for (j=0;j<Wall.length;j++) {
+						if (Wall[j][0] == WallL && Wall[j][1] == WallR) {
+							add = false;
+							break;
+						}
 					}
-					csvfile = bvetunnelObjArr[i][15].replace(/[/]/g,'\\');
-					if (WallR.indexOf(csvfile) < 0) {
-						WallR.push(csvfile);
-						teks += '.WallR(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
+					if (add) {
+						Wall.push([WallL,WallR,0,-1]);
+					}					
+				}									
+			}
+			
+			if (typeof bvetunnelObjArr[i][14] != 'undefined' && typeof bvetunnelObjArr[i][15] != 'undefined') {
+				if (bvetunnelObjArr[i][14] != '' || bvetunnelObjArr[i][15] != '') {
+					var WallL = bvetunnelObjArr[i][14].replace(/[/]/g,'\\');
+					var WallR = bvetunnelObjArr[i][15].replace(/[/]/g,'\\');
+					var add = true;
+					for (j=0;j<Wall.length;j++) {
+						if (Wall[j][0] == WallL && Wall[j][1] == WallR) {
+							add = false;
+							break;
+						}
 					}
-					if (addno) { no++;}
-				}
+					if (add) {
+						Wall.push([WallL,WallR,0,-1]);
+					}					
+				}									
 			}
 
 		}		
@@ -304,30 +294,34 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		//['1','Flyover02','Flyover 2','fo02.png','seto_down/wall/walll.csv','seto_down/wall/wallr.csv','pierdbll.csv','50','']
 		for (var i=0; i < bveFOObjArr.length; i++) {
 			if ((typeof bveFOObjArr[i][4] != 'undefined') && (typeof bveFOObjArr[i][5] != 'undefined'))  { 
-				if ((bveFOObjArr[i][4] != '') && (bveFOObjArr[i][5] != '')) {
-					var csvfile = bveFOObjArr[i][4].replace(/[/]/g,'\\');
-					var addno = false;
-					if (WallL.indexOf(csvfile) < 0) {
-						WallL.push(csvfile);
-						teks += '.WallL(' + no + ') ' + csvfile + ',,\n';		
-						addno = true;			
+				if ((bveFOObjArr[i][4] != '') || (bveFOObjArr[i][5] != '')) {
+					var WallL = bveFOObjArr[i][4].replace(/[/]/g,'\\');
+					var WallR = bveFOObjArr[i][5].replace(/[/]/g,'\\');
+					var add = true;
+					for (j=0;j<Wall.length;j++) {
+						if (Wall[j][0] == WallL && Wall[j][1] == WallR) {
+							add = false;
+							break;
+						}
 					}
-					csvfile = bveFOObjArr[i][5].replace(/[/]/g,'\\');
-					if (WallR.indexOf(csvfile) < 0) {
-						WallR.push(csvfile);
-						teks += '.WallR(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
-					}
-					if (addno) { no++;}
+					if (add) {
+						Wall.push([WallL,WallR,0,-1]);
+					}					
 				}
 			}
 			if (typeof bveFOObjArr[i][6] != 'undefined') { //pier
 				if (bveFOObjArr[i][6] != '') {
 					var csvfile = bveFOObjArr[i][6].replace(/[/]/g,'\\');
-					if (FreeObj.indexOf(csvfile) < 0) {
-						FreeObj.push(csvfile);
-						//teks += '.FreeObj(' + (FreeObj.length-1) + ') ' + csvfile + ',,\n';					
-					} 							
+					var add = true;
+					for (j=0;j<FreeObj.length;j++) {
+						if (FreeObj[j][0] == csvfile) {
+							add = false;
+							break;
+						}
+					}
+					if (add) {
+						FreeObj.push([csvfile,0,-1]);
+					}							
 				}							
 			}
 		} 		
@@ -341,30 +335,34 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		for (var i=0; i < bvebridgeObjArr.length; i++) { 
 			if (typeof bvebridgeObjArr[i][9] != 'Wall') {		
 				if ((typeof bvebridgeObjArr[i][4] != 'undefined') && (typeof bvebridgeObjArr[i][5] != 'undefined'))  { 
-					if ((bvebridgeObjArr[i][4] != '') && (bvebridgeObjArr[i][5] != '')) {
-						var csvfile = bvebridgeObjArr[i][4].replace(/[/]/g,'\\');
-						var addno = false;
-						if (WallL.indexOf(csvfile) < 0) {
-							WallL.push(csvfile);
-							teks += '.WallL(' + no + ') ' + csvfile + ',,\n';		
-							addno = true;			
+					if ((bvebridgeObjArr[i][4] != '') || (bvebridgeObjArr[i][5] != '')) {
+						var WallL = bvebridgeObjArr[i][4].replace(/[/]/g,'\\');
+						var WallR = bvebridgeObjArr[i][5].replace(/[/]/g,'\\');
+						var add = true;
+						for (j=0;j<Wall.length;j++) {
+							if (Wall[j][0] == WallL && Wall[j][1] == WallR) {
+								add = false;
+								break;
+							}
 						}
-						csvfile = bvebridgeObjArr[i][5].replace(/[/]/g,'\\');
-						if (WallR.indexOf(csvfile) < 0) {
-							WallR.push(csvfile);
-							teks += '.WallR(' + no + ') ' + csvfile + ',,\n';
-							addno = true;
-						}
-						if (addno) { no++;}
+						if (add) {
+							Wall.push([WallL,WallR,0,-1]);
+						}									
 					}
 				}
 				if (typeof bvebridgeObjArr[i][6] != 'undefined') { //pier
 					if (bvebridgeObjArr[i][6] != '') {
 						var csvfile = bvebridgeObjArr[i][6].replace(/[/]/g,'\\');
-						if (FreeObj.indexOf(csvfile) < 0) {
-							FreeObj.push(csvfile);
-							//teks += '.FreeObj(' + (FreeObj.length-1) + ') ' + csvfile + ',,\n';					
-						} 							
+						var add = true;
+						for (j=0;j<FreeObj.length;j++) {
+							if (FreeObj[j][0] == csvfile) {
+								add = false;
+								break;
+							}
+						}
+						if (add) {
+							FreeObj.push([csvfile,0,-1]);
+						}
 					}							
 				}			
 			}			
@@ -383,78 +381,71 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		//12~13 'test_route/tunnel_sikaku/tunnel_sikakuendl.csv','test_route/tunnel_sikaku/tunnel_sikakuendr.csv']
 		for (var i=0; i < bveUGObjArr.length; i++) {
 			if ((typeof bveUGObjArr[i][4] != 'undefined') && (typeof bveUGObjArr[i][5] != 'undefined'))  { 
-				if ((bveUGObjArr[i][4] != '') && (bveUGObjArr[i][5] != '')) {
-					var csvfile = bveUGObjArr[i][4].replace(/[/]/g,'\\');
-					var addno = false;
-					if (WallL.indexOf(csvfile) < 0) {
-						WallL.push(csvfile);
-						teks += '.WallL(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
+				if ((bveUGObjArr[i][4] != '') || (bveUGObjArr[i][5] != '')) {
+					var WallL = bveUGObjArr[i][4].replace(/[/]/g,'\\');
+					var WallR = bveUGObjArr[i][5].replace(/[/]/g,'\\');
+					var add = true;
+					for (j=0;j<Wall.length;j++) {
+						if (Wall[j][0] == WallL && Wall[j][1] == WallR) {
+							add = false;
+							break;
+						}
 					}
-					csvfile = bveUGObjArr[i][5].replace(/[/]/g,'\\');
-					if (WallR.indexOf(csvfile) < 0) {
-						WallR.push(csvfile);
-						teks += '.WallR(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
-					}
-					if (addno) { no++;}
+					if (add) {
+						Wall.push([WallL,WallR,0,-1]);
+					}									
 				}
 			}
 
 			if ((typeof bveUGObjArr[i][6] != 'undefined') && (typeof bveUGObjArr[i][7] != 'undefined'))  { 
-				if ((bveUGObjArr[i][6] != '') && (bveUGObjArr[i][7] != '')) {
-					var csvfile = bveUGObjArr[i][6].replace(/[/]/g,'\\');
-					var addno = false;
-					if (WallL.indexOf(csvfile) < 0) {
-						WallL.push(csvfile);
-						teks += '.WallL(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
+				if ((bveUGObjArr[i][6] != '') || (bveUGObjArr[i][7] != '')) {
+					var WallL = bveUGObjArr[i][6].replace(/[/]/g,'\\');
+					var WallR = bveUGObjArr[i][7].replace(/[/]/g,'\\');
+					var add = true;
+					for (j=0;j<Wall.length;j++) {
+						if (Wall[j][0] == WallL && Wall[j][1] == WallR) {
+							add = false;
+							break;
+						}
 					}
-					csvfile = bveUGObjArr[i][7].replace(/[/]/g,'\\');
-					if (WallR.indexOf(csvfile) < 0) {
-						WallR.push(csvfile);
-						teks += '.WallR(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
-					}
-					if (addno) { no++;}
+					if (add) {
+						Wall.push([WallL,WallR,0,-1]);
+					}									
 				}
 			}
 
 			if ((typeof bveUGObjArr[i][9] != 'undefined') && (typeof bveUGObjArr[i][10] != 'undefined'))  { 
-				if ((bveUGObjArr[i][9] != '') && (bveUGObjArr[i][10] != '')) {
-					var csvfile = bveUGObjArr[i][9].replace(/[/]/g,'\\');
-					var addno = false;
-					if (WallL.indexOf(csvfile) < 0) {
-						WallL.push(csvfile);
-						teks += '.WallL(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
+				if ((bveUGObjArr[i][9] != '') || (bveUGObjArr[i][10] != '')) {
+					var WallL = bveUGObjArr[i][9].replace(/[/]/g,'\\');
+					var WallR = bveUGObjArr[i][10].replace(/[/]/g,'\\');
+					var add = true;
+					for (j=0;j<Wall.length;j++) {
+						if (Wall[j][0] == WallL && Wall[j][1] == WallR) {
+							add = false;
+							break;
+						}
 					}
-					csvfile = bveUGObjArr[i][10].replace(/[/]/g,'\\');
-					if (WallR.indexOf(csvfile) < 0) {
-						WallR.push(csvfile);
-						teks += '.WallR(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
-					}
-					if (addno) { no++;}
+					if (add) {
+						Wall.push([WallL,WallR,0,-1]);
+					}									
+				
 				}
 			}
 
 			if ((typeof bveUGObjArr[i][12] != 'undefined') && (typeof bveUGObjArr[i][13] != 'undefined'))  { 
-				if ((bveUGObjArr[i][12] != '') && (bveUGObjArr[i][13] != '')) {
-					var csvfile = bveUGObjArr[i][12].replace(/[/]/g,'\\');
-					var addno = false;
-					if (WallL.indexOf(csvfile) < 0) {
-						WallL.push(csvfile);
-						teks += '.WallL(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
+				if ((bveUGObjArr[i][12] != '') || (bveUGObjArr[i][13] != '')) {
+					var WallL = bveUGObjArr[i][12].replace(/[/]/g,'\\');
+					var WallR = bveUGObjArr[i][13].replace(/[/]/g,'\\');
+					var add = true;
+					for (j=0;j<Wall.length;j++) {
+						if (Wall[j][0] == WallL && Wall[j][1] == WallR) {
+							add = false;
+							break;
+						}
 					}
-					csvfile = bveUGObjArr[i][13].replace(/[/]/g,'\\');
-					if (WallR.indexOf(csvfile) < 0) {
-						WallR.push(csvfile);
-						teks += '.WallR(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
-					}
-					if (addno) { no++;}
+					if (add) {
+						Wall.push([WallL,WallR,0,-1]);
+					}									
 				}
 			}
 		} 			
@@ -466,56 +457,62 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
  	try {
 		// ['2','LeftRight1','Left Right 1','cut03.png','seto_down/dike/diker.csv','seto_down/dike/dikel.csv']
 		for (var i=0; i < bvecutObjArr.length; i++) {
-			var addno = false;
-			if (typeof bvecutObjArr[i][4] != 'undefined') {
-				if (bvecutObjArr[i][4] != '') {
-					var csvfile = bvecutObjArr[i][4].replace(/[/]/g,'\\');
-					if (WallL.indexOf(csvfile) < 0) {
-						WallL.push(csvfile);
-						teks += '.WallL(' + no + ') ' + csvfile + ',,\n';		
-						addno = true;		
-					} 							
-				}									
-			}
-			if (typeof bvecutObjArr[i][5] != 'undefined') {
-				if (bvecutObjArr[i][5] != '') {
-					var csvfile = bvecutObjArr[i][5].replace(/[/]/g,'\\');
-					if (WallR.indexOf(csvfile) < 0) {
-						WallR.push(csvfile);
-						teks += '.WallR(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
-					}							
-				}									
-			}
-			if (addno) { no++;}	
+			if ((typeof bvecutObjArr[i][4] != 'undefined') && (typeof bvecutObjArr[i][5] != 'undefined'))  { 
+				if ((bvecutObjArr[i][4] != '') || (bvecutObjArr[i][5] != '')) {
+					var WallL = bvecutObjArr[i][4].replace(/[/]/g,'\\');
+					var WallR = bvecutObjArr[i][5].replace(/[/]/g,'\\');
+					var add = true;
+					for (j=0;j<Wall.length;j++) {
+						if (Wall[j][0] == WallL && Wall[j][1] == WallR) {
+							add = false;
+							break;
+						}
+					}
+					if (add) {
+						Wall.push([WallL,WallR,0,-1]);
+					}									
+				}
+			}		
+
 		}  		
 	}
 	catch(err) {
 		teks += "[Error] : error in creating hill cut list." + "\n" + err.message + ". \n";
 	}
 	
-	no = 0;
 	try {
-		for (i = 0; i < bvecrackObjArr.length; i++) {		
-			teks += '.CrackL(' + no + ') ' + bvecrackObjArr[i][4].replace(/[/]/g,'\\') + ',,\n';
-			CrackL.push(bvecrackObjArr[i][4].replace(/[/]/g,'\\'));
-			teks += '.CrackR(' + no + ') ' + bvecrackObjArr[i][5].replace(/[/]/g,'\\') + ',,\n';
-			CrackR.push(bvecrackObjArr[i][5].replace(/[/]/g,'\\'));			
-			no++;
+		for (i = 0; i < bvecrackObjArr.length; i++) {	
+			if ((typeof bvecrackObjArr[i][4] != 'undefined') && (typeof bvecrackObjArr[i][5] != 'undefined'))  { 
+				if ((bvecrackObjArr[i][4] != '') || (bvecrackObjArr[i][5] != '')) {
+					var CrackL = bvecrackObjArr[i][4].replace(/[/]/g,'\\');
+					var CrackR = bvecrackObjArr[i][5].replace(/[/]/g,'\\');
+					var add = true;
+					for (j=0;j<Crack.length;j++) {
+						if (Crack[j][0] == CrackL && Crack[j][1] == CrackR) {
+							add = false;
+							break;
+						}
+					}
+					if (add) {
+						Crack.push([CrackL,CrackR,0,-1]);
+					}									
+				}
+			}		
+
 		}		
 	}
 	catch(err) {
 		teks += "[Error] : error in creating crack list." + "\n" + err.message + ". \n";
 	}	
 	
-	var np =[0,0,0,0];
+	//var np =[0,0,0,0];
 	try {
 		for (i = 0; i < bvepoleObjArr.length; i++) {
-			var tracksNum = parseInt(bvepoleObjArr[i][5]) - 1;
-			teks += '.Pole(' + tracksNum + ';' + np[tracksNum] + ') ' + bvepoleObjArr[i][4].replace(/[/]/g,'\\') + ',,\n';
-			var newPole = [tracksNum + ';' + np[tracksNum], bvepoleObjArr[i][4].replace(/[/]/g,'\\')];
+			var tracks = parseInt(bvepoleObjArr[i][5]) - 1;
+			//teks += '.Pole(' + tracks + ';' + np[tracks] + ') ' + bvepoleObjArr[i][4].replace(/[/]/g,'\\') + ',,\n';
+			var newPole = [bvepoleObjArr[i][4].replace(/[/]/g,'\\'),0,-1,tracks];
 			Pole.push(newPole);
-			np[tracksNum]++;
+			//np[tracks]++;
 		}		
 	}
 	catch(err) {
@@ -528,96 +525,44 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		//8~11 'roofl.csv','roofcl.csv','roofcr.csv','roofr.csv']
 		no = 1;
 		for (var i=0; i < bveplatformObjArr.length; i++) {
-			var addno = false;
-			if (typeof bveplatformObjArr[i][4] != 'undefined') { 
-				if (bveplatformObjArr[i][4] != '') {
-					var csvfile = bveplatformObjArr[i][4].replace(/[/]/g,'\\');				
-					if (FormL.indexOf(csvfile) < 0) {
-						FormL.push(csvfile);
-						teks += '.FormL(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
-					}				
+			if ((typeof bveplatformObjArr[i][4] != 'undefined') && (typeof bveplatformObjArr[i][5] != 'undefined') && (typeof bveplatformObjArr[i][6] != 'undefined') && (typeof bveplatformObjArr[i][7] != 'undefined'))  { 
+				if ((bveplatformObjArr[i][4] != '') || (bveplatformObjArr[i][5] != '') || (bveplatformObjArr[i][6] != '') || (bveplatformObjArr[i][7] != '')) {
+					var FormL = bveplatformObjArr[i][4].replace(/[/]/g,'\\');
+					var FormCL = bveplatformObjArr[i][5].replace(/[/]/g,'\\');
+					var FormCR = bveplatformObjArr[i][6].replace(/[/]/g,'\\');
+					var FormR = bveplatformObjArr[i][7].replace(/[/]/g,'\\');
+					var add = true;
+					for (j=0;j<Form.length;j++) {
+						if (Form[j][0] == FormL && Form[j][1] == FormCL && Form[j][2] == FormCR && Form[j][3] == FormR) {
+							add = false;
+							break;
+						}
+					}
+					if (add) {
+						Form.push([FormL,FormCL,FormCR,FormR,0,-1]);
+					}									
 				}
-			}
-			
-			if (typeof bveplatformObjArr[i][5] != 'undefined') { 
-				if (bveplatformObjArr[i][5] != '') {
-					var csvfile = bveplatformObjArr[i][5].replace(/[/]/g,'\\');				
-					if (FormCL.indexOf(csvfile) < 0) {
-						FormCL.push(csvfile);
-						teks += '.FormCL(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
-					}				
+			}		
+
+			if ((typeof bveplatformObjArr[i][8] != 'undefined') && (typeof bveplatformObjArr[i][9] != 'undefined') && (typeof bveplatformObjArr[i][10] != 'undefined') && (typeof bveplatformObjArr[i][11] != 'undefined'))  { 
+				if ((bveplatformObjArr[i][8] != '') || (bveplatformObjArr[i][9] != '') || (bveplatformObjArr[i][10] != '') || (bveplatformObjArr[i][11] != '')) {
+					var RoofL = bveplatformObjArr[i][8].replace(/[/]/g,'\\');
+					var RoofCL = bveplatformObjArr[i][9].replace(/[/]/g,'\\');
+					var RoofCR = bveplatformObjArr[i][10].replace(/[/]/g,'\\');
+					var RoofR = bveplatformObjArr[i][11].replace(/[/]/g,'\\');
+					var add = true;
+					for (j=0;j<Roof.length;j++) {
+						if (Roof[j][0] == RoofL && Roof[j][1] == RoofCL && Roof[j][2] == RoofCR && Roof[j][3] == RoofR) {
+							add = false;
+							break;
+						}
+					}
+					if (add) {
+						Roof.push([RoofL,RoofCL,RoofCR,RoofR,0,-1]);
+					}									
 				}
-			}
+			}		
 			
-			if (typeof bveplatformObjArr[i][6] != 'undefined') { 
-				if (bveplatformObjArr[i][6] != '') {
-					var csvfile = bveplatformObjArr[i][6].replace(/[/]/g,'\\');				
-					if (FormCR.indexOf(csvfile) < 0) {
-						FormCR.push(csvfile);
-						teks += '.FormCR(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
-					}				
-				}
-			}
-			
-			if (typeof bveplatformObjArr[i][7] != 'undefined') { 
-				if (bveplatformObjArr[i][7] != '') {
-					var csvfile = bveplatformObjArr[i][7].replace(/[/]/g,'\\');				
-					if (FormR.indexOf(csvfile) < 0) {
-						FormR.push(csvfile);
-						teks += '.FormR(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
-					}				
-				}
-			}
-			
-			if (typeof bveplatformObjArr[i][8] != 'undefined') { 
-				if (bveplatformObjArr[i][8] != '') {
-					var csvfile = bveplatformObjArr[i][8].replace(/[/]/g,'\\');				
-					if (RoofL.indexOf(csvfile) < 0) {
-						RoofL.push(csvfile);
-						teks += '.RoofL(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
-					}				
-				}
-			}
-			
-			if (typeof bveplatformObjArr[i][9] != 'undefined') { 
-				if (bveplatformObjArr[i][9] != '') {
-					var csvfile = bveplatformObjArr[i][9].replace(/[/]/g,'\\');				
-					if (RoofCL.indexOf(csvfile) < 0) {
-						RoofCL.push(csvfile);
-						teks += '.RoofCL(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
-					}				
-				}
-			}
-			
-			if (typeof bveplatformObjArr[i][10] != 'undefined') { 
-				if (bveplatformObjArr[i][10] != '') {
-					var csvfile = bveplatformObjArr[i][10].replace(/[/]/g,'\\');				
-					if (RoofCR.indexOf(csvfile) < 0) {
-						RoofCR.push(csvfile);
-						teks += '.RoofCR(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
-					}				
-				}
-			}
-			
-			if (typeof bveplatformObjArr[i][11] != 'undefined') { 
-				if (bveplatformObjArr[i][11] != '') {
-					var csvfile = bveplatformObjArr[i][11].replace(/[/]/g,'\\');				
-					if (RoofR.indexOf(csvfile) < 0) {
-						RoofR.push(csvfile);
-						teks += '.RoofR(' + no + ') ' + csvfile + ',,\n';
-						addno = true;
-					}				
-				}
-			}														
-			
-			if (addno) { no++;}
 		}	
 		
 	}
@@ -630,9 +575,22 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 	try {
 		for (i = 0; i < bvebveStrOjArr.length; i++) {
 			if (bvebveStrOjArr[i][3] == 'Ground') {
-				teks += '.Ground(' + no + ') ' + bvebveStrOjArr[i][5].replace(/[/]/g,'\\') + ',,\n';
-				Ground.push(bvebveStrOjArr[i][5].replace(/[/]/g,'\\'));
-				no++;
+				if (typeof bvebveStrOjArr[i][5] != 'undefined') { 
+					if (bvebveStrOjArr[i][5] != '') {
+						var csvfile = bvebveStrOjArr[i][5].replace(/[/]/g,'\\');
+						var add = true;
+						for (j=0;j<Ground.length;j++) {
+							if (Ground[j][0] == csvfile) {
+								add = false;
+								break;
+							}
+						}
+						if (add) {
+							Ground.push([csvfile,0,-1]);
+						}
+							
+					}							
+				}
 			}		
 		}		
 	}
@@ -643,9 +601,22 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 	try {
 		for (i = 0; i < bvebveStrOjArr.length; i++) {		
 			if (bvebveStrOjArr[i][3] == 'River') {
-				teks += '.Ground(' + no + ') ' + bvebveStrOjArr[i][5].replace(/[/]/g,'\\') + ',,\n';
-				Ground.push(bvebveStrOjArr[i][5].replace(/[/]/g,'\\'));
-				no++;			
+				if (typeof bvebveStrOjArr[i][5] != 'undefined') { 
+					if (bvebveStrOjArr[i][5] != '') {
+						var csvfile = bvebveStrOjArr[i][5].replace(/[/]/g,'\\');
+						var add = true;
+						for (j=0;j<Ground.length;j++) {
+							if (Ground[j][0] == csvfile) {
+								add = false;
+								break;
+							}
+						}
+						if (add) {
+							Ground.push([csvfile,0,-1]);
+						}
+							
+					}							
+				}
 			}
 		}		
 	}
@@ -656,9 +627,23 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 	try {
 		for (i = 0; i < bvebveStrOjArr.length; i++) {		
 			if (bvebveStrOjArr[i][3] == 'RiverBank') {
-				teks += '.Ground(' + no + ') ' + bvebveStrOjArr[i][5].replace(/[/]/g,'\\') + ',,\n';
-				Ground.push(bvebveStrOjArr[i][5].replace(/[/]/g,'\\'));
-				no++;			
+				if (typeof bvebveStrOjArr[i][5] != 'undefined') { 
+					if (bvebveStrOjArr[i][5] != '') {
+						var csvfile = bvebveStrOjArr[i][5].replace(/[/]/g,'\\');
+						var add = true;
+						for (j=0;j<Ground.length;j++) {
+							if (Ground[j][0] == csvfile) {
+								add = false;
+								break;
+							}
+						}
+						if (add) {
+							Ground.push([csvfile,0,-1]);
+						}
+							
+					}							
+				}
+			
 			}
 		}		
 	}
@@ -666,13 +651,25 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		teks += "[Error] : error in creating river bank list." + "\n" + err.message + ". \n";
 	}	
 		
-	no = 0;
 	try {
 		for (i = 0; i < bvebveStrOjArr.length; i++) {
 			if (bvebveStrOjArr[i][3] == 'Beacon') {
-				teks += '.Beacon(' + no + ') ' + bvebveStrOjArr[i][5].replace(/[/]/g,'\\') + ',,\n';
-				Beacon.push(bvebveStrOjArr[i][5].replace(/[/]/g,'\\'));
-				no++;
+				if (typeof bvebveStrOjArr[i][5] != 'undefined') { 
+					if (bvebveStrOjArr[i][5] != '') {
+						var csvfile = bvebveStrOjArr[i][5].replace(/[/]/g,'\\');
+						var add = true;
+						for (j=0;j<Beacon.length;j++) {
+							if (Beacon[j][0] == csvfile) {
+								add = false;
+								break;
+							}
+						}
+						if (add) {
+							Beacon.push([csvfile,0,-1]);
+						}
+							
+					}							
+				}			
 			}		
 		}		
 	}
@@ -687,39 +684,64 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 				if (typeof bvebridgeObjArr[i][4] != 'undefined') {
 					if (bvebridgeObjArr[i][4] != '') {
 						var csvfile = bvebridgeObjArr[i][4].replace(/[/]/g,'\\');
-						if (FreeObj.indexOf(csvfile) < 0) {
-							FreeObj.push(csvfile);
-							//teks += '.FreeObj(' + (FreeObj.length-1) + ') ' + csvfile + ',,\n';
+						var add = true;
+						for (j=0;j<FreeObj.length;j++) {
+							if (FreeObj[j][0] == csvfile) {
+								add = false;
+								break;
+							}
+						}
+						if (add) {
+							FreeObj.push([csvfile,0,-1]);
 						} 							
 					}									
 				}
 				if (typeof bvebridgeObjArr[i][5] != 'undefined') {
 					if (bvebridgeObjArr[i][5] != '') {
 						var csvfile = bvebridgeObjArr[i][5].replace(/[/]/g,'\\');
-						if (FreeObj.indexOf(csvfile) < 0) {
-							FreeObj.push(csvfile);
-							//teks += '.FreeObj(' + (FreeObj.length-1) + ') ' + csvfile + ',,\n';
+						var add = true;
+						for (j=0;j<FreeObj.length;j++) {
+							if (FreeObj[j][0] == csvfile) {
+								add = false;
+								break;
+							}
+						}
+						if (add) {
+							FreeObj.push([csvfile,0,-1]);
 						} 							
 					}									
 				}
 				if (typeof bvebridgeObjArr[i][6] != 'undefined') {
 					if (bvebridgeObjArr[i][6] != '') {
-						var csvfile = bvebridgeObjArr[i][6].replace(/[/]/g,'\\');
-						if (FreeObj.indexOf(csvfile) < 0) {
-							FreeObj.push(csvfile);
-							//teks += '.FreeObj(' + (FreeObj.length-1) + ') ' + csvfile + ',,\n';
+						var csvfile = [i][6].replace(/[/]/g,'\\');
+						var add = true;
+						for (j=0;j<FreeObj.length;j++) {
+							if (FreeObj[j][0] == csvfile) {
+								add = false;
+								break;
+							}
+						}
+						if (add) {
+							FreeObj.push([csvfile,0,-1]);
 						} 							
 					}									
 				}
+				/*
 				if (typeof bvebridgeObjArr[i][7] != 'undefined') {
 					if (bvebridgeObjArr[i][7] != '') {
-						var csvfile = bvebridgeObjArr[i][7].replace(/[/]/g,'\\');
-						if (FreeObj.indexOf(csvfile) < 0) {
-							FreeObj.push(csvfile);
-							//teks += '.FreeObj(' + (FreeObj.length-1) + ') ' + csvfile + ',,\n';
+						var csvfile = [i][7].replace(/[/]/g,'\\');
+						var add = true;
+						for (j=0;j<FreeObj.length;j++) {
+							if (FreeObj[j][0] == csvfile) {
+								add = false;
+								break;
+							}
+						}
+						if (add) {
+							FreeObj.push([csvfile,0,-1]);
 						} 							
 					}									
-				}			
+				}	*/		
 			}		
 		}		
 	}
@@ -728,20 +750,24 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 	}	
 	
 	try {
-		if (WallL.length == WallR.length) {
-			no = WallL.length;
-		} else if (WallL.length == WallR.length) {
-			no = WallL.length;
-		} else {
-			no = WallR.length;
-		}
 		for (i = 0; i < bvebveStrOjArr.length; i++) {
 			if (bvebveStrOjArr[i][3] == 'Wall') {
-				teks += '.WallL(' + no + ') ' + bvebveStrOjArr[i][6].replace(/[/]/g,'\\') + ',,\n';
-				teks += '.WallR(' + no + ') ' + bvebveStrOjArr[i][7].replace(/[/]/g,'\\') + ',,\n';
-				WallL.push(bvebveStrOjArr[i][6].replace(/[/]/g,'\\'));
-				WallR.push(bvebveStrOjArr[i][7].replace(/[/]/g,'\\'));
-				no++;
+				if ((typeof bvebveStrOjArr[i][6] != 'undefined') && (typeof bvebveStrOjArr[i][7] != 'undefined'))  { 
+					if ((bvebveStrOjArr[i][6] != '') || bvebveStrOjArr([i][7] != '')) {
+						var WallL = bvebveStrOjArr[i][6].replace(/[/]/g,'\\');
+						var WallR = bvebveStrOjArr[i][7].replace(/[/]/g,'\\');
+						var add = true;
+						for (j=0;j<Wall.length;j++) {
+							if (Wall[j][0] == WallL && Wall[j][1] == WallR) {
+								add = false;
+								break;
+							}
+						}
+						if (add) {
+							Wall.push([WallL,WallR,0,-1]);
+						}									
+					}
+				}
 			}		
 		}		
 	}
@@ -755,27 +781,45 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 			if (typeof bveRCObjArr[i][4] != 'undefined') {
 				if (bveRCObjArr[i][4] != '') {
 					var csvfile = bveRCObjArr[i][4].replace(/[/]/g,'\\');
-					if (FreeObj.indexOf(csvfile) < 0) {
-						FreeObj.push(csvfile);
-						//teks += '.FreeObj(' + (FreeObj.length-1) + ') ' + csvfile + ',,\n';
+					var add = true;
+					for (j=0;j<FreeObj.length;j++) {
+						if (FreeObj[j][0] == csvfile) {
+							add = false;
+							break;
+						}
+					}
+					if (add) {
+						FreeObj.push([csvfile,0,-1]);
 					} 							
 				}									
 			}
 			if (typeof bveRCObjArr[i][5] != 'undefined') {
 				if (bveRCObjArr[i][5] != '') {
 					var csvfile = bveRCObjArr[i][5].replace(/[/]/g,'\\');
-					if (FreeObj.indexOf(csvfile) < 0) {
-						FreeObj.push(csvfile);
-						//teks += '.FreeObj(' + (FreeObj.length-1) + ') ' + csvfile + ',,\n';
+					var add = true;
+					for (j=0;j<FreeObj.length;j++) {
+						if (FreeObj[j][0] == csvfile) {
+							add = false;
+							break;
+						}
+					}
+					if (add) {
+						FreeObj.push([csvfile,0,-1]);
 					} 							
 				}									
 			}
 			if (typeof bveRCObjArr[i][6] != 'undefined') {
 				if (bveRCObjArr[i][6] != '') {
 					var csvfile = bveRCObjArr[i][6].replace(/[/]/g,'\\');
-					if (FreeObj.indexOf(csvfile) < 0) {
-						FreeObj.push(csvfile);
-						//teks += '.FreeObj(' + (FreeObj.length-1) + ') ' + csvfile + ',,\n';
+					var add = true;
+					for (j=0;j<FreeObj.length;j++) {
+						if (FreeObj[j][0] == csvfile) {
+							add = false;
+							break;
+						}
+					}
+					if (add) {
+						FreeObj.push([csvfile,0,-1]);
 					} 							
 				}									
 			}		
@@ -786,12 +830,22 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 	} 
   
 	try {
-		for (i = 0; i < FreeObj.length; i++) {		
-			teks += '.FreeObj(' + i + ') ' + FreeObj[i].replace(/[/]/g,'\\') + ',,\n';
-		}	
-		for (i = 0; i < bvefreeObjArr.length; i++) {		
-			FreeObj.push(bvefreeObjArr[i][5].replace(/[/]/g,'\\'));
-			teks += '.FreeObj(' + (FreeObj.length-1) + ') ' + bvefreeObjArr[i][5].replace(/[/]/g,'\\') + ',,\n';
+		for (i = 0; i < bvefreeObjArr.length; i++) {
+			if (typeof bvefreeObjArr[i][5] != 'undefined') {
+				if (bvefreeObjArr[i][5] != '') {
+					var csvfile = bvefreeObjArr[i][5].replace(/[/]/g,'\\');
+					var add = true;
+					for (j=0;j<FreeObj.length;j++) {
+						if (FreeObj[j][0] == csvfile) {
+							add = false;
+							break;
+						}
+					}
+					if (add) {
+						FreeObj.push([csvfile,0,-1]);
+					} 							
+				}									
+			}		
 		}		
 	}
 	catch(err) {
@@ -799,8 +853,6 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 	}  			
 	
     	
-
-	teks +='\nWith Track\n';
 	
 	var polyL = MapToolbar.features['lineTab'][pid];
 	var allPoints = polyL.getPath().getArray();
@@ -863,29 +915,29 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 						
 							if (ci == 0) {
 						
-								var tmpTxt = '.Curve ' + Rc + ';' + cant+', .FreeObj 0;0;-2;0.7;0';
+								var tmpTxt = '.Curve ' + Rc + ';' + cant+',.FreeObj 0;0;-2;0.7;0';
 							
 								if (forceSL == true) {
-									tmpTxt += ', .Limit ' + Vd + ';-1;0';
+									tmpTxt += ',.Limit ' + Vd + ';-1;0';
 								}
-								tmpTxt += ', .RailType 0;' + Crailindex;
+								tmpTxt += ',.RailType 0;' + Crailindex;
 
 								for (p = 0; p < paralellTrack.length; p++) {
-									tmpTxt += ', .RailType ' + paralellTrack[p][0] + ';' + Crailindex;  													
+									tmpTxt += ',.RailType ' + paralellTrack[p][0] + ';' + Crailindex;  													
 								}
 								mainTrkArr.push([Math.round(cX),tmpTxt]);
-
+								Rail[Crailindex][1]++;
 								
 							} else if (ci == 1) {					
 								var tmpTxt = '.Curve 0;0';
 							
 								if (forceSL == true) {
-									tmpTxt += ', .Limit 0;-1;0';
+									tmpTxt += ',.Limit 0;-1;0';
 								}
-								tmpTxt += ', .RailType 0;' + defaultRailIndex;
+								tmpTxt += ',.RailType 0;' + defaultRailIndex;
 
 								for (p = 0; p < paralellTrack.length; p++) {
-									tmpTxt += ', .RailType ' + paralellTrack[p][0] + ';' + defaultRailIndex;  													
+									tmpTxt += ',.RailType ' + paralellTrack[p][0] + ';' + defaultRailIndex;  													
 								}
 								mainTrkArr.push([Math.round(cX),tmpTxt]);
 							
@@ -905,7 +957,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 				
 							//kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''},
 							if (cPoly.markers.getAt(ci).kdata.bridge != '' || cPoly.markers.getAt(ci).kdata.overbridge != '' || cPoly.markers.getAt(ci).kdata.river != '' || cPoly.markers.getAt(ci).kdata.ground != '' || cPoly.markers.getAt(ci).kdata.flyover != '' || cPoly.markers.getAt(ci).kdata.tunnel != '' || cPoly.markers.getAt(ci).kdata.pole != '' || cPoly.markers.getAt(ci).kdata.dike != '' || cPoly.markers.getAt(ci).kdata.cut != '' || cPoly.markers.getAt(ci).kdata.underground != '' || cPoly.markers.getAt(ci).kdata.form != '' || cPoly.markers.getAt(ci).kdata.roadcross != '' || cPoly.markers.getAt(ci).kdata.crack != '' || cPoly.markers.getAt(ci).kdata.beacon != ''){  			
-								ProcesskData(cPoly.markers.getAt(ci).kdata,Math.round(cX),polyL.markers.getAt(i).bdata.curve,ci);
+								ProcesskData(cPoly.markers.getAt(ci).kdata,Math.round(cX),polyL.markers.getAt(i).bdata.curve,ci,stsign,maxspeed);
 							}			
 							// ######### data on point end ##########					
 						}
@@ -934,6 +986,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 					} else if (i == edIdx) {
 						var crX = Math.round(currX/25)*25;
 						mainTrkArr.push([crX,'']);
+						if (kmstone) { stoneMark(crX); }
 						noteTrkArr.push([crX,'************ End of Track ************']);
 				
 					} else {
@@ -952,7 +1005,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 				
 					//kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''},
 					if (polyL.markers.getAt(i).kdata.bridge != '' || polyL.markers.getAt(i).kdata.overbridge != '' || polyL.markers.getAt(i).kdata.river != '' || polyL.markers.getAt(i).kdata.ground != '' || polyL.markers.getAt(i).kdata.flyover != '' || polyL.markers.getAt(i).kdata.tunnel != '' || polyL.markers.getAt(i).kdata.pole != '' || polyL.markers.getAt(i).kdata.dike != '' || polyL.markers.getAt(i).kdata.cut != '' || polyL.markers.getAt(i).kdata.underground != '' || polyL.markers.getAt(i).kdata.form != '' || polyL.markers.getAt(i).kdata.roadcross != '' || polyL.markers.getAt(i).kdata.crack != '' || polyL.markers.getAt(i).kdata.beacon != ''){  			
-						ProcesskData(polyL.markers.getAt(i).kdata,Math.round(currX),pid,i);
+						ProcesskData(polyL.markers.getAt(i).kdata,Math.round(currX),pid,i,stsign,maxspeed);
 					}			
 					// ######### data on point end ##########
 				}
@@ -971,6 +1024,314 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
   	
 	} 
 	
+	//update referrer index
+	teks +='\nWith Texture\n';
+
+	no = 0;
+	for (r = 0; r < BackGround.length; r++) {
+		if (r == 0) {
+			teks += '.BackGround(' + no + ') ' + BackGround[r][0] + ',,\n';
+			no++;
+		} else {
+			if (BackGround[r][1] > 0) {
+				teks += '.BackGround(' + no + ') ' + BackGround[r][0] + ',,\n';
+				BackGround[r][2] = no;
+				no++;
+			}			
+		}
+
+	}
+
+	teks +='\nWith Structure\n';
+	
+	no = 0;
+	for (r = 0; r < Rail.length; r++) {
+	//console.log(Rail[r][1]);
+		if (Rail[r][1] > 0) {
+			teks += '.Rail(' + no + ') ' + Rail[r][0] + ',,\n';
+			Rail[r][2] = no;
+			no++;
+		}
+	}
+	
+	no = 0;
+	for (r = 0; r < Ground.length; r++) {
+		if (r == 0) {
+			teks += '.Ground(' + no + ') ' + Ground[r][0] + ',,\n';
+			no++;
+		} else {
+			if (Ground[r][1] > 0) {
+				teks += '.Ground(' + no + ') ' + Ground[r][0] + ',,\n';
+				Ground[r][2] = no;
+				no++;
+			}
+
+		}		
+	}
+	
+	
+	var noP =[0,0,0,0]; //[0]-single track, [1]-double tracks,[2]-triple tracks, [3]-quad tracks,
+	
+	for (r = 0; r < Pole.length; r++) {
+		if (Pole[r][1] > 0) {
+			var tracks = Pole[r][3];
+			teks += '.Pole(' + tracks + ';' + noP[tracks] + ') ' + Pole[r][0] + ',,\n';
+			Pole[r][2] = noP[tracks];
+			noP[tracks]++;
+		}
+	}
+	
+	no = 0;
+	for (r = 0; r < Dike.length; r++) {
+		if (Dike[r][2] > 0) {
+			if (Dike[r][0] != '') {	teks += '.DikeL(' + no + ') ' + Dike[r][0] + ',,\n'; }
+			if (Dike[r][1] != '') {	teks += '.DikeR(' + no + ') ' + Dike[r][1] + ',,\n'; }
+			Dike[r][3] = no;
+			no++;
+		}
+	}
+	
+	no = 0;
+	for (r = 0; r < Wall.length; r++) {
+		if (Wall[r][2] > 0) {
+			if (Wall[r][0] != '') {	teks += '.WallL(' + no + ') ' + Wall[r][0] + ',,\n'; }
+			if (Wall[r][1] != '') {	teks += '.WallR(' + no + ') ' + Wall[r][1] + ',,\n'; }
+			Wall[r][3] = no;
+			no++;
+		}
+	}
+	
+	no = 0;
+	for (r = 0; r < Crack.length; r++) {
+		if (Crack[r][2] > 0) {
+			if (Crack[r][0] != '') {	teks += '.CrackL(' + no + ') ' + Crack[r][0] + ',,\n'; }
+			if (Crack[r][1] != '') {	teks += '.CrackR(' + no + ') ' + Crack[r][1] + ',,\n'; }
+			Crack[r][3] = no;
+			no++;
+		}
+	}
+	
+	no = 0;
+	for (r = 0; r < Form.length; r++) {
+		if (Form[r][4] > 0) {
+			if (Form[r][0] != '') {	teks += '.FormL(' + (no+1) + ') ' + Form[r][0] + ',,\n'; }
+			if (Form[r][1] != '') {	teks += '.FormCL(' + (no+1) + ') ' + Form[r][1] + ',,\n'; }
+			if (Form[r][2] != '') {	teks += '.FormCR(' + (no+1) + ') ' + Form[r][2] + ',,\n'; }
+			if (Form[r][3] != '') {	teks += '.FormR(' + (no+1) + ') ' + Form[r][3] + ',,\n'; }
+			Form[r][5] = no;
+			no++;
+		}
+	}
+	
+	no = 0;
+	for (r = 0; r < Roof.length; r++) {
+		if (Roof[r][4] > 0) {
+			if (Roof[r][0] != '') {	teks += '.RoofL(' + (no+1) + ') ' + Roof[r][0] + ',,\n'; }
+			if (Roof[r][1] != '') {	teks += '.RoofCL(' + (no+1) + ') ' + Roof[r][1] + ',,\n'; }
+			if (Roof[r][2] != '') {	teks += '.RoofCR(' + (no+1) + ') ' + Roof[r][2] + ',,\n'; }
+			if (Roof[r][3] != '') {	teks += '.RoofR(' + (no+1) + ') ' + Roof[r][3] + ',,\n'; }
+			Roof[r][5] = no;
+			no++;
+		}
+	}
+	
+	no = 0;
+	for (r = 0; r < Beacon.length; r++) {
+		if (Beacon[r][1] > 0) {
+			teks += '.Beacon(' + no + ') ' + Beacon[r][0] + ',,\n';
+			Beacon[r][2] = no;
+			no++;
+		}
+	}
+	
+	no = 0;
+	for (r = 0; r < FreeObj.length; r++) {
+		if (r < 21) {
+			teks += '.FreeObj(' + r + ') ' + FreeObj[r][0] + ',,\n';
+			//FreeObj[r][2] = no;
+			no++;		
+		} else {
+			if (FreeObj[r][1] > 0) {
+				teks += '.FreeObj(' + no + ') ' + FreeObj[r][0] + ',,\n';
+				FreeObj[r][2] = no;
+				no++;		
+			}		
+		}
+
+	}
+	
+	//updating obj index on mainTrkArr
+	for (s = 0; s < mainTrkArr.length; s++) {
+		try {	
+			if ((mainTrkArr[s][1].indexOf('.Rail') > -1) || (mainTrkArr[s][1].indexOf('.RailType') > -1) || (mainTrkArr[s][1].indexOf('.FreeObj') > -1) || (mainTrkArr[s][1].indexOf('.Wall') > -1) || (mainTrkArr[s][1].indexOf('.Dike') > -1) || (mainTrkArr[s][1].indexOf('.Pole') > -1) || (mainTrkArr[s][1].indexOf('.Ground') > -1) || (mainTrkArr[s][1].indexOf('.Back') > -1) || (mainTrkArr[s][1].indexOf('.Form') > -1) || (mainTrkArr[s][1].indexOf('.Beacon') > -1)) {
+				var par1 = mainTrkArr[s][1].split(',');
+				for (u = 0; u < par1.length; u++) {
+					var trObjArr1 = par1[u].split(';'); //bve obj prop
+					var trObjArr2 = trObjArr1[0].split(' '); //bve obj key
+					
+					if (trObjArr2[0] == '.Rail') {
+						//.Rail RailIndex; X; Y; RailType
+						var oldIdx = parseInt(trObjArr1[3]);
+						mainTrkArr[s][1] = mainTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + trObjArr1[1] + ';' + trObjArr1[2] + ';' + Rail[oldIdx][2]);
+					}
+					
+					if (trObjArr2[0] == '.RailType') {
+						//.RailType RailIndex; RailType
+						var oldIdx = parseInt(trObjArr1[1]);
+						mainTrkArr[s][1] = mainTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + Rail[oldIdx][2]);
+					}
+					
+					if (trObjArr2[0] == '.FreeObj') {
+						//.FreeObj RailIndex; FreeObjStructureIndex; X; Y; Yaw
+						var oldIdx = parseInt(trObjArr1[1]);
+						if (oldIdx > 20) {
+							mainTrkArr[s][1] = mainTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + FreeObj[oldIdx][2] + ';' + trObjArr1[2] + ';' + trObjArr1[3] + ';' + trObjArr1[4]);
+						}
+					}
+					
+					if (trObjArr2[0] == '.Wall') {
+						//.Wall RailIndex; Direction; WallStructureIndex
+						var oldIdx = parseInt(trObjArr1[2]);
+						mainTrkArr[s][1] = mainTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + trObjArr1[1] + ';' + Wall[oldIdx][3]);
+					}
+					
+					if (trObjArr2[0] == '.Dike') {
+						//.Dike RailIndex; Direction; DikeStructureIndex
+						var oldIdx = parseInt(trObjArr1[2]);
+						mainTrkArr[s][1] = mainTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + trObjArr1[1] + ';' + Dike[oldIdx][3]);
+					}
+					
+					if (trObjArr2[0] == '.Pole') {
+						//.Pole RailIndex; NumberOfAdditionalRails; Location; Interval; PoleStructureIndex
+						var oldIdx = parseInt(trObjArr1[4]);
+						mainTrkArr[s][1] = mainTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + trObjArr1[1] + ';' + trObjArr1[1] + ';' + trObjArr1[1] + ';' + Pole[oldIdx][2]);
+					}
+					
+					if (trObjArr2[0] == '.Ground') {
+						//.Ground CycleIndex
+						var oldIdx = parseInt(trObjArr2[1]);
+						mainTrkArr[s][1] = mainTrkArr[s][1].replace(par1[u], trObjArr2[0] + ' ' + Ground[oldIdx][2]);
+					}
+					
+					if (trObjArr2[0] == '.Beacon') {
+						//.Beacon Type; BeaconStructureIndex; Section; Data; X; Y; Yaw; Pitch; Roll
+						var oldIdx = parseInt(trObjArr1[1]);
+						mainTrkArr[s][1] = mainTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + Beacon[oldIdx][2] + ';' + trObjArr1[2] + ';' + trObjArr1[3] + ';' + trObjArr1[4] + ';'  + trObjArr1[5]);
+					}
+					
+					if (trObjArr2[0] == '.Back') {
+						//.Back BackgroundTextureIndex
+						var oldIdx = parseInt(trObjArr2[1]);
+						mainTrkArr[s][1] = mainTrkArr[s][1].replace(par1[u], trObjArr2[0] + ' ' + BackGround[oldIdx][2]);
+					}
+					
+					if (trObjArr2[0] == '.Form') {
+						//.Form RailIndex1; RailIndex2; RoofStructureIndex; FormStructureIndex
+						var oldIdx1 = parseInt(trObjArr1[2])-1;
+						var oldIdx2 = parseInt(trObjArr1[3])-1;
+						mainTrkArr[s][1] = mainTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + trObjArr1[1] + ';' + (Roof[oldIdx1][5]+1) + ';' + (Form[oldIdx2][5]+1));
+					}
+					
+					
+				}				
+			}
+				
+		
+		}
+		catch(err) {
+			teks += "[Error] : error updating object index." + "\n" + err.message + ". \n";
+		}
+		
+	}
+
+	//updating obj index on subTrkArr
+	for (s = 0; s < subTrkArr.length; s++) {
+		try {	
+			if ((subTrkArr[s][1].indexOf('.Rail') > -1) || (subTrkArr[s][1].indexOf('.RailType') > -1) || (subTrkArr[s][1].indexOf('.FreeObj') > -1) || (subTrkArr[s][1].indexOf('.Wall') > -1) || (subTrkArr[s][1].indexOf('.Dike') > -1) || (subTrkArr[s][1].indexOf('.Pole') > -1) || (subTrkArr[s][1].indexOf('.Ground') > -1) || (subTrkArr[s][1].indexOf('.Back') > -1) || (subTrkArr[s][1].indexOf('.Form') > -1) || (subTrkArr[s][1].indexOf('.Beacon') > -1)) {
+			
+				var par1 = subTrkArr[s][1].split(',');
+				for (u = 0; u < par1.length; u++) {
+					var trObjArr1 = par1[u].split(';'); //bve obj prop
+					var trObjArr2 = trObjArr1[0].split(' '); //bve obj key
+					
+					if (trObjArr2[0] == '.Rail') {
+						//.Rail RailIndex; X; Y; RailType
+						var oldIdx = parseInt(trObjArr1[3]);
+						subTrkArr[s][1] = subTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + trObjArr1[1] + ';' + trObjArr1[2] + ';' + Rail[oldIdx][2]);
+					}
+					
+					if (trObjArr2[0] == '.RailType') {
+						//.RailType RailIndex; RailType
+						var oldIdx = parseInt(trObjArr1[1]);
+						subTrkArr[s][1] = subTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + Rail[oldIdx][2]);
+					}
+					
+					if (trObjArr2[0] == '.FreeObj') {
+						//.FreeObj RailIndex; FreeObjStructureIndex; X; Y; Yaw
+						var oldIdx = parseInt(trObjArr1[1]);
+						if (oldIdx > 20) {
+							subTrkArr[s][1] = subTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + FreeObj[oldIdx][2] + ';' + trObjArr1[2] + ';' + trObjArr1[3] + ';' + trObjArr1[4]);
+						}
+					}
+					
+					if (trObjArr2[0] == '.Wall') {
+						//.Wall RailIndex; Direction; WallStructureIndex
+						var oldIdx = parseInt(trObjArr1[2]);
+						subTrkArr[s][1] = subTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + trObjArr1[1] + ';' + Wall[oldIdx][3]);
+					}
+					
+					if (trObjArr2[0] == '.Dike') {
+						//.Dike RailIndex; Direction; DikeStructureIndex
+						var oldIdx = parseInt(trObjArr1[2]);
+						subTrkArr[s][1] = subTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + trObjArr1[1] + ';' + Dike[oldIdx][3]);
+					}
+					
+					if (trObjArr2[0] == '.Pole') {
+						//.Pole RailIndex; NumberOfAdditionalRails; Location; Interval; PoleStructureIndex
+						var oldIdx = parseInt(trObjArr1[4]);
+						subTrkArr[s][1] = subTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + trObjArr1[1] + ';' + trObjArr1[1] + ';' + trObjArr1[1] + ';' + Pole[oldIdx][2]);
+					}
+					
+					if (trObjArr2[0] == '.Ground') {
+						//.Ground CycleIndex
+						var oldIdx = parseInt(trObjArr2[1]);
+						subTrkArr[s][1] = subTrkArr[s][1].replace(par1[u], trObjArr2[0] + ' ' + Ground[oldIdx][2]);
+					}
+					
+					if (trObjArr2[0] == '.Beacon') {
+						//.Beacon Type; BeaconStructureIndex; Section; Data; X; Y; Yaw; Pitch; Roll
+						var oldIdx = parseInt(trObjArr1[1]);
+						subTrkArr[s][1] = subTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + Beacon[oldIdx][2] + ';' + trObjArr1[2] + ';' + trObjArr1[3] + ';' + trObjArr1[4] + ';'  + trObjArr1[5]);
+					}
+					
+					if (trObjArr2[0] == '.Back') {
+						//.Back BackgroundTextureIndex
+						var oldIdx = parseInt(trObjArr2[1]);
+						subTrkArr[s][1] = subTrkArr[s][1].replace(par1[u], trObjArr2[0] + ' ' + BackGround[oldIdx][2]);
+					}
+					
+					if (trObjArr2[0] == '.Form') {
+						//.Form RailIndex1; RailIndex2; RoofStructureIndex; FormStructureIndex
+						var oldIdx1 = parseInt(trObjArr1[2])-1;
+						var oldIdx2 = parseInt(trObjArr1[3])-1;
+						subTrkArr[s][1] = subTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + trObjArr1[1] + ';' + (Roof[oldIdx1][5]+1) + ';' + (Form[oldIdx2][5]+1));
+					}
+					
+					
+				}				
+			}
+				
+		
+		}
+		catch(err) {
+			teks += "[Error] : error updating object index." + "\n" + err.message + ". \n";
+		}
+		
+	}
+
+	teks +='\nWith Track\n';
+				
+	
 	var tmpTrkStrArr = [];
 	//array sorting by first key
 	for (m = 0; m < mainTrkArr.length; m++) {
@@ -984,7 +1345,12 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 					var inArr = false;
 					for (t=0; t < tmpTrkStrArr.length; t++) {
 						if (parseInt(mainTrkArr[m][0]) == parseInt(tmpTrkStrArr[t][0])) {
-							tmpTrkStrArr[t][1] += ',' + mainTrkArr[m][1];
+							//.Rail .RailEnd / .Pole .PoleEnd / .Dike  .DikeEnd / .Wall .WallEnd
+							if (((mainTrkArr[m][1].indexOf('.RailEnd') > -1) && (tmpTrkStrArr[t][1].indexOf('.Rail') > -1)) || ((mainTrkArr[m][1].indexOf('.PoleEnd') > -1) && (tmpTrkStrArr[t][1].indexOf('.Pole') > -1)) || ((mainTrkArr[m][1].indexOf('.DikeEnd') > -1) && (tmpTrkStrArr[t][1].indexOf('.Dike') > -1)) || ((mainTrkArr[m][1].indexOf('.WallEnd') > -1) && (tmpTrkStrArr[t][1].indexOf('.Wall') > -1))) {
+								tmpTrkStrArr[t][1] = mainTrkArr[m][1] + ',' + tmpTrkStrArr[t][1];							
+							} else {
+								tmpTrkStrArr[t][1] += ',' + mainTrkArr[m][1];
+							}							
 							inArr = true;
 							break;
 						}					
@@ -1026,7 +1392,12 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 				var inArr = false;
 				for (t=0; t < tmpTrkStrArr.length; t++) {
 					if (parseInt(subTrkArr[s][0]) == parseInt(tmpTrkStrArr[t][0])) {
-						tmpTrkStrArr[t][1] += ',' + subTrkArr[s][1];
+						//.Rail .RailEnd / .Pole .PoleEnd / .Dike  .DikeEnd / .Wall .WallEnd
+						if (((subTrkArr[s][1].indexOf('.RailEnd') > -1) && (tmpTrkStrArr[t][1].indexOf('.Rail') > -1)) || ((subTrkArr[s][1].indexOf('.PoleEnd') > -1) && (tmpTrkStrArr[t][1].indexOf('.Pole') > -1)) || ((subTrkArr[s][1].indexOf('.DikeEnd') > -1) && (tmpTrkStrArr[t][1].indexOf('.Dike') > -1)) || ((subTrkArr[s][1].indexOf('.WallEnd') > -1) && (tmpTrkStrArr[t][1].indexOf('.Wall') > -1))) {
+							tmpTrkStrArr[t][1] = subTrkArr[s][1] + ',' + tmpTrkStrArr[t][1];							
+						} else {
+							tmpTrkStrArr[t][1] += ',' + subTrkArr[s][1];
+						}
 						inArr = true;
 						break;
 					}					
@@ -1137,10 +1508,6 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 	}       
   
 	$('#buildBVE').val(teks);
-  
-	if ($('#dialogBuildRoute').dialog('isOpen') == true) {
-		$('#dialogBuildRoute').dialog('close');
-	}
 	
 }
 
@@ -1157,29 +1524,29 @@ function ProcessbData(bdata,currX) {
 		var tmpTxt = '.Pitch ' + rpit;
 		if (pitchRatio == 0)  { 
 			if (rpit < pitchRatio)  { 
-				tmpTxt += ', .FreeObj 0;3;-2;-0.3;0'; 	//menurun opp. level
+				tmpTxt += '.FreeObj 0;3;-2;-0.3;0'; 	//menurun opp. level
 				
 			} else if (rpit > pitchRatio) { 
-				tmpTxt += ', .FreeObj 0;4;-2;-0.3;0';	//mendaki opp. level
+				tmpTxt += '.FreeObj 0;4;-2;-0.3;0';	//mendaki opp. level
 				
 			} else {
 				// line level ... (^x^)
 			}
 		} else if (pitchRatio > 0)  {
 			if (rpit == 0) {
-				tmpTxt += ', .FreeObj 0;2;-2;-0.3;0'; 	//level opp. mendaki
+				tmpTxt += '.FreeObj 0;2;-2;-0.3;0'; 	//level opp. mendaki
 			} else if (rpit > 0) {
-				tmpTxt += ', .FreeObj 0;7;-2;-0.3;0';		//mendaki-mendaki, lain ratio
+				tmpTxt += '.FreeObj 0;7;-2;-0.3;0';		//mendaki-mendaki, lain ratio
 			} else {
-				tmpTxt += ', .FreeObj 0;1;-2;-0.3;0';    //menurun opp. mendaki										  										
+				tmpTxt += '.FreeObj 0;1;-2;-0.3;0';    //menurun opp. mendaki										  										
 			}
 		} else {
 			if (rpit == 0) { 
-				tmpTxt += ', .FreeObj 0;5;-2;-0.3;0';		//level opp. menurun
+				tmpTxt += '.FreeObj 0;5;-2;-0.3;0';		//level opp. menurun
 			} else if (rpit < 0) {
-				tmpTxt += ', .FreeObj 0;8;-2;-0.3;0';		//menurun-menurun, lain ratio
+				tmpTxt += '.FreeObj 0;8;-2;-0.3;0';		//menurun-menurun, lain ratio
 			} else {
-				tmpTxt += ', .FreeObj 0;6;-2;-0.3;0';		//mendaki opp. menurun
+				tmpTxt += '.FreeObj 0;6;-2;-0.3;0';		//mendaki opp. menurun
 			}
 		}	
 		
@@ -1193,7 +1560,8 @@ function ProcessbData(bdata,currX) {
 			for (g1 = 0; g1 < bverailobjArr.length; g1++) {			
 				if (bverailobjArr[g1][1] == bdata.railindex) {
 					for (r = 0; r < Rail.length; r++) {
-						if (Rail[r] == bverailobjArr[g1][6].replace(/[/]/g,'\\')) {
+						if (Rail[r][0] == bverailobjArr[g1][6].replace(/[/]/g,'\\')) {
+							Rail[r][1]++;
 							ri =  r ;  									
 							break;
 						}
@@ -1212,13 +1580,13 @@ function ProcessbData(bdata,currX) {
 }
 
 
-function ProcesskData(kdata,currX,pid,idx) {
+function ProcesskData(kdata,currX,pid,idx,stsign,maxspeed) {
 //kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''},
 	var crX = Math.round(currX/25)*25;
 
 	if ( kdata.bridge != '' ) {
 		noteTrkArr.push([ crX,'bridge']);
-		var arrK = kdata.bridge.split(',');
+		var arrK = kdata.bridge.split('¤');
 		for (k = 0; k < arrK.length; k++) {
 			var arrK_1 = arrK[k].split(':');
 			if (arrK_1[1] == '0') {
@@ -1227,8 +1595,9 @@ function ProcesskData(kdata,currX,pid,idx) {
 						if (bvebridgeObjArr[g][9] == 'Wall') {
 							//algoritma utk wall type
 							if (paralellTrack.length == 0) {
-								for (wI = 0; wI < WallL.length; wI++) {
-									if (bvebridgeObjArr[g][4].replace(/[/]/g,'\\') ==  WallL[wI]) {																
+								for (wI = 0; wI < Wall.length; wI++) {
+									if (bvebridgeObjArr[g][4].replace(/[/]/g,'\\') ==  Wall[wI][0]) {	
+										Wall[wI][2]++;
 										if (bvebridgeObjArr[g][5] != '') {
 											subTrkArr.push([crX, '.Wall 0;0;'+ wI]);
 											GBfo[0] = 0;
@@ -1254,15 +1623,17 @@ function ProcesskData(kdata,currX,pid,idx) {
 										rightestIndex = paralellTrack[pTi][0];
 									}
 								}
-								for (wI = 0; wI < WallL.length; wI++) {
-									if (bvebridgeObjArr[g][4].replace(/[/]/g,'\\') ==  WallL[wI]) {
-										subTrkArr.push([crX, ' .Wall ' + leftestIndex + ';-1;'+ wI]);
+								for (wI = 0; wI < Wall.length; wI++) {
+									if (bvebridgeObjArr[g][4].replace(/[/]/g,'\\') ==  Wall[wI][0]) {
+										Wall[wI][2]++;
+										subTrkArr.push([crX, '.Wall ' + leftestIndex + ';-1;'+ wI]);
 										GBfo[0] = leftestIndex;														
 										break;
 									}
 								}
-								for (wI = 0; wI < WallR.length; wI++) {
-									if (bvebridgeObjArr[g][5].replace(/[/]/g,'\\') == WallR[wI]) {
+								for (wI = 0; wI < Wall.length; wI++) {
+									if (bvebridgeObjArr[g][5].replace(/[/]/g,'\\') == Wall[wI][1]) {
+										Wall[wI][2]++;
 										subTrkArr.push([crX, '.Wall ' + rightestIndex + ';1;'+ wI]);
 										GBfo[1] = rightestIndex;
 										break;
@@ -1271,7 +1642,8 @@ function ProcesskData(kdata,currX,pid,idx) {
 							}
 							if (bvebridgeObjArr[g][6] != '') {	
 								for (foI = 21; foI < FreeObj.length; foI++) {
-									if (bvebridgeObjArr[g][6].replace(/[/]/g,'\\') == FreeObj[foI]) {
+									if (bvebridgeObjArr[g][6].replace(/[/]/g,'\\') == FreeObj[foI][0]) {
+										FreeObj[foI][1]++;
 										break;
 									}
 								}
@@ -1286,7 +1658,8 @@ function ProcesskData(kdata,currX,pid,idx) {
 							if (paralellTrack.length == 0) {
 								if (bvebridgeObjArr[g][4] != '') {	
 									for (foI = 21; foI < FreeObj.length; foI++) {
-										if (bvebridgeObjArr[g][4].replace(/[/]/g,'\\') == FreeObj[foI]) {
+										if (bvebridgeObjArr[g][4].replace(/[/]/g,'\\') == FreeObj[foI][0]) {
+											FreeObj[foI][1]++;
 											subTrkArr.push([crX, '.FreeObj 0;'+ foI +';0;0;0']);
 											GBbridge[0] = 0;															
 											break;
@@ -1296,7 +1669,8 @@ function ProcesskData(kdata,currX,pid,idx) {
 												
 								if (bvebridgeObjArr[g][5] != '') {	
 									for (foI = 21; foI < FreeObj.length; foI++) {
-										if (bvebridgeObjArr[g][5].replace(/[/]/g,'\\') == FreeObj[foI]) {
+										if (bvebridgeObjArr[g][5].replace(/[/]/g,'\\') == FreeObj[foI][0]) {
+											FreeObj[foI][1]++;
 											GBbridge[1] = 0;
 											break;
 										}
@@ -1305,7 +1679,8 @@ function ProcesskData(kdata,currX,pid,idx) {
 												
 								if (bvebridgeObjArr[g][6] != '') {	
 									for (foI = 21; foI < FreeObj.length; foI++) {
-										if (bvebridgeObjArr[g][6].replace(/[/]/g,'\\') == FreeObj[foI]) {
+										if (bvebridgeObjArr[g][6].replace(/[/]/g,'\\') == FreeObj[foI][0]) {
+											FreeObj[foI][1]++;
 											subTrkArr.push([crX, '.FreeObj 0;'+ foI +';0;0;0']);
 											GBbridge[2] = 0;															
 											break;
@@ -1342,7 +1717,8 @@ function ProcesskData(kdata,currX,pid,idx) {
 													
 								if (bvebridgeObjArr[g][4] != '') {	//left @ basic str
 									for (foI = 21; foI < FreeObj.length; foI++) {
-										if (bvebridgeObjArr[g][4].replace(/[/]/g,'\\') == FreeObj[foI]) {
+										if (bvebridgeObjArr[g][4].replace(/[/]/g,'\\') == FreeObj[foI][0]) {
+											FreeObj[foI][1]++;
 											subTrkArr.push([crX, '.FreeObj ' + leftestIndex + ';' + foI +';0;0;0']);
 											GBbridge[0] = leftestIndex;														
 											break;
@@ -1352,8 +1728,9 @@ function ProcesskData(kdata,currX,pid,idx) {
 								
 								if (bvebridgeObjArr[g][5] != '') {	//right str
 									for (foI = 21; foI < FreeObj.length; foI++) {
-										if (bvebridgeObjArr[g][5].replace(/[/]/g,'\\') == FreeObj[foI]) {
-											subTrkArr.push([crX, ' .FreeObj ' + rightestIndex + ';' + foI +';0;5;0']);
+										if (bvebridgeObjArr[g][5].replace(/[/]/g,'\\') == FreeObj[foI][0]) {
+											FreeObj[foI][1]++;
+											subTrkArr.push([crX, '.FreeObj ' + rightestIndex + ';' + foI +';0;5;0']);
 											GBbridge[1] = rightestIndex;														
 											break;
 										}
@@ -1362,7 +1739,8 @@ function ProcesskData(kdata,currX,pid,idx) {
 								
 								if (bvebridgeObjArr[g][6] != '') {	//pier obj												
 									for (foI = 21; foI < FreeObj.length; foI++) {
-										if (bvebridgeObjArr[g][6].replace(/[/]/g,'\\') == FreeObj[foI]) {
+										if (bvebridgeObjArr[g][6].replace(/[/]/g,'\\') == FreeObj[foI][0]) {
+											FreeObj[foI][1]++;
 											subTrkArr.push([crX, '.FreeObj 0;' + foI +';0;0;0']); 
 											GBbridge[2] = 0;
 											break;
@@ -1388,7 +1766,8 @@ function ProcesskData(kdata,currX,pid,idx) {
 								if (bvebridgeObjArr[g][1] == arrK_1[0]) {
 									if (bvebridgeObjArr[g][6] != '') {	
 										for (foI = 21; foI < FreeObj.length; foI++) {
-											if (bvebridgeObjArr[g][6].replace(/[/]/g,'\\') ==  FreeObj[foI]) {
+											if (bvebridgeObjArr[g][6].replace(/[/]/g,'\\') ==  FreeObj[foI][0]) {
+												FreeObj[foI][1]++;
 												if (typeof GBfo[2] != 'undefined') { 
 													var iXd = GBfo[2] + parseInt(bvebridgeObjArr[g][7]);
 													subTrkArr.push([GBfo[2], '.FreeObj 0;' + foI +';0;0;0']);
@@ -1409,7 +1788,7 @@ function ProcesskData(kdata,currX,pid,idx) {
 								if (( GBfo[0] == 0) && ( GBfo[1] == 0)) {
 									subTrkArr.push([crX, '.WallEnd 0']);
 								} else {
-									subTrkArr.push([crX, '.WallEnd ' + GBfo[0] + ', .WallEnd ' + GBfo[1]]);
+									subTrkArr.push([crX, '.WallEnd ' + GBfo[0] + ',.WallEnd ' + GBfo[1]]);
 								}
 							} else { 									
 								if (typeof GBfo[0] != 'undefined') {
@@ -1427,7 +1806,8 @@ function ProcesskData(kdata,currX,pid,idx) {
 							if (paralellTrack.length == 0) {
 								if (bvebridgeObjArr[g][4] != '') {	
 									for (foI = 21; foI < FreeObj.length; foI++) {
-										if (bvebridgeObjArr[g][4].replace(/[/]/g,'\\') == FreeObj[foI]) {
+										if (bvebridgeObjArr[g][4].replace(/[/]/g,'\\') == FreeObj[foI][0]) {
+											FreeObj[foI][1]++;
 											if (typeof GBbridge[4] != 'undefined') {
 												var iXd = GBbridge[4] + Math.abs(bgL);																
 												do {
@@ -1442,7 +1822,8 @@ function ProcesskData(kdata,currX,pid,idx) {
 												
 								if (bvebridgeObjArr[g][5] != '') {	
 									for (foI = 21; foI < FreeObj.length; foI++) {
-										if (bvebridgeObjArr[g][5].replace(/[/]/g,'\\') == FreeObj[foI]) {
+										if (bvebridgeObjArr[g][5].replace(/[/]/g,'\\') == FreeObj[foI][0]) {
+											FreeObj[foI][1]++;
 											if (typeof GBbridge[4] != 'undefined') {
 												var iXd = GBbridge[4] + Math.abs(bgL);																
 												do {
@@ -1458,7 +1839,8 @@ function ProcesskData(kdata,currX,pid,idx) {
 								if (bvebridgeObjArr[g][6] != '') {
 									var pierXd = (bvebridgeObjArr[g][7] == '0') ? 50 : parseFloat(bvebridgeObjArr[g][7]);
 									for (foI = 21; foI < FreeObj.length; foI++) {
-										if (bvebridgeObjArr[g][6].replace(/[/]/g,'\\') == FreeObj[foI]) {
+										if (bvebridgeObjArr[g][6].replace(/[/]/g,'\\') == FreeObj[foI][0]) {
+											FreeObj[foI][1]++;
 											if (typeof GBbridge[4] != 'undefined') {
 												var iXd = GBbridge[4] + pierXd;																
 												do {
@@ -1488,7 +1870,8 @@ function ProcesskData(kdata,currX,pid,idx) {
 													
 								if (bvebridgeObjArr[g][4] != '') {	
 									for (foI = 21; foI < FreeObj.length; foI++) {
-										if (bvebridgeObjArr[g][4].replace(/[/]/g,'\\') == FreeObj[foI]) {															
+										if (bvebridgeObjArr[g][4].replace(/[/]/g,'\\') == FreeObj[foI][0]) {	
+											FreeObj[foI][1]++;
 											if (typeof GBbridge[4] != 'undefined') {
 												var iXd = GBbridge[4] + Math.abs(bgL);																
 												do {
@@ -1502,7 +1885,8 @@ function ProcesskData(kdata,currX,pid,idx) {
 								}
 								if (bvebridgeObjArr[g][5] != '') {	
 									for (foI = 21; foI < FreeObj.length; foI++) {
-										if (bvebridgeObjArr[g][5].replace(/[/]/g,'\\') == FreeObj[foI]) {
+										if (bvebridgeObjArr[g][5].replace(/[/]/g,'\\') == FreeObj[foI][0]) {
+											FreeObj[foI][1]++;
 											if (typeof GBbridge[4] != 'undefined') {
 												var iXd = GBbridge[4] + Math.abs(bgL);																
 												do {
@@ -1518,7 +1902,8 @@ function ProcesskData(kdata,currX,pid,idx) {
 								if (bvebridgeObjArr[g][6] != '') {
 									var pierXd = (bvebridgeObjArr[g][7] == '0') ? 25 : parseFloat(bvebridgeObjArr[g][7]);
 										for (foI = 21; foI < FreeObj.length; foI++) {
-										if (bvebridgeObjArr[g][6].replace(/[/]/g,'\\') == FreeObj[foI]) {
+										if (bvebridgeObjArr[g][6].replace(/[/]/g,'\\') == FreeObj[foI][0]) {
+											FreeObj[foI][1]++;
 											if (typeof GBbridge[4] != 'undefined') {
 												var iXd = GBbridge[4] + pierXd;																
 												do {
@@ -1539,14 +1924,15 @@ function ProcesskData(kdata,currX,pid,idx) {
 	}
 	
 	if (kdata.overbridge != '') {
-		var obname = kdata.overbridge.split(',');
+		var obname = kdata.overbridge.split('¤');
 		noteTrkArr.push([ crX,'overbridge']);
   		for (g = 0; g < bvefreeObjArr.length; g++) {
   			if (bvefreeObjArr[g][3] == 'overbridge') {
 				if (bvefreeObjArr[g][1] == obname[0]) {
 					if (bvefreeObjArr[g][5] != '') {	
  						for (foI = 21; foI < FreeObj.length; foI++) {
-							if (bvefreeObjArr[g][5].replace(/[/]/g,'\\') ==  FreeObj[foI]) {
+							if (bvefreeObjArr[g][5].replace(/[/]/g,'\\') ==  FreeObj[foI][0]) {
+								FreeObj[foI][1]++;
 								subTrkArr.push([currX, '.FreeObj 0;'+ foI +';' + obname[1] + ';' + obname[2] + ';' + obname[3]]);
 								break;
 							}
@@ -1561,7 +1947,7 @@ function ProcesskData(kdata,currX,pid,idx) {
 	
 	/* // dah x perlu, digantikan dengan ground sj
 	if (kdata.river != '') {
-		var rname = kdata.river.split(',');
+		var rname = kdata.river.split('¤');
 		var rwidth = parseInt(rname[1]);
 		for (rv = 0; rv < bvebveStrOjArr.length; rv++) {
   			if (bvebveStrOjArr[rv][1] == rname[0]) {
@@ -1580,7 +1966,8 @@ function ProcesskData(kdata,currX,pid,idx) {
 		for (g1 = 0; g1 < bvebveStrOjArr.length; g1++) {
   			if (bvebveStrOjArr[g1][1] == kdata.ground) {
   				for (gr = 0; gr < Ground.length; gr++) {
-  					if (Ground[gr] == bvebveStrOjArr[g1][5].replace(/[/]/g,'\\')) {
+  					if (Ground[gr][0] == bvebveStrOjArr[g1][5].replace(/[/]/g,'\\')) {
+						Ground[gr][1]++;
   						subTrkArr.push([ crX, '.Ground ' + gr ]);
   						break;
   					}
@@ -1590,7 +1977,7 @@ function ProcesskData(kdata,currX,pid,idx) {
 	}
 	
 	if (kdata.flyover != '') {
-		var arrK = kdata.flyover.split(',');
+		var arrK = kdata.flyover.split('¤');
 		noteTrkArr.push([ crX,'flyover']);
 		
 		for (k = 0; k < arrK.length; k++) {
@@ -1600,8 +1987,9 @@ function ProcesskData(kdata,currX,pid,idx) {
 					if (bveFOObjArr[g][1] == arrK_1[0]) {
 									
 						if (paralellTrack.length == 0) {
-							for (wI = 0; wI < WallL.length; wI++) {
-								if (bveFOObjArr[g][4].replace(/[/]/g,'\\') ==  WallL[wI]) {																
+							for (wI = 0; wI < Wall.length; wI++) {
+								if (bveFOObjArr[g][4].replace(/[/]/g,'\\') ==  Wall[wI][0]) {																
+									Wall[wI][2]++;
 									if (bveFOObjArr[g][5] != '') {
 										subTrkArr.push([crX, '.Wall 0;0;'+ wI]);
 										GBfo[0] = 0;
@@ -1627,15 +2015,17 @@ function ProcesskData(kdata,currX,pid,idx) {
 									rightestIndex = paralellTrack[pTi][0];
 								}
 							}
-							for (wI = 0; wI < WallL.length; wI++) {
-								if (bveFOObjArr[g][4].replace(/[/]/g,'\\') ==  WallL[wI]) {
-									subTrkArr.push([crX, ' .Wall ' + leftestIndex + ';-1;'+ wI]);
+							for (wI = 0; wI < Wall.length; wI++) {
+								if (bveFOObjArr[g][4].replace(/[/]/g,'\\') ==  Wall[wI][0]) {
+									Wall[wI][2]++;
+									subTrkArr.push([crX, '.Wall ' + leftestIndex + ';-1;'+ wI]);
 									GBfo[0] = leftestIndex;														
 									break;
 								}
 							}
-							for (wI = 0; wI < WallR.length; wI++) {
-								if (bveFOObjArr[g][5].replace(/[/]/g,'\\') == WallR[wI]) {
+							for (wI = 0; wI < Wall.length; wI++) {
+								if (bveFOObjArr[g][5].replace(/[/]/g,'\\') == Wall[wI][1]) {
+									Wall[wI][2]++;
 									subTrkArr.push([crX, '.Wall ' + rightestIndex + ';1;'+ wI]);
 									GBfo[1] = rightestIndex;
 									break;
@@ -1644,7 +2034,7 @@ function ProcesskData(kdata,currX,pid,idx) {
 						}
 						if (bveFOObjArr[g][6] != '') {	
 							for (foI = 21; foI < FreeObj.length; foI++) {
-								if (bveFOObjArr[g][6].replace(/[/]/g,'\\') == FreeObj[foI]) {
+								if (bveFOObjArr[g][6].replace(/[/]/g,'\\') == FreeObj[foI][0]) {
 									break;
 								}
 							}
@@ -1663,7 +2053,8 @@ function ProcesskData(kdata,currX,pid,idx) {
 					if (bveFOObjArr[g][1] == arrK_1[0]) {
 						if (bveFOObjArr[g][6] != '') {	
 							for (foI = 21; foI < FreeObj.length; foI++) {
-								if (bveFOObjArr[g][6].replace(/[/]/g,'\\') ==  FreeObj[foI]) {
+								if (bveFOObjArr[g][6].replace(/[/]/g,'\\') ==  FreeObj[foI][0]) {
+									FreeObj[foI][1]++;
 									if (typeof GBfo[2] != 'undefined') { 
 										var iXd = GBfo[2] + parseInt(bveFOObjArr[g][7]);
 										subTrkArr.push([GBfo[2], '.FreeObj 0;' + foI +';0;0;0']);
@@ -1684,7 +2075,7 @@ function ProcesskData(kdata,currX,pid,idx) {
 					if (( GBfo[0] == 0) && ( GBfo[1] == 0)) {
 						subTrkArr.push([crX, '.WallEnd 0']);
 					} else {
-						subTrkArr.push([crX, '.WallEnd ' + GBfo[0] + ', .WallEnd ' + GBfo[1]]);
+						subTrkArr.push([crX, '.WallEnd ' + GBfo[0] + ',.WallEnd ' + GBfo[1]]);
 					}
 				} else { 									
 					if (typeof GBfo[0] != 'undefined') {
@@ -1700,7 +2091,7 @@ function ProcesskData(kdata,currX,pid,idx) {
  	}
 	
 	if (kdata.tunnel != '') {
-		var arrK = kdata.tunnel.split(',');
+		var arrK = kdata.tunnel.split('¤');
 		noteTrkArr.push([ crX,'tunnel']);
 		
 		for (k = 0; k < arrK.length; k++) {
@@ -1709,20 +2100,22 @@ function ProcesskData(kdata,currX,pid,idx) {
 				for (g = 0; g < bvetunnelObjArr.length; g++) {
 					if (bvetunnelObjArr[g][1] == arrK_1[0]) {
 						for (foI = 21; foI < FreeObj.length; foI++) {
-							if (bvetunnelObjArr[g][4].replace(/[/]/g,'\\') ==  FreeObj[foI]) {
-								subTrkArr.push([crX, ' .FreeObj 0;'+ foI +';0;0;0']);
+							if (bvetunnelObjArr[g][4].replace(/[/]/g,'\\') ==  FreeObj[foI][0]) {
+								FreeObj[foI][1]++;
+								subTrkArr.push([crX, '.FreeObj 0;'+ foI +';0;0;0']);
 								break;
 							}
 						}
 						if (paralellTrack.length == 0) {
-							for (wI = 0; wI < WallL.length; wI++) {
-								if (bvetunnelObjArr[g][6].replace(/[/]/g,'\\') ==  WallL[wI]) {														
+							for (wI = 0; wI < Wall.length; wI++) {
+								if (bvetunnelObjArr[g][6].replace(/[/]/g,'\\') ==  Wall[wI][0]) {
+									Wall[wI][2]++;
 									if (bvetunnelObjArr[g][7] != '') {
-										subTrkArr.push([crX, ' .Wall 0;0;'+ wI]);
+										subTrkArr.push([crX, '.Wall 0;0;'+ wI]);
 										GBtunnel[0] = 0;
 										GBtunnel[1] = 0;
 									} else {
-										subTrkArr.push([crX, ' .Wall 0;-1;'+ wI]);
+										subTrkArr.push([crX, '.Wall 0;-1;'+ wI]);
 										GBtunnel[0] = 0;
 									}
 											
@@ -1744,16 +2137,18 @@ function ProcesskData(kdata,currX,pid,idx) {
 								}
 							}
 												
-							for (wI = 0; wI < WallL.length; wI++) {
-								if (bvetunnelObjArr[g][6].replace(/[/]/g,'\\') ==  WallL[wI]) {
+							for (wI = 0; wI < Wall.length; wI++) {
+								if (bvetunnelObjArr[g][6].replace(/[/]/g,'\\') ==  Wall[wI][0]) {
+									Wall[wI][2]++;
 									subTrkArr.push([crX, '.Wall ' + leftestIndex + ';-1;'+ wI]);
 									GBtunnel[0] = leftestIndex;														
 									break;
 								}
 							}
 											
-							for (wI = 0; wI < WallR.length; wI++) {
-								if (bvetunnelObjArr[g][7].replace(/[/]/g,'\\') ==  WallR[wI]) {
+							for (wI = 0; wI < Wall.length; wI++) {
+								if (bvetunnelObjArr[g][7].replace(/[/]/g,'\\') ==  Wall[wI][1]) {
+									Wall[wI][2]++;
 									subTrkArr.push([crX, '.Wall ' + rightestIndex + ';1;'+ wI]);
 									GBtunnel[1] = rightestIndex;
 									break;
@@ -1772,7 +2167,7 @@ function ProcesskData(kdata,currX,pid,idx) {
 					if (( GBtunnel[0] == 0) && ( GBtunnel[1] == 0)) {
 						subTrkArr.push([crX, '.WallEnd 0']);
 					} else {
-						subTrkArr.push([crX, '.WallEnd ' + GBtunnel[0] + ', .WallEnd ' + GBtunnel[1]]);
+						subTrkArr.push([crX, '.WallEnd ' + GBtunnel[0] + ',.WallEnd ' + GBtunnel[1]]);
 					}
 				} else {
 					if (typeof GBtunnel[0] != 'undefined') {
@@ -1802,7 +2197,7 @@ function ProcesskData(kdata,currX,pid,idx) {
 	}
 		
 	if (kdata.dike != '') {
-		var arrK = kdata.dike.split(',');
+		var arrK = kdata.dike.split('¤');
 		
 		
 		for (k = 0; k < arrK.length; k++) {
@@ -1811,8 +2206,9 @@ function ProcesskData(kdata,currX,pid,idx) {
 				for (g = 0; g < bvedikeObjArr.length; g++) {
 					if (bvedikeObjArr[g][1] == arrK_1[0]) {
 						if (paralellTrack.length == 0) {
-							for (dI = 0; dI < DikeL.length; dI++) {
-								if (bvedikeObjArr[g][4].replace(/[/]/g,'\\') == DikeL[dI]) {
+							for (dI = 0; dI < Dike.length; dI++) {
+								if (bvedikeObjArr[g][4].replace(/[/]/g,'\\') == Dike[dI][0]) {
+									Dike[dI][2]++;
 									subTrkArr.push([currX, '.Dike 0;0;'+ dI]);
 									GBdike[0] = 0;
 									GBdike[1] = 0;
@@ -1835,17 +2231,19 @@ function ProcesskData(kdata,currX,pid,idx) {
 								}
 							}
 										
-							for (dI = 0; dI < DikeL.length; dI++) {
-								if (bvedikeObjArr[g][4].replace(/[/]/g,'\\') == DikeL[dI]) {
+							for (dI = 0; dI < Dike.length; dI++) {
+								if (bvedikeObjArr[g][4].replace(/[/]/g,'\\') == Dike[dI][0]) {
+									Dike[dI][2]++;
 									subTrkArr.push([currX, '.Dike ' + leftestIndex + ';-1;'+ dI]);
 									GBdike[0] = leftestIndex;														
 									break;
 								}
 							}
 										
-							for (dI = 0; dI < DikeR.length; dI++) {
-								if (bvedikeObjArr[g][5].replace(/[/]/g,'\\') == DikeR[dI]) {
-									subTrkArr.push([currX, ', .Dike ' + rightestIndex + ';1;'+ dI]);
+							for (dI = 0; dI < Dike.length; dI++) {
+								if (bvedikeObjArr[g][5].replace(/[/]/g,'\\') == Dike[dI][0]) {
+									Dike[dI][2]++;
+									subTrkArr.push([currX, ',.Dike ' + rightestIndex + ';1;'+ dI]);
 									GBdike[1] = rightestIndex;
 									break;
 								}
@@ -1861,14 +2259,14 @@ function ProcesskData(kdata,currX,pid,idx) {
 					if (( GBdike[0] == 0) && ( GBdike[1] == 0)) {
 						subTrkArr.push([currX,'.DikeEnd 0']);
 					} else {
-						subTrkArr.push([currX, '.DikeEnd ' + GBdike[0] + ', .DikeEnd ' + GBdike[1]]);
+						subTrkArr.push([currX, '.DikeEnd ' + GBdike[0] + ',.DikeEnd ' + GBdike[1]]);
 					}
 				} else {
 					if (typeof GBdike[0] != 'undefined') {
 						subTrkArr.push([currX, '.DikeEnd ' + GBdike[0]]);
 					}
 					if (typeof GBdike[1] != 'undefined') {
-						subTrkArr.push([currX, ' .DikeEnd ' + GBdike[1]]);
+						subTrkArr.push([currX, '.DikeEnd ' + GBdike[1]]);
 					}
 				}
    				
@@ -1879,7 +2277,7 @@ function ProcesskData(kdata,currX,pid,idx) {
 	}
 	
 	if (kdata.cut != '') {
-		var arrK = kdata.cut.split(',');
+		var arrK = kdata.cut.split('¤');
 		noteTrkArr.push([ crX,'cut']);
 		
 		for (k = 0; k < arrK.length; k++) {
@@ -1888,8 +2286,9 @@ function ProcesskData(kdata,currX,pid,idx) {
 				for (g = 0; g < bvecutObjArr.length; g++) {
 					if (bvecutObjArr[g][1] == arrK_1[0]) {										
 						if (paralellTrack.length == 0) {
-							for (wI = 0; wI < WallL.length; wI++) {
-								if (bvecutObjArr[g][4].replace(/[/]/g,'\\') ==  WallL[wI]) {																
+							for (wI = 0; wI < Wall.length; wI++) {
+								if (bvecutObjArr[g][4].replace(/[/]/g,'\\') ==  Wall[wI][0]) {		
+									Wall[wI][2]++;
 									if (bvecutObjArr[g][5] != '') {
 										subTrkArr.push([crX, '.Wall 0;0;'+ wI]);
 										GBcut[0] = 0;
@@ -1915,15 +2314,17 @@ function ProcesskData(kdata,currX,pid,idx) {
 									rightestIndex = paralellTrack[pTi][0];
 								}
 							}
-							for (wI = 0; wI < WallL.length; wI++) {
-								if (bvecutObjArr[g][4].replace(/[/]/g,'\\') ==  WallL[wI]) {
-									subTrkArr.push([crX, ' .Wall ' + leftestIndex + ';-1;'+ wI]);
+							for (wI = 0; wI < Wall.length; wI++) {
+								if (bvecutObjArr[g][4].replace(/[/]/g,'\\') ==  Wall[wI][0]) {
+									Wall[wI][2]++;
+									subTrkArr.push([crX, '.Wall ' + leftestIndex + ';-1;'+ wI]);
 									GBcut[0] = leftestIndex;														
 									break;
 								}
 							}
-							for (wI = 0; wI < WallR.length; wI++) {
-								if (bvecutObjArr[g][5].replace(/[/]/g,'\\') == WallR[wI]) {
+							for (wI = 0; wI < Wall.length; wI++) {
+								if (bvecutObjArr[g][5].replace(/[/]/g,'\\') == Wall[wI][1]) {
+									Wall[wI][2]++;
 									subTrkArr.push([crX, '.Wall ' + rightestIndex + ';1;'+ wI]);
 									GBcut[1] = rightestIndex;
 									break;
@@ -1944,7 +2345,7 @@ function ProcesskData(kdata,currX,pid,idx) {
 					if (( GBcut[0] == 0) && ( GBcut[1] == 0)) {
 						subTrkArr.push([crX, '.WallEnd 0']);
 					} else {
-						subTrkArr.push([crX, '.WallEnd ' + GBcut[0] + ', .WallEnd ' + GBcut[1]]);
+						subTrkArr.push([crX, '.WallEnd ' + GBcut[0] + ',.WallEnd ' + GBcut[1]]);
 					}
 				} else { 									
 					if (typeof GBcut[0] != 'undefined') {
@@ -1966,7 +2367,7 @@ function ProcesskData(kdata,currX,pid,idx) {
 	}
 	
 	if (kdata.form != '') {
-		var formArr = kdata.form.split(',');
+		var formArr = kdata.form.split('¤');
 		var RoofStructureIndex;
 		var FormStructureIndex;		
 		
@@ -1975,14 +2376,16 @@ function ProcesskData(kdata,currX,pid,idx) {
 			for (f1 = 0; f1 < bveplatformObjArr.length; f1++) {			
 				if (bveplatformObjArr[f1][1] == formArr[0]) {
 					
-					for (fI = 0; fI < FormL.length; fI++) {
-						if (bveplatformObjArr[f1][4].replace(/[/]/g,'\\') ==  FormL[fI]) {
+					for (fI = 0; fI < Form.length; fI++) {
+						if (bveplatformObjArr[f1][4].replace(/[/]/g,'\\') ==  Form[fI][0]) {
+							Form[fI][4]++;
 							FormStructureIndex = fI+1;
 							break;
 						}
 					}
-					for (rI = 0; rI < RoofL.length; rI++) {
-						if (bveplatformObjArr[f1][8].replace(/[/]/g,'\\') == RoofL[rI]) {
+					for (rI = 0; rI < Roof.length; rI++) {
+						if (bveplatformObjArr[f1][8].replace(/[/]/g,'\\') == Roof[rI][0]) {
+							Roof[rI][4]++;
 							RoofStructureIndex = rI+1;
 							break;
 						}
@@ -2019,6 +2422,19 @@ function ProcesskData(kdata,currX,pid,idx) {
 			
 			subTrkArr.push([ crX, '.sta ' + formArr[1] + ';  ' + stop + '; ; ' + passAlarm + '; ' + door + '; 0; 0; ; ' + formArr[3] + '; 100;test_route\\salam.wav, ']);
 			
+			if (stsign) { 
+				//subTrkArr.push([ crX-1000, '.FreeObj 0;14;-2;0;0,;st near sign,']); 
+				if (parseInt(maxspeed) >150) {
+					if (crX-1500 >=0) { subTrkArr.push([ crX-1500, '.FreeObj 0;14;-2;0;0,;st near sign,']); }
+				} else if (parseInt(maxspeed) >100) {
+					if (crX-1000 >=0) { subTrkArr.push([ crX-1000, '.FreeObj 0;14;-2;0;0,;st near sign,']); }
+				} else if (parseInt(maxspeed) >75) {
+					if (crX-500 >=0) { subTrkArr.push([ crX-500, '.FreeObj 0;14;-2;0;0,;st near sign,']); }
+				} else {
+					if (crX-200 >=0) { subTrkArr.push([ crX-200, '.FreeObj 0;14;-2;0;0,;st near sign,']); }
+				}				
+			}
+			
 			var formTxt = '';
 			// paralellTrack[0] = [RailIndex,X,Y,pid]; // data : railindex, x-distance from main track, y-height --- 2 study
 			for (fs = 0; fs < formSideArr.length; fs++) {
@@ -2042,7 +2458,7 @@ function ProcesskData(kdata,currX,pid,idx) {
 				if (formTxt == '') {
 					formTxt = '.Form ' + formSide + ';' + RoofStructureIndex + ';' + FormStructureIndex;
 				} else {
-					formTxt += ', .Form ' + formSide + ';' + RoofStructureIndex + ';' + FormStructureIndex;
+					formTxt += ',.Form ' + formSide + ';' + RoofStructureIndex + ';' + FormStructureIndex;
 				}
 			}
 
@@ -2088,7 +2504,7 @@ function ProcesskData(kdata,currX,pid,idx) {
 	}
 	
 	if (kdata.roadcross != '') {
-		var rcname = kdata.roadcross.split(',') ;
+		var rcname = kdata.roadcross.split('¤') ;
 		noteTrkArr.push([ crX,'roadcross']);
 		var leftestIndex = 0; var rightestIndex = 0;
 		var leftestX = 0; var rightestX = 0;
@@ -2111,7 +2527,8 @@ function ProcesskData(kdata,currX,pid,idx) {
 				// 4 toolbar left
 				if (bveRCObjArr[g][4] != '') {	
  					for (foI = 21; foI < FreeObj.length; foI++) {
-						if (bveRCObjArr[g][4].replace(/[/]/g,'\\') ==  FreeObj[foI]) {
+						if (bveRCObjArr[g][4].replace(/[/]/g,'\\') ==  FreeObj[foI][0]) {
+							FreeObj[foI][1]++;
 							subTrkArr.push([currX, '.FreeObj ' + leftestIndex + ';'+ foI +';0;0;0']);
 							break;
 						}
@@ -2121,7 +2538,8 @@ function ProcesskData(kdata,currX,pid,idx) {
 				// 5 crossing center
 				if (bveRCObjArr[g][5] != '') {	
  					for (foI = 21; foI < FreeObj.length; foI++) {
-						if (bveRCObjArr[g][5].replace(/[/]/g,'\\') ==  FreeObj[foI]) {
+						if (bveRCObjArr[g][5].replace(/[/]/g,'\\') ==  FreeObj[foI][0]) {
+							FreeObj[foI][1]++;
 							if (paralellTrack.length == 0) {
 								subTrkArr.push([currX, '.FreeObj 0;'+ foI +';0;0;0']);
 							} else {
@@ -2138,7 +2556,8 @@ function ProcesskData(kdata,currX,pid,idx) {
 				// 6 toolbar right
 				if (bveRCObjArr[g][6] != '') {	
  					for (foI = 21; foI < FreeObj.length; foI++) {
-						if (bveRCObjArr[g][6].replace(/[/]/g,'\\') ==  FreeObj[foI]) {
+						if (bveRCObjArr[g][6].replace(/[/]/g,'\\') ==  FreeObj[foI][0]) {
+							FreeObj[foI][1]++;
 							subTrkArr.push([currX, '.FreeObj ' + rightestIndex + ';'+ foI +';0;0;0']);
 							break;
 						}
@@ -2149,6 +2568,7 @@ function ProcesskData(kdata,currX,pid,idx) {
 				if (bveRCObjArr[g][7] != '') {	
 					var soundFile  = bveRCObjArr[g][7].replace(/[/]/g,'\\');
 					var xOffset  = -3.2;
+					
 					for (pTi = 0; pTi < paralellTrack.length; pTi++) {
 						if (paralellTrack[pTi][0] == leftestIndex) {
 							xOffset += paralellTrack[pTi][1];
@@ -2166,8 +2586,9 @@ function ProcesskData(kdata,currX,pid,idx) {
 	if (kdata.crack != '') {
 		for (csi = 0; csi < bvecrackObjArr.length; csi++) {
   			if (bvecrackObjArr[csi][1] == kdata.ground) {
-  				for (ci = 0; ci < CrackL.length; ci++) {
-  					if (CrackL[ci] == bvecrackObjArr[csi][4].replace(/[/]/g,'\\')) {
+  				for (ci = 0; ci < Crack.length; ci++) {
+  					if (Crack[ci][0] == bvecrackObjArr[csi][4].replace(/[/]/g,'\\')) {
+						Crack[ci][1]++;
 						GBcrack[0] = ci;
   						break;
   					}
@@ -2194,7 +2615,7 @@ function ProcesskData(kdata,currX,pid,idx) {
 }
 
 function ProcessSLine(sline,currX,stIdx,edIdx,cIdx) {
-	var linesArr = sline.split(',');
+	var linesArr = sline.split('¤');
 	crX = Math.round(currX/25)*25;
 	
 	for (li = 0; li < linesArr.length; li++) {
@@ -2348,7 +2769,7 @@ function ProcessSLine(sline,currX,stIdx,edIdx,cIdx) {
 					//2do extent side line processing
 					//setTimeout(function(){ code 2 run }, milliseconds);
 						
-					if (cIdx >= stIdx && cIdx <= edIdx) { subTrkArr.push([ crX, '.RailEnd ' + railIdx + ';' + side0*endOffset + ';0,']); }				
+					if (cIdx >= stIdx && cIdx <= edIdx) { subTrkArr.push([ crX, '.RailEnd ' + railIdx + ';' + side0*endOffset + ';0']); }				
 				}
 			} else {
 				alert(sArr[0] + ' not defined.');
@@ -2371,5 +2792,20 @@ function turnTxt(turn,currX) {
 	if (slope == 0 || (slope > 0 && slope >= 1) || (slope < 0 && slope <= -1)) { return false; }
 	
 	subTrkArr.push([crX, tmpTxt]);	
+}
+
+function stoneMark(maxlength) {
+	var crX = 0;
+	
+	while ( crX <= maxlength ) {
+		if (crX % 1000 == 0) { //every 1000m
+			subTrkArr.push([ crX, '.FreeObj 0;9;2;-0.4;0']);
+		} else if (crX % 500 == 0) { //every 500m
+			subTrkArr.push([ crX, '.FreeObj 0;10;2;-0.4;0']);
+		} else { //every 100m
+			subTrkArr.push([ crX, '.FreeObj 0;11;2;-0.4;0']); 
+		}
+		crX += 100;
+	}
 }
 
