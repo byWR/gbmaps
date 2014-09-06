@@ -17,7 +17,7 @@ purpose : CSS
 type : release (under development)
 version : 1.0.0
 build : 
-last update : 17 June 2014 10:07pm (GMT 8+)
+last update : 05 September 2014 12:01am (GMT 8+)
 
 */
 
@@ -31,7 +31,6 @@ body {
 	margin: 0;
 	padding: 0;
 	overflow: hidden;  
-	position: relative;
 }
 
 #hand_b {
@@ -325,7 +324,19 @@ li:hover li a:hover  { background: #95A9B1; }
 	top: auto;
 	}
 
+ .ui-progressbar {
+position: relative;
+}
+.progress-label {
+position: absolute;
+left: 50%;
+top: 4px;
+font-weight: bold;
+text-shadow: 1px 1px 0 #fff;
+}	
 .ui-progressbarBuildBVE4O .ui-progressbar-value { background-image: url(../images/pbar-ani.gif); }
+.ui-mainload .ui-progressbar-value { background-image: url(../images/pbar-ani.gif); }
+.ui-subload .ui-progressbar-value { background-image: url(../images/pbar-ani.gif); }
 
 #red, #green, #blue {
 	float: left;
@@ -347,3 +358,6 @@ li:hover li a:hover  { background: #95A9B1; }
 #blue .ui-slider-range { background: #729fcf; }
 #blue .ui-slider-handle { border-color: #729fcf; }
 
+.no-close .ui-dialog-titlebar-close {
+display: none;
+}
