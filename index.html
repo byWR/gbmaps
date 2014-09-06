@@ -18,7 +18,7 @@ File : index.html
 type : release (under development)
 version : 1.0.0
 build : 
-last update : 13 August 2014 12:00am (GMT 8+)
+last update : 6 September 2014 12:00am (GMT 8+)
 
 -->
 <head>
@@ -83,9 +83,28 @@ last update : 13 August 2014 12:00am (GMT 8+)
 	<script type="text/javascript" src="script/gbm-func-v1.js"></script>
 	<script type="text/javascript" src="script/conv-openbve-v1.js"></script>
 	<script type="text/javascript" src="script/gbm-conv-bve5-v1.js"></script>
-	<script type="text/javascript" src="script/gbm-objects.js"></script>
-	<script type="text/javascript" src="script/gbm-form-v1.js"></script>
-	<script type="text/javascript" src="script/gbm-jq-v1.js"></script>
+	
+<!-- GB Map Data, change here !!!  -->
+	<script type="text/javascript">	
+		var gbmapdata = $.cookie('gbmapdata');
+		if (gbmapdata != null && gbmapdata != "") {
+			var script = document.createElement('script');
+			script.type = 'text/javascript';
+			script.src = 'script/' + gbmapdata;
+			script.id = "gbmaps-script";
+			document.getElementsByTagName("head")[0].appendChild(script);		
+		} else {
+			var script = document.createElement('script');
+			script.type = 'text/javascript';
+			script.src = 'script/gbm-objects.js';
+			script.id = "gbmaps-script";
+			document.getElementsByTagName("head")[0].appendChild(script);			
+		}
+	</script>
+<!-- *** -->	
+	
+	<script type="text/javascript" async src="script/gbm-form-v1.js"></script>
+	<script type="text/javascript" async src="script/gbm-jq-v1.js"></script>
 	<script type="text/javascript" src="script/langpack/jp.js" charset="utf-8"></script>
 	<script type="text/javascript" src="script/langpack/my.js" charset="utf-8"></script>
 	<script type="text/javascript" src="script/langpack/hu.js" charset="utf-8"></script>
@@ -103,9 +122,8 @@ last update : 13 August 2014 12:00am (GMT 8+)
     <li id="mMdefaultLocation"><span lang="en">Default location</span></li>
 	<li id="mMGFinder"><span lang="en">Find location</span></li>
 	<li>&nbsp;</li>
-    <li id="mMopenFile"><span lang="en">Open File</span></li>
-    <li id="mMexportMapData"><span lang="en">Export</span></li>
-    <li id="mMimportMapData"><span lang="en">Import</span></li>
+    <li id="mMimportMapData"><span lang="en">Import/Open map</span></li>
+    <li id="mMexportMapData"><span lang="en">Export/Save map</span></li>
 	<li>&nbsp;</li>
     <li id="mMGBMOptions"><span lang="en">Options</span></li>
     </ul>
@@ -210,18 +228,24 @@ last update : 13 August 2014 12:00am (GMT 8+)
 <img src="images/transparent.png" width="1" height="1600">
 <br style="clear:both;" />
 <!-- ************************ Application dialog windows ********************************* -->
-<div id="dialogOpenFile" title="Open File" lang="en">
-	<p><span lang="en">File name : </span><input type="file" id="fileOP" name="fileOP[]" accept="text/*" size="60" />
-	</p>
+
+<div id="dialogExportData" title="Export/Save Maps..." lang="en">
+<textarea name="exportData" cols="109" rows="20" id="exportData" readonly="readonly" ></textarea>
+<p id="ceksaveRoute"><span lang="en">If file saving unsupported by your browser, please copy this texts and save file manually with your text editor (e.g : Notepad). Select &lt;Ctrl+A&gt; and copy &lt;Ctrl+C&gt; the following text to your text editor.</span></p>
+	<table width="100%" border="0" cellspacing="0" cellpadding="3">
+	  <tr>
+	    <td>Filename : 
+        <input type="text" name="dex_filename" id="dex_filename" size="50" />.txt</td>
+	    <td width="70" align="right"><input type="button" name="dexSave" id="dexSave" value="Save" /></td>
+	    <td width="70" align="right"><input type="button" name="dexClose" id="dexClose" value="Close" /></td>
+      </tr>
+</table>
 </div>
 
-<div id="dialogExportData" title="Export Data..." lang="en">
-	<p><span lang="en">Save file (via JavaScript) is unsupported, due to browser limitation, security issue and also browser incompatibility. Please copy this texts and save file manually with your text editor (e.g : Notepad). Select &lt;Ctrl+A&gt; and copy &lt;Ctrl+C&gt; the following text to your text editor.</span><br /><br /><textarea name="exportData" cols="92" rows="16" id="exportData" readonly="readonly" ></textarea>
+<div id="dialogImportData" title="Import/Open map..." lang="en">
+	<p><span lang="en">File name </span> :<input type="file" id="fileOP" name="fileOP[]" accept="text/*" size="60" /> - <strong><span lang="en">OR</span></strong> -
 	</p>
-</div>
-
-<div id="dialogImportData" title="Import Data..." lang="en">
-	<p><span lang="en">Paste &lt;Ctrl+V&gt; GB Maps ギビマップ data in the following text box.</span><br /><br /><textarea name="importDataText" cols="92" rows="16" id="importDataText" ></textarea><br /><div align="right"><button id="btnImportData">Import ...</button></div>
+	<p><span lang="en">Paste &lt;Ctrl+V&gt; GB Maps ギビマップ data in the following text box.</span><br /><br /><textarea name="importDataText" cols="108" rows="18" id="importDataText" ></textarea><br /><div align="right"><button id="btnImportData">Import ...</button></div>
 	</p>
 </div>
 
@@ -275,7 +299,17 @@ last update : 13 August 2014 12:00am (GMT 8+)
 </div>
 
 <div id="dialogBuildBVERoute" title="Build route ..." lang="en">
-	<p><span lang="en">Save file (via JavaScript) is unsupported, due to browser limitation, security issue and also browser incompatibility. Please copy this texts and save file manually with your text editor (e.g : Notepad). Select &lt;Ctrl+A&gt; and copy &lt;Ctrl+C&gt; the following text to your text editor.</span></p><textarea name="buildBVE" cols="125" rows="14" id="buildBVE" readonly="readonly" ></textarea><div id="progressbarBuildBVE4O" style="height: 10px;"></div>
+	<textarea name="buildBVE" cols="140" rows="15" id="buildBVE" readonly="readonly" ></textarea>
+	<p><span lang="en">If file saving unsupported by your browser, please copy this texts and save file manually with your text editor (e.g : Notepad). Select &lt;Ctrl+A&gt; and copy &lt;Ctrl+C&gt; the following text to your text editor.</span></p>
+		<table width="100%" border="0" cellspacing="0" cellpadding="3">
+		  <tr>
+			<td>Filename : 
+			<input type="text" name="dbr_filename" id="dbr_filename" size="50" />.csv</td>
+			<td width="70" align="right"><input type="button" name="dbr_Save" id="dbr_Save" value="Save" /></td>
+			<td width="70" align="right"><input type="button" name="dbr_Close" id="dbr_Close" value="Close" /></td>
+		  </tr>
+	</table>
+	<div id="progressbarBuildBVE4O" style="height: 10px;"></div>
 </div>
 
 <div id="dialogOptions" title="Options">
@@ -288,24 +322,28 @@ last update : 13 August 2014 12:00am (GMT 8+)
 	    <td>Developer ID</td>
 	    <td><input type="text" name="op_DevID" id="op_DevID" /></td>
       </tr>
-	  <tr>
-	    <td>Default Gauge</td>
-	    <td><input name="op_DGauge" type="text" id="op_DGauge" />
-        mm</td>
+	<tr>
+    <td>Default Gauge</td>
+    <td><input name="op_DGauge" type="text" id="op_DGauge" size="8" />
+mm</td>
       </tr>
 	  <tr>
-	    <td>Default Cant Size</td>
-	    <td><input name="op_Cant" type="text" id="op_Cant" />
-        mm</td>
-      </tr>
+    <td>Default Cant</td>
+    <td><input name="op_Cant" type="text" id="op_Cant" size="8" />
+mm</td>
+  </tr>
+  <tr>
+    <td>Default Offset</td>
+    <td><input name="op_Offset" type="text" id="op_Offset" size="8" />
+m</td>
+  </tr>
 	  <tr>
-	    <td>Rails</td>
-	    <td><input name="op_RailsPack" type="text" id="op_RailsPack" readonly="readonly" /></td>
-      </tr>
-	  <tr>
-	    <td>Objects</td>
-	    <td><input name="op_ObjectsPack" type="text" id="op_ObjectsPack" readonly="readonly" /></td>
-      </tr>
+	    <td valign="top">GB Map data</td>
+	    <td><select name="op_gbmapdata" id="op_gbmapdata">
+        </select> or add new data : 
+          <input type="file" name="op_addjsfile" id="op_addjsfile" /> or
+        <input type="submit" name="op_cleargbdata" id="op_cleargbdata" value="Clear List" /></td>
+  </tr>
 	  <tr>
 	    <td>Google Maps <br />
 	      Javascript <br />
@@ -323,10 +361,11 @@ last update : 13 August 2014 12:00am (GMT 8+)
 	    <td>&nbsp;</td>
 	    <td>Please refresh this page if you change the API version.</td>
       </tr>
+
 	  <tr>
 	    <td>&nbsp;</td>
-	    <td align="right" valign="bottom"><input type="button" name="op_Update" id="op_Update" value="Update"/>
-        <input type="button" name="op_Cancel" id="op_Cancel" value="Cancel"/></td>
+	    <td align="right" valign="bottom"><input type="submit" name="op_Update" id="op_Update" value="Update"/>
+        <input type="submit" name="op_Cancel" id="op_Cancel" value="Cancel"/></td>
       </tr>
 </table>
 </div>
@@ -357,8 +396,12 @@ last update : 13 August 2014 12:00am (GMT 8+)
 	<p>text text text text text text text </p>
 </div>
 
-<div id="dialogSaveCookie" title="Save Cookie">
-	<p>text text text text text text text </p>
+<div id="dialogLoadingData" title="Loading ...." lang="en">
+	<p id="loadstatus"><span lang="en">&nbsp;</span></p>
+	<div id="mainload" ><div id="mainloadlabel" class="progress-label">Loading...</div></div>
+	<p id="loadprocess">&nbsp;</p>
+	<div id="subload" ><div id="subloadlabel" class="progress-label">Loading...</div></div><br />
+	<p><span lang="en">Please wait ... </span></p>
 </div>
 
 <div id="dialogCantSize" title="Suggested Cant Size" lang="en">
@@ -384,9 +427,9 @@ last update : 13 August 2014 12:00am (GMT 8+)
 </div>
 
 <div id="dialogImportObjects" title="Import Objects" lang="en">
-	<p><span lang="en"></span>Open file gbmapstools.txt in the same directori as this file.<br /><br /><input type="fileGBMObj" id="fileGBMObj" name="fileGBMObj[]" accept="text/*" size="60" /> <strong>OR</strong>
+	<p><span lang="en">Open file gbmapstools.txt in the same directori as this file.</span><br /><br /><input type="fileGBMObj" id="fileGBMObj" name="fileGBMObj[]" accept="text/*" size="60" /> <strong>OR</strong>
 	</p>
-	<p><span lang="en"></span>Copy all text from file gbmapstools.txt and paste &lt;Ctrl+V&gt; the data in the following text box.<br /><br /><textarea name="importGBMapObjDataText" cols="92" rows="16" id="importGBMapObjDataText" ></textarea><br /><div align="right"><button id="btnimportGBMapObjDataText">Import ...</button></div>
+	<p><span lang="en">Copy all text from file gbmapstools.txt and paste &lt;Ctrl+V&gt; the data in the following text box.</span><br /><br /><textarea name="importGBMapObjDataText" cols="92" rows="16" id="importGBMapObjDataText" ></textarea><br /><div align="right"><button id="btnimportGBMapObjDataText">Import ...</button></div>
 	</p>
 </div>
 
@@ -584,6 +627,10 @@ m</td>
     <td><img title="hint" src="images/information_white.png" width="16" height="16" onclick="alert('any reasonable value OR roundup to common value based on speed limit.\n\nfor example : minimum curve radius 160 m for ordinary railways\n(Technical Standard for Japanese Railway)');" /><img title="please refresh this value if you don't change any above values" src="images/gtk_refresh.png" width="16" height="16" onclick="curveCalculator('TC','');" /></td>
   </tr>
 </table>
+<p><span lang="en">Circular rail index</span> : 
+	<select name="ddtc_railindex" id="ddtc_railindex">
+	    <option value="none" selected>- select -</option>
+    </select><img  title="sort rail index..." src="images/gtk_refresh.png" width="16" height="16" onclick="tcurveRailRefresh();" /></p>
 <p>	
 <span lang="en">Calculation method : </span>
 <input type="radio" name="radio" id="tc_cubic_parabola" value="tc_cubic_parabola" checked="checked" onclick="curveCalculator('TC','lock');" />Cubic Parabola&nbsp;
@@ -3013,5 +3060,9 @@ and
 </div>
 
 <!-- ********************************* drawing dialog ********************************* --> 
+
+<script type="text/javascript" src="script/Blob.js"></script>
+<script type="text/javascript" src="script/FileSaver.js"></script>
+
 </body>
 </html>
