@@ -15,10 +15,10 @@ Personal blog for GB Maps ギビマップ (design algorithm) : http://blogkaryai
 
 File : gbm-conv-openbve-v1.js
 purpose : open bve route builder, data conversion function
-type : release (under development)
-version : 1.0.0
+type : development release
+version : 1.1.0
 build : 
-last update : 31 August 2014 02:43pm (GMT 8+)
+last update : 25 October 2014 2:00am (GMT 8+)
 
 */
 	//BVE object list
@@ -56,34 +56,34 @@ last update : 31 August 2014 02:43pm (GMT 8+)
 function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,maxspeed,bg,kmstone,stsign,devID,desc)
 {	
 	
-	FreeObj[0] = ['gb_maps\\km_p\\m_curve.csv',0,-1]; //curve sign
+	FreeObj[0] = ['gb_maps_v1\\conventional\\shared\\freeobj\\km_p\\m_curve.csv',0,-1]; //curve sign
 	
-	FreeObj[1] = ['gb_maps\\km_p\\sloop_down-up.csv',0,-1]; //menurun opp. mendaki
-	FreeObj[2] = ['gb_maps\\km_p\\sloop_level-up.csv',0,-1]; //level opp. mendaki
-	FreeObj[3] = ['gb_maps\\km_p\\sloop_down-level.csv',0,-1]; //menurun opp. level
-	FreeObj[4] = ['gb_maps\\km_p\\sloop_up-level.csv',0,-1]; //mendaki opp. level
-	FreeObj[5] = ['gb_maps\\km_p\\sloop_level-down.csv',0,-1]; //level opp. menurun
-	FreeObj[6] = ['gb_maps\\km_p\\sloop_up-down.csv',0,-1]; //mendaki opp. menurun
-	FreeObj[7] = ['gb_maps\\km_p\\sloop_up-up.csv',0,-1]; //mendaki-mendaki, lain2 ratio
-	FreeObj[8] = ['gb_maps\\km_p\\sloop_down-down.csv',0,-1]; //menurun-menurun, lain2 ratio
+	FreeObj[1] = ['gb_maps_v1\\conventional\\shared\\freeobj\\km_p\\sloop_down-up.csv',0,-1]; //menurun opp. mendaki
+	FreeObj[2] = ['gb_maps_v1\\conventional\\shared\\freeobj\\km_p\\sloop_level-up.csv',0,-1]; //level opp. mendaki
+	FreeObj[3] = ['gb_maps_v1\\conventional\\shared\\freeobj\\km_p\\sloop_down-level.csv',0,-1]; //menurun opp. level
+	FreeObj[4] = ['gb_maps_v1\\conventional\\shared\\freeobj\\km_p\\sloop_up-level.csv',0,-1]; //mendaki opp. level
+	FreeObj[5] = ['gb_maps_v1\\conventional\\shared\\freeobj\\km_p\\sloop_level-down.csv',0,-1]; //level opp. menurun
+	FreeObj[6] = ['gb_maps_v1\\conventional\\shared\\freeobj\\km_p\\sloop_up-down.csv',0,-1]; //mendaki opp. menurun
+	FreeObj[7] = ['gb_maps_v1\\conventional\\shared\\freeobj\\km_p\\sloop_up-up.csv',0,-1]; //mendaki-mendaki, lain2 ratio
+	FreeObj[8] = ['gb_maps_v1\\conventional\\shared\\freeobj\\km_p\\sloop_down-down.csv',0,-1]; //menurun-menurun, lain2 ratio
 	
-	FreeObj[9] = ['gb_maps\\km_p\\kmp.csv',0,-1]; //kilometer mark
-	FreeObj[10] = ['gb_maps\\km_p\\500mp.csv',0,-1]; //500 meter mark
-	FreeObj[11] = ['gb_maps\\km_p\\100mp.csv',0,-1]; //100 meter mark
+	FreeObj[9] = ['gb_maps_v1\\conventional\\shared\\freeobj\\km_p\\kmp.csv',0,-1]; //kilometer mark
+	FreeObj[10] = ['gb_maps_v1\\conventional\\shared\\freeobj\\km_p\\500mp.csv',0,-1]; //500 meter mark
+	FreeObj[11] = ['gb_maps_v1\\conventional\\shared\\freeobj\\km_p\\100mp.csv',0,-1]; //100 meter mark
 	
-	FreeObj[12] = ['gb_maps\\Symbol_Tr_Al\\s_begin.csv',0,-1]; //S start sign
-	FreeObj[13] = ['gb_maps\\Symbol_Tr_Al\\s_cancel.csv',0,-1]; //S cancel sign
-	FreeObj[14] = ['gb_maps\\Symbol_Tr_Al\\stap.csv',0,-1]; //station near sign
-	FreeObj[15] = ['gb_maps\\Symbol_Tr_Al\\start_wr.csv',0,-1]; //
-	FreeObj[16] = ['gb_maps\\Symbol_Tr_Al\\stop_through.csv',0,-1]; //
-	FreeObj[17] = ['gb_maps\\Symbol_Tr_Al\\whistle.csv',0,-1]; //whistle sign
+	FreeObj[12] = ['gb_maps_v1\\conventional\\shared\\freeobj\\sign\\s_begin.csv',0,-1]; //S start sign
+	FreeObj[13] = ['gb_maps_v1\\conventional\\shared\\freeobj\\sign\\s_cancel.csv',0,-1]; //S cancel sign
+	FreeObj[14] = ['gb_maps_v1\\conventional\\shared\\freeobj\\sign\\stap.csv',0,-1]; //station near sign
+	FreeObj[15] = ['gb_maps_v1\\conventional\\shared\\freeobj\\sign\\start_wr.csv',0,-1]; //
+	FreeObj[16] = ['gb_maps_v1\\conventional\\shared\\freeobj\\sign\\stop_through.csv',0,-1]; //
+	FreeObj[17] = ['gb_maps_v1\\conventional\\shared\\freeobj\\sign\\whistle.csv',0,-1]; //whistle sign
 	
 	FreeObj[18] = ['gb_maps\\rail\\stop\\stop_01.csv',0,-1]; //stop mark
 	FreeObj[19] = ['gb_maps\\rail\\stop\\stop_02.csv',0,-1]; //stop mark
 	FreeObj[20] = ['gb_maps\\rail\\stop\\stop_03.csv',0,-1]; //stop ballast
 	
 	
-	Pole[0] = ['test_route\\pole_2.csv',0,-1,'0'];
+	//Pole[0] = ['test_route\\pole_2.csv',0,-1,1,0];
 	
 	teks ='With Route\n';
 	
@@ -505,14 +505,14 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 		teks += "[Error] : error in creating crack list." + "\n" + err.message + ". \n";
 	}	
 	
-	//var np =[0,0,0,0];
+	var npIdx =[0,0,0,0];
 	try {
 		for (i = 0; i < bvepoleObjArr.length; i++) {
 			var tracks = parseInt(bvepoleObjArr[i][5]) - 1;
 			//teks += '.Pole(' + tracks + ';' + np[tracks] + ') ' + bvepoleObjArr[i][4].replace(/[/]/g,'\\') + ',,\n';
-			var newPole = [bvepoleObjArr[i][4].replace(/[/]/g,'\\'),0,-1,tracks];
+			var newPole = [bvepoleObjArr[i][4].replace(/[/]/g,'\\'),0,-1,tracks,npIdx[tracks]];
 			Pole.push(newPole);
-			//np[tracks]++;
+			npIdx[tracks]++;
 		}		
 	}
 	catch(err) {
@@ -981,7 +981,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 
 				if (i >= stIdx && i <= edIdx) {
 					if (i == stIdx) {
-						mainTrkArr.push([Math.round(currX),'.RailType 0;' + defaultRailIndex  + ', ; .height 1,']);
+						mainTrkArr.push([Math.round(currX),'.RailType 0;' + defaultRailIndex  + ', .height 0.5,']);
 				
 					} else if (i == edIdx) {
 						var crX = Math.round(currX/25)*25;
@@ -1058,6 +1058,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 	for (r = 0; r < Ground.length; r++) {
 		if (r == 0) {
 			teks += '.Ground(' + no + ') ' + Ground[r][0] + ',,\n';
+			Ground[r][2] = no;
 			no++;
 		} else {
 			if (Ground[r][1] > 0) {
@@ -1203,8 +1204,16 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 					
 					if (trObjArr2[0] == '.Pole') {
 						//.Pole RailIndex; NumberOfAdditionalRails; Location; Interval; PoleStructureIndex
-						var oldIdx = parseInt(trObjArr1[4]);
-						mainTrkArr[s][1] = mainTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + trObjArr1[1] + ';' + trObjArr1[1] + ';' + trObjArr1[1] + ';' + Pole[oldIdx][2]);
+						//2do 16 sept 2014
+						var idxP = 0;
+						for (pi=0;pi<Pole.length;pi++) {
+							if (Pole[pi][3] == parseInt(trObjArr1[1]) && Pole[pi][4] == parseInt(trObjArr1[4])) {
+								idxP = pi;
+								break;
+							}
+						}
+						//var oldIdx = parseInt(trObjArr1[4]);//salah ref
+						mainTrkArr[s][1] = mainTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + trObjArr1[1] + ';' + trObjArr1[2] + ';' + trObjArr1[3] + ';' + Pole[idxP][2]);
 					}
 					
 					if (trObjArr2[0] == '.Ground') {
@@ -1288,8 +1297,15 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 					
 					if (trObjArr2[0] == '.Pole') {
 						//.Pole RailIndex; NumberOfAdditionalRails; Location; Interval; PoleStructureIndex
-						var oldIdx = parseInt(trObjArr1[4]);
-						subTrkArr[s][1] = subTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + trObjArr1[1] + ';' + trObjArr1[1] + ';' + trObjArr1[1] + ';' + Pole[oldIdx][2]);
+						var idxP = 0;
+						for (pi=0;pi<Pole.length;pi++) {
+							if (Pole[pi][3] == parseInt(trObjArr1[1]) && Pole[pi][4] == parseInt(trObjArr1[4])) {
+								idxP = pi;
+								break;
+							}
+						}
+						//var oldIdx = parseInt(trObjArr1[4]);
+						subTrkArr[s][1] = subTrkArr[s][1].replace(par1[u], trObjArr1[0] + ';' + trObjArr1[1] + ';' + trObjArr1[2] + ';' + trObjArr1[3] + ';' + Pole[idxP][2]);
 					}
 					
 					if (trObjArr2[0] == '.Ground') {
@@ -1524,29 +1540,29 @@ function ProcessbData(bdata,currX) {
 		var tmpTxt = '.Pitch ' + rpit;
 		if (pitchRatio == 0)  { 
 			if (rpit < pitchRatio)  { 
-				tmpTxt += '.FreeObj 0;3;-2;-0.3;0'; 	//menurun opp. level
+				tmpTxt += ',.FreeObj 0;3;-2;-0.3;0'; 	//menurun opp. level
 				
 			} else if (rpit > pitchRatio) { 
-				tmpTxt += '.FreeObj 0;4;-2;-0.3;0';	//mendaki opp. level
+				tmpTxt += ',.FreeObj 0;4;-2;-0.3;0';	//mendaki opp. level
 				
 			} else {
 				// line level ... (^x^)
 			}
 		} else if (pitchRatio > 0)  {
 			if (rpit == 0) {
-				tmpTxt += '.FreeObj 0;2;-2;-0.3;0'; 	//level opp. mendaki
+				tmpTxt += ',.FreeObj 0;2;-2;-0.3;0'; 	//level opp. mendaki
 			} else if (rpit > 0) {
-				tmpTxt += '.FreeObj 0;7;-2;-0.3;0';		//mendaki-mendaki, lain ratio
+				tmpTxt += ',.FreeObj 0;7;-2;-0.3;0';		//mendaki-mendaki, lain ratio
 			} else {
-				tmpTxt += '.FreeObj 0;1;-2;-0.3;0';    //menurun opp. mendaki										  										
+				tmpTxt += ',.FreeObj 0;1;-2;-0.3;0';    //menurun opp. mendaki										  										
 			}
 		} else {
 			if (rpit == 0) { 
-				tmpTxt += '.FreeObj 0;5;-2;-0.3;0';		//level opp. menurun
+				tmpTxt += ',.FreeObj 0;5;-2;-0.3;0';		//level opp. menurun
 			} else if (rpit < 0) {
-				tmpTxt += '.FreeObj 0;8;-2;-0.3;0';		//menurun-menurun, lain ratio
+				tmpTxt += ',.FreeObj 0;8;-2;-0.3;0';		//menurun-menurun, lain ratio
 			} else {
-				tmpTxt += '.FreeObj 0;6;-2;-0.3;0';		//mendaki opp. menurun
+				tmpTxt += ',.FreeObj 0;6;-2;-0.3;0';		//mendaki opp. menurun
 			}
 		}	
 		
@@ -2136,7 +2152,6 @@ function ProcesskData(kdata,currX,pid,idx,stsign,maxspeed) {
 									rightestIndex = paralellTrack[pTi][0];
 								}
 							}
-												
 							for (wI = 0; wI < Wall.length; wI++) {
 								if (bvetunnelObjArr[g][6].replace(/[/]/g,'\\') ==  Wall[wI][0]) {
 									Wall[wI][2]++;
@@ -2153,8 +2168,8 @@ function ProcesskData(kdata,currX,pid,idx,stsign,maxspeed) {
 									GBtunnel[1] = rightestIndex;
 									break;
 								}
-							}
-												
+							}							
+					
 						}
 
 						break;
@@ -2230,7 +2245,6 @@ function ProcesskData(kdata,currX,pid,idx,stsign,maxspeed) {
 									rightestIndex = paralellTrack[pTi][0];
 								}
 							}
-										
 							for (dI = 0; dI < Dike.length; dI++) {
 								if (bvedikeObjArr[g][4].replace(/[/]/g,'\\') == Dike[dI][0]) {
 									Dike[dI][2]++;
@@ -2239,15 +2253,15 @@ function ProcesskData(kdata,currX,pid,idx,stsign,maxspeed) {
 									break;
 								}
 							}
-										
 							for (dI = 0; dI < Dike.length; dI++) {
-								if (bvedikeObjArr[g][5].replace(/[/]/g,'\\') == Dike[dI][0]) {
+								if (bvedikeObjArr[g][5].replace(/[/]/g,'\\') == Dike[dI][1]) {
 									Dike[dI][2]++;
 									subTrkArr.push([currX, ',.Dike ' + rightestIndex + ';1;'+ dI]);
 									GBdike[1] = rightestIndex;
 									break;
 								}
-							}
+							}							
+
 						}
 						break;
 					}
@@ -2371,7 +2385,7 @@ function ProcesskData(kdata,currX,pid,idx,stsign,maxspeed) {
 		var RoofStructureIndex;
 		var FormStructureIndex;		
 		
-		if (formArr.length == 7) {
+		if (formArr.length > 2) {
 			//['0','formstd','Form Std','form.jpg','1067/form/forml.csv','1067/form/formcl.csv','1067/form/formcr.csv','1067/form/formr.csv','1067/form/roofl.csv','1067/form/roofcl.csv','1067/form/roofcr.csv','1067/form/roofr.csv'];							
 			for (f1 = 0; f1 < bveplatformObjArr.length; f1++) {			
 				if (bveplatformObjArr[f1][1] == formArr[0]) {
@@ -2420,7 +2434,7 @@ function ProcesskData(kdata,currX,pid,idx,stsign,maxspeed) {
 				}
 			}
 			
-			subTrkArr.push([ crX, '.sta ' + formArr[1] + ';  ' + stop + '; ; ' + passAlarm + '; ' + door + '; 0; 0; ; ' + formArr[3] + '; 100;test_route\\salam.wav, ']);
+			subTrkArr.push([ crX, '.sta ' + formArr[1] + ';  ' + stop + '; ; ' + passAlarm + '; ' + door + '; 0; 0; ; ' + formArr[3] + '; 100;gb_maps_v1\\Bell.wav, ']);
 			
 			if (stsign) { 
 				//subTrkArr.push([ crX-1000, '.FreeObj 0;14;-2;0;0,;st near sign,']); 
@@ -2442,23 +2456,32 @@ function ProcesskData(kdata,currX,pid,idx,stsign,maxspeed) {
 				//.Form RailIndex2; R; RoofStructureIndex; FormStructureIndex, right form
 				//.Form RailIndex; RailIndexOpposite; RoofStructureIndex; FormStructureIndex,
 			
-				var formSide = formSideArr[fs].replace(':',';');
+				var formSide = formSideArr[fs].split(':'); //,';');
 								
 				for (pTi = 0; pTi < paralellTrack.length; pTi++) {
-					var fsArr = formSide.split(';');
-					if (fsArr[0] == paralellTrack[pTi][3] || fsArr[1] == paralellTrack[pTi][3]) {
-						formSide = formSide.replace(paralellTrack[pTi][3],paralellTrack[pTi][0]);
-					}					
+					//var fsArr = formSide.split(';');
+					if (formSide[0] == paralellTrack[pTi][3]) {
+						formSide[0] = formSide[0].replace(paralellTrack[pTi][3],paralellTrack[pTi][0]);
+					}
+					if (formSide[1] == paralellTrack[pTi][3]) {
+						formSide[1] = formSide[1].replace(paralellTrack[pTi][3],paralellTrack[pTi][0]);
+					}
+					
 				}
-				
-				formSide = formSide.replace(pid,'0');			
+				var formly = '';
+				if (formSide[0] == pid || formSide[1] == pid) {
+					formly = '0;' + formSide[1];
+				} else {
+					formly = formSide[0] + ';' + formSide[1];
+				}
+							
 				
 				//Track.Form RailIndex1; RailIndex2; RoofStructureIndex; FormStructureIndex
-				subTrkArr.push([ crX, '.Form ' + formSide + ';' + RoofStructureIndex + ';' + FormStructureIndex]);
+				subTrkArr.push([ crX, '.Form ' + formly + ';' + RoofStructureIndex + ';' + FormStructureIndex]);
 				if (formTxt == '') {
-					formTxt = '.Form ' + formSide + ';' + RoofStructureIndex + ';' + FormStructureIndex;
+					formTxt = '.Form ' + formly + ';' + RoofStructureIndex + ';' + FormStructureIndex;
 				} else {
-					formTxt += ',.Form ' + formSide + ';' + RoofStructureIndex + ';' + FormStructureIndex;
+					formTxt += ',.Form ' + formly + ';' + RoofStructureIndex + ';' + FormStructureIndex;
 				}
 			}
 
@@ -2500,7 +2523,30 @@ function ProcesskData(kdata,currX,pid,idx,stsign,maxspeed) {
 	if (kdata.pole != '') {
 		crX = Math.round(currX/25)*25;
 		
-		subTrkArr.push([ crX, '.Pole 0;' + kdata.pole + '; 0; 25; 0']);
+		var arrK = kdata.pole.split('¤');
+		
+		for (k = 0; k < arrK.length; k++) {
+			var arrK_1 = arrK[k].split(':');
+			if (arrK_1[1] == '0') {		
+				for (p = 0; p < bvepoleObjArr.length; p++) {
+					if (bvepoleObjArr[p][1] == arrK_1[0]) {
+						for (pi=0;pi<Pole.length;pi++) {
+							if (bvepoleObjArr[p][4].replace(/[/]/g,'\\') ==  Pole[pi][0]) {
+								Pole[pi][1]++;
+								subTrkArr.push([ crX, '.Pole 0;' + Pole[pi][3] + ';0;25;' + Pole[pi][4]]);
+								break;
+							}
+						}
+					}
+
+				}			
+			} else {
+				subTrkArr.push([ crX, '.PoleEnd 0']);
+			}
+		}
+		
+		//.Pole RailIndex; NumberOfAdditionalRails; Location; Interval; PoleStructureIndex
+		
 	}
 	
 	if (kdata.roadcross != '') {
