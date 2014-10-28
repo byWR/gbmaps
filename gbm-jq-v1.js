@@ -18,7 +18,7 @@ purpose : gb maps functions based on jquery
 type : development release
 version : 1.1.0
 build : 
-last update : 25 October 2014 2:00am (GMT 8+)
+last update : 28 October 2014 7:40am (GMT 8+)
 
 */
 	
@@ -1911,7 +1911,7 @@ last update : 25 October 2014 2:00am (GMT 8+)
 				return false;	
 			}
 	    	
-	    	var strType = (start) ? pitchStr + '_start': pitchStr + '_end';
+	    	var strType = (start) ? pitchStr + '«start': pitchStr + '«end';
 	    	
 	    	for (j = 0; j < arrTE.length; j++) {
 	    		var td = arrTE[j].split(',');
@@ -1930,7 +1930,7 @@ last update : 25 October 2014 2:00am (GMT 8+)
 								var ar0 = td[4].split('§'); // jadi array [strB_start:B2,strA_start:A1,strC_start:C1;]
 								for (var a=0; a < ar0.length;a++) {
 									var ar1 = ar0[a].split(':'); // jadi array [strA_start,A1]
-									var ar1_0 = ar1[0].split('_'); // jadi array [strA,start]
+									var ar1_0 = ar1[0].split('«'); // jadi array [strA,start]
 									
 									if (ar1_0[0] == pitchStr) {
 										if (((ar1_0[1] == 'start') && start) || ((ar1_0[1] == 'end') && (!start))) {
@@ -1970,7 +1970,7 @@ last update : 25 October 2014 2:00am (GMT 8+)
 										var ar0 = td0[4].split('§');  	// jadi array [strB_start:B2,strA_start:A1,strC_start:C1;]
 										for (var a=0; a < ar0.length;a++) {
 											var ar1 = ar0[a].split(':');	// jadi array [strA_start,A1]
-											var ar1_0 = ar1[0].split('_'); // jadi array [strA,start]
+											var ar1_0 = ar1[0].split('«'); // jadi array [strA,start]
 										
 											if (ar1_0[0] == pitchStr) {
 												if (((ar1_0[1] == 'start') && start) || ((ar1_0[1] == 'end') && (!start))) {
@@ -1999,7 +1999,7 @@ last update : 25 October 2014 2:00am (GMT 8+)
 										var ar0 = td1[4].split('§');  	// jadi array [strB_start:B2,strA_start:A1,strC_start:C1;]
 										for (var a=0; a < ar0.length;a++) {
 											var ar1 = ar0[a].split(':');	// jadi array [strA_start,A1]
-											var ar1_0 = ar1[a].split('_'); // jadi array [strA,start]
+											var ar1_0 = ar1[a].split('«'); // jadi array [strA,start]
 										
 											if (ar1_0[0] == pitchStr) {
 												if (((ar1_0[1] == 'start') && start) || ((ar1_0[1] == 'end') && (!start))) {
