@@ -18,7 +18,7 @@ purpose : gb maps functions based on jquery
 type : development release
 version : 1.1.0
 build : 
-last update : 28 October 2014 7:40am (GMT 8+)
+last update : 5 November 2014 9:05pm (GMT 8+)
 
 */
 	
@@ -2101,7 +2101,7 @@ last update : 28 October 2014 7:40am (GMT 8+)
 							updateKdata("lineTab",polyIDtxt,miSt,arr0[3]);
 						}
 						if (arr0[4] != '') { 
-							updateBdata("lineTab",polyIDtxt,miSt,arr0[4]);						
+							updateBdata("lineTab",polyIDtxt,miSt,arr0[4]);	
 						}
 
 					} else if (i == (arrTE.length - 1)) {
@@ -2582,10 +2582,11 @@ last update : 28 October 2014 7:40am (GMT 8+)
 			var mIdx = $('#dms_markerindex').val();
 			var tab = pid.split('_')[0]+ 'Tab';
 			
-			MapToolbar.features[tab][pid].markers.getAt(mIdx).bdata.railindex = $('#dms_railindex option:selected').val();
-			MapToolbar.features[tab][pid].markers.getAt(mIdx).bdata.height = $('#dms_height').val();
-			MapToolbar.features[tab][pid].markers.getAt(mIdx).bdata.pitch = $('#dms_pitch').val();
-			MapToolbar.features[tab][pid].markers.getAt(mIdx).note = $('#dms_note').val();
+			if ( $('#dms_railindex option:selected').val() != '') { MapToolbar.features[tab][pid].markers.getAt(mIdx).bdata.railindex = $('#dms_railindex option:selected').val(); }
+			if ( $('#dms_height').val() != '') { MapToolbar.features[tab][pid].markers.getAt(mIdx).bdata.height = parseFloat($('#dms_height').val()); }
+			if ( $('#dms_pitch').val() != '') { MapToolbar.features[tab][pid].markers.getAt(mIdx).bdata.pitch = parseFloat($('#dms_pitch').val()); }
+			if ( $('#dms_note').val() != '') { MapToolbar.features[tab][pid].markers.getAt(mIdx).note = $('#dms_note').val(); }
+	
 			
 			if (document.getElementById('lockedmarker').checked) {
 				MapToolbar.features[tab][pid].markers.getAt(mIdx).setDraggable(false);
@@ -8252,10 +8253,10 @@ last update : 28 October 2014 7:40am (GMT 8+)
 			var pid = $('#dInsPitch_PID').val(); 
 			var mIdx = parseInt($('#dInsPitch_MID').val());
 			var tab = pid.split('_')[0]+ 'Tab';
-			var pitch = $('#dInsPitch_val').val();
+			var pitch = parseInt($('#dInsPitch_val').val());
 			
 			if (typeof MapToolbar.features[tab][pid].markers.getAt(mIdx) != 'undefined') {		
-				MapToolbar.features[tab][pid].markers.getAt(mIdx).bdata.pitch = $('#dInsPitch_val').val();
+				MapToolbar.features[tab][pid].markers.getAt(mIdx).bdata.pitch = pitch;
 				var image = new google.maps.MarkerImage('images/pitch_icon.png',
 					new google.maps.Size(6, 6),
 					new google.maps.Point(0, 0),
