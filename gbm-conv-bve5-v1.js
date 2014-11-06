@@ -1,4 +1,4 @@
-﻿/*
+/*
 GB Maps ギビマップ - © Karya IT (http://www.karyait.net.my/) 2012-2014. All rights reserved. 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
 without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -18,7 +18,7 @@ purpose : open bve route builder, data conversion function
 type : development release
 version : 1.1.0
 build : 
-last update : 25 October 2014 2:00am (GMT 8+)
+last update : 5 November 2014 8:46pm (GMT 8+)
 
 */
 	//bve5 list
@@ -1492,7 +1492,7 @@ function generateBVE5(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,max
 						
 							// ######### data on point start ##########
 
-							if (tPoly.markers.getAt(ci).bdata.height != '' || tPoly.markers.getAt(ci).bdata.pitch != ''){
+							if ($.isNumeric(tPoly.markers.getAt(ci).bdata.height) || $.isNumeric(tPoly.markers.getAt(ci).bdata.pitch)){
 								ProcessbData5(tPoly.markers.getAt(ci).bdata, Math.round(cX));
 							}	
 				
@@ -1606,7 +1606,7 @@ function generateBVE5(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,max
 						
 							// ######### data on point start ##########
 
-							if (cPoly.markers.getAt(ci).bdata.height != '' || cPoly.markers.getAt(ci).bdata.pitch != ''){
+							if ($.isNumeric(cPoly.markers.getAt(ci).bdata.height) || $.isNumeric(cPoly.markers.getAt(ci).bdata.pitch)){
 								ProcessbData5(cPoly.markers.getAt(ci).bdata, Math.round(cX));
 							}	
 				
@@ -1643,7 +1643,7 @@ function generateBVE5(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,max
 					if (i == stIdx) {
 						var tmpTxt = '\tCurve.Gauge('+gauge+');;\n';
 						tmpTxt += '\tIrregularity.Change(0.002009509, 0.001255943, 0.0007912442, 50, 50, 50);\n';
-						tmpTxt += '\tRepeater[\'railbase_0\'].Begin(0, 0, 0, 0, 0, 0, 3, 0, 5, 5,\'' + defaultrailbasekey + '\');\n';
+						tmpTxt += '\tRepeater[\'railbase_0\'].Begin(0, 0, 0, 0, 0, 0, 0, 3, 5, 5,\'' + defaultrailbasekey + '\');\n';
 						tmpTxt += '\tRepeater[\'railL_0\'].Begin(0, 0, 0, 0, 0, 0, 0, 3, 5, 5,\'' + defaultrailLkey + '\');\n';
 						tmpTxt += '\tRepeater[\'railR_0\'].Begin(0, 0, 0, 0, 0, 0, 0, 3, 5, 5,\'' + defaultrailRkey + '\');\n';
 						tmpTxt += '\tRepeater[\'ohwire_0\'].Begin(0, 0, 0, 0, 0, 0, 0, 0, 25, 25,\'' + defaultohwirekey + '\');\n';
@@ -1681,40 +1681,22 @@ function generateBVE5(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,max
 
 						if (typeof iGkey != 'undefined') {
 							tmpTxt += '\tRepeater[\'Ground\'].Begin(, 0, -0.45, 0, 0, 0, 0, 1, 25, 25,\'' + iGkey + '\');\n';
-						}						
+						}	
 						
-	//Track.Accuracy(0) perfect accuracy (no inaccuracy at all)
-	//Irregularity.Change(0.0008, 0.0005, 0.000315, 50, 50, 50);
-	
-	//Track.Accuracy(1) very good accuracy (high speed lines)
-	//Irregularity.Change(0.001267915, 0.0007924467, 0.0004992414, 50, 50, 50);
-	
-	//Track.Accuracy(2) means good accuracy (default for conventional line)
-	//Irregularity.Change(0.002009509, 0.001255943, 0.0007912442, 50, 50, 50);
-	
-	//Track.Accuracy(3) mediocre accuracy
-	//Irregularity.Change(0.003184857, 0.001990536, 0.001254038, 50, 50, 50);
-	
-	//Track.Accuracy(4) poor accuracy
-	//Irregularity.Change(0.005047659, 0.003154787, 0.001987516, 50, 50, 50);
+						noteTrkArr.push([Math.round(currX),'# Irregularity.Change(0.0008, 0.0005, 0.000315, 50, 50, 50); # Track.Accuracy(0) perfect accuracy (no inaccuracy at all)\n']);						
+						noteTrkArr.push([Math.round(currX),'# Irregularity.Change(0.001267915, 0.0007924467, 0.0004992414, 50, 50, 50); # Track.Accuracy(1) very good accuracy (high speed lines)\n']);						
+						noteTrkArr.push([Math.round(currX),'# Irregularity.Change(0.002009509, 0.001255943, 0.0007912442, 50, 50, 50); # Track.Accuracy(2) means good accuracy (default for conventional line)\n']);						
+						noteTrkArr.push([Math.round(currX),'# Irregularity.Change(0.003184857, 0.001990536, 0.001254038, 50, 50, 50); # Track.Accuracy(3) mediocre accuracy\n']);						
+						noteTrkArr.push([Math.round(currX),'# Irregularity.Change(0.005047659, 0.003154787, 0.001987516, 50, 50, 50); # Track.Accuracy(4) poor accuracy\n']);						
+						noteTrkArr.push([Math.round(currX),'# Adhesion.Change (0.35, 0, 0.01); # the train will not be able to move at all\n']);						
+						noteTrkArr.push([Math.round(currX),'# Adhesion.Change (0.351, 0, 0.009496677); # Track.Adhesion(135) Drying\n']);						
+						noteTrkArr.push([Math.round(currX),'# Adhesion.Change (0.2418, 0, 0.0137855); # Track.Adhesion(93) Wet\n']);						
+						noteTrkArr.push([Math.round(currX),'# Adhesion.Change (0.221, 0, 0.01508296); # Track.Adhesion(85) Frost\n']);						
+						noteTrkArr.push([Math.round(currX),'# Adhesion.Change (0.13, 0, 0.02564103); # Track.Adhesion(50) Snow\n']);						
 
-	// the train will not be able to move at all
-	//Adhesion.Change (0.35, 0, 0.01);
-
-	//Track.Adhesion(135) Drying
-	//Adhesion.Change (0.351, 0, 0.009496677);
-
-	//Track.Adhesion(93) Wet
-	//Adhesion.Change (0.2418, 0, 0.0137855);
-
-	//Track.Adhesion(85) Frost
-	//Adhesion.Change (0.221, 0, 0.01508296);
-
-	//Track.Adhesion(50) Snow
-	//Adhesion.Change (0.13, 0, 0.02564103);
-	
 						//mainTrkArr.push([Math.round(currX),';']);
 						mainTrkArr.push([Math.round(currX),tmpTxt]);
+
 				
 					} else if (i == edIdx) {
 						var crX = Math.round(currX/25)*25;
@@ -1728,7 +1710,7 @@ function generateBVE5(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,max
 					
 					// ######### data on point start ##########
 
-					if (polyL.markers.getAt(i).bdata.height != '' || polyL.markers.getAt(i).bdata.railindex != '' || polyL.markers.getAt(i).bdata.pitch != ''){
+					if ($.isNumeric(polyL.markers.getAt(i).bdata.height) || polyL.markers.getAt(i).bdata.railindex != '' || $.isNumeric(polyL.markers.getAt(i).bdata.pitch)){
 						ProcessbData5(polyL.markers.getAt(i).bdata, Math.round(currX));
 					}	
 				
