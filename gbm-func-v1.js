@@ -17,7 +17,7 @@ purpose : gb maps function library
 type : development release
 version : 1.1.0
 build : 
-last update : 25 October 2014 2:00am (GMT 8+)
+last update : 6 November 2014 11:23am (GMT 8+)
 
 */
 var gbm_ver = '1.1.0';
@@ -1057,11 +1057,11 @@ function prelinepitch(polyid) {
 							
 							//curve start marker index 0
 							if (tcpoly.markers.getAt(0).note != '') { note = tcpoly.markers.getAt(0).note; } 
-							if (tcpoly.markers.getAt(0).bdata.pitch != '') { 
+							if ($.isNumeric(tcpoly.markers.getAt(0).bdata.pitch)) { 
 								pit = tcpoly.markers.getAt(0).bdata.pitch; 
 							}
 							bdata = "tcurve:startT:" + cuvid; 
-							if (tcpoly.markers.getAt(0).bdata.height != '') { 
+							if ($.isNumeric(tcpoly.markers.getAt(0).bdata.height)) { 
 								bdata += '§height:' + tcpoly.markers.getAt(0).bdata.height;
 							}
 							
@@ -1083,11 +1083,11 @@ function prelinepitch(polyid) {
 							//curve end marker index 1
 							note = ''; pit = ''; bdata = ''; kit = '';
 							if (tcpoly.markers.getAt(1).note != '') { note = tcpoly.markers.getAt(1).note; } 
-							if (tcpoly.markers.getAt(1).bdata.pitch != '') { 
+							if ($.isNumeric(tcpoly.markers.getAt(1).bdata.pitch)) { 
 								pit = tcpoly.markers.getAt(1).bdata.pitch; 
 							}
 							bdata = "tcurve:startC:" + cuvid; 
-							if (tcpoly.markers.getAt(1).bdata.height != '') { 
+							if ($.isNumeric(tcpoly.markers.getAt(1).bdata.height)) { 
 								bdata += '§height:' + tcpoly.markers.getAt(1).bdata.height;
 							}
 
@@ -1108,11 +1108,11 @@ function prelinepitch(polyid) {
 							//curve end marker index 1
 							note = ''; pit = ''; bdata = ''; kit = '';
 							if (tcpoly.markers.getAt(1).note != '') { note = tcpoly.markers.getAt(1).note; } 
-							if (tcpoly.markers.getAt(1).bdata.pitch != '') { 
+							if ($.isNumeric(tcpoly.markers.getAt(1).bdata.pitch)) { 
 								pit = tcpoly.markers.getAt(1).bdata.pitch; 
 							}
 							bdata = "tcurve:endC:" + cuvid; 
-							if (tcpoly.markers.getAt(1).bdata.height != '') { 
+							if ($.isNumeric(tcpoly.markers.getAt(1).bdata.height)) { 
 								bdata += '§height:' + tcpoly.markers.getAt(1).bdata.height;
 							}
 
@@ -1133,11 +1133,11 @@ function prelinepitch(polyid) {
 							//curve end marker index 1
 							note = ''; pit = ''; bdata = ''; kit = '';
 							if (tcpoly.markers.getAt(1).note != '') { note = tcpoly.markers.getAt(1).note; } 
-							if (tcpoly.markers.getAt(1).bdata.pitch != '') { 
+							if ($.isNumeric(tcpoly.markers.getAt(1).bdata.pitch)) { 
 								pit = tcpoly.markers.getAt(1).bdata.pitch; 
 							}
 							bdata = "tcurve:endT:" + cuvid; 
-							if (tcpoly.markers.getAt(1).bdata.height != '') { 
+							if ($.isNumeric(tcpoly.markers.getAt(1).bdata.height)) { 
 								bdata += '§height:' + tcpoly.markers.getAt(1).bdata.height;
 							}
 
@@ -1160,11 +1160,11 @@ function prelinepitch(polyid) {
 									note = ''; pit = ''; bdata = ''; kit = '';
 									if (tcpoly.markers.getAt(c).note != '') { note = tcpoly.markers.getAt(c).note; } 
 									
-									if (tcpoly.markers.getAt(c).bdata.pitch != '') { 
+									if ($.isNumeric(tcpoly.markers.getAt(c).bdata.pitch)) { 
 										pit = tcpoly.markers.getAt(c).bdata.pitch; 
 									}
 									bdata = "tcurve:ld:" + cuvid + ':' + c;
-									if (tcpoly.markers.getAt(c).bdata.height != '') { 
+									if ($.isNumeric(tcpoly.markers.getAt(c).bdata.height)) { 
 										bdata = 'height:' + tcpoly.markers.getAt(c).bdata.height;
 									}
 
@@ -1261,11 +1261,11 @@ function prelinepitch(polyid) {
 							
 							//curve start marker index 0
 							if (tcpoly.markers.getAt(0).note != '') { note = tcpoly.markers.getAt(0).note; } 
-							if (tcpoly.markers.getAt(0).bdata.pitch != '') { 
+							if ($.isNumeric(tcpoly.markers.getAt(0).bdata.pitch)) { 
 								pit = tcpoly.markers.getAt(0).bdata.pitch; 
 							}
 							bdata = "tcurve:startT:" + cuvid; 
-							if (tcpoly.markers.getAt(0).bdata.height != '') { 
+							if ($.isNumeric(tcpoly.markers.getAt(0).bdata.height)) { 
 								bdata += '§height:' + tcpoly.markers.getAt(0).bdata.height;
 							}
 							
@@ -1287,11 +1287,11 @@ function prelinepitch(polyid) {
 							//curve end marker index 1
 							note = ''; pit = ''; bdata = ''; kit = '';
 							if (tcpoly.markers.getAt(1).note != '') { note = tcpoly.markers.getAt(1).note; } 
-							if (tcpoly.markers.getAt(1).bdata.pitch != '') { 
+							if ($.isNumeric(tcpoly.markers.getAt(1).bdata.pitch)) { 
 								pit = tcpoly.markers.getAt(1).bdata.pitch; 
 							}
 							bdata = "tcurve:startC:" + cuvid; 
-							if (tcpoly.markers.getAt(1).bdata.height != '') { 
+							if ($.isNumeric(tcpoly.markers.getAt(1).bdata.height)) { 
 								bdata += '§height:' + tcpoly.markers.getAt(1).bdata.height;
 							}
 
@@ -1312,11 +1312,11 @@ function prelinepitch(polyid) {
 							//curve end marker index 1
 							note = ''; pit = ''; bdata = ''; kit = '';
 							if (tcpoly.markers.getAt(1).note != '') { note = tcpoly.markers.getAt(1).note; } 
-							if (tcpoly.markers.getAt(1).bdata.pitch != '') { 
+							if ($.isNumeric(tcpoly.markers.getAt(1).bdata.pitch)) { 
 								pit = tcpoly.markers.getAt(1).bdata.pitch; 
 							}
 							bdata = "tcurve:endC:" + cuvid; 
-							if (tcpoly.markers.getAt(1).bdata.height != '') { 
+							if ($.isNumeric(tcpoly.markers.getAt(1).bdata.height)) { 
 								bdata += '§height:' + tcpoly.markers.getAt(1).bdata.height;
 							}
 
@@ -1337,11 +1337,11 @@ function prelinepitch(polyid) {
 							//curve end marker index 1
 							note = ''; pit = ''; bdata = ''; kit = '';
 							if (tcpoly.markers.getAt(1).note != '') { note = tcpoly.markers.getAt(1).note; } 
-							if (tcpoly.markers.getAt(1).bdata.pitch != '') { 
+							if ($.isNumeric(tcpoly.markers.getAt(1).bdata.pitch)) { 
 								pit = tcpoly.markers.getAt(1).bdata.pitch; 
 							}
 							bdata = "tcurve:endT:" + cuvid; 
-							if (tcpoly.markers.getAt(1).bdata.height != '') { 
+							if ($.isNumeric(tcpoly.markers.getAt(1).bdata.height)) { 
 								bdata += '§height:' + tcpoly.markers.getAt(1).bdata.height;
 							}
 
@@ -1364,11 +1364,11 @@ function prelinepitch(polyid) {
 									note = ''; pit = ''; bdata = ''; kit = '';
 									if (tcpoly.markers.getAt(c).note != '') { note = tcpoly.markers.getAt(c).note; } 
 									
-									if (tcpoly.markers.getAt(c).bdata.pitch != '') { 
+									if ($.isNumeric(tcpoly.markers.getAt(c).bdata.pitch)) { 
 										pit = tcpoly.markers.getAt(c).bdata.pitch; 
 									}
 									bdata = "tcurve:ld:" + cuvid + ':' + c;
-									if (tcpoly.markers.getAt(c).bdata.height != '') { 
+									if ($.isNumeric(tcpoly.markers.getAt(c).bdata.height)) { 
 										bdata = 'height:' + tcpoly.markers.getAt(c).bdata.height;
 									}
 
@@ -1494,11 +1494,11 @@ function prelinepitch(polyid) {
 							
 							//curve start marker index 0
 							if (cpoly.markers.getAt(0).note != '') { note = cpoly.markers.getAt(0).note; } 
-							if (cpoly.markers.getAt(0).bdata.pitch != '') { 
+							if ($.isNumeric(cpoly.markers.getAt(0).bdata.pitch)) { 
 								pit = cpoly.markers.getAt(0).bdata.pitch; 
 							}
 							bdata = "curve:start:" + cuvid; 
-							if (cpoly.markers.getAt(0).bdata.height != '') { 
+							if ($.isNumeric(cpoly.markers.getAt(0).bdata.height)) { 
 								bdata += '§height:' + cpoly.markers.getAt(0).bdata.height;
 							}
 
@@ -1521,11 +1521,11 @@ function prelinepitch(polyid) {
 							//curve end marker index 1
 							note = ''; pit = ''; bdata = ''; kit = '';
 							if (cpoly.markers.getAt(1).note != '') { note = cpoly.markers.getAt(1).note; } 
-							if (cpoly.markers.getAt(1).bdata.pitch != '') { 
+							if ($.isNumeric(cpoly.markers.getAt(1).bdata.pitch)) { 
 								pit = cpoly.markers.getAt(1).bdata.pitch; 
 							}
 							bdata = "curve:end:" + cuvid; 
-							if (cpoly.markers.getAt(1).bdata.height != '') { 
+							if ($.isNumeric(cpoly.markers.getAt(1).bdata.height)) { 
 								bdata += '§height:' + cpoly.markers.getAt(1).bdata.height;
 							}
 
@@ -1549,11 +1549,11 @@ function prelinepitch(polyid) {
 									note = ''; pit = ''; bdata = ''; kit = '';
 									if (cpoly.markers.getAt(c).note != '') { note = cpoly.markers.getAt(c).note; } 
 									
-									if (cpoly.markers.getAt(c).bdata.pitch != '') { 
+									if ($.isNumeric(cpoly.markers.getAt(c).bdata.pitch)) { 
 										pit = cpoly.markers.getAt(c).bdata.pitch; 
 									}
 									bdata = "curve:ld:" + cuvid + ':' + c;
-									if (cpoly.markers.getAt(c).bdata.height != '') { 
+									if ($.isNumeric(cpoly.markers.getAt(c).bdata.height)) { 
 										bdata = 'height:' + cpoly.markers.getAt(c).bdata.height;
 									}
 
@@ -2944,7 +2944,7 @@ function getTrackDistanceFromStart(pid,index) {
 		LwCurve += lenDiff; 	
 	
 		if ((pLM.getAt(i-1).bdata.curve == '') && (pLM.getAt(i-1).bdata.tcurve == '')) {
-			if (pLM.getAt(i-1).bdata.pitch != '') {
+			if ($.isNumeric(pLM.getAt(i-1).bdata.pitch)) {
 				if (pitchProp.pitch != parseFloat(pLM.getAt(i-1).bdata.pitch)) {
 					var pitch = parseFloat(pLM.getAt(i-1).bdata.pitch)/1000;
 					pitchProp.prevX = pitchProp.currX;
@@ -2979,7 +2979,7 @@ function getTrackDistanceFromStart(pid,index) {
 			// LwCurve += (-2 * TL) + ((2*Ls)+ Lc); 
 			LwCurve -= TL; 
 			
-			if (tPoly.markers.getAt(0).bdata.pitch != '') {
+			if ($.isNumeric(tPoly.markers.getAt(0).bdata.pitch)) {
 				if (pitchProp.pitch != parseFloat(tPoly.markers.getAt(0).bdata.pitch)) {
 					var pitch = parseFloat(tPoly.markers.getAt(0).bdata.pitch)/1000;
 					pitchProp.prevX = pitchProp.currX;
@@ -3011,7 +3011,7 @@ function getTrackDistanceFromStart(pid,index) {
 					LwCurve += tPoly.markers.getAt(ci).ld - tPoly.markers.getAt(ci-1).ld;
 				}
 					
-				if (tPoly.markers.getAt(ci).bdata.pitch != '') {
+				if ($.isNumeric(tPoly.markers.getAt(ci).bdata.pitch)) {
 					if (pitchProp.pitch != parseFloat(tPoly.markers.getAt(ci).bdata.pitch)) {
 						var pitch = parseFloat(tPoly.markers.getAt(ci).bdata.pitch)/1000;
 						pitchProp.prevX = pitchProp.currX;
@@ -3044,7 +3044,7 @@ function getTrackDistanceFromStart(pid,index) {
 				LwCurve += tPoly.markers.getAt(1).ld - tPoly.markers.getAt(4).ld - TL;
 			}
 
-			if (tPoly.markers.getAt(1).bdata.pitch != '') {
+			if ($.isNumeric(tPoly.markers.getAt(1).bdata.pitch)) {
 				if (pitchProp.pitch != parseFloat(tPoly.markers.getAt(1).bdata.pitch)) {
 					var pitch = parseFloat(tPoly.markers.getAt(1).bdata.pitch)/1000;
 					pitchProp.prevX = pitchProp.currX;
@@ -3075,7 +3075,7 @@ function getTrackDistanceFromStart(pid,index) {
 			var cL = cPoly.Lc;
 			LwCurve -= tL; 
 			
-			if (cPoly.markers.getAt(0).bdata.pitch != '') {
+			if ($.isNumeric(cPoly.markers.getAt(0).bdata.pitch)) {
 				if (pitchProp.pitch != parseFloat(cPoly.markers.getAt(0).bdata.pitch)) {
 					var pitch = parseFloat(cPoly.markers.getAt(0).bdata.pitch)/1000;
 					pitchProp.prevX = pitchProp.currX;
@@ -3108,7 +3108,7 @@ function getTrackDistanceFromStart(pid,index) {
 						LwCurve += cPoly.markers.getAt(ci).ld - cPoly.markers.getAt(ci-1).ld;
 					}
 					
-					if (cPoly.markers.getAt(ci).bdata.pitch != '') {
+					if ($.isNumeric(cPoly.markers.getAt(ci).bdata.pitch)) {
 						if (pitchProp.pitch != parseFloat(cPoly.markers.getAt(ci).bdata.pitch)) {
 							var pitch = parseFloat(cPoly.markers.getAt(ci).bdata.pitch)/1000;
 							pitchProp.prevX = pitchProp.currX;
@@ -3142,7 +3142,7 @@ function getTrackDistanceFromStart(pid,index) {
 				LwCurve += cPoly.markers.getAt(1).ld - tL;
 			}
 
-			if (cPoly.markers.getAt(1).bdata.pitch != '') {
+			if ($.isNumeric(cPoly.markers.getAt(1).bdata.pitch)) {
 				if (pitchProp.pitch != parseFloat(cPoly.markers.getAt(1).bdata.pitch)) {
 					var pitch = parseFloat(cPoly.markers.getAt(1).bdata.pitch)/1000;
 					pitchProp.prevX = pitchProp.currX;
@@ -3249,7 +3249,7 @@ function plotElevation(results, status) {
 				var lastH = parseFloat(arrlast[iv].split(':')[1]);
 				data.setValue(0, 2, lastH);			
 			}
-			if (arrlast[iv].indexOf('§lastpitch:') == 0) {
+			if (arrlast[iv].indexOf('lastpitch:') == 0) {
 				pitch0 = parseFloat(arrlast[iv].split(':')[1]);
 			}			
 		}
@@ -3429,8 +3429,8 @@ function markerSetting(pid,midx) {
 	$('#dms_position').val(MapToolbar.features[type][pid].markers.getAt(midx).position.toString());
 	if (MapToolbar.features[type][pid].route != '') { $('#dms_route').val(MapToolbar.features[type][pid].route); } else { $('#dms_route').val('');}
 	if (MapToolbar.features[type][pid].name != '') { $('#dms_linename').val(MapToolbar.features[type][pid].name); } else { $('#dms_linename').val('');}
-	if (MapToolbar.features[type][pid].markers.getAt(midx).bdata.height != '') { $('#dms_height').val(MapToolbar.features[type][pid].markers.getAt(midx).bdata.height); } else { $('#dms_height').val('');}
-	if (MapToolbar.features[type][pid].markers.getAt(midx).bdata.pitch != '') { $('#dms_pitch').val(MapToolbar.features[type][pid].markers.getAt(midx).bdata.pitch); } else { $('#dms_pitch').val('');}
+	if ($.isNumeric(MapToolbar.features[type][pid].markers.getAt(midx).bdata.height)) { $('#dms_height').val(MapToolbar.features[type][pid].markers.getAt(midx).bdata.height); } else { $('#dms_height').val('');}
+	if ($.isNumeric(MapToolbar.features[type][pid].markers.getAt(midx).bdata.pitch)) { $('#dms_pitch').val(MapToolbar.features[type][pid].markers.getAt(midx).bdata.pitch); } else { $('#dms_pitch').val('');}
 	
 
 	if (MapToolbar.features[type][pid].markers.getAt(midx).lineX != '') { $('#dms_lineX').val(MapToolbar.features[type][pid].markers.getAt(midx).lineX); } else { $('#dms_lineX').val('');}
@@ -4311,7 +4311,7 @@ var arr1 = arr0.split('§'); //contoh : "height:2.1§curve:end:curve_1"
 		var arr2 = arr1[a].split(':');
 		switch (arr2[0]) {
 			case 'height' :
-				MapToolbar.features[tab][pid].markers.getAt(mid).bdata.height = arr2[1];
+				MapToolbar.features[tab][pid].markers.getAt(mid).bdata.height = parseFloat(arr2[1]);
 				break;
 			case 'curve' :
 							
@@ -4326,6 +4326,10 @@ var arr1 = arr0.split('§'); //contoh : "height:2.1§curve:end:curve_1"
 function updateBdata(tab,pid,mid,arr0) {
 	var arr1 = arr0.split('§'); //contoh : "tunnel«end:DarkTunnel01§cut«start:WCut03" >> "tunnel«end:DarkTunnel01" "cut«start:WCut03"
 	for (var a = 0; a < arr1.length; a++) {
+		if (arr1[a].indexOf('lastheight:') > -1 || arr1[a].indexOf('lastpitch:') > -1) {
+			continue;
+		}	
+		
 		var arr2 = arr1[a].split('«'); //contoh : "tunnel" "end:DarkTunnel01"
 
 		var arr3 = arr2[1].split(':'); //contoh : "end" "DarkTunnel01"
@@ -4724,19 +4728,19 @@ function processPolylineID(rowsData, i) {
 					}
 				}	
 				if (!dahada) {
-					var loadNextPoly = null; 				
+					//var loadPoly = null; 				
 					MapToolbar.initFeature('line');
 					MapToolbar.stopEditing();
 					var newPID = 'line_'+ MapToolbar['lineCounter'];
-					loadNextPoly = MapToolbar.features["lineTab"][newPID];
+					//loadPoly = MapToolbar.features["lineTab"][newPID];
 					
-					if (typeof loadNextPoly != 'undefined') {
-						loadNextPoly.uid = rd[1];
-						loadNextPoly.ptype = rd[2];	
-						loadNextPoly.note = (rd[3] != '')? rd[3].replace('-',',').replace(' - ','\n') : '';
-						loadNextPoly.name = (rd[4] != '')? rd[4] : '';
-						loadNextPoly.route = (rd[5] != '')? rd[5] : '';
-						loadNextPoly.lineX = '';
+					if (typeof MapToolbar.features["lineTab"][newPID] != 'undefined') {
+						MapToolbar.features["lineTab"][newPID].uid = rd[1];
+						MapToolbar.features["lineTab"][newPID].ptype = rd[2];	
+						MapToolbar.features["lineTab"][newPID].note = (rd[3] != '')? rd[3].replace('-',',').replace(' - ','\n') : '';
+						MapToolbar.features["lineTab"][newPID].name = (rd[4] != '')? rd[4] : '';
+						MapToolbar.features["lineTab"][newPID].route = (rd[5] != '')? rd[5] : '';
+						MapToolbar.features["lineTab"][newPID].lineX = '';
 						if (rd[6] != '') {
 							var newlineX = '';
 							for (r=0;r<oldnewid.length;r++) {
@@ -4746,22 +4750,22 @@ function processPolylineID(rowsData, i) {
 								}									
 							}
 							if (newlineX !='') {
-								loadNextPoly.lineX = newlineX;
+								MapToolbar.features["lineTab"][newPID].lineX = newlineX;
 							} else {
-								loadNextPoly.lineX = rd[6];
+								MapToolbar.features["lineTab"][newPID].lineX = rd[6];
 							}
 						}
 						var bdataL = rd[7].split('§');
-						loadNextPoly.bdata.devID = (bdataL[0] != '')? bdataL[0] : '';
-						loadNextPoly.bdata.maxSpeed = (bdataL[1] != '')? bdataL[1] : '';
-						loadNextPoly.bdata.simBVE = (bdataL[2] != '')? bdataL[2] : '';
-						loadNextPoly.bdata.gauge = (bdataL[3] != '')? bdataL[3] : '';
-						loadNextPoly.bdata.desc = (bdataL[4] != '')? bdataL[4] : '';
-						loadNextPoly.bdata.train = (bdataL[5] != '')? bdataL[5] : '';
-						loadNextPoly.bdata.railindex = (bdataL[6] != '')? bdataL[6] : '';
+						MapToolbar.features["lineTab"][newPID].bdata.devID = (bdataL[0] != '')? bdataL[0] : '';
+						MapToolbar.features["lineTab"][newPID].bdata.maxSpeed = (bdataL[1] != '')? bdataL[1] : '';
+						MapToolbar.features["lineTab"][newPID].bdata.simBVE = (bdataL[2] != '')? bdataL[2] : '';
+						MapToolbar.features["lineTab"][newPID].bdata.gauge = (bdataL[3] != '')? bdataL[3] : '';
+						MapToolbar.features["lineTab"][newPID].bdata.desc = (bdataL[4] != '')? bdataL[4] : '';
+						MapToolbar.features["lineTab"][newPID].bdata.train = (bdataL[5] != '')? bdataL[5] : '';
+						MapToolbar.features["lineTab"][newPID].bdata.railindex = (bdataL[6] != '')? bdataL[6] : '';
 					
-						if (loadNextPoly.id != rd[0]) {	
-							var oldnew = [rd[0],rd[1],loadNextPoly.id];
+						if (MapToolbar.features["lineTab"][newPID].id != rd[0]) {	
+							var oldnew = [rd[0],rd[1],MapToolbar.features["lineTab"][newPID].id];
 							oldnewid.push(oldnew);
 						}
 						$( "#mainload" ).progressbar({
@@ -4771,202 +4775,172 @@ function processPolylineID(rowsData, i) {
 							value: Math.round((8/(rd.length-1))*100)
 						});	
 
-						setTimeout(function() { processPolylineData(loadNextPoly,rd, 8, rowsData, i); }, 150);
+						setTimeout(function() { processPolylineData(newPID,rd, 8, rowsData, i); }, 100);
 						
 					} else {
-						setTimeout(function() { processPolylineID(rowsData, i+1); }, 200);
+						setTimeout(function() { processPolylineID(rowsData, i+1); }, 100);
 					}					
 				} else {
-					setTimeout(function() { processPolylineID(rowsData, i+1); }, 200);
+					setTimeout(function() { processPolylineID(rowsData, i+1); }, 100);
 				}
 			} else {
-				setTimeout(function() { processPolylineID(rowsData, i+1); }, 200);
+				setTimeout(function() { processPolylineID(rowsData, i+1); }, 100);
 			}			
 		} else {
-			setTimeout(function() { processPolylineID(rowsData, i+1); }, 200);		
+			setTimeout(function() { processPolylineID(rowsData, i+1); }, 100);		
 		}
 	} else {
 		$( "#loadprocess" ).text($.lang.convert('Loading : curves ...'));				
-		setTimeout(function() { processCurve(rowsData, 1); }, 150);	
+		setTimeout(function() { processCurve(rowsData, 1); }, 50);	
 	}
 }
 
-function processPolylineData(loadPoly,rd, n, rowsData, i) {
-	//poly marker coordinate start at 8
-	/*
-0,1	teks += ',' + allPoints[i].lat() + ";" + allPoints[i].lng();
-	
-2	teks += ';' + polyL.markers.getAt(i).uid;
-	//teks += ';' + polyL.markers.getAt(i).pid;
-3	teks += ';' + polyL.markers.getAt(i).note.replace(',','-').replace('\n',' - ');
+function processPolylineData(pidx,rd, n, rowsData, i) {
+	try {
+		var idx = n-8;
+		//poly marker coordinate start at 8
+		var loadPoly = MapToolbar.features["lineTab"][pidx];
+		
+		var xD = rd[n].split(";");
+		MapToolbar.addPoint(new google.maps.LatLng(xD[0], xD[1]), loadPoly, idx);	
+		//loadPoly.markers.getAt(idx)
+	  
+		loadPoly.markers.getAt(idx).uid = xD[2]; 
+		loadPoly.markers.getAt(idx).note = (xD[3] != '')? xD[3].replace('-',',').replace(' - ','\n') : ''; 
+		
+		var bdataM = xD[4].split('§');
+		var kdataM = xD[5].split('§');
+		var gdataM = xD[6].split('§');
 
-4	//bdata
-	teks += ';' + polyL.markers.getAt(i).bdata.height;
-	teks += '§' + polyL.markers.getAt(i).bdata.railindex;
-	teks += '§' + polyL.markers.getAt(i).bdata.pitch;
-	teks += '§' + polyL.markers.getAt(i).bdata.curve;
-	teks += '§' + polyL.markers.getAt(i).bdata.tcurve;
+		//loadPoly.markers.getAt(idx).lineX = (xD[7] != '')? xD[7] : ''; 
 
-5	//kdata
-	teks += ';' + polyL.markers.getAt(i).kdata.bridge;
-	teks += '§' + polyL.markers.getAt(i).kdata.overbridge;
-	teks += '§' + polyL.markers.getAt(i).kdata.river;
-	teks += '§' + polyL.markers.getAt(i).kdata.ground;
-	teks += '§' + polyL.markers.getAt(i).kdata.flyover;
-	teks += '§' + polyL.markers.getAt(i).kdata.tunnel;
-	teks += '§' + polyL.markers.getAt(i).kdata.pole;
-	teks += '§' + polyL.markers.getAt(i).kdata.dike;
-	teks += '§' + polyL.markers.getAt(i).kdata.cut;
-	teks += '§' + polyL.markers.getAt(i).kdata.underground;
-	teks += '§' + polyL.markers.getAt(i).kdata.form;
-	teks += '§' + polyL.markers.getAt(i).kdata.roadcross;
-	teks += '§' + polyL.markers.getAt(i).kdata.crack;
-	teks += '§' + polyL.markers.getAt(i).kdata.beacon;
+		if (xD[7] != '') {
+			var newId = '';
+			var lineXid = xD[7].split(':');
+			for (r=0;r<oldnewid.length;r++) {
+				if (oldnewid[r][0] == lineXid[0]) {
+					newId = lineXid[0].replace(oldnewid[r][0],oldnewid[r][2]);
+					break;
+				}									
+			}
+			if (newId !='') {
+				loadPoly.markers.getAt(idx).lineX =  newId + ':' + lineXid[1] + ':' + lineXid[2] + ':' + lineXid[3] + ':' + lineXid[4];
+			} else {
+				loadPoly.markers.getAt(idx).lineX = xD[7];
+			}
+		}	
 
-6	//gdata
-	teks += ';' + polyL.markers.getAt(i).gdata.lastpitch;
-	teks += '§' + polyL.markers.getAt(i).gdata.lastheight;
-	teks += '§' + polyL.markers.getAt(i).gdata.lastheightratio;
+		if (xD[8] != '') { loadPoly.markers.getAt(idx).sline = xD[8];  } //cek last krn data utk newpoly ava. kemudian
 
-7	teks += ';' + polyL.markers.getAt(i).lineX;
-8	teks += '§' + polyL.markers.getAt(i).sline;
-	*/
-	var xD = rd[n].split(";");
-	MapToolbar.addPoint(new google.maps.LatLng(xD[0], xD[1]), loadPoly, n-8);	
-	//loadPoly.markers.getAt(n-8)
-  
-	loadPoly.markers.getAt(n-8).uid = xD[2]; 
-	loadPoly.markers.getAt(n-8).note = (xD[3] != '')? xD[3].replace('-',',').replace(' - ','\n') : ''; 
-	
-	var bdataM = xD[4].split('§');
-	var kdataM = xD[5].split('§');
-	var gdataM = xD[6].split('§');
-
-	//loadPoly.markers.getAt(n-8).lineX = (xD[7] != '')? xD[7] : ''; 
-
-	if (xD[7] != '') {
-		var newId = '';
-		var lineXid = xD[7].split(':');
-		for (r=0;r<oldnewid.length;r++) {
-			if (oldnewid[r][0] == lineXid[0]) {
-				newId = lineXid[0].replace(oldnewid[r][0],oldnewid[r][2]);
-				break;
-			}									
+		//bdata
+		if (bdataM[0] != '') { loadPoly.markers.getAt(idx).bdata.height =  parseFloat(bdataM[0]); }
+		if (bdataM[1] != '') { loadPoly.markers.getAt(idx).bdata.railindex = bdataM[1]; }
+		if (bdataM[2] != '') { loadPoly.markers.getAt(idx).bdata.pitch = parseFloat(bdataM[2]); }
+		if (bdataM[3] != '') { loadPoly.markers.getAt(idx).bdata.curve = bdataM[3]; }
+		if (bdataM[4] != '') { loadPoly.markers.getAt(idx).bdata.tcurve = bdataM[4]; }
+		
+		//kdata {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
+		if (kdataM[0] != '') {
+			loadPoly.markers.getAt(idx).kdata.bridge = kdataM[0];
+			var image0 = new google.maps.MarkerImage('images/bridge_icon.png',
+				new google.maps.Size(6, 6),
+				new google.maps.Point(0, 0),
+				new google.maps.Point(3, 3));
+			loadPoly.markers.getAt(idx).setIcon(image0);	
 		}
-		if (newId !='') {
-			loadPoly.markers.getAt(n-8).lineX =  newId + ':' + lineXid[1] + ':' + lineXid[2] + ':' + lineXid[3] + ':' + lineXid[4];
-		} else {
-			loadPoly.markers.getAt(n-8).lineX = xD[7];
+		if (kdataM[1] != '') {
+			loadPoly.markers.getAt(idx).kdata.overbridge = kdataM[1];
+			var image1 = new google.maps.MarkerImage('images/overbridge_icon.png',
+				new google.maps.Size(6, 6),
+				new google.maps.Point(0, 0),
+				new google.maps.Point(3, 3));
+			loadPoly.markers.getAt(idx).setIcon(image1);	
 		}
-	}	
 
-	loadPoly.markers.getAt(n-8).sline = (xD[8] != '')? xD[8] : ''; //cek last krn data utk newpoly ava. kemudian
+		loadPoly.markers.getAt(idx).kdata.river = kdataM[2];
 
-
-	//bdata
-	loadPoly.markers.getAt(n-8).bdata.height = bdataM[0];
-	loadPoly.markers.getAt(n-8).bdata.railindex = bdataM[1];
-	loadPoly.markers.getAt(n-8).bdata.pitch = bdataM[2];
-	loadPoly.markers.getAt(n-8).bdata.curve = bdataM[3];
-	loadPoly.markers.getAt(n-8).bdata.tcurve = bdataM[4];
+		if (kdataM[3] != '') {
+			loadPoly.markers.getAt(idx).kdata.ground = kdataM[3];
+			var image3 = new google.maps.MarkerImage('images/ground8.png',
+				new google.maps.Size(8, 8),
+				new google.maps.Point(0, 0),
+				new google.maps.Point(4, 4));
+			loadPoly.markers.getAt(idx).setIcon(image3);	
+		} 
+		if (kdataM[4] != '') {
+			loadPoly.markers.getAt(idx).kdata.flyover = kdataM[4];
+			var image4 = new google.maps.MarkerImage('images/flyover_icon.png',
+				new google.maps.Size(6, 6),
+				new google.maps.Point(0, 0),
+				new google.maps.Point(3, 3));
+			loadPoly.markers.getAt(idx).setIcon(image4);	
+		} 
+		if (kdataM[5] != '') {
+			loadPoly.markers.getAt(idx).kdata.tunnel = kdataM[5];
+			var image5 = new google.maps.MarkerImage('images/tunnel_icon.png',
+				new google.maps.Size(6, 6),
+				new google.maps.Point(0, 0),
+				new google.maps.Point(3, 3));
+			loadPoly.markers.getAt(idx).setIcon(image5); 	
+		} 
+		if (kdataM[6] != '') {
+			loadPoly.markers.getAt(idx).kdata.pole = kdataM[6];
+		
+		} 
+		if (kdataM[7] != '') {
+			loadPoly.markers.getAt(idx).kdata.dike = kdataM[7];
+			var image7 = new google.maps.MarkerImage('images/dike_icon.png',
+				new google.maps.Size(6, 6),
+				new google.maps.Point(0, 0),
+				new google.maps.Point(3, 3));
+			loadPoly.markers.getAt(idx).setIcon(image7);	
+		} 
+		if (kdataM[8] != '') {
+			loadPoly.markers.getAt(idx).kdata.cut = kdataM[8];
+			var image8 = new google.maps.MarkerImage('images/hillcut_icon.png',
+				new google.maps.Size(6, 6),
+				new google.maps.Point(0, 0),
+				new google.maps.Point(3, 3));
+			loadPoly.markers.getAt(idx).setIcon(image8);	
+		} 
+		if (kdataM[9] != '') {
+			loadPoly.markers.getAt(idx).kdata.underground = kdataM[9];
+		
+		} 
+		if (kdataM[10] != '') {
+			loadPoly.markers.getAt(idx).kdata.form = kdataM[10];
+			var image10 = new google.maps.MarkerImage('images/form_icon.png',
+				new google.maps.Size(6, 6),
+				new google.maps.Point(0, 0),
+				new google.maps.Point(3, 3));
+			loadPoly.markers.getAt(idx).setIcon(image10);	
+		} 
+		if (kdataM[11] != '') {
+			loadPoly.markers.getAt(idx).kdata.roadcross = kdataM[11];
+			var image11 = new google.maps.MarkerImage('images/roadcross_icon.png',
+				new google.maps.Size(6, 6),
+				new google.maps.Point(0, 0),
+				new google.maps.Point(3, 3));
+			loadPoly.markers.getAt(idx).setIcon(image11);	
+		} 
+		if (kdataM[12] != '') {
+			loadPoly.markers.getAt(idx).kdata.crack = kdataM[12];
+		
+		} 
+		if (kdataM[13] != '') {
+			loadPoly.markers.getAt(idx).kdata.beacon = kdataM[13];
+		
+		} 
+		
+		//gdata
+		loadPoly.markers.getAt(idx).gdata.lastpitch = gdataM[0];
+		loadPoly.markers.getAt(idx).gdata.lastheight = gdataM[1];
+		loadPoly.markers.getAt(idx).gdata.lastheightratio = gdataM[2];	
 	
-	//kdata {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
-	if (kdataM[0] != '') {
-		loadPoly.markers.getAt(n-8).kdata.bridge = kdataM[0];
-		var image0 = new google.maps.MarkerImage('images/bridge_icon.png',
-			new google.maps.Size(6, 6),
-			new google.maps.Point(0, 0),
-			new google.maps.Point(3, 3));
-		loadPoly.markers.getAt(n-8).setIcon(image0);	
+	} catch(err) {
+		console.log('[Error] : (line)\n' + err + '\n\n');
 	}
-	if (kdataM[1] != '') {
-		loadPoly.markers.getAt(n-8).kdata.overbridge = kdataM[1];
-		var image1 = new google.maps.MarkerImage('images/overbridge_icon.png',
-			new google.maps.Size(6, 6),
-			new google.maps.Point(0, 0),
-			new google.maps.Point(3, 3));
-		loadPoly.markers.getAt(n-8).setIcon(image1);	
-	}
 
-	loadPoly.markers.getAt(n-8).kdata.river = kdataM[2];
-
-	if (kdataM[3] != '') {
-		loadPoly.markers.getAt(n-8).kdata.ground = kdataM[3];
-		var image3 = new google.maps.MarkerImage('images/ground8.png',
-			new google.maps.Size(8, 8),
-			new google.maps.Point(0, 0),
-			new google.maps.Point(4, 4));
-		loadPoly.markers.getAt(n-8).setIcon(image3);	
-	} 
-	if (kdataM[4] != '') {
-		loadPoly.markers.getAt(n-8).kdata.flyover = kdataM[4];
-		var image4 = new google.maps.MarkerImage('images/flyover_icon.png',
-			new google.maps.Size(6, 6),
-			new google.maps.Point(0, 0),
-			new google.maps.Point(3, 3));
-		loadPoly.markers.getAt(n-8).setIcon(image4);	
-	} 
-	if (kdataM[5] != '') {
-		loadPoly.markers.getAt(n-8).kdata.tunnel = kdataM[5];
-		var image5 = new google.maps.MarkerImage('images/tunnel_icon.png',
-			new google.maps.Size(6, 6),
-			new google.maps.Point(0, 0),
-			new google.maps.Point(3, 3));
-		loadPoly.markers.getAt(n-8).setIcon(image5); 	
-	} 
-	if (kdataM[6] != '') {
-		loadPoly.markers.getAt(n-8).kdata.pole = kdataM[6];
-	
-	} 
-	if (kdataM[7] != '') {
-		loadPoly.markers.getAt(n-8).kdata.dike = kdataM[7];
-		var image7 = new google.maps.MarkerImage('images/dike_icon.png',
-			new google.maps.Size(6, 6),
-			new google.maps.Point(0, 0),
-			new google.maps.Point(3, 3));
-		loadPoly.markers.getAt(n-8).setIcon(image7);	
-	} 
-	if (kdataM[8] != '') {
-		loadPoly.markers.getAt(n-8).kdata.cut = kdataM[8];
-		var image8 = new google.maps.MarkerImage('images/hillcut_icon.png',
-			new google.maps.Size(6, 6),
-			new google.maps.Point(0, 0),
-			new google.maps.Point(3, 3));
-		loadPoly.markers.getAt(n-8).setIcon(image8);	
-	} 
-	if (kdataM[9] != '') {
-		loadPoly.markers.getAt(n-8).kdata.underground = kdataM[9];
-	
-	} 
-	if (kdataM[10] != '') {
-		loadPoly.markers.getAt(n-8).kdata.form = kdataM[10];
-		var image10 = new google.maps.MarkerImage('images/form_icon.png',
-			new google.maps.Size(6, 6),
-			new google.maps.Point(0, 0),
-			new google.maps.Point(3, 3));
-		loadPoly.markers.getAt(n-8).setIcon(image10);	
-	} 
-	if (kdataM[11] != '') {
-		loadPoly.markers.getAt(n-8).kdata.roadcross = kdataM[11];
-		var image11 = new google.maps.MarkerImage('images/roadcross_icon.png',
-			new google.maps.Size(6, 6),
-			new google.maps.Point(0, 0),
-			new google.maps.Point(3, 3));
-		loadPoly.markers.getAt(n-8).setIcon(image11);	
-	} 
-	if (kdataM[12] != '') {
-		loadPoly.markers.getAt(n-8).kdata.crack = kdataM[12];
-	
-	} 
-	if (kdataM[13] != '') {
-		loadPoly.markers.getAt(n-8).kdata.beacon = kdataM[13];
-	
-	} 
-	
-	//gdata
-	loadPoly.markers.getAt(n-8).bdata.lastpitch = gdataM[0];
-	loadPoly.markers.getAt(n-8).bdata.lastheight = gdataM[1];
-	loadPoly.markers.getAt(n-8).bdata.lastheightratio = gdataM[2];
 
 	n++;
 	
@@ -4974,996 +4948,1008 @@ function processPolylineData(loadPoly,rd, n, rowsData, i) {
 		$( "#subload" ).progressbar({
 			value: Math.round((n/(rd.length-1))*100)
 		});		
-		setTimeout(function() { processPolylineData(loadPoly,rd, n, rowsData, i); }, 150);	
+		setTimeout(function() { processPolylineData(pidx,rd, n, rowsData, i); }, 100);	
 	} else {
-		setTimeout(function() { processPolylineID(rowsData, i+1); }, 200);
+		setTimeout(function() { processPolylineID(rowsData, i+1); }, 100);
 	
 	}
 }
 
 function processCurve(rowsData, i) {
-	var rd = rowsData[i].split(",");
-	var dname = rd[0];				    					
-	if (rd[2] == 'curve') {
-		var dahada = false;
-		for(var cid in MapToolbar.features['curveTab'] ) {
-			if (MapToolbar.features['curveTab'][cid].uid == rd[1]) {
-				dahada = true;
-				break;
-			}
-		}	
-		if (!dahada) {
-		/*
-			teks += ',' + cpoly.uid;
-			teks += ',' + cpoly.ptype;
-			teks += ',' + cpoly.pid;
-			teks += ',' + cpoly.mid;
-			teks += ',' + cpoly.Rc;
-			teks += ',' + cpoly.cant;
-			teks += ',' + cpoly.Vd;
-			teks += ',' + cpoly.Lt;
-			teks += ',' + cpoly.Lc;
-			teks += ',' + cpoly.Cc;
-			teks += ',' + cpoly.st;
-			teks += ',' + cpoly.ed;
-			teks += ',' + cpoly.h1;
-			teks += ',' + cpoly.h2;
-			teks += ',' + cpoly.forceSL;
-			teks += ',' + cpoly.delta;
-			teks += ',' + cpoly.theta;
-			teks += ',' + cpoly.railindex;
-			teks += ',' + cpoly.route;
-		*/	
-			var uid = rd[1];
-			var ptype = rd[2];
-			var pid = '';
-			
-			if (rd[3] != '') {
-				var newpid = '';
-				for (r=0;r<oldnewid.length;r++) {
-					if (oldnewid[r][0] == rd[3]) {
-						newpid = rd[3].replace(oldnewid[r][0],oldnewid[r][2]);
-						break;
-					}									
+	try {
+		var rd = rowsData[i].split(",");
+		var dname = rd[0];				    					
+		if (rd[2] == 'curve') {
+			var dahada = false;
+			for(var cid in MapToolbar.features['curveTab'] ) {
+				if (MapToolbar.features['curveTab'][cid].uid == rd[1]) {
+					dahada = true;
+					break;
 				}
-				if (newpid !='') {
-					pid = newpid;
-				} else {
-					pid = rd[3];
+			}	
+			if (!dahada) {
+			/*
+				teks += ',' + cpoly.uid;
+				teks += ',' + cpoly.ptype;
+				teks += ',' + cpoly.pid;
+				teks += ',' + cpoly.mid;
+				teks += ',' + cpoly.Rc;
+				teks += ',' + cpoly.cant;
+				teks += ',' + cpoly.Vd;
+				teks += ',' + cpoly.Lt;
+				teks += ',' + cpoly.Lc;
+				teks += ',' + cpoly.Cc;
+				teks += ',' + cpoly.st;
+				teks += ',' + cpoly.ed;
+				teks += ',' + cpoly.h1;
+				teks += ',' + cpoly.h2;
+				teks += ',' + cpoly.forceSL;
+				teks += ',' + cpoly.delta;
+				teks += ',' + cpoly.theta;
+				teks += ',' + cpoly.railindex;
+				teks += ',' + cpoly.route;
+			*/	
+				var uid = rd[1];
+				var ptype = rd[2];
+				var pid = '';
+				
+				if (rd[3] != '') {
+					var newpid = '';
+					for (r=0;r<oldnewid.length;r++) {
+						if (oldnewid[r][0] == rd[3]) {
+							newpid = rd[3].replace(oldnewid[r][0],oldnewid[r][2]);
+							break;
+						}									
+					}
+					if (newpid !='') {
+						pid = newpid;
+					} else {
+						pid = rd[3];
+					}
+				}			
+				
+				var mid = parseInt(rd[4]);
+				var Rc = parseFloat(rd[5]);
+				var cant = parseInt(rd[6]);
+				var Vd = parseInt(rd[7]);
+				var Lt = parseFloat(rd[8]);
+				var Lc = parseFloat(rd[9]);
+				var Cc = new google.maps.LatLng(rd[10].split(';')[0],rd[10].split(';')[1]);
+				var st = new google.maps.LatLng(rd[11].split(';')[0],rd[11].split(';')[1]);
+				var ed = new google.maps.LatLng(rd[12].split(';')[0],rd[12].split(';')[1]);
+				var h1 = parseFloat(rd[13]);
+				var h2 = parseFloat(rd[14]);
+				var forceSL = (rd[15] == 'true')? true:false;
+				var delta = parseFloat(rd[16]);
+				var theta = parseFloat(rd[17]);
+				var railIndex = parseInt(rd[18]);
+				var route = rd[19];
+			
+				var dir = (Rc < 0) ? -1: 1;
+				var preR = Math.abs(Rc);
+
+				var points = Math.ceil(Lc/25);
+				var iB = google.maps.geometry.spherical.computeHeading(Cc,st);
+				var fB = google.maps.geometry.spherical.computeHeading(Cc,ed);
+
+				var extp = [];
+				var br = null;
+					
+				br = fB - iB;
+					
+				if (br >  180) {br -= 360;}
+				if (br < -180) {br += 360;}
+
+				var deltaBearing = br/points;
+			
+				for (var b=0; (b < points+1); b++) {     
+					extp.push(google.maps.geometry.spherical.computeOffset(Cc, preR, iB + b*deltaBearing)); 
 				}
-			}			
-			
-			var mid = parseInt(rd[4]);
-			var Rc = parseFloat(rd[5]);
-			var cant = parseInt(rd[6]);
-			var Vd = parseInt(rd[7]);
-			var Lt = parseFloat(rd[8]);
-			var Lc = parseFloat(rd[9]);
-			var Cc = new google.maps.LatLng(rd[10].split(';')[0],rd[10].split(';')[1]);
-			var st = new google.maps.LatLng(rd[11].split(';')[0],rd[11].split(';')[1]);
-			var ed = new google.maps.LatLng(rd[12].split(';')[0],rd[12].split(';')[1]);
-			var h1 = parseFloat(rd[13]);
-			var h2 = parseFloat(rd[14]);
-			var forceSL = (rd[15] == 'true')? true:false;
-			var delta = parseFloat(rd[16]);
-			var theta = parseFloat(rd[17]);
-			var railIndex = parseInt(rd[18]);
-			var route = rd[19];
-		
-			var dir = (Rc < 0) ? -1: 1;
-			var preR = Math.abs(Rc);
-
-			var points = Math.ceil(Lc/25);
-			var iB = google.maps.geometry.spherical.computeHeading(Cc,st);
-			var fB = google.maps.geometry.spherical.computeHeading(Cc,ed);
-
-			var extp = [];
-			var br = null;
-				
-			br = fB - iB;
-				
-			if (br >  180) {br -= 360;}
-			if (br < -180) {br += 360;}
-
-			var deltaBearing = br/points;
-		
-			for (var b=0; (b < points+1); b++) {     
-				extp.push(google.maps.geometry.spherical.computeOffset(Cc, preR, iB + b*deltaBearing)); 
-			}
-								
-			var curve = new google.maps.Polyline({
-				path: extp,
-				strokeColor: "#FF0000",
-				strokeOpacity: 0.7,
-				geodesic: true,
-				map: map,
-				strokeWeight: 1
-			});
-			//curve.setMap(map);
-			
-			++MapToolbar["curveCounter"];
-			curve.id = 'curve_'+ MapToolbar["curveCounter"];
-			curve.pid = pid;
-			curve.ptype = ptype;
-			curve.uid = uid; //unique id - new feature start on 01/9/2014
-			curve.mid = mid;
-			curve.Rc = Rc,
-			curve.cant = cant;
-			curve.Vd = Vd;
-			curve.Lt = Lt;
-			curve.Lc = Lc;
-			curve.Cc = Cc;
-			curve.st = st;
-			curve.ed = ed;
-			curve.h1 = h1;
-			curve.h2 = h2;
-			curve.forceSL = forceSL;
-			curve.delta = delta;
-			curve.theta = theta;
-			curve.railindex = railIndex;
-			curve.route = route;
-			curve.$el = MapToolbar.addFeatureEntry(curve.id);
-			curve.markers = new google.maps.MVCArray;	     
-			MapToolbar.features['curveTab'][curve.id] = curve;
-							
-			MapToolbar.features["lineTab"][pid].markers.getAt(mid).bdata.curve = curve.id ;
-			MapToolbar.features["lineTab"][pid].markers.getAt(mid).setDraggable(false);
-													
-			var imgurl = "images/curve-sign.png";
-			var imgurl2 = "images/curve-sign2.png";
-			var imgccurl = "images/bullet_white.png";
- 
-			var e1 = st,      
-				image = new google.maps.MarkerImage(imgurl,
-				new google.maps.Size(6, 6),
-				new google.maps.Point(0, 0),
-				new google.maps.Point(5, 5)), 
-				index =0,
-				marker = new google.maps.Marker({
-					position: st,
+									
+				var curve = new google.maps.Polyline({
+					path: extp,
+					strokeColor: "#FF0000",
+					strokeOpacity: 0.7,
+					geodesic: true,
 					map: map,
-					icon: image,
-					title: '' ,
-					note: '', // any extra note 
-					bdata: {height:'',pitch:''},
-					kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
-					sline: '',
-					lineX: '',
-					gdata: {lastpitch:'',lastheight:'',lastheightratio:''},
-					ld:0, // distance on circumference from curve start point 
-					pid:curve.id
+					strokeWeight: 1
 				});
-
-				marker.index = index;    
-				curve.markers.insertAt(index, marker);
-				curve.markers.getAt(index).title = curve.id + ' start point : ' + st;	
-
-			var e2 = ed,      
-				image= new google.maps.MarkerImage(imgurl2,
+				//curve.setMap(map);
+				
+				++MapToolbar["curveCounter"];
+				curve.id = 'curve_'+ MapToolbar["curveCounter"];
+				curve.pid = pid;
+				curve.ptype = ptype;
+				curve.uid = uid; //unique id - new feature start on 01/9/2014
+				curve.mid = mid;
+				curve.Rc = Rc,
+				curve.cant = cant;
+				curve.Vd = Vd;
+				curve.Lt = Lt;
+				curve.Lc = Lc;
+				curve.Cc = Cc;
+				curve.st = st;
+				curve.ed = ed;
+				curve.h1 = h1;
+				curve.h2 = h2;
+				curve.forceSL = forceSL;
+				curve.delta = delta;
+				curve.theta = theta;
+				curve.railindex = railIndex;
+				curve.route = route;
+				curve.$el = MapToolbar.addFeatureEntry(curve.id);
+				curve.markers = new google.maps.MVCArray;	     
+				MapToolbar.features['curveTab'][curve.id] = curve;
+								
+				MapToolbar.features["lineTab"][pid].markers.getAt(mid).bdata.curve = curve.id ;
+				MapToolbar.features["lineTab"][pid].markers.getAt(mid).setDraggable(false);
+														
+				var imgurl = "images/curve-sign.png";
+				var imgurl2 = "images/curve-sign2.png";
+				var imgccurl = "images/bullet_white.png";
+	 
+				var e1 = st,      
+					image = new google.maps.MarkerImage(imgurl,
 					new google.maps.Size(6, 6),
 					new google.maps.Point(0, 0),
 					new google.maps.Point(5, 5)), 
-				index =1,
-				marker = new google.maps.Marker({
-					position: ed,
-					map: map,
-					icon: image,
-					note: '', // any extra note 
-					bdata: {height:'',pitch:''},
-					title: '',
-					kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
-					sline: '',
-					lineX: '',
-					gdata: {lastpitch:'',lastheight:'',lastheightratio:''},
-					ld:Lc, // distance on circumference from curve start point 
-					pid:curve.id
-				});
+					index =0,
+					marker = new google.maps.Marker({
+						position: st,
+						map: map,
+						icon: image,
+						title: '' ,
+						note: '', // any extra note 
+						bdata: {height:'',pitch:''},
+						kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
+						sline: '',
+						lineX: '',
+						gdata: {lastpitch:'',lastheight:'',lastheightratio:''},
+						ld:0, // distance on circumference from curve start point 
+						pid:curve.id
+					});
+
+					marker.index = index;    
+					curve.markers.insertAt(index, marker);
+					curve.markers.getAt(index).title = curve.id + ' start point : ' + st;	
+
+				var e2 = ed,      
+					image= new google.maps.MarkerImage(imgurl2,
+						new google.maps.Size(6, 6),
+						new google.maps.Point(0, 0),
+						new google.maps.Point(5, 5)), 
+					index =1,
+					marker = new google.maps.Marker({
+						position: ed,
+						map: map,
+						icon: image,
+						note: '', // any extra note 
+						bdata: {height:'',pitch:''},
+						title: '',
+						kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
+						sline: '',
+						lineX: '',
+						gdata: {lastpitch:'',lastheight:'',lastheightratio:''},
+						ld:Lc, // distance on circumference from curve start point 
+						pid:curve.id
+					});
+					marker.index = index;    
+					curve.markers.insertAt(index, marker);
+					curve.markers.getAt(index).title = curve.id + ' end point : ' + ed;	
+					
+				var ec = Cc,      
+					image= new google.maps.MarkerImage(imgccurl,
+						new google.maps.Size(6, 6),
+						new google.maps.Point(0, 0),
+						new google.maps.Point(3, 3)), 
+					index =2,
+					marker = new google.maps.Marker({
+						position: Cc,
+						map: map,
+						icon: image,
+						note: '', // any extra note 
+						bdata: {height:'',pitch:''},
+						title: curve.id + ' center point : ' + Cc,
+						kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
+						sline: '',
+						lineX: '',
+						gdata: {lastpitch:'',lastheight:'',lastheightratio:''},
+						ld:null, // distance on circumference from curve start point 
+						pid:curve.id
+					});
 				marker.index = index;    
 				curve.markers.insertAt(index, marker);
-				curve.markers.getAt(index).title = curve.id + ' end point : ' + ed;	
-				
-			var ec = Cc,      
-				image= new google.maps.MarkerImage(imgccurl,
-					new google.maps.Size(6, 6),
-					new google.maps.Point(0, 0),
-					new google.maps.Point(3, 3)), 
-				index =2,
-				marker = new google.maps.Marker({
-					position: Cc,
-					map: map,
-					icon: image,
-					note: '', // any extra note 
-					bdata: {height:'',pitch:''},
-					title: curve.id + ' center point : ' + Cc,
-					kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
-					sline: '',
-					lineX: '',
-					gdata: {lastpitch:'',lastheight:'',lastheightratio:''},
-					ld:null, // distance on circumference from curve start point 
-					pid:curve.id
-				});
-			marker.index = index;    
-			curve.markers.insertAt(index, marker);
-			//curve.markers.getAt(index).title = curve.id + ' center point : ' + Cc;
-	
-			google.maps.event.addListener(curve, "click", function(mEvent){
-				var infoWindowTxt = 'curve Id : ' + curve.id + '(' + uid + ')';
-				infoWindowTxt += '<br><br>line id : ' + pid + ' mid : ' + mid; 
-				infoWindowTxt += '<br>radius : ' + Rc + 'm<br>design speed : ' + Vd + ' km/h<br>cant : ' + cant + ' mm' + '<br>curve length : ' + (Math.round(Lc*10000)/10000) + '<br>tangent length : ' + (Math.round(Lt*10000)/10000) + ' m<br>';
-
-				var lat0 = mEvent.latLng.lat();
-				var lng0 = mEvent.latLng.lng();
-				
-				infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="2"><tr>' + '<td width="24"><img src="images/remove line.png" width="20" height="20" title="Remove line" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\''+ curve.id + '\');"></td><td>&nbsp;&nbsp;</td>'; 
-
-				infoWindowTxt += '<td width="24"><img src="images/line+point.png" width="20" height="20" title="Add new point to current line" style="cursor: pointer;" onclick="btnAddMarker2Polyline(\''+ curve.id + '\',\'' + lat0 + '\',\'' + lng0 + '\');"></td>';
+				//curve.markers.getAt(index).title = curve.id + ' center point : ' + Cc;
 		
-				infoWindowTxt += '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
+				google.maps.event.addListener(curve, "click", function(mEvent){
+					var infoWindowTxt = 'curve Id : ' + curve.id + '(' + uid + ')';
+					infoWindowTxt += '<br><br>line id : ' + pid + ' mid : ' + mid; 
+					infoWindowTxt += '<br>radius : ' + Rc + 'm<br>design speed : ' + Vd + ' km/h<br>cant : ' + cant + ' mm' + '<br>curve length : ' + (Math.round(Lc*10000)/10000) + '<br>tangent length : ' + (Math.round(Lt*10000)/10000) + ' m<br>';
+
+					var lat0 = mEvent.latLng.lat();
+					var lng0 = mEvent.latLng.lng();
+					
+					infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="2"><tr>' + '<td width="24"><img src="images/remove line.png" width="20" height="20" title="Remove line" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\''+ curve.id + '\');"></td><td>&nbsp;&nbsp;</td>'; 
+
+					infoWindowTxt += '<td width="24"><img src="images/line+point.png" width="20" height="20" title="Add new point to current line" style="cursor: pointer;" onclick="btnAddMarker2Polyline(\''+ curve.id + '\',\'' + lat0 + '\',\'' + lng0 + '\');"></td>';
 			
-				infoWindowTxt += '<td><img src="images/sticky_note_pencil.png" title="Add Note" width="16" height="16" style="cursor: pointer;" onclick="curveNote(\'' + curve.id + '\');"></td>';
-			
-				infoWindowTxt += '<td><img src="images/xfce4_settings.png" title="Setting" width="16" height="16" style="cursor: pointer;" onclick="curveSetting(\'' + curve.id + '\');"></td>';
-			
-				infoWindowTxt += '</tr></table>';    			
-	
-				var infowindow = new google.maps.InfoWindow({
-					content: infoWindowTxt,
-					position: mEvent.latLng
+					infoWindowTxt += '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
+				
+					infoWindowTxt += '<td><img src="images/sticky_note_pencil.png" title="Add Note" width="16" height="16" style="cursor: pointer;" onclick="curveNote(\'' + curve.id + '\');"></td>';
+				
+					infoWindowTxt += '<td><img src="images/xfce4_settings.png" title="Setting" width="16" height="16" style="cursor: pointer;" onclick="curveSetting(\'' + curve.id + '\');"></td>';
+				
+					infoWindowTxt += '</tr></table>';    			
+		
+					var infowindow = new google.maps.InfoWindow({
+						content: infoWindowTxt,
+						position: mEvent.latLng
+					});
+
+					infowindow.open(map);	
+
+				});	
+
+				/*
+					teks += ',' + cpoly.markers.getAt(mi).getPosition().lat() + ";" +cpoly.markers.getAt(mi).getPosition().lng();
+
+					//teks += ';' +  cpoly.markers.getAt(mi).pid;
+					teks += ';' +  cpoly.markers.getAt(mi).index;
+					teks += ';' +  cpoly.markers.getAt(mi).note.replace(',','-').replace('\n',' - ');
+					teks += ';' +  cpoly.markers.getAt(mi).ld;
+					teks += ';' +  cpoly.markers.getAt(mi).title;
+					teks += ';' +  cpoly.markers.getAt(mi).sline;
+					teks += ';' +  cpoly.markers.getAt(mi).lineX;
+					
+					//bdata
+					teks += ';' + cpoly.markers.getAt(mi).bdata.height;
+					teks += '§' + cpoly.markers.getAt(mi).bdata.pitch;
+
+					//kdata
+					teks += ';' + cpoly.markers.getAt(mi).kdata.bridge;
+					teks += '§' + cpoly.markers.getAt(mi).kdata.overbridge;
+					teks += '§' + cpoly.markers.getAt(mi).kdata.river;
+					teks += '§' + cpoly.markers.getAt(mi).kdata.ground;
+					teks += '§' + cpoly.markers.getAt(mi).kdata.flyover;
+					teks += '§' + cpoly.markers.getAt(mi).kdata.tunnel;
+					teks += '§' + cpoly.markers.getAt(mi).kdata.pole;
+					teks += '§' + cpoly.markers.getAt(mi).kdata.dike;
+					teks += '§' + cpoly.markers.getAt(mi).kdata.cut;
+					teks += '§' + cpoly.markers.getAt(mi).kdata.underground;
+					teks += '§' + cpoly.markers.getAt(mi).kdata.form;
+					teks += '§' + cpoly.markers.getAt(mi).kdata.roadcross;
+					teks += '§' + cpoly.markers.getAt(mi).kdata.crack;
+					teks += '§' + cpoly.markers.getAt(mi).kdata.beacon;
+
+					//gdata
+					teks += ';' + cpoly.markers.getAt(mi).gdata.lastpitch;
+					teks += '§' + cpoly.markers.getAt(mi).gdata.lastheight;
+					teks += '§' + cpoly.markers.getAt(mi).gdata.lastheightratio;							
+
+				*/	
+				//index=3;
+				
+				$( "#mainload" ).progressbar({
+					value: Math.round((i/(rowsData.length-1))*100)
 				});
 
-				infowindow.open(map);	
+							
+				for (a=20; a<rd.length; a++) {
+					var part = rd[a].split(';');
+					
+					//var latlng = new google.maps.LatLng(parseFloat(part[0]),parseFloat(part[1]));
+					//index = parseInt(part[2]);
+					if (parseInt(part[2]) > 2) { btnAddMarker2Polyline(curve.id,parseFloat(part[0]),parseFloat(part[1])); }
+					//MapToolbar.addPoint(latlng, curve, index);
+					var idx = curve.markers.length - 1;
+					//bdata
+					var bpart = part[8].split('§');
+					//kdata
+					var kpart = part[9].split('§');
+					//gdata
+					var gpart = part[10].split('§');
+					//curve.markers.getAt(idx).pid = ;
+					//curve.markers.getAt(idx).index = part[2];
+					curve.markers.getAt(idx).note = part[3].replace(',','-').replace('\n',' - ');
+					curve.markers.getAt(idx).ld = parseFloat(part[4]);
+					curve.markers.getAt(idx).title = part[5];
+					curve.markers.getAt(idx).sline = part[6];
+					curve.markers.getAt(idx).lineX = part[7];
+					
+					//bdata
+					if (bpart[0] != '') { curve.markers.getAt(idx).bdata.height = parseFloat(bpart[0]); }
+					if (bpart[1] != '') { curve.markers.getAt(idx).bdata.pitch = parseFloat(bpart[1]); }
 
-			});	
+					//kdata
+					if (kpart[0] != '') {
+						curve.markers.getAt(idx).kdata.bridge = kpart[0];
+						var image0 = new google.maps.MarkerImage('images/bridge_icon.png',
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3));
+						curve.markers.getAt(idx).setIcon(image0);	
+					}
+					if (kpart[1] != '') {
+						curve.markers.getAt(idx).kdata.overbridge = kpart[1];
+						var image1 = new google.maps.MarkerImage('images/overbridge_icon.png',
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3));
+						curve.markers.getAt(idx).setIcon(image1);	
+					}
 
-			/*
-				teks += ',' + cpoly.markers.getAt(mi).getPosition().lat() + ";" +cpoly.markers.getAt(mi).getPosition().lng();
+					curve.markers.getAt(idx).kdata.river = kpart[2];
 
-				//teks += ';' +  cpoly.markers.getAt(mi).pid;
-				teks += ';' +  cpoly.markers.getAt(mi).index;
-				teks += ';' +  cpoly.markers.getAt(mi).note.replace(',','-').replace('\n',' - ');
-				teks += ';' +  cpoly.markers.getAt(mi).ld;
-				teks += ';' +  cpoly.markers.getAt(mi).title;
-				teks += ';' +  cpoly.markers.getAt(mi).sline;
-				teks += ';' +  cpoly.markers.getAt(mi).lineX;
-				
-				//bdata
-				teks += ';' + cpoly.markers.getAt(mi).bdata.height;
-				teks += '§' + cpoly.markers.getAt(mi).bdata.pitch;
+					if (kpart[3] != '') {
+						curve.markers.getAt(idx).kdata.ground = kpart[3];
+						var image3 = new google.maps.MarkerImage('images/ground8.png',
+							new google.maps.Size(8, 8),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(4, 4));
+						curve.markers.getAt(idx).setIcon(image3);	
+					} 
+					if (kpart[4] != '') {
+						curve.markers.getAt(idx).kdata.flyover = kpart[4];
+						var image4 = new google.maps.MarkerImage('images/flyover_icon.png',
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3));
+						curve.markers.getAt(idx).setIcon(image4);	
+					} 
+					if (kpart[5] != '') {
+						curve.markers.getAt(idx).kdata.tunnel = kpart[5];
+						var image5 = new google.maps.MarkerImage('images/tunnel_icon.png',
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3));
+						curve.markers.getAt(idx).setIcon(image5); 	
+					} 
+					if (kpart[6] != '') {
+						curve.markers.getAt(idx).kdata.pole = kpart[6];
+					
+					} 
+					if (kpart[7] != '') {
+						curve.markers.getAt(idx).kdata.dike = kpart[7];
+						var image7 = new google.maps.MarkerImage('images/dike_icon.png',
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3));
+						curve.markers.getAt(idx).setIcon(image7);	
+					} 
+					if (kpart[8] != '') {
+						curve.markers.getAt(idx).kdata.cut = kpart[8];
+						var image8 = new google.maps.MarkerImage('images/hillcut_icon.png',
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3));
+						curve.markers.getAt(idx).setIcon(image8);	
+					} 
+					if (kpart[9] != '') {
+						curve.markers.getAt(idx).kdata.underground = kpart[9];
+					
+					} 
+					if (kpart[10] != '') {
+						curve.markers.getAt(idx).kdata.form = kpart[10];
+						var image10 = new google.maps.MarkerImage('images/form_icon.png',
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3));
+						curve.markers.getAt(idx).setIcon(image10);	
+					} 
+					if (kpart[11] != '') {
+						curve.markers.getAt(idx).kdata.roadcross = kpart[11];
+						var image11 = new google.maps.MarkerImage('images/roadcross_icon.png',
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3));
+						curve.markers.getAt(idx).setIcon(image11);	
+					} 
+					if (kpart[12] != '') {
+						curve.markers.getAt(idx).kdata.crack = kpart[12];
+					
+					} 
+					if (kpart[13] != '') {
+						curve.markers.getAt(idx).kdata.beacon = kpart[13];
+					
+					}
 
-				//kdata
-				teks += ';' + cpoly.markers.getAt(mi).kdata.bridge;
-				teks += '§' + cpoly.markers.getAt(mi).kdata.overbridge;
-				teks += '§' + cpoly.markers.getAt(mi).kdata.river;
-				teks += '§' + cpoly.markers.getAt(mi).kdata.ground;
-				teks += '§' + cpoly.markers.getAt(mi).kdata.flyover;
-				teks += '§' + cpoly.markers.getAt(mi).kdata.tunnel;
-				teks += '§' + cpoly.markers.getAt(mi).kdata.pole;
-				teks += '§' + cpoly.markers.getAt(mi).kdata.dike;
-				teks += '§' + cpoly.markers.getAt(mi).kdata.cut;
-				teks += '§' + cpoly.markers.getAt(mi).kdata.underground;
-				teks += '§' + cpoly.markers.getAt(mi).kdata.form;
-				teks += '§' + cpoly.markers.getAt(mi).kdata.roadcross;
-				teks += '§' + cpoly.markers.getAt(mi).kdata.crack;
-				teks += '§' + cpoly.markers.getAt(mi).kdata.beacon;
-
-				//gdata
-				teks += ';' + cpoly.markers.getAt(mi).gdata.lastpitch;
-				teks += '§' + cpoly.markers.getAt(mi).gdata.lastheight;
-				teks += '§' + cpoly.markers.getAt(mi).gdata.lastheightratio;							
-
-			*/	
-			//index=3;
-			
-			$( "#mainload" ).progressbar({
-				value: Math.round((i/(rowsData.length-1))*100)
-			});
-
-						
-			for (a=20; a<rd.length; a++) {
-				var part = rd[a].split(';');
-				
-				//var latlng = new google.maps.LatLng(parseFloat(part[0]),parseFloat(part[1]));
-				index = parseInt(part[2]);
-				if (parseInt(part[2]) > 2) { btnAddMarker2Polyline(curve.id,parseFloat(part[0]),parseFloat(part[1])); }
-				//MapToolbar.addPoint(latlng, curve, index);
-				
-				//bdata
-				var bpart = part[8].split('§');
-				//kdata
-				var kpart = part[9].split('§');
-				//gdata
-				var gpart = part[10].split('§');
-				//curve.markers.getAt(index).pid = ;
-				//curve.markers.getAt(index).index = part[2];
-				curve.markers.getAt(index).note = part[3].replace(',','-').replace('\n',' - ');
-				curve.markers.getAt(index).ld = parseFloat(part[4]);
-				curve.markers.getAt(index).title = part[5];
-				curve.markers.getAt(index).sline = part[6];
-				curve.markers.getAt(index).lineX = part[7];
-				
-				//bdata
-				curve.markers.getAt(index).bdata.height = bpart[0];
-				curve.markers.getAt(index).bdata.pitch = bpart[1];
-
-				//kdata
-				if (kpart[0] != '') {
-					curve.markers.getAt(index).kdata.bridge = kpart[0];
-					var image0 = new google.maps.MarkerImage('images/bridge_icon.png',
-						new google.maps.Size(6, 6),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(3, 3));
-					curve.markers.getAt(index).setIcon(image0);	
+					//gdata
+					curve.markers.getAt(idx).gdata.lastpitch = gpart[0];
+					curve.markers.getAt(idx).gdata.lastheight = gpart[1];
+					curve.markers.getAt(idx).gdata.lastheightratio = gpart[2];
+					
+					$( "#subload" ).progressbar({
+						value: Math.round(((a-20)/(rd.length-1))*100)
+					});	
 				}
-				if (kpart[1] != '') {
-					curve.markers.getAt(index).kdata.overbridge = kpart[1];
-					var image1 = new google.maps.MarkerImage('images/overbridge_icon.png',
-						new google.maps.Size(6, 6),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(3, 3));
-					curve.markers.getAt(index).setIcon(image1);	
-				}
-
-				curve.markers.getAt(index).kdata.river = kpart[2];
-
-				if (kpart[3] != '') {
-					curve.markers.getAt(index).kdata.ground = kpart[3];
-					var image3 = new google.maps.MarkerImage('images/ground8.png',
-						new google.maps.Size(8, 8),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(4, 4));
-					curve.markers.getAt(index).setIcon(image3);	
-				} 
-				if (kpart[4] != '') {
-					curve.markers.getAt(index).kdata.flyover = kpart[4];
-					var image4 = new google.maps.MarkerImage('images/flyover_icon.png',
-						new google.maps.Size(6, 6),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(3, 3));
-					curve.markers.getAt(index).setIcon(image4);	
-				} 
-				if (kpart[5] != '') {
-					curve.markers.getAt(index).kdata.tunnel = kpart[5];
-					var image5 = new google.maps.MarkerImage('images/tunnel_icon.png',
-						new google.maps.Size(6, 6),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(3, 3));
-					curve.markers.getAt(index).setIcon(image5); 	
-				} 
-				if (kpart[6] != '') {
-					curve.markers.getAt(index).kdata.pole = kpart[6];
 				
-				} 
-				if (kpart[7] != '') {
-					curve.markers.getAt(index).kdata.dike = kpart[7];
-					var image7 = new google.maps.MarkerImage('images/dike_icon.png',
-						new google.maps.Size(6, 6),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(3, 3));
-					curve.markers.getAt(index).setIcon(image7);	
-				} 
-				if (kpart[8] != '') {
-					curve.markers.getAt(index).kdata.cut = kpart[8];
-					var image8 = new google.maps.MarkerImage('images/hillcut_icon.png',
-						new google.maps.Size(6, 6),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(3, 3));
-					curve.markers.getAt(index).setIcon(image8);	
-				} 
-				if (kpart[9] != '') {
-					curve.markers.getAt(index).kdata.underground = kpart[9];
-				
-				} 
-				if (kpart[10] != '') {
-					curve.markers.getAt(index).kdata.form = kpart[10];
-					var image10 = new google.maps.MarkerImage('images/form_icon.png',
-						new google.maps.Size(6, 6),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(3, 3));
-					curve.markers.getAt(index).setIcon(image10);	
-				} 
-				if (kpart[11] != '') {
-					curve.markers.getAt(index).kdata.roadcross = kpart[11];
-					var image11 = new google.maps.MarkerImage('images/roadcross_icon.png',
-						new google.maps.Size(6, 6),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(3, 3));
-					curve.markers.getAt(index).setIcon(image11);	
-				} 
-				if (kpart[12] != '') {
-					curve.markers.getAt(index).kdata.crack = kpart[12];
-				
-				} 
-				if (kpart[13] != '') {
-					curve.markers.getAt(index).kdata.beacon = kpart[13];
-				
-				}
-
-				//gdata
-				curve.markers.getAt(index).gdata.lastpitch = gpart[0];
-				curve.markers.getAt(index).gdata.lastheight = gpart[1];
-				curve.markers.getAt(index).gdata.lastheightratio = gpart[2];
-				
-				$( "#subload" ).progressbar({
-					value: Math.round(((a-20)/(rd.length-1))*100)
-				});	
-			}
-			
-		} 
+			} 
+		}	
+	
+	} catch(err) {
+		console.log('[Error] : (curve)\n' + err + '\n\n');
 	}
+
 	i++;
 
 	if (i < rowsData.length) {		
 		setTimeout(function() { processCurve(rowsData, i); }, 50 );		
 	} else {
 		$( "#loadprocess" ).text($.lang.convert('Loading : transition curves ...'));	
-		setTimeout(function() { processTCurve(rowsData, 1); }, 100 );
+		setTimeout(function() { processTCurve(rowsData, 1); }, 50 );
 	}	
 }
 
 function processTCurve(rowsData, i) {
-	var rd = rowsData[i].split(",");
-	var dname = rd[0];				    					
-	if (rd[2] == 'tcurve') {
-		var dahada = false;
-		for(var cid in MapToolbar.features['tcurveTab'] ) {
-			if (MapToolbar.features['tcurveTab'][cid].uid == rd[1]) {
-				dahada = true;
-				break;
-			}
-		}	
-		if (!dahada) {
-		/*
-			teks += ',' + cpoly.uid;
-			teks += ',' + cpoly.ptype;
-			teks += ',' + cpoly.pid;
-			teks += ',' + cpoly.mid;
-			teks += ',' + cpoly.tctype;
-			teks += ',' + cpoly.note;
-			teks += ',' + cpoly.Rc;
-			teks += ',' + cpoly.cant;
-			teks += ',' + cpoly.Vd;
-			teks += ',' + cpoly.Ls;
-			teks += ',' + cpoly.Lc;
-			teks += ',' + cpoly.K;
-			teks += ',' + cpoly.TotalX;
-			teks += ',' + cpoly.TotalY;
-			teks += ',' + cpoly.Cc.lat() + ';' + cpoly.Cc.lng();
-			teks += ',' + cpoly.Ttst.lat() + ';' + cpoly.Ttst.lng();
-			teks += ',' + cpoly.Tted.lat() + ';' + cpoly.Tted.lng();
-			teks += ',' + cpoly.Tcst.lat() + ';' + cpoly.Tcst.lng();
-			teks += ',' + cpoly.Tced.lat() + ';' + cpoly.Tced.lng();
-			teks += ',' + cpoly.h1;
-			teks += ',' + cpoly.h2;
-			teks += ',' + cpoly.TL;
-			teks += ',' + cpoly.shift;
-			teks += ',' + cpoly.forceSL;
-			teks += ',' + cpoly.delta;
-			teks += ',' + cpoly.theta;
-			teks += ',' + cpoly.deltaS;
-			teks += ',' + cpoly.deltaC;
-			teks += ',' + cpoly.railindex;
-			teks += ',' + cpoly.route;
-		*/	
-			var uid = rd[1];
-			var ptype = rd[2];
-			var pid = '';
-			if (rd[3] != '') {
-				var newpid = '';
-				for (r=0;r<oldnewid.length;r++) {
-					if (oldnewid[r][0] == rd[3]) {
-						newpid = rd[3].replace(oldnewid[r][0],oldnewid[r][2]);
-						break;
-					}									
+	try {
+		var rd = rowsData[i].split(",");
+		var dname = rd[0];				    					
+		if (rd[2] == 'tcurve') {
+			var dahada = false;
+			for(var cid in MapToolbar.features['tcurveTab'] ) {
+				if (MapToolbar.features['tcurveTab'][cid].uid == rd[1]) {
+					dahada = true;
+					break;
 				}
-				if (newpid !='') {
-					pid = newpid;
+			}	
+			if (!dahada) {
+			/*
+				teks += ',' + cpoly.uid;
+				teks += ',' + cpoly.ptype;
+				teks += ',' + cpoly.pid;
+				teks += ',' + cpoly.mid;
+				teks += ',' + cpoly.tctype;
+				teks += ',' + cpoly.note;
+				teks += ',' + cpoly.Rc;
+				teks += ',' + cpoly.cant;
+				teks += ',' + cpoly.Vd;
+				teks += ',' + cpoly.Ls;
+				teks += ',' + cpoly.Lc;
+				teks += ',' + cpoly.K;
+				teks += ',' + cpoly.TotalX;
+				teks += ',' + cpoly.TotalY;
+				teks += ',' + cpoly.Cc.lat() + ';' + cpoly.Cc.lng();
+				teks += ',' + cpoly.Ttst.lat() + ';' + cpoly.Ttst.lng();
+				teks += ',' + cpoly.Tted.lat() + ';' + cpoly.Tted.lng();
+				teks += ',' + cpoly.Tcst.lat() + ';' + cpoly.Tcst.lng();
+				teks += ',' + cpoly.Tced.lat() + ';' + cpoly.Tced.lng();
+				teks += ',' + cpoly.h1;
+				teks += ',' + cpoly.h2;
+				teks += ',' + cpoly.TL;
+				teks += ',' + cpoly.shift;
+				teks += ',' + cpoly.forceSL;
+				teks += ',' + cpoly.delta;
+				teks += ',' + cpoly.theta;
+				teks += ',' + cpoly.deltaS;
+				teks += ',' + cpoly.deltaC;
+				teks += ',' + cpoly.railindex;
+				teks += ',' + cpoly.route;
+			*/	
+				var uid = rd[1];
+				var ptype = rd[2];
+				var pid = '';
+				if (rd[3] != '') {
+					var newpid = '';
+					for (r=0;r<oldnewid.length;r++) {
+						if (oldnewid[r][0] == rd[3]) {
+							newpid = rd[3].replace(oldnewid[r][0],oldnewid[r][2]);
+							break;
+						}									
+					}
+					if (newpid !='') {
+						pid = newpid;
+					} else {
+						pid = rd[3];
+					}
+				}			
+				var mid = parseInt(rd[4]);
+				var tctype = rd[5];
+				var note = rd[6];
+				var Rc = parseFloat(rd[7]);
+				var cant = parseInt(rd[8]);
+				var Vd = parseInt(rd[9]);
+				var Ls = parseFloat(rd[10]);
+				var Lc = parseFloat(rd[11]);
+				var K = parseFloat(rd[12]);
+				var TotalX = parseFloat(rd[13]);
+				var TotalY = parseFloat(rd[14]);
+				var Cc = new google.maps.LatLng(rd[15].split(';')[0],rd[15].split(';')[1]);
+				var Ttst = new google.maps.LatLng(rd[16].split(';')[0],rd[16].split(';')[1]);
+				var Tted = new google.maps.LatLng(rd[17].split(';')[0],rd[17].split(';')[1]);
+				var Tcst = new google.maps.LatLng(rd[18].split(';')[0],rd[18].split(';')[1]);
+				var Tced = new google.maps.LatLng(rd[19].split(';')[0],rd[19].split(';')[1]);
+				var h1 = parseFloat(rd[20]);
+				var h2 = parseFloat(rd[21]);
+				var TL = parseFloat(rd[22]);
+				var shift = parseFloat(rd[23]);
+				var forceSL = (rd[24] == 'true')? true:false;
+				var delta = parseFloat(rd[25]);
+				var theta = parseFloat(rd[26]);
+				var deltaS = parseFloat(rd[27]);
+				var deltaC = parseFloat(rd[28]);
+				var railIndex = parseInt(rd[29]);
+				var route = rd[30];
+				
+				var dir = (Rc < 0) ? -1: 1;
+				var preR = Math.abs(Rc);
+				
+				var tarr = [];
+
+						
+				if (tctype == 'cubic') {
+					//cubic parabola
+					var parts = 30; // any value, higher = more precision
+					var ts = Ls / parts; //transition segment divided by any value (for plotting)
+										 
+					//plotting entering spiral curve
+					for (var i=0; (i <= parts); i++) {     
+						if (i == 0) {
+							tarr.push(Ttst);
+						} else if (i== parts) {
+							tarr.push(Tcst);   	  		 
+						} else {
+							var yi = google.maps.geometry.spherical.computeOffset(Ttst, ts * i, h1);
+							var ycd = (Math.pow((ts * i),3))/(6 * preR * Ls);
+							var yd = google.maps.geometry.spherical.computeOffset(yi, ycd , h1+(90 * dir));
+							var xo = google.maps.geometry.spherical.computeHeading(tarr[i-1],yd);
+							var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[i-1],yd);
+							var xi = google.maps.geometry.spherical.computeOffset(tarr[i-1], xd, xo);
+							tarr.push(xi);
+						}
+					}
+					// --- end		
+					
+					var points = Math.ceil(Lc/25);
+					var iB = google.maps.geometry.spherical.computeHeading(Cc,Tcst);
+					var fB = google.maps.geometry.spherical.computeHeading(Cc,Tced);
+				
+					var br = fB - iB;
+					if (br >  180) {br -= 360;}
+					if (br < -180) {br += 360;}
+				
+					var deltaBearing = br/points;
+				
+					//plotting circular curve
+					for (var i=0; (i < points+1); i++) {     
+						tarr.push(google.maps.geometry.spherical.computeOffset(Cc, preR, iB + i*deltaBearing)); 
+					}	
+					// --- end
+				
+					//plotting exiting spiral curve
+					for (var i=parts; (i >= 0); i--) {     
+						if (i == 0) {
+							tarr.push(Tted); 		  		 	 
+						} else if (i== parts) {		
+							tarr.push(Tced);  	  		 
+						} else {
+							var yi = google.maps.geometry.spherical.computeOffset(Tted, -ts * i, h2);
+							var ycd = (Math.pow((ts * i),3))/(6 * preR * Ls);
+							var yd = google.maps.geometry.spherical.computeOffset(yi, -ycd , h2-(90 * dir));
+							var xo = google.maps.geometry.spherical.computeHeading(tarr[i-1],yd);
+							var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[i-1],yd);
+							var xi = google.maps.geometry.spherical.computeOffset(tarr[i-1], xd, xo);
+							tarr.push(xi);
+						}
+					}
+					// --- end
+				
+					// cubic parabola plotter end
+							
 				} else {
-					pid = rd[3];
-				}
-			}			
-			var mid = parseInt(rd[4]);
-			var tctype = rd[5];
-			var note = rd[6];
-			var Rc = parseFloat(rd[7]);
-			var cant = parseInt(rd[8]);
-			var Vd = parseInt(rd[9]);
-			var Ls = parseFloat(rd[10]);
-			var Lc = parseFloat(rd[11]);
-			var K = parseFloat(rd[12]);
-			var TotalX = parseFloat(rd[13]);
-			var TotalY = parseFloat(rd[14]);
-			var Cc = new google.maps.LatLng(rd[15].split(';')[0],rd[15].split(';')[1]);
-			var Ttst = new google.maps.LatLng(rd[16].split(';')[0],rd[16].split(';')[1]);
-			var Tted = new google.maps.LatLng(rd[17].split(';')[0],rd[17].split(';')[1]);
-			var Tcst = new google.maps.LatLng(rd[18].split(';')[0],rd[18].split(';')[1]);
-			var Tced = new google.maps.LatLng(rd[19].split(';')[0],rd[19].split(';')[1]);
-			var h1 = parseFloat(rd[20]);
-			var h2 = parseFloat(rd[21]);
-			var TL = parseFloat(rd[22]);
-			var shift = parseFloat(rd[23]);
-			var forceSL = (rd[24] == 'true')? true:false;
-			var delta = parseFloat(rd[25]);
-			var theta = parseFloat(rd[26]);
-			var deltaS = parseFloat(rd[27]);
-			var deltaC = parseFloat(rd[28]);
-			var railIndex = parseInt(rd[29]);
-			var route = rd[30];
-			
-			var dir = (Rc < 0) ? -1: 1;
-			var preR = Math.abs(Rc);
-			
-			var tarr = [];
-
-					
-			if (tctype == 'cubic') {
-				//cubic parabola
-				var parts = 30; // any value, higher = more precision
-				var ts = Ls / parts; //transition segment divided by any value (for plotting)
-									 
-				//plotting entering spiral curve
-				for (var i=0; (i <= parts); i++) {     
-					if (i == 0) {
-						tarr.push(Ttst);
-					} else if (i== parts) {
-						tarr.push(Tcst);   	  		 
-					} else {
-						var yi = google.maps.geometry.spherical.computeOffset(Ttst, ts * i, h1);
-						var ycd = (Math.pow((ts * i),3))/(6 * preR * Ls);
-						var yd = google.maps.geometry.spherical.computeOffset(yi, ycd , h1+(90 * dir));
-						var xo = google.maps.geometry.spherical.computeHeading(tarr[i-1],yd);
-						var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[i-1],yd);
-						var xi = google.maps.geometry.spherical.computeOffset(tarr[i-1], xd, xo);
-						tarr.push(xi);
-					}
-				}
-				// --- end		
-				
-				var points = Math.ceil(Lc/25);
-				var iB = google.maps.geometry.spherical.computeHeading(Cc,Tcst);
-				var fB = google.maps.geometry.spherical.computeHeading(Cc,Tced);
-			
-				var br = fB - iB;
-				if (br >  180) {br -= 360;}
-				if (br < -180) {br += 360;}
-			
-				var deltaBearing = br/points;
-			
-				//plotting circular curve
-				for (var i=0; (i < points+1); i++) {     
-					tarr.push(google.maps.geometry.spherical.computeOffset(Cc, preR, iB + i*deltaBearing)); 
-				}	
-				// --- end
-			
-				//plotting exiting spiral curve
-				for (var i=parts; (i >= 0); i--) {     
-					if (i == 0) {
-						tarr.push(Tted); 		  		 	 
-					} else if (i== parts) {		
-						tarr.push(Tced);  	  		 
-					} else {
-						var yi = google.maps.geometry.spherical.computeOffset(Tted, -ts * i, h2);
-						var ycd = (Math.pow((ts * i),3))/(6 * preR * Ls);
-						var yd = google.maps.geometry.spherical.computeOffset(yi, -ycd , h2-(90 * dir));
-						var xo = google.maps.geometry.spherical.computeHeading(tarr[i-1],yd);
-						var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[i-1],yd);
-						var xi = google.maps.geometry.spherical.computeOffset(tarr[i-1], xd, xo);
-						tarr.push(xi);
-					}
-				}
-				// --- end
-			
-				// cubic parabola plotter end
+					//halfsine tangent	
+					var X2_2PI2 = Math.pow(TotalX,2)/(2*Math.pow(Math.PI,2));
+					var parts = 30; // any value, higher = more precision on plotting
+					var ts = Ls / parts; // TotalX = full length of transition by assumption (see Cubic Parabola calculation), ntc new transition segment divided by any value
+													
+					for (var i=0; (i <= parts); i++) {     
+						if (i == 0) {
+							tarr.push(Ttst);
+						} else if (i== parts) {
+							tarr.push(Tcst);   	  		 
+						} else {
+							var yi = google.maps.geometry.spherical.computeOffset(Ttst, ts * i, h1);
+							var ycd = (1/preR)*((Math.pow(ts * i,2)/4)-X2_2PI2*(1-Math.cos((Math.PI * ts * i)/TotalX)));
+							var yd = google.maps.geometry.spherical.computeOffset(yi, ycd , h1+(90 * dir));
+							var xo = google.maps.geometry.spherical.computeHeading(tarr[i-1],yd);
+							var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[i-1],yd);
+							var xi = google.maps.geometry.spherical.computeOffset(tarr[i-1], xd, xo);
+							tarr.push(xi);
+						}
+					}	
 						
-			} else {
-				//halfsine tangent	
-				var X2_2PI2 = Math.pow(TotalX,2)/(2*Math.pow(Math.PI,2));
-				var parts = 30; // any value, higher = more precision on plotting
-				var ts = Ls / parts; // TotalX = full length of transition by assumption (see Cubic Parabola calculation), ntc new transition segment divided by any value
-									 			
-				for (var i=0; (i <= parts); i++) {     
-					if (i == 0) {
-						tarr.push(Ttst);
-					} else if (i== parts) {
-						tarr.push(Tcst);   	  		 
-					} else {
-						var yi = google.maps.geometry.spherical.computeOffset(Ttst, ts * i, h1);
-						var ycd = (1/preR)*((Math.pow(ts * i,2)/4)-X2_2PI2*(1-Math.cos((Math.PI * ts * i)/TotalX)));
-						var yd = google.maps.geometry.spherical.computeOffset(yi, ycd , h1+(90 * dir));
-						var xo = google.maps.geometry.spherical.computeHeading(tarr[i-1],yd);
-						var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[i-1],yd);
-						var xi = google.maps.geometry.spherical.computeOffset(tarr[i-1], xd, xo);
-						tarr.push(xi);
+					var points = Math.ceil(Lc/25);
+					var iB = google.maps.geometry.spherical.computeHeading(Cc,Tcst);
+					var fB = google.maps.geometry.spherical.computeHeading(Cc,Tced);
+				
+					var br = fB - iB;
+					if (br >  180) {br -= 360;}
+					if (br < -180) {br += 360;}
+				
+					var deltaBearing = br/points;
+				
+					for (var i=0; (i < points+1); i++) {     
+						tarr.push(google.maps.geometry.spherical.computeOffset(Cc, preR, iB + i*deltaBearing)); 
+					}	
+				
+					for (var i=parts; (i >= 0); i--) {     
+						if (i == 0) {
+							tarr.push(Tted); 		  		 	 
+						} else if (i== parts) {		
+							tarr.push(Tced);  	  		 
+						} else {
+							var yi = google.maps.geometry.spherical.computeOffset(Tted, -ts * i, h2);
+							var ycd = (1/preR)*((Math.pow(ts * i,2)/4)-X2_2PI2*(1-Math.cos((Math.PI * ts * i)/TotalX)));
+							var yd = google.maps.geometry.spherical.computeOffset(yi, -ycd , h2-(90 * dir));
+							var xo = google.maps.geometry.spherical.computeHeading(tarr[i-1],yd);
+							var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[i-1],yd);
+							var xi = google.maps.geometry.spherical.computeOffset(tarr[i-1], xd, xo);
+							tarr.push(xi);
+						}
 					}
-				}	
+
+					// halfsine curve plotter end
 					
-				var points = Math.ceil(Lc/25);
-				var iB = google.maps.geometry.spherical.computeHeading(Cc,Tcst);
-				var fB = google.maps.geometry.spherical.computeHeading(Cc,Tced);
-			
-				var br = fB - iB;
-				if (br >  180) {br -= 360;}
-				if (br < -180) {br += 360;}
-			
-				var deltaBearing = br/points;
-			
-				for (var i=0; (i < points+1); i++) {     
-					tarr.push(google.maps.geometry.spherical.computeOffset(Cc, preR, iB + i*deltaBearing)); 
-				}	
-			
-				for (var i=parts; (i >= 0); i--) {     
-					if (i == 0) {
-						tarr.push(Tted); 		  		 	 
-					} else if (i== parts) {		
-						tarr.push(Tced);  	  		 
-					} else {
-						var yi = google.maps.geometry.spherical.computeOffset(Tted, -ts * i, h2);
-						var ycd = (1/preR)*((Math.pow(ts * i,2)/4)-X2_2PI2*(1-Math.cos((Math.PI * ts * i)/TotalX)));
-						var yd = google.maps.geometry.spherical.computeOffset(yi, -ycd , h2-(90 * dir));
-						var xo = google.maps.geometry.spherical.computeHeading(tarr[i-1],yd);
-						var xd = google.maps.geometry.spherical.computeDistanceBetween(tarr[i-1],yd);
-						var xi = google.maps.geometry.spherical.computeOffset(tarr[i-1], xd, xo);
-						tarr.push(xi);
-					}
+				
 				}
 
-				// halfsine curve plotter end
-				
-			
-			}
+				var  color = MapToolbar.getColor(true),
+					tcurve = new google.maps.Polyline({
+					path: tarr,
+					strokeColor: "#00E600",
+					strokeOpacity: 0.7,
+					geodesic: true,
+					map: map,
+					strokeWeight: 1
+				});
+									
+				++MapToolbar["tcurveCounter"];
+				tcurve.id = 'tcurve_'+ MapToolbar["tcurveCounter"];
+				tcurve.uid = uid; //unique id - new feature start on 01/9/2014
+				tcurve.pid = pid;
+				tcurve.mid = mid;
+				tcurve.ptype = 'tcurve';
+				tcurve.tctype = tctype;
+				tcurve.note = ''; 
+				tcurve.Rc = Rc,
+				tcurve.cant = cant;
+				tcurve.Vd = Vd;
+				tcurve.Ls = Ls;
+				tcurve.Lc = Lc;
+				tcurve.K = K;
+				tcurve.TotalX = TotalX;
+				tcurve.TotalY = TotalY;
+				tcurve.Cc = Cc;
+				tcurve.Ttst = Ttst;
+				tcurve.Tted = Tted;
+				tcurve.Tcst = Tcst;
+				tcurve.Tced = Tced;
 
-			var  color = MapToolbar.getColor(true),
-				tcurve = new google.maps.Polyline({
-				path: tarr,
-				strokeColor: "#00E600",
-				strokeOpacity: 0.7,
-				geodesic: true,
-				map: map,
-				strokeWeight: 1
-			});
+				tcurve.h1 = h1;
+				tcurve.h2 = h2;
+
+				tcurve.TL = TL;
+				tcurve.shift = shift;
+					
+				tcurve.forceSL = forceSL;
+				tcurve.delta = delta;
+				tcurve.theta = theta;
+			 
+				tcurve.deltaS = deltaS;
+				tcurve.deltaC = deltaC;
+				tcurve.railindex = railIndex;	//circular rail index
+				tcurve.route = route;	
+				tcurve.$el = MapToolbar.addFeatureEntry(tcurve.id);
+				tcurve.markers = new google.maps.MVCArray;	 
+				
+				MapToolbar.features['tcurveTab'][tcurve.id] = tcurve;
+
+				var imgurlTcSt = "images/gbm-m_curve.png";
+				var imgurlCcSt = "images/curve-sign2.png";
+				var imgurlCcCt = "images/bullet_white.png";
+				var imgurlShft = "images/bullet_grey.png";			
+				
+				//MapToolbar.features["lineTab"][pid].markers.getAt(mid).note = '' ;
+				MapToolbar.features["lineTab"][pid].markers.getAt(mid).bdata.tcurve = tcurve.id; 
+				MapToolbar.features["lineTab"][pid].markers.getAt(mid).setDraggable(false);
+				
+				var e1 = new google.maps.LatLng(Ttst),      
+					image = new google.maps.MarkerImage(imgurlTcSt,
+						new google.maps.Size(16, 16),
+						new google.maps.Point(0, 0),
+						new google.maps.Point(8, 8)), 
+					index =0,
+					marker = new google.maps.Marker({
+						position: Ttst,
+						map: map,
+						icon: image,
+						note: '', // any extra note 
+						bdata: {height:'',pitch:''},
+						kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
+						sline: '',
+						lineX: '',
+						gdata: {lastpitch:'',lastheight:'',lastheightratio:''},			
+						ld:0, // distance on circumference from curve start point 
+						pid : tcurve.id,
+						title : tcurve.id + ' start point : ' + Ttst 
+					});
+
+				marker.index = index;    
+				tcurve.markers.insertAt(index, marker)
+					
+				var e2 = new google.maps.LatLng(Tted),      
+					image= new google.maps.MarkerImage(imgurlTcSt,
+						new google.maps.Size(16, 16),
+						new google.maps.Point(0, 0),
+						new google.maps.Point(8, 8)), 
+					index =1,
+					marker = new google.maps.Marker({
+						position: Tted,
+						map: map,
+						icon: image,
+						note: '', // any extra note 
+						bdata: {height:'',pitch:''},
+						kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
+						sline: '',
+						lineX: '',
+						gdata: {lastpitch:'',lastheight:'',lastheightratio:''},			
+						ld: 2*Ls + Lc,  
+						pid : tcurve.id,
+						title: tcurve.id + ' end point : ' + Tted
+					});
+					marker.index = index;    
+					tcurve.markers.insertAt(index, marker)
+					
+					var ec = new google.maps.LatLng(Cc),      
+						image= new google.maps.MarkerImage(imgurlCcCt,
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3)), 
+					index =2,
+					marker = new google.maps.Marker({
+						position: Cc,
+						map: map,
+						icon: image,
+						note: '', // any extra note 
+						bdata: {height:'',pitch:''},
+						kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
+						sline: '',
+						lineX: '',
+						gdata: {lastpitch:'',lastheight:'',lastheightratio:''},			
+						ld:null,  
+						pid : tcurve.id,
+						title: tcurve.id + ' circlular center : ' + Cc
+					});
+					marker.index = index;    
+					tcurve.markers.insertAt(index, marker)
+
+					var e3 = new google.maps.LatLng(Tcst),      
+						image= new google.maps.MarkerImage(imgurlCcSt,
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3)), 
+					index =3,
+					marker = new google.maps.Marker({
+						position: Tcst,
+						map: map,
+						icon: image,
+						note: '', // any extra note 
+						bdata: {height:'',pitch:''},
+						kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
+						sline: '',
+						lineX: '',
+						gdata: {lastpitch:'',lastheight:'',lastheightratio:''},			
+						ld:Ls,  
+						pid : tcurve.id,
+						title: tcurve.id + ' circlular start : ' + Tcst
+					});
+					marker.index = index;    
+					tcurve.markers.insertAt(index, marker)
+
+					var e4 = new google.maps.LatLng(Tced),      
+						image= new google.maps.MarkerImage(imgurlCcSt,
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3)), 
+					index =4,
+					marker = new google.maps.Marker({
+						position: Tced,
+						map: map,
+						icon: image,
+						note: '', // any extra note 
+						bdata: {height:'',pitch:''},
+						kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
+						sline: '',
+						lineX: '',
+						gdata: {lastpitch:'',lastheight:'',lastheightratio:''},			
+						ld:Ls + Lc,  
+						pid : tcurve.id,
+						title: tcurve.id + ' circlular end : ' + Tced
+					});
+					marker.index = index;    
+					tcurve.markers.insertAt(index, marker)
+				
+				google.maps.event.addListener(tcurve, "click", function(mEvent){
+					var infoWindowTxt = 'curve Id : ' + tcurve.id + '<br>total transition curve length : ' + (Math.round((Lc + 2 * Ls)*10000)/10000) + ' m';
+					infoWindowTxt += '<br>total tangent from intersection : ' + (Math.round(TL*10000)/10000) + ' m';
+					infoWindowTxt += '<br>spiral curve length Ls : ' + (Math.round(Ls*10000)/10000) + ' m';
+					infoWindowTxt += '<br>circular curve length Lc : ' + (Math.round(Lc*10000)/10000) + ' m';
+					infoWindowTxt += '<br>shift : ' + (Math.round(tcurve.shift*10000)/10000)  + ' m';
+					infoWindowTxt += '<br>deflection angle Δ : ' + delta + '&deg;';
+					infoWindowTxt += '<br>intersection angle θ : ' + theta + '&deg;';
+					infoWindowTxt += '<br>Δs : ' + deltaS + '&deg;';
+					infoWindowTxt += '<br>Δc : ' + deltaC + '&deg;';
+					
+					infoWindowTxt += '<br>Rc : ' + Rc  + '&deg;';
+					infoWindowTxt += '<br>cant : ' + cant + ' mm';
+					infoWindowTxt += '<br>Vd : ' + Vd + ' km/h';
+
+					var lat0 = mEvent.latLng.lat();
+					var lng0 = mEvent.latLng.lng();
+					
+					infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="2"><tr>' + '<td width="24"><img src="images/remove line.png" width="20" height="20" title="Remove line" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\''+ tcurve.id + '\');"></td><td>&nbsp;&nbsp;</td>'; 
+					
+					infoWindowTxt += '<td width="24"><img src="images/line+point.png" width="20" height="20" title="Add new point to current line" style="cursor: pointer;" onclick="btnAddMarker2Polyline(\''+ tcurve.id + '\',\'' + lat0 + '\',\'' + lng0 + '\');"></td>';
+							
+					infoWindowTxt += '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
 								
-			++MapToolbar["tcurveCounter"];
-			tcurve.id = 'tcurve_'+ MapToolbar["tcurveCounter"];
-			tcurve.uid = uid; //unique id - new feature start on 01/9/2014
-			tcurve.pid = pid;
-			tcurve.mid = mid;
-			tcurve.ptype = 'tcurve';
-			tcurve.tctype = tctype;
-			tcurve.note = ''; 
-			tcurve.Rc = Rc,
-			tcurve.cant = cant;
-			tcurve.Vd = Vd;
-			tcurve.Ls = Ls;
-			tcurve.Lc = Lc;
-			tcurve.K = K;
-			tcurve.TotalX = TotalX;
-			tcurve.TotalY = TotalY;
-			tcurve.Cc = Cc;
-			tcurve.Ttst = Ttst;
-			tcurve.Tted = Tted;
-			tcurve.Tcst = Tcst;
-			tcurve.Tced = Tced;
+					infoWindowTxt += '<td><img src="images/sticky_note_pencil.png" title="Add Note" width="16" height="16" style="cursor: pointer;" onclick="curveNote(\'' + tcurve.id + '\');"></td>';
+								
+					infoWindowTxt += '<td><img src="images/xfce4_settings.png" title="Setting" width="16" height="16" style="cursor: pointer;" onclick="curveSetting(\'' + tcurve.id + '\');"></td>';
 
-			tcurve.h1 = h1;
-			tcurve.h2 = h2;
+					infoWindowTxt += '</td></tr></table><br />';
+					
+					var infowindow = new google.maps.InfoWindow({
+						content: infoWindowTxt,
+						position: mEvent.latLng
+					});
+					
+					infowindow.open(map);	
+					
+				});	
 
-			tcurve.TL = TL;
-			tcurve.shift = shift;
-				
-			tcurve.forceSL = forceSL;
-			tcurve.delta = delta;
-			tcurve.theta = theta;
-		 
-			tcurve.deltaS = deltaS;
-			tcurve.deltaC = deltaC;
-			tcurve.railindex = railIndex;	//circular rail index
-			tcurve.route = route;	
-			tcurve.$el = MapToolbar.addFeatureEntry(tcurve.id);
-			tcurve.markers = new google.maps.MVCArray;	 
-			
-			MapToolbar.features['tcurveTab'][tcurve.id] = tcurve;
-
-			var imgurlTcSt = "images/gbm-m_curve.png";
-			var imgurlCcSt = "images/curve-sign2.png";
-			var imgurlCcCt = "images/bullet_white.png";
-			var imgurlShft = "images/bullet_grey.png";			
-			
-			//MapToolbar.features["lineTab"][pid].markers.getAt(mid).note = '' ;
-			MapToolbar.features["lineTab"][pid].markers.getAt(mid).bdata.tcurve = tcurve.id; 
-			MapToolbar.features["lineTab"][pid].markers.getAt(mid).setDraggable(false);
-			
-			var e1 = new google.maps.LatLng(Ttst),      
-				image = new google.maps.MarkerImage(imgurlTcSt,
-					new google.maps.Size(16, 16),
-					new google.maps.Point(0, 0),
-					new google.maps.Point(8, 8)), 
-				index =0,
-				marker = new google.maps.Marker({
-					position: Ttst,
-					map: map,
-					icon: image,
-					note: '', // any extra note 
-					bdata: {height:'',pitch:''},
-					kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
-					sline: '',
-					lineX: '',
-					gdata: {lastpitch:'',lastheight:'',lastheightratio:''},			
-					ld:0, // distance on circumference from curve start point 
-					pid : tcurve.id,
-					title : tcurve.id + ' start point : ' + Ttst 
+				$( "#mainload" ).progressbar({
+					value: Math.round((i/(rowsData.length-1))*100)
 				});
-
-			marker.index = index;    
-			tcurve.markers.insertAt(index, marker)
-				
-			var e2 = new google.maps.LatLng(Tted),      
-				image= new google.maps.MarkerImage(imgurlTcSt,
-					new google.maps.Size(16, 16),
-					new google.maps.Point(0, 0),
-					new google.maps.Point(8, 8)), 
-				index =1,
-				marker = new google.maps.Marker({
-					position: Tted,
-					map: map,
-					icon: image,
-					note: '', // any extra note 
-					bdata: {height:'',pitch:''},
-					kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
-					sline: '',
-					lineX: '',
-					gdata: {lastpitch:'',lastheight:'',lastheightratio:''},			
-					ld: 2*Ls + Lc,  
-					pid : tcurve.id,
-					title: tcurve.id + ' end point : ' + Tted
-				});
-				marker.index = index;    
-				tcurve.markers.insertAt(index, marker)
-				
-				var ec = new google.maps.LatLng(Cc),      
-					image= new google.maps.MarkerImage(imgurlCcCt,
-						new google.maps.Size(6, 6),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(3, 3)), 
-				index =2,
-				marker = new google.maps.Marker({
-					position: Cc,
-					map: map,
-					icon: image,
-					note: '', // any extra note 
-					bdata: {height:'',pitch:''},
-					kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
-					sline: '',
-					lineX: '',
-					gdata: {lastpitch:'',lastheight:'',lastheightratio:''},			
-					ld:null,  
-					pid : tcurve.id,
-					title: tcurve.id + ' circlular center : ' + Cc
-				});
-				marker.index = index;    
-				tcurve.markers.insertAt(index, marker)
-
-				var e3 = new google.maps.LatLng(Tcst),      
-					image= new google.maps.MarkerImage(imgurlCcSt,
-						new google.maps.Size(6, 6),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(3, 3)), 
-				index =3,
-				marker = new google.maps.Marker({
-					position: Tcst,
-					map: map,
-					icon: image,
-					note: '', // any extra note 
-					bdata: {height:'',pitch:''},
-					kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
-					sline: '',
-					lineX: '',
-					gdata: {lastpitch:'',lastheight:'',lastheightratio:''},			
-					ld:Ls,  
-					pid : tcurve.id,
-					title: tcurve.id + ' circlular start : ' + Tcst
-				});
-				marker.index = index;    
-				tcurve.markers.insertAt(index, marker)
-
-				var e4 = new google.maps.LatLng(Tced),      
-					image= new google.maps.MarkerImage(imgurlCcSt,
-						new google.maps.Size(6, 6),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(3, 3)), 
-				index =4,
-				marker = new google.maps.Marker({
-					position: Tced,
-					map: map,
-					icon: image,
-					note: '', // any extra note 
-					bdata: {height:'',pitch:''},
-					kdata: {bridge:'',overbridge:'',river:'',ground:'',flyover:'',tunnel:'',pole:'',dike:'',cut:'',underground:'',form:'',roadcross:'',crack:'',beacon:''}, // various bve data
-					sline: '',
-					lineX: '',
-					gdata: {lastpitch:'',lastheight:'',lastheightratio:''},			
-					ld:Ls + Lc,  
-					pid : tcurve.id,
-					title: tcurve.id + ' circlular end : ' + Tced
-				});
-				marker.index = index;    
-				tcurve.markers.insertAt(index, marker)
-			
-			google.maps.event.addListener(tcurve, "click", function(mEvent){
-				var infoWindowTxt = 'curve Id : ' + tcurve.id + '<br>total transition curve length : ' + (Math.round((Lc + 2 * Ls)*10000)/10000) + ' m';
-				infoWindowTxt += '<br>total tangent from intersection : ' + (Math.round(TL*10000)/10000) + ' m';
-				infoWindowTxt += '<br>spiral curve length Ls : ' + (Math.round(Ls*10000)/10000) + ' m';
-				infoWindowTxt += '<br>circular curve length Lc : ' + (Math.round(Lc*10000)/10000) + ' m';
-				infoWindowTxt += '<br>shift : ' + (Math.round(tcurve.shift*10000)/10000)  + ' m';
-				infoWindowTxt += '<br>deflection angle Δ : ' + delta + '&deg;';
-				infoWindowTxt += '<br>intersection angle θ : ' + theta + '&deg;';
-				infoWindowTxt += '<br>Δs : ' + delta_Sd + '&deg;';
-				infoWindowTxt += '<br>Δc : ' + delta_Cd + '&deg;';
-				
-				infoWindowTxt += '<br>Rc : ' + tcurve.Rc  + '&deg;';
-				infoWindowTxt += '<br>cant : ' + tcurve.cant + ' mm';
-				infoWindowTxt += '<br>Vd : ' + tcurve.Vd + ' km/h';
-
-				var lat0 = mEvent.latLng.lat();
-				var lng0 = mEvent.latLng.lng();
-				
-				infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="2"><tr>' + '<td width="24"><img src="images/remove line.png" width="20" height="20" title="Remove line" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\''+ tcurve.id + '\');"></td><td>&nbsp;&nbsp;</td>'; 
-				
-				infoWindowTxt += '<td width="24"><img src="images/line+point.png" width="20" height="20" title="Add new point to current line" style="cursor: pointer;" onclick="btnAddMarker2Polyline(\''+ tcurve.id + '\',\'' + lat0 + '\',\'' + lng0 + '\');"></td>';
-						
-				infoWindowTxt += '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
+		
 							
-				infoWindowTxt += '<td><img src="images/sticky_note_pencil.png" title="Add Note" width="16" height="16" style="cursor: pointer;" onclick="curveNote(\'' + tcurve.id + '\');"></td>';
-							
-				infoWindowTxt += '<td><img src="images/xfce4_settings.png" title="Setting" width="16" height="16" style="cursor: pointer;" onclick="curveSetting(\'' + tcurve.id + '\');"></td>';
+				//index=5;
+				for (a=31; a<rd.length; a++) {
+					var part = rd[a].split(';');
+					
+					//var latlng = new google.maps.LatLng(parseFloat(part[0]),parseFloat(part[1]));
+					//index = parseInt(part[2]);
+					if (parseInt(part[2]) > 4) { btnAddMarker2Polyline(tcurve.id,parseFloat(part[0]),parseFloat(part[1])); }
+					//MapToolbar.addPoint(latlng, tcurve, index);
+					var idx = tcurve.markers.length - 1;
+					//bdata
+					var bpart = part[8].split('§');
+					//kdata
+					var kpart = part[9].split('§');
+					//gdata
+					var gpart = part[10].split('§');
+					//tcurve.markers.getAt(idx).pid = ;
+					//tcurve.markers.getAt(idx).index = part[2];
+					tcurve.markers.getAt(idx).note = part[3].replace(',','-').replace('\n',' - ');
+					tcurve.markers.getAt(idx).ld = parseFloat(part[4]);
+					tcurve.markers.getAt(idx).title = part[5];
+					tcurve.markers.getAt(idx).sline = part[6];
+					tcurve.markers.getAt(idx).lineX = part[7];
+					
+					//bdata
+					if ( bpart[0] != '') { tcurve.markers.getAt(idx).bdata.height = parseFloat(bpart[0]); }
+					if ( bpart[1] != '') { tcurve.markers.getAt(idx).bdata.pitch = parseFloat(bpart[1]); }
 
-				infoWindowTxt += '</td></tr></table><br />';
-				
-				var infowindow = new google.maps.InfoWindow({
-					content: infoWindowTxt,
-					position: mEvent.latLng
-				});
-				
-				infowindow.open(map);	
-				
-			});	
+					//kdata
+					if (kpart[0] != '') {
+						tcurve.markers.getAt(idx).kdata.bridge = kpart[0];
+						var image0 = new google.maps.MarkerImage('images/bridge_icon.png',
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3));
+						tcurve.markers.getAt(idx).setIcon(image0);	
+					}
+					if (kpart[1] != '') {
+						tcurve.markers.getAt(idx).kdata.overbridge = kpart[1];
+						var image1 = new google.maps.MarkerImage('images/overbridge_icon.png',
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3));
+						tcurve.markers.getAt(idx).setIcon(image1);	
+					}
 
-			$( "#mainload" ).progressbar({
-				value: Math.round((i/(rowsData.length-1))*100)
-			});
+					tcurve.markers.getAt(idx).kdata.river = kpart[2];
+
+					if (kpart[3] != '') {
+						tcurve.markers.getAt(idx).kdata.ground = kpart[3];
+						var image3 = new google.maps.MarkerImage('images/ground8.png',
+							new google.maps.Size(8, 8),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(4, 4));
+						tcurve.markers.getAt(idx).setIcon(image3);	
+					} 
+					if (kpart[4] != '') {
+						tcurve.markers.getAt(idx).kdata.flyover = kpart[4];
+						var image4 = new google.maps.MarkerImage('images/flyover_icon.png',
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3));
+						tcurve.markers.getAt(idx).setIcon(image4);	
+					} 
+					if (kpart[5] != '') {
+						tcurve.markers.getAt(idx).kdata.tunnel = kpart[5];
+						var image5 = new google.maps.MarkerImage('images/tunnel_icon.png',
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3));
+						tcurve.markers.getAt(idx).setIcon(image5); 	
+					} 
+					if (kpart[6] != '') {
+						tcurve.markers.getAt(idx).kdata.pole = kpart[6];
+					
+					} 
+					if (kpart[7] != '') {
+						tcurve.markers.getAt(idx).kdata.dike = kpart[7];
+						var image7 = new google.maps.MarkerImage('images/dike_icon.png',
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3));
+						tcurve.markers.getAt(idx).setIcon(image7);	
+					} 
+					if (kpart[8] != '') {
+						tcurve.markers.getAt(idx).kdata.cut = kpart[8];
+						var image8 = new google.maps.MarkerImage('images/hillcut_icon.png',
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3));
+						tcurve.markers.getAt(idx).setIcon(image8);	
+					} 
+					if (kpart[9] != '') {
+						tcurve.markers.getAt(idx).kdata.underground = kpart[9];
+					
+					} 
+					if (kpart[10] != '') {
+						tcurve.markers.getAt(idx).kdata.form = kpart[10];
+						var image10 = new google.maps.MarkerImage('images/form_icon.png',
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3));
+						tcurve.markers.getAt(idx).setIcon(image10);	
+					} 
+					if (kpart[11] != '') {
+						tcurve.markers.getAt(idx).kdata.roadcross = kpart[11];
+						var image11 = new google.maps.MarkerImage('images/roadcross_icon.png',
+							new google.maps.Size(6, 6),
+							new google.maps.Point(0, 0),
+							new google.maps.Point(3, 3));
+						tcurve.markers.getAt(idx).setIcon(image11);	
+					} 
+					if (kpart[12] != '') {
+						tcurve.markers.getAt(idx).kdata.crack = kpart[12];
+					
+					} 
+					if (kpart[13] != '') {
+						tcurve.markers.getAt(idx).kdata.beacon = kpart[13];
+					
+					}
+
+					//gdata
+					tcurve.markers.getAt(idx).gdata.lastpitch = gpart[0];
+					tcurve.markers.getAt(idx).gdata.lastheight = gpart[1];
+					tcurve.markers.getAt(idx).gdata.lastheightratio = gpart[2];
+					
+					$( "#subload" ).progressbar({
+						value: Math.round(((a-31)/(rd.length-1))*100)
+					});
+				}
+
+			} 	
+		
+		}	
 	
-						
-			//index=5;
-			for (a=31; a<rd.length; a++) {
-				var part = rd[a].split(';');
-				
-				//var latlng = new google.maps.LatLng(parseFloat(part[0]),parseFloat(part[1]));
-				index = parseInt(part[2]);
-				if (parseInt(part[2]) > 4) { btnAddMarker2Polyline(tcurve.id,parseFloat(part[0]),parseFloat(part[1])); }
-				//MapToolbar.addPoint(latlng, tcurve, index);
-				
-				//bdata
-				var bpart = part[8].split('§');
-				//kdata
-				var kpart = part[9].split('§');
-				//gdata
-				var gpart = part[10].split('§');
-				//tcurve.markers.getAt(index).pid = ;
-				//tcurve.markers.getAt(index).index = part[2];
-				tcurve.markers.getAt(index).note = part[3].replace(',','-').replace('\n',' - ');
-				tcurve.markers.getAt(index).ld = parseFloat(part[4]);
-				tcurve.markers.getAt(index).title = part[5];
-				tcurve.markers.getAt(index).sline = part[6];
-				tcurve.markers.getAt(index).lineX = part[7];
-				
-				//bdata
-				tcurve.markers.getAt(index).bdata.height = bpart[0];
-				tcurve.markers.getAt(index).bdata.pitch = bpart[1];
-
-				//kdata
-				if (kpart[0] != '') {
-					tcurve.markers.getAt(index).kdata.bridge = kpart[0];
-					var image0 = new google.maps.MarkerImage('images/bridge_icon.png',
-						new google.maps.Size(6, 6),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(3, 3));
-					tcurve.markers.getAt(index).setIcon(image0);	
-				}
-				if (kpart[1] != '') {
-					tcurve.markers.getAt(index).kdata.overbridge = kpart[1];
-					var image1 = new google.maps.MarkerImage('images/overbridge_icon.png',
-						new google.maps.Size(6, 6),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(3, 3));
-					tcurve.markers.getAt(index).setIcon(image1);	
-				}
-
-				tcurve.markers.getAt(index).kdata.river = kpart[2];
-
-				if (kpart[3] != '') {
-					tcurve.markers.getAt(index).kdata.ground = kpart[3];
-					var image3 = new google.maps.MarkerImage('images/ground8.png',
-						new google.maps.Size(8, 8),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(4, 4));
-					tcurve.markers.getAt(index).setIcon(image3);	
-				} 
-				if (kpart[4] != '') {
-					tcurve.markers.getAt(index).kdata.flyover = kpart[4];
-					var image4 = new google.maps.MarkerImage('images/flyover_icon.png',
-						new google.maps.Size(6, 6),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(3, 3));
-					tcurve.markers.getAt(index).setIcon(image4);	
-				} 
-				if (kpart[5] != '') {
-					tcurve.markers.getAt(index).kdata.tunnel = kpart[5];
-					var image5 = new google.maps.MarkerImage('images/tunnel_icon.png',
-						new google.maps.Size(6, 6),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(3, 3));
-					tcurve.markers.getAt(index).setIcon(image5); 	
-				} 
-				if (kpart[6] != '') {
-					tcurve.markers.getAt(index).kdata.pole = kpart[6];
-				
-				} 
-				if (kpart[7] != '') {
-					tcurve.markers.getAt(index).kdata.dike = kpart[7];
-					var image7 = new google.maps.MarkerImage('images/dike_icon.png',
-						new google.maps.Size(6, 6),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(3, 3));
-					tcurve.markers.getAt(index).setIcon(image7);	
-				} 
-				if (kpart[8] != '') {
-					tcurve.markers.getAt(index).kdata.cut = kpart[8];
-					var image8 = new google.maps.MarkerImage('images/hillcut_icon.png',
-						new google.maps.Size(6, 6),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(3, 3));
-					tcurve.markers.getAt(index).setIcon(image8);	
-				} 
-				if (kpart[9] != '') {
-					tcurve.markers.getAt(index).kdata.underground = kpart[9];
-				
-				} 
-				if (kpart[10] != '') {
-					tcurve.markers.getAt(index).kdata.form = kpart[10];
-					var image10 = new google.maps.MarkerImage('images/form_icon.png',
-						new google.maps.Size(6, 6),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(3, 3));
-					tcurve.markers.getAt(index).setIcon(image10);	
-				} 
-				if (kpart[11] != '') {
-					tcurve.markers.getAt(index).kdata.roadcross = kpart[11];
-					var image11 = new google.maps.MarkerImage('images/roadcross_icon.png',
-						new google.maps.Size(6, 6),
-						new google.maps.Point(0, 0),
-						new google.maps.Point(3, 3));
-					tcurve.markers.getAt(index).setIcon(image11);	
-				} 
-				if (kpart[12] != '') {
-					tcurve.markers.getAt(index).kdata.crack = kpart[12];
-				
-				} 
-				if (kpart[13] != '') {
-					tcurve.markers.getAt(index).kdata.beacon = kpart[13];
-				
-				}
-
-				//gdata
-				tcurve.markers.getAt(index).gdata.lastpitch = gpart[0];
-				tcurve.markers.getAt(index).gdata.lastheight = gpart[1];
-				tcurve.markers.getAt(index).gdata.lastheightratio = gpart[2];
-				
-				$( "#subload" ).progressbar({
-					value: Math.round(((a-31)/(rd.length-1))*100)
-				});
-			}
-
-		} 	
-	
+	} catch(err) {
+		console.log('[Error] : (TCurve)\n' + err + '\n\n');
 	}
+
 	i++;
 
 	if (i < rowsData.length) {		
@@ -5975,60 +5961,66 @@ function processTCurve(rowsData, i) {
 }
 
 function processshape(rowsData, i) {
-	var rd = rowsData[i].split(",");
-	var dname = rd[0];				    					
-	if (rd[2] == 'shape') {
-		var dahada = false;
-		for(var cid in MapToolbar.features['shapeTab'] ) {
-			if (MapToolbar.features['shapeTab'][cid].uid == rd[1]) {
-				dahada = true;
-				break;
-			}
-		}	
-		if (!dahada) {
-			/*
-				teks += ',' + polyL.uid;
-				teks += ',' + polyL.ptype;
-				teks += ',' + polyL.note.replace(',','-').replace('\n',' - ');
-				teks += ',' + polyL.name;
-			*/	
-
-			var poligon = null; 				
-			MapToolbar.initFeature('shape');
-			MapToolbar.stopEditing();
-			var newPID = 'shape_'+ MapToolbar['shapeCounter'];
-			poligon = MapToolbar.features["shapeTab"][newPID];
-		/*
-			teks += ',' + allPoints[i].lat() + ";" + allPoints[i].lng();
-			
-			teks += ';' + polyL.markers.getAt(i).kit;
-			teks += ';' + polyL.markers.getAt(i).note.replace(',','-').replace('\n',' - ');		
-		
-		*/			
-			if (typeof poligon != 'undefined') {
-				poligon.uid = rd[1];
-				poligon.ptype = rd[2];	
-				poligon.note = rd[3];
-				poligon.name = rd[4];
-				
-				$( "#mainload" ).progressbar({
-					value: Math.round((i/(rowsData.length-1))*100)
-				});
-				for (a=5; a<rd.length; a++) {
-					var part = rd[a].split(';');
-					var latlng = new google.maps.LatLng(parseFloat(part[0]),parseFloat(part[1]));
-
-					MapToolbar.addPoint(latlng, poligon, a-5);
-					poligon.markers.getAt(a-5).kit = part[2];
-					poligon.markers.getAt(a-5).note = part[3];
-					$( "#subload" ).progressbar({
-						value: Math.round((5/(rd.length-1))*100)
-					});						
+	try {
+		var rd = rowsData[i].split(",");
+		var dname = rd[0];				    					
+		if (rd[2] == 'shape') {
+			var dahada = false;
+			for(var cid in MapToolbar.features['shapeTab'] ) {
+				if (MapToolbar.features['shapeTab'][cid].uid == rd[1]) {
+					dahada = true;
+					break;
 				}
-			}						
+			}	
+			if (!dahada) {
+				/*
+					teks += ',' + polyL.uid;
+					teks += ',' + polyL.ptype;
+					teks += ',' + polyL.note.replace(',','-').replace('\n',' - ');
+					teks += ',' + polyL.name;
+				*/	
 
-		} 	
+				var poligon = null; 				
+				MapToolbar.initFeature('shape');
+				MapToolbar.stopEditing();
+				var newPID = 'shape_'+ MapToolbar['shapeCounter'];
+				poligon = MapToolbar.features["shapeTab"][newPID];
+			/*
+				teks += ',' + allPoints[i].lat() + ";" + allPoints[i].lng();
+				
+				teks += ';' + polyL.markers.getAt(i).kit;
+				teks += ';' + polyL.markers.getAt(i).note.replace(',','-').replace('\n',' - ');		
+			
+			*/			
+				if (typeof poligon != 'undefined') {
+					poligon.uid = rd[1];
+					poligon.ptype = rd[2];	
+					poligon.note = rd[3];
+					poligon.name = rd[4];
+					
+					$( "#mainload" ).progressbar({
+						value: Math.round((i/(rowsData.length-1))*100)
+					});
+					for (a=5; a<rd.length; a++) {
+						var part = rd[a].split(';');
+						var latlng = new google.maps.LatLng(parseFloat(part[0]),parseFloat(part[1]));
+
+						MapToolbar.addPoint(latlng, poligon, a-5);
+						poligon.markers.getAt(a-5).kit = part[2];
+						poligon.markers.getAt(a-5).note = part[3];
+						$( "#subload" ).progressbar({
+							value: Math.round((5/(rd.length-1))*100)
+						});						
+					}
+				}						
+
+			} 	
+		}	
+	
+	} catch(err) {
+		console.log('[Error] : (shape)\n' + err + '\n\n');
 	}
+
 	i++;
 
 	if (i < rowsData.length) {		
@@ -6042,73 +6034,79 @@ function processshape(rowsData, i) {
 }
 
 function processdotMarker(rowsData, i) {
-	var rd = rowsData[i].split(",");
-	var dname = rd[0];				    					
-	if (rd[2] == 'dotMarker') {
-		var dahada = false;
-		for(var cid in MapToolbar.features['dotMarkerTab'] ) {
-			if (MapToolbar.features['dotMarkerTab'][cid].uid == rd[1]) {
-				dahada = true;
-				break;
-			}
-		}	
-		if (!dahada) {
-			/*
-				teks += ',' + dotMarker.uid;
-				teks += ',' + dotMarker.ptype;
-				teks += ',' + dotMarker.note.replace(',','-');
-				teks += ',' + dotMarker.iwref;			
-			*/
-			
-			var pos = new google.maps.LatLng(parseFloat(rd[5].split(';')[0]), parseFloat(rd[5].split(';')[1]));
+	try {
+		var rd = rowsData[i].split(",");
+		var dname = rd[0];				    					
+		if (rd[2] == 'dotMarker') {
+			var dahada = false;
+			for(var cid in MapToolbar.features['dotMarkerTab'] ) {
+				if (MapToolbar.features['dotMarkerTab'][cid].uid == rd[1]) {
+					dahada = true;
+					break;
+				}
+			}	
+			if (!dahada) {
+				/*
+					teks += ',' + dotMarker.uid;
+					teks += ',' + dotMarker.ptype;
+					teks += ',' + dotMarker.note.replace(',','-');
+					teks += ',' + dotMarker.iwref;			
+				*/
+				
+				var pos = new google.maps.LatLng(parseFloat(rd[5].split(';')[0]), parseFloat(rd[5].split(';')[1]));
 
-			var color = MapToolbar.getColor2(true),
-			  marker = new google.maps.Marker({
-				position: pos, 
-				map: map, 
-				draggable: true,
-				flat: true
-			}); 
+				var color = MapToolbar.getColor2(true),
+				  marker = new google.maps.Marker({
+					position: pos, 
+					map: map, 
+					draggable: true,
+					flat: true
+				}); 
+						
+				++MapToolbar["dotMarkerCounter"];
+				marker.id = 'dotMarker_'+ MapToolbar["dotMarkerCounter"];
+				marker.uid = rd[1]; //unique id  new feature start on 01/9/2014
+				marker.ptype = rd[2];
+				marker.note = rd[3];
+				marker.iwref = rd[4];
+				marker.$el = MapToolbar.addFeatureEntry(marker.id);	     
+				MapToolbar.updateMarker(marker, marker.$el, color);
+				MapToolbar.features['dotMarkerTab'][marker.id] = marker;
+
+				google.maps.event.addListener(marker, "dragend", function() {
+					MapToolbar.updateMarker(marker, marker.$el);
+				}); 
+				
+				google.maps.event.addListener(marker, "click", function(mEvent){
+					//alert(mEvent.latLng.toString());
+					var DegMinSec = DecInDeg(mEvent.latLng);
+					var infoWindowTxt = 'Marker Id : ' + marker.id;
+					infoWindowTxt += '<br />' + 'Location : ';
+					//infoWindowTxt += '<br />' + mEvent.latLng.toString() + '<br />';
+					infoWindowTxt += DegMinSec + '<br />';
+					//var lat0 = mEvent.latLng.lat();
+					//var lng0 = mEvent.latLng.lng();
 					
-			++MapToolbar["dotMarkerCounter"];
-			marker.id = 'dotMarker_'+ MapToolbar["dotMarkerCounter"];
-			marker.uid = rd[1]; //unique id  new feature start on 01/9/2014
-			marker.ptype = rd[2];
-			marker.note = rd[3];
-			marker.iwref = rd[4];
-			marker.$el = MapToolbar.addFeatureEntry(marker.id);	     
-			MapToolbar.updateMarker(marker, marker.$el, color);
-			MapToolbar.features['dotMarkerTab'][marker.id] = marker;
-
-			google.maps.event.addListener(marker, "dragend", function() {
-				MapToolbar.updateMarker(marker, marker.$el);
-			}); 
-			
-			google.maps.event.addListener(marker, "click", function(mEvent){
-				//alert(mEvent.latLng.toString());
-				var DegMinSec = DecInDeg(mEvent.latLng);
-				var infoWindowTxt = 'Marker Id : ' + marker.id;
-				infoWindowTxt += '<br />' + 'Location : ';
-				//infoWindowTxt += '<br />' + mEvent.latLng.toString() + '<br />';
-				infoWindowTxt += DegMinSec + '<br />';
-				//var lat0 = mEvent.latLng.lat();
-				//var lng0 = mEvent.latLng.lng();
-				
-				infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="3"><tr><td>';
-				infoWindowTxt += '<img src="images/marker_remove.png" title="Remove marker" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\'' + marker.id + '\');">' + 'Remove' + '</td><td>&nbsp;</td><td>';
-				infoWindowTxt += '<img src="images/note_todo_list.png" title="Properties" width="16" height="16" style="cursor: pointer;" onclick="alert(\'No code defined, this feature still not yet planned.\');">' + 'Properties' + '</td><td>&nbsp;</td>';
-		 
-				infoWindowTxt += '</tr></table>';
-				var infowindow = new google.maps.InfoWindow({
-					content: infoWindowTxt,
-					position: mEvent.latLng
-				});
-				
-				infowindow.open(map);		
-			});			
-				
-		} 
+					infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="3"><tr><td>';
+					infoWindowTxt += '<img src="images/marker_remove.png" title="Remove marker" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\'' + marker.id + '\');">' + 'Remove' + '</td><td>&nbsp;</td><td>';
+					infoWindowTxt += '<img src="images/note_todo_list.png" title="Properties" width="16" height="16" style="cursor: pointer;" onclick="alert(\'No code defined, this feature still not yet planned.\');">' + 'Properties' + '</td><td>&nbsp;</td>';
+			 
+					infoWindowTxt += '</tr></table>';
+					var infowindow = new google.maps.InfoWindow({
+						content: infoWindowTxt,
+						position: mEvent.latLng
+					});
+					
+					infowindow.open(map);		
+				});			
+					
+			} 
+		}	
+	
+	} catch(err) {
+		console.log('[Error] : (dotMarker)\n' + err + '\n\n');
 	}
+
 	i++;
 	
 	$( "#mainload" ).progressbar({
@@ -6127,111 +6125,117 @@ function processdotMarker(rowsData, i) {
 }
 
 function processrectangle(rowsData, i) {
-	var rd = rowsData[i].split(",");
-	var dname = rd[0];				    					
-	if (rd[2] == 'rectangle') {
-		var dahada = false;
-		for(var cid in MapToolbar.features['rectangleTab'] ) {
-			if (MapToolbar.features['rectangleTab'][cid].uid == rd[1]) {
-				dahada = true;
-				break;
-			}
-		}	
-		if (!dahada) {
-			/*
-				teks += ',' + rectangle.uid;
-				teks += ',' + rectangle.ptype;
-				teks += ',' + rectangle.note.replace(',','-');
-				teks += ',' + rectangle.iwref;												
-				teks += ',' + rectangle.data;
-										
-				teks += ',' + sw.lat() + ';' + sw.lng() + ',' + ne.lat() + ';' + ne.lng() + "\n";
-			*/		
-			
-			var sw = new google.maps.LatLng(parseFloat(rd[6].split(';')[0]), parseFloat(rd[6].split(';')[1]));
-			var ne = new google.maps.LatLng(parseFloat(rd[7].split(';')[0]), parseFloat(rd[7].split(';')[1]));
-			var latLngBounds = new google.maps.LatLngBounds(sw, ne);
-			
-			var rect = new google.maps.Rectangle({
-				strokeColor: MapToolbar.getColor(true),
-				strokeOpacity: 0.8,
-				strokeWeight: 1,
-				bounds: latLngBounds,
-				map: map,
-				editable: true,
-				fillOpacity: 0.0
-			}),
-			el = "rectangle_b";
-				
-				
-			++MapToolbar["rectangleCounter"];
-			 
-			rect.id = 'rectangle_'+ MapToolbar["rectangleCounter"];
-			rect.uid = rd[1]; //unique id  new feature start on 01/9/2014
-			rect.ptype = 'rectangle';		
-			rect.note = rd[3];
-			rect.iwref = rd[4];
-			rect.data = rd[5];
-			rect.$el = MapToolbar.addFeatureEntry(rect.id);  	
-			MapToolbar.features["rectangleTab"][rect.id] = rect;
-			
-			google.maps.event.addListener(rect, "click", function(mEvent){
-				//alert(mEvent.latLng.toString());
-				var sw = rect.getBounds().getSouthWest();
-				var ne = rect.getBounds().getNorthEast();
-								
-				var trpoly = []; 
-					
-				trpoly.push(ne);
-				trpoly.push(new google.maps.LatLng(ne.lat(), sw.lng()));
-				trpoly.push(sw);
-				trpoly.push(new google.maps.LatLng(sw.lat(), ne.lng()));
-					
-				var area = google.maps.geometry.spherical.computeArea(trpoly);
-				var rheight = google.maps.geometry.spherical.computeDistanceBetween(ne, new google.maps.LatLng(sw.lat(), ne.lng()));
-				var rwidth = google.maps.geometry.spherical.computeDistanceBetween(ne, new google.maps.LatLng(ne.lat(), sw.lng()));
-				
-				var infoWindowTxt = 'Rectangle Id : ' + rect.id + '<br />' + 'Area : ';
-				var lat0 = mEvent.latLng.lat();
-				var lng0 = mEvent.latLng.lng();
-		
-				if (area < 1000) {
-					infoWindowTxt += area.toFixed(2) + ' m' + String.fromCharCode(178) ;
-				} else {
-					infoWindowTxt += (area/1000).toFixed(2) + ' km' + String.fromCharCode(178) ;
-				}	
-	
-				infoWindowTxt += '<br />' + 'Width : ';
-				
-				if (rwidth < 1000) {
-					infoWindowTxt += rwidth.toFixed(2) + ' m';
-				} else {
-					infoWindowTxt += (rwidth/1000).toFixed(6) + ' km';
+	try {
+		var rd = rowsData[i].split(",");
+		var dname = rd[0];				    					
+		if (rd[2] == 'rectangle') {
+			var dahada = false;
+			for(var cid in MapToolbar.features['rectangleTab'] ) {
+				if (MapToolbar.features['rectangleTab'][cid].uid == rd[1]) {
+					dahada = true;
+					break;
 				}
+			}	
+			if (!dahada) {
+				/*
+					teks += ',' + rectangle.uid;
+					teks += ',' + rectangle.ptype;
+					teks += ',' + rectangle.note.replace(',','-');
+					teks += ',' + rectangle.iwref;												
+					teks += ',' + rectangle.data;
+											
+					teks += ',' + sw.lat() + ';' + sw.lng() + ',' + ne.lat() + ';' + ne.lng() + "\n";
+				*/		
+				
+				var sw = new google.maps.LatLng(parseFloat(rd[6].split(';')[0]), parseFloat(rd[6].split(';')[1]));
+				var ne = new google.maps.LatLng(parseFloat(rd[7].split(';')[0]), parseFloat(rd[7].split(';')[1]));
+				var latLngBounds = new google.maps.LatLngBounds(sw, ne);
+				
+				var rect = new google.maps.Rectangle({
+					strokeColor: MapToolbar.getColor(true),
+					strokeOpacity: 0.8,
+					strokeWeight: 1,
+					bounds: latLngBounds,
+					map: map,
+					editable: true,
+					fillOpacity: 0.0
+				}),
+				el = "rectangle_b";
+					
+					
+				++MapToolbar["rectangleCounter"];
+				 
+				rect.id = 'rectangle_'+ MapToolbar["rectangleCounter"];
+				rect.uid = rd[1]; //unique id  new feature start on 01/9/2014
+				rect.ptype = 'rectangle';		
+				rect.note = rd[3];
+				rect.iwref = rd[4];
+				rect.data = rd[5];
+				rect.$el = MapToolbar.addFeatureEntry(rect.id);  	
+				MapToolbar.features["rectangleTab"][rect.id] = rect;
+				
+				google.maps.event.addListener(rect, "click", function(mEvent){
+					//alert(mEvent.latLng.toString());
+					var sw = rect.getBounds().getSouthWest();
+					var ne = rect.getBounds().getNorthEast();
+									
+					var trpoly = []; 
+						
+					trpoly.push(ne);
+					trpoly.push(new google.maps.LatLng(ne.lat(), sw.lng()));
+					trpoly.push(sw);
+					trpoly.push(new google.maps.LatLng(sw.lat(), ne.lng()));
+						
+					var area = google.maps.geometry.spherical.computeArea(trpoly);
+					var rheight = google.maps.geometry.spherical.computeDistanceBetween(ne, new google.maps.LatLng(sw.lat(), ne.lng()));
+					var rwidth = google.maps.geometry.spherical.computeDistanceBetween(ne, new google.maps.LatLng(ne.lat(), sw.lng()));
+					
+					var infoWindowTxt = 'Rectangle Id : ' + rect.id + '<br />' + 'Area : ';
+					var lat0 = mEvent.latLng.lat();
+					var lng0 = mEvent.latLng.lng();
+			
+					if (area < 1000) {
+						infoWindowTxt += area.toFixed(2) + ' m' + String.fromCharCode(178) ;
+					} else {
+						infoWindowTxt += (area/1000).toFixed(2) + ' km' + String.fromCharCode(178) ;
+					}	
 		
-				infoWindowTxt += '<br />' + 'Height : ';
-				
-				if (rheight < 1000) {
-					infoWindowTxt += rheight.toFixed(2) + ' m.';
-				} else {
-					infoWindowTxt += (rheight/1000).toFixed(6) + ' km.';
-				}
-				
-				infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="3"><tr><td>';
-				//infoWindowTxt += '<img src="images/rectangle_edit.png" title="Edit rectangle" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.setMapCenter(\'' + rect.id + '\');">' + 'Edit' + '</td><td>';
-				infoWindowTxt += '<img src="images/rectangle_remove.png" title="Remove rectangle" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\'' + rect.id + '\');">' + 'Remove' + '</td><td>';
-				infoWindowTxt += '<img src="images/note_todo_list.png" title="Properties" width="20" height="20" style="cursor: pointer;" onclick="alert(\'No code defined, this feature still not yet planned.\');">' + 'Properties' + '</td></tr></table>';
+					infoWindowTxt += '<br />' + 'Width : ';
+					
+					if (rwidth < 1000) {
+						infoWindowTxt += rwidth.toFixed(2) + ' m';
+					} else {
+						infoWindowTxt += (rwidth/1000).toFixed(6) + ' km';
+					}
+			
+					infoWindowTxt += '<br />' + 'Height : ';
+					
+					if (rheight < 1000) {
+						infoWindowTxt += rheight.toFixed(2) + ' m.';
+					} else {
+						infoWindowTxt += (rheight/1000).toFixed(6) + ' km.';
+					}
+					
+					infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="3"><tr><td>';
+					//infoWindowTxt += '<img src="images/rectangle_edit.png" title="Edit rectangle" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.setMapCenter(\'' + rect.id + '\');">' + 'Edit' + '</td><td>';
+					infoWindowTxt += '<img src="images/rectangle_remove.png" title="Remove rectangle" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\'' + rect.id + '\');">' + 'Remove' + '</td><td>';
+					infoWindowTxt += '<img src="images/note_todo_list.png" title="Properties" width="20" height="20" style="cursor: pointer;" onclick="alert(\'No code defined, this feature still not yet planned.\');">' + 'Properties' + '</td></tr></table>';
 
-				var infowindow = new google.maps.InfoWindow({
-				  content: infoWindowTxt,
-					position: mEvent.latLng
-				});
-			
-				infowindow.open(map);    
-					//alert("Area : " + area + "\nWidth : " + rwidth + "\nHeight : " + rheight);
-			});	
-		}		
+					var infowindow = new google.maps.InfoWindow({
+					  content: infoWindowTxt,
+						position: mEvent.latLng
+					});
+				
+					infowindow.open(map);    
+						//alert("Area : " + area + "\nWidth : " + rwidth + "\nHeight : " + rheight);
+				});	
+			}		
+		}	
+	
+	} catch(err) {
+		console.log('[Error] : (rectangle)\n' + err + '\n\n');
 	}
+
 	
 	i++;
 	
@@ -6250,90 +6254,96 @@ function processrectangle(rowsData, i) {
 }
 
 function processcircle(rowsData, i) {
-	var rd = rowsData[i].split(",");
-	var dname = rd[0];				    					
-	if (rd[2] == 'circle') {
-		var dahada = false;
-		for(var cid in MapToolbar.features['circleTab'] ) {
-			if (MapToolbar.features['circleTab'][cid].uid == rd[1]) {
-				dahada = true;
-				break;
-			}
-		}	
-		if (!dahada) {
-			/*
-				teks += ',' + circle.uid;
-				teks += ',' + circle.ptype;
-				teks += ',' + circle.note.replace(',','-');
-				teks += ',' + circle.iwref;
-										
-				teks += ',' + radius + ',' + center.lat() + ';' + center.lng() + "\n";
-			*/		
-			var radius = parseFloat(rd[5]);
-			var pusat = new google.maps.LatLng(parseFloat(rd[6].split(';')[0]), parseFloat(rd[6].split(';')[1]));
-			
-			var bulat = new google.maps.Circle({
-				strokeColor: MapToolbar.getColor(true),
-				strokeOpacity: 0.8,
-				strokeWeight: 1,
-				editable: true,
-				map: map,
-				fillOpacity: 0.0,
-				center: pusat,
-				radius: radius
-			}),
-			el = "circle_b";
-			
-			++MapToolbar["circleCounter"];
-			 
-			bulat.id = 'circle_'+ MapToolbar["circleCounter"];
-			bulat.uid = rd[1]; //unique id  new feature start on 01/9/2014
-			bulat.ptype = 'circle';
-			bulat.note = rd[3];
-			bulat.iwref = rd[4];
-			bulat.$el = MapToolbar.addFeatureEntry(bulat.id);  	
-			MapToolbar.features["circleTab"][bulat.id] = bulat;		 		
-
-			   
-			google.maps.event.addListener(bulat, "click", function(mEvent){		
-				var infoWindowTxt = 'Circle Id : ' + bulat.id + '<br />' + 'Area : ';
-				var lat0 = mEvent.latLng.lat();
-				var lng0 = mEvent.latLng.lng();
-
-				var area = Math.PI * bulat.getRadius() * bulat.getRadius();
-				var radius = bulat.getRadius();
-				var pusat = DecInDeg(bulat.getCenter());
-				
-				if (area < 1000) {
-					infoWindowTxt += area.toFixed(2) + ' m' + String.fromCharCode(178) ;
-				} else {
-					infoWindowTxt += (area/1000).toFixed(2) + ' km' + String.fromCharCode(178) ;
-				}	
-			
-				infoWindowTxt += '<br />' + 'Radius : ';
-						
-				if (radius < 1000) {
-					infoWindowTxt += radius.toFixed(2) + ' m.';
-				} else {
-					infoWindowTxt += (radius/1000).toFixed(6) + ' km.';
+	try {
+		var rd = rowsData[i].split(",");
+		var dname = rd[0];				    					
+		if (rd[2] == 'circle') {
+			var dahada = false;
+			for(var cid in MapToolbar.features['circleTab'] ) {
+				if (MapToolbar.features['circleTab'][cid].uid == rd[1]) {
+					dahada = true;
+					break;
 				}
-				 
-				infoWindowTxt += '<br />' + 'Center : ' + pusat;
+			}	
+			if (!dahada) {
+				/*
+					teks += ',' + circle.uid;
+					teks += ',' + circle.ptype;
+					teks += ',' + circle.note.replace(',','-');
+					teks += ',' + circle.iwref;
+											
+					teks += ',' + radius + ',' + center.lat() + ';' + center.lng() + "\n";
+				*/		
+				var radius = parseFloat(rd[5]);
+				var pusat = new google.maps.LatLng(parseFloat(rd[6].split(';')[0]), parseFloat(rd[6].split(';')[1]));
 				
-				infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="3"><tr><td>';
-				//infoWindowTxt += '<img src="images/circle-edit.png" title="Edit circle" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.setMapCenter(\'' + bulat.id + '\');">' + 'Edit' + '</td><td>';
-				infoWindowTxt += '<img src="images/circle-remove.png" title="Remove circle" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\'' + bulat.id + '\');">' + 'Remove' + '</td><td>';
-				infoWindowTxt += '<img src="images/note_todo_list.png" title="Properties" width="20" height="20" style="cursor: pointer;" onclick="alert(\'No code defined, this feature still not yet planned.\');">' + 'Properties' + '</td></tr></table>';
-			
-				 var infowindow = new google.maps.InfoWindow({
-						content: infoWindowTxt,
-						position: mEvent.latLng
-				 });
-			
-				 infowindow.open(map);  	    		
-			});		
-		}		
+				var bulat = new google.maps.Circle({
+					strokeColor: MapToolbar.getColor(true),
+					strokeOpacity: 0.8,
+					strokeWeight: 1,
+					editable: true,
+					map: map,
+					fillOpacity: 0.0,
+					center: pusat,
+					radius: radius
+				}),
+				el = "circle_b";
+				
+				++MapToolbar["circleCounter"];
+				 
+				bulat.id = 'circle_'+ MapToolbar["circleCounter"];
+				bulat.uid = rd[1]; //unique id  new feature start on 01/9/2014
+				bulat.ptype = 'circle';
+				bulat.note = rd[3];
+				bulat.iwref = rd[4];
+				bulat.$el = MapToolbar.addFeatureEntry(bulat.id);  	
+				MapToolbar.features["circleTab"][bulat.id] = bulat;		 		
+
+				   
+				google.maps.event.addListener(bulat, "click", function(mEvent){		
+					var infoWindowTxt = 'Circle Id : ' + bulat.id + '<br />' + 'Area : ';
+					var lat0 = mEvent.latLng.lat();
+					var lng0 = mEvent.latLng.lng();
+
+					var area = Math.PI * bulat.getRadius() * bulat.getRadius();
+					var radius = bulat.getRadius();
+					var pusat = DecInDeg(bulat.getCenter());
+					
+					if (area < 1000) {
+						infoWindowTxt += area.toFixed(2) + ' m' + String.fromCharCode(178) ;
+					} else {
+						infoWindowTxt += (area/1000).toFixed(2) + ' km' + String.fromCharCode(178) ;
+					}	
+				
+					infoWindowTxt += '<br />' + 'Radius : ';
+							
+					if (radius < 1000) {
+						infoWindowTxt += radius.toFixed(2) + ' m.';
+					} else {
+						infoWindowTxt += (radius/1000).toFixed(6) + ' km.';
+					}
+					 
+					infoWindowTxt += '<br />' + 'Center : ' + pusat;
+					
+					infoWindowTxt += '<table border="0" cellspacing="0" cellpadding="3"><tr><td>';
+					//infoWindowTxt += '<img src="images/circle-edit.png" title="Edit circle" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.setMapCenter(\'' + bulat.id + '\');">' + 'Edit' + '</td><td>';
+					infoWindowTxt += '<img src="images/circle-remove.png" title="Remove circle" width="20" height="20" style="cursor: pointer;" onclick="MapToolbar.removeFeature(\'' + bulat.id + '\');">' + 'Remove' + '</td><td>';
+					infoWindowTxt += '<img src="images/note_todo_list.png" title="Properties" width="20" height="20" style="cursor: pointer;" onclick="alert(\'No code defined, this feature still not yet planned.\');">' + 'Properties' + '</td></tr></table>';
+				
+					 var infowindow = new google.maps.InfoWindow({
+							content: infoWindowTxt,
+							position: mEvent.latLng
+					 });
+				
+					 infowindow.open(map);  	    		
+				});		
+			}		
+		}	
+	
+	} catch(err) {
+		console.log('[Error] : (circle)\n' + err + '\n\n');
 	}
+
 	i++;
 
 	$( "#mainload" ).progressbar({
@@ -6389,70 +6399,81 @@ function sline_key(linekey,k) {
 }
 
 function sline_upd(polyL,i,sline,linekey,k) {
-	if (sline != '') {
-		var slineArr = sline.split('¤');
-		polyL.markers.getAt(i).sline = '';
-		
-		for (s=0; s<slineArr.length; s++) {
-			var snewId = '';
-			var slinepart = slineArr[s].split(':');
-			for (r=0;r<oldnewid.length;r++) {
-				if (oldnewid[r][0] == slinepart[0]) {
-					snewId = slinepart[0].replace(oldnewid[r][0],oldnewid[r][2]);
-					break;
-				}									
-			}
+	try {
+		if (sline != '') {
+			var slineArr = sline.split('¤');
+			polyL.markers.getAt(i).sline = '';
 			
-			if (snewId !='') {
-				if (polyL.markers.getAt(i).sline == '') {
-					polyL.markers.getAt(i).sline +=  snewId + ':' + slinepart[1] + ':' + slinepart[2] + ':' + slinepart[3];
-				} else {
-					polyL.markers.getAt(i).sline += '¤' + snewId + ':' + slinepart[1] + ':' + slinepart[2] + ':' + slinepart[3];
+			for (s=0; s<slineArr.length; s++) {
+				var snewId = '';
+				var slinepart = slineArr[s].split(':');
+				for (r=0;r<oldnewid.length;r++) {
+					if (oldnewid[r][0] == slinepart[0]) {
+						snewId = slinepart[0].replace(oldnewid[r][0],oldnewid[r][2]);
+						break;
+					}									
 				}
-			} else {
-				if (polyL.markers.getAt(i).sline == '') {
-					polyL.markers.getAt(i).sline +=  slineArr[s];
-				} else {
-					if (slinepart.length == 1) {
-						polyL.markers.getAt(i).sline += '¤' + slineArr[s] + ':0:0:' + MapToolbar.features["lineTab"][slineArr[s]].markers.getAt(0).uid;
+				
+				if (snewId !='') {
+					if (polyL.markers.getAt(i).sline == '') {
+						polyL.markers.getAt(i).sline +=  snewId + ':' + slinepart[1] + ':' + slinepart[2] + ':' + slinepart[3];
 					} else {
-						polyL.markers.getAt(i).sline += '¤' + slineArr[s];
+						//if (slinepart.length == 1) {
+						//	polyL.markers.getAt(i).sline += '¤' + snewId + ':0:0:' + MapToolbar.features["lineTab"][snewId].markers.getAt(0).uid;
+						//} else {
+							
+							polyL.markers.getAt(i).sline += '¤' + snewId + ':' + slinepart[1] + ':' + slinepart[2] + ':' + slinepart[3];
+						//}
 					}
-					
-				}			
-			}		
+				} else {
+					if (polyL.markers.getAt(i).sline == '') {
+						polyL.markers.getAt(i).sline +=  slineArr[s];
+					} else {
+						//if (slinepart.length == 1) {
+						//	polyL.markers.getAt(i).sline += '¤' + slineArr[s] + ':0:0:' + MapToolbar.features["lineTab"][slineArr[s]].markers.getAt(0).uid;
+						//} else {
+							polyL.markers.getAt(i).sline += '¤' + slineArr[s];
+						//}
+						
+					}			
+				}		
+			}
+		
 		}
+		//2do fix formside, 14/10/2014
+		if (polyL.markers.getAt(i).kdata.form != '') {
+			var formArr = polyL.markers.getAt(i).kdata.form.split('¤');
+			if (formArr.length >2) {
+				var formSideArr = formArr[6].split('/');
+				
+				for (fs = 0; fs < formSideArr.length; fs++) {
+					var formSide = formSideArr[fs].split(':');
+					for (r=0;r<oldnewid.length;r++) {
+						if (oldnewid[r][0] == formSide[0]) {
+							formSide[0] = formSide[0].replace(oldnewid[r][0],oldnewid[r][2]);
+							break;
+						}									
+					}																
+					for (r=0;r<oldnewid.length;r++) {
+						if (oldnewid[r][0] == formSide[1]) {
+							formSide[1] = formSide[1].replace(oldnewid[r][0],oldnewid[r][2]);
+							break;
+						}									
+					}																
+					formSideArr[fs] = formSide[0] + ':' + formSide[1];
+				}
+				if (formSideArr.length > 1) {
+					polyL.markers.getAt(i).kdata.form = formArr[0] + '¤' + formArr[1] + '¤' + formArr[2] + '¤' + formArr[3] + '¤' + formArr[4] + '¤' + formArr[5] + '¤' + formSideArr[0] + '/' + formSideArr[1] + '¤' + formArr[7];
+				} else {
+					polyL.markers.getAt(i).kdata.form = formArr[0] + '¤' + formArr[1] + '¤' + formArr[2] + '¤' + formArr[3] + '¤' + formArr[4] + '¤' + formArr[5] + '¤' + formSideArr[0] + '¤' + formArr[7];
+				}
+			}
+		}	
 	
+	} catch(err) {
+		console.log('[Error] : (update sline)\n' + err + '\n\n');
 	}
-	//2do fix formside, 14/10/2014
-	if (polyL.markers.getAt(i).kdata.form != '') {
-		var formArr = polyL.markers.getAt(i).kdata.form.split('¤');
-		if (formArr.length >2) {
-			var formSideArr = formArr[6].split('/');
-			
-			for (fs = 0; fs < formSideArr.length; fs++) {
-				var formSide = formSideArr[fs].split(':');
-				for (r=0;r<oldnewid.length;r++) {
-					if (oldnewid[r][0] == formSide[0]) {
-						formSide[0] = formSide[0].replace(oldnewid[r][0],oldnewid[r][2]);
-						break;
-					}									
-				}																
-				for (r=0;r<oldnewid.length;r++) {
-					if (oldnewid[r][0] == formSide[1]) {
-						formSide[1] = formSide[1].replace(oldnewid[r][0],oldnewid[r][2]);
-						break;
-					}									
-				}																
-				formSideArr[fs] = formSide[0] + ':' + formSide[1];
-			}
-			if (formSideArr.length > 1) {
-				polyL.markers.getAt(i).kdata.form = formArr[0] + '¤' + formArr[1] + '¤' + formArr[2] + '¤' + formArr[3] + '¤' + formArr[4] + '¤' + formArr[5] + '¤' + formSideArr[0] + '/' + formSideArr[1] + '¤' + formArr[7];
-			} else {
-				polyL.markers.getAt(i).kdata.form = formArr[0] + '¤' + formArr[1] + '¤' + formArr[2] + '¤' + formArr[3] + '¤' + formArr[4] + '¤' + formArr[5] + '¤' + formSideArr[0] + '¤' + formArr[7];
-			}
-		}
-	}
+
 	
 	i++;
 	if (i < polyL.markers.length) {
@@ -6530,38 +6551,38 @@ function processoldPolylineID(rowsData, i) {
 
 function ReloadPolyline (loadPoly,rd, n, rowsData, i, quickScan) { 				    		
 //poly marker coordinate start at 9
-
-	var xD = rd[n].split(";");
-	MapToolbar.addPoint(new google.maps.LatLng(xD[0], xD[1]), loadPoly, n-9);	
-  
-	if (xD[2] != '') { 
-			loadPoly.markers.getAt(n-9).note = xD[2]; 
-	} else {
-		loadPoly.markers.getAt(n-9).note = ''; 
-	} 
-	/*
-	if (xD[3] != '') {
-		loadPoly.markers.getAt(n-9).pitch = xD[3]; 
-	} else {
-		loadPoly.markers.getAt(n-9).pitch = ''; 
-	} 
-	if (xD[4] != '') {
-		loadPoly.markers.getAt(n-9).bdata = xD[4]; 
-	} else {
-		loadPoly.markers.getAt(n-9).bdata = ''; 
-	} 
-	
-	if (xD[5] != '') {		
-		loadPoly.markers.getAt(n-9).kit = xD[5]; 	
-		if ((xD[5].indexOf('lastheight:') >=0) || (xD[5].indexOf('lastpitch:') >=0) || (xD[5].indexOf('lastheightratio:') >=0)) {
-			loadPoly.markers.getAt(n-9).setIcon("images/marker_squared_edit.png");	
-		}		
-	} else {
-		loadPoly.markers.getAt(n-9).kit = ''; 
-	} */
-	if (xD[6] != '') {
-		//loadPoly.markers.getAt(n-9).curve = xD[6]; 
-		//4 old prototype data
+	try {
+		var xD = rd[n].split(";");
+		MapToolbar.addPoint(new google.maps.LatLng(xD[0], xD[1]), loadPoly, n-9);	
+	  
+		if (xD[2] != '') { 
+				loadPoly.markers.getAt(n-9).note = xD[2]; 
+		} else {
+			loadPoly.markers.getAt(n-9).note = ''; 
+		} 
+		/*
+		if (xD[3] != '') {
+			loadPoly.markers.getAt(n-9).pitch = xD[3]; 
+		} else {
+			loadPoly.markers.getAt(n-9).pitch = ''; 
+		} 
+		if (xD[4] != '') {
+			loadPoly.markers.getAt(n-9).bdata = xD[4]; 
+		} else {
+			loadPoly.markers.getAt(n-9).bdata = ''; 
+		} 
+		
+		if (xD[5] != '') {		
+			loadPoly.markers.getAt(n-9).kit = xD[5]; 	
+			if ((xD[5].indexOf('lastheight:') >=0) || (xD[5].indexOf('lastpitch:') >=0) || (xD[5].indexOf('lastheightratio:') >=0)) {
+				loadPoly.markers.getAt(n-9).setIcon("images/marker_squared_edit.png");	
+			}		
+		} else {
+			loadPoly.markers.getAt(n-9).kit = ''; 
+		} */
+		if (xD[6] != '') {
+			//loadPoly.markers.getAt(n-9).curve = xD[6]; 
+			//4 old prototype data
 			/* 
 			0	' curve:'+ curve.id + 
 			1 '§radius:' + preR * dir + 
@@ -6765,7 +6786,12 @@ function ReloadPolyline (loadPoly,rd, n, rowsData, i, quickScan) {
 				infowindow.open(map);	
 
 			});					
-	} 
+		}	
+	
+	} catch(err) {
+		console.log('[Error] : ()' + err + '\n\n');
+	}
+ 
 	/*
 	if (xD[7] != '') {
 		loadPoly.markers.getAt(n-9).tcurve = xD[7]; 
