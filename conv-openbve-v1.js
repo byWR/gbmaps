@@ -18,7 +18,7 @@ purpose : open bve route builder, data conversion function
 type : development release
 version : 1.1.0
 build : 
-last update : 25 October 2014 2:00am (GMT 8+)
+last update : 5 November 2014 8:47pm (GMT 8+)
 
 */
 	//BVE object list
@@ -947,7 +947,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 						
 							// ######### data on point start ##########
 
-							if (cPoly.markers.getAt(ci).bdata.height != '' || cPoly.markers.getAt(ci).bdata.pitch != ''){
+							if ($.isNumeric(cPoly.markers.getAt(ci).bdata.height) || $.isNumeric(cPoly.markers.getAt(ci).bdata.pitch)){
 								ProcessbData(cPoly.markers.getAt(ci).bdata, Math.round(cX));
 							}	
 				
@@ -995,7 +995,7 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 					
 					// ######### data on point start ##########
 
-					if (polyL.markers.getAt(i).bdata.height != '' || polyL.markers.getAt(i).bdata.railindex != '' || polyL.markers.getAt(i).bdata.pitch != ''){
+					if ($.isNumeric(polyL.markers.getAt(i).bdata.height) || polyL.markers.getAt(i).bdata.railindex != '' || $.isNumeric(polyL.markers.getAt(i).bdata.pitch)){
 						ProcessbData(polyL.markers.getAt(i).bdata, Math.round(currX));
 					}	
 				
