@@ -17,7 +17,7 @@ purpose : google maps drawing logic
 type : development release
 version : 1.1.0
 build : 
-last update : 25 October 2014 2:00am (GMT 8+)
+last update : 5 November 2014 8:54pm (GMT 8+)
 
 */
 
@@ -135,7 +135,7 @@ reindex:function(markers){
 				}
 			} */			    
 		});	
-		if (MapToolbar.features['lineTab'][pid].lineX != '') {
+		if (MapToolbar.features['lineTab'][pid].lineX != '' && $('#dialogLoadingData').dialog('isOpen') == false) {
 			//MapToolbar.features['lineTab'][marker.pid].lineX != 'baseline_pid1,baseline_pid2 ....'
 			
 			for (i = 0; i < MapToolbar.features['lineTab'][pid].markers.length; i++) {
@@ -537,10 +537,10 @@ addPoint : function(e, poly, index) {
 				infoWindowTxt += '<br />Note : ' + marker.note;
 			}
 				
-			if (marker.bdata.pitch != '') { 
+			if ($.isNumeric(marker.bdata.pitch)) { 
 				infoWindowTxt += '<br />Pitch : ' + marker.bdata.pitch;
 			} 
-			if (marker.bdata.height != '') { 
+			if ($.isNumeric(marker.bdata.height)) { 
 					infoWindowTxt += '<br />Height : ' + marker.bdata.height;
 			}
 
@@ -788,7 +788,7 @@ addPoint : function(e, poly, index) {
 			}
 */					
 
-			if (marker.bdata.pitch != '') { 
+			if ($.isNumeric(marker.bdata.pitch)) { 
 				infoWindowTxt += $.lang.convert('<br />Pitch : ') + marker.bdata.pitch;
 			}
 
