@@ -15,9 +15,9 @@ Personal blog for GB Maps ギビマップ (design algorithm) : http://blogkaryai
 File : gbm-func-v1.js
 purpose : gb maps function library
 type : development release
-version : 1.1.0
+version : 1.1.5
 build : 
-last update : 6 November 2014 11:23am (GMT 8+)
+last update : 15 November 2014 11:23am (GMT 8+)
 
 */
 var gbm_ver = '1.1.0';
@@ -4326,7 +4326,7 @@ var arr1 = arr0.split('§'); //contoh : "height:2.1§curve:end:curve_1"
 function updateBdata(tab,pid,mid,arr0) {
 	var arr1 = arr0.split('§'); //contoh : "tunnel«end:DarkTunnel01§cut«start:WCut03" >> "tunnel«end:DarkTunnel01" "cut«start:WCut03"
 	for (var a = 0; a < arr1.length; a++) {
-		if (arr1[a].indexOf('lastheight:') > -1 || arr1[a].indexOf('lastpitch:') > -1) {
+		if (arr1[a].indexOf('lastheight:') > -1 || arr1[a].indexOf('lastpitch:') > -1 || arr1[a] == '') {
 			continue;
 		}	
 		
@@ -4741,6 +4741,34 @@ function processPolylineID(rowsData, i) {
 						MapToolbar.features["lineTab"][newPID].name = (rd[4] != '')? rd[4] : '';
 						MapToolbar.features["lineTab"][newPID].route = (rd[5] != '')? rd[5] : '';
 						MapToolbar.features["lineTab"][newPID].lineX = '';
+											
+						if (rd[5] != '' && rd[4] != '') { 
+
+							var svclist = document.getElementById('route_list');
+							if (svclist.childElementCount > 0) {
+								var dahada = false;
+								for (var i = 0; i < svclist.childElementCount; i++) {
+									if (svclist.children[i].firstElementChild.getAttribute("value") == rd[5]) {
+										dahada = true;
+										break;
+									}
+								}
+								if (dahada == false) {
+									var slist = document.createElement('label');
+									slist.id = rd[5];
+									slist.innerHTML = '<input type="checkbox" value="' + rd[5] + '" checked="checked" onClick="toggleRoute(\'' + rd[5] + '\')">' + rd[5] + '<br />';
+									svclist.appendChild(slist);						
+								}
+							} else {
+								var slist = document.createElement('label');
+								slist.id = rd[5];
+								slist.innerHTML = '<input type="checkbox" value="' + rd[5] + '" checked="checked" onClick="toggleRoute(\'' + rd[5] + '\')">' + rd[5] + '<br />';
+								svclist.appendChild(slist);
+					
+							}
+							
+						}	
+							
 						if (rd[6] != '') {
 							var newlineX = '';
 							for (r=0;r<oldnewid.length;r++) {
@@ -5229,9 +5257,6 @@ function processCurve(rowsData, i) {
 				*/	
 				//index=3;
 				
-				$( "#mainload" ).progressbar({
-					value: Math.round((i/(rowsData.length-1))*100)
-				});
 
 							
 				for (a=20; a<rd.length; a++) {
@@ -5359,7 +5384,7 @@ function processCurve(rowsData, i) {
 					curve.markers.getAt(idx).gdata.lastheightratio = gpart[2];
 					
 					$( "#subload" ).progressbar({
-						value: Math.round(((a-20)/(rd.length-1))*100)
+						value: Math.round(((a)/(rd.length-1))*100)
 					});	
 				}
 				
@@ -5373,6 +5398,9 @@ function processCurve(rowsData, i) {
 	i++;
 
 	if (i < rowsData.length) {		
+		$( "#mainload" ).progressbar({
+			value: Math.round((i/(rowsData.length-1))*100)
+		});
 		setTimeout(function() { processCurve(rowsData, i); }, 50 );		
 	} else {
 		$( "#loadprocess" ).text($.lang.convert('Loading : transition curves ...'));	
@@ -5382,7 +5410,8 @@ function processCurve(rowsData, i) {
 
 function processTCurve(rowsData, i) {
 	try {
-		var rd = rowsData[i].split(",");
+
+	var rd = rowsData[i].split(",");
 		var dname = rd[0];				    					
 		if (rd[2] == 'tcurve') {
 			var dahada = false;
@@ -5392,6 +5421,7 @@ function processTCurve(rowsData, i) {
 					break;
 				}
 			}	
+		
 			if (!dahada) {
 			/*
 				teks += ',' + cpoly.uid;
@@ -5807,11 +5837,7 @@ function processTCurve(rowsData, i) {
 					
 				});	
 
-				$( "#mainload" ).progressbar({
-					value: Math.round((i/(rowsData.length-1))*100)
-				});
-		
-							
+						
 				//index=5;
 				for (a=31; a<rd.length; a++) {
 					var part = rd[a].split(';');
@@ -5938,7 +5964,7 @@ function processTCurve(rowsData, i) {
 					tcurve.markers.getAt(idx).gdata.lastheightratio = gpart[2];
 					
 					$( "#subload" ).progressbar({
-						value: Math.round(((a-31)/(rd.length-1))*100)
+						value: Math.round(((a)/(rd.length-1))*100)
 					});
 				}
 
@@ -5953,6 +5979,9 @@ function processTCurve(rowsData, i) {
 	i++;
 
 	if (i < rowsData.length) {		
+		$( "#mainload" ).progressbar({
+			value: Math.round((i/(rowsData.length-1))*100)
+		});	
 		setTimeout(function() { processTCurve(rowsData, i); }, 50 );		
 	} else {
 		$( "#loadprocess" ).text($.lang.convert('Loading : dotMarkers ...'));	
@@ -5998,9 +6027,6 @@ function processshape(rowsData, i) {
 					poligon.note = rd[3];
 					poligon.name = rd[4];
 					
-					$( "#mainload" ).progressbar({
-						value: Math.round((i/(rowsData.length-1))*100)
-					});
 					for (a=5; a<rd.length; a++) {
 						var part = rd[a].split(';');
 						var latlng = new google.maps.LatLng(parseFloat(part[0]),parseFloat(part[1]));
@@ -6024,6 +6050,9 @@ function processshape(rowsData, i) {
 	i++;
 
 	if (i < rowsData.length) {		
+		$( "#mainload" ).progressbar({
+			value: Math.round((i/(rowsData.length-1))*100)
+		});
 		setTimeout(function() { processshape(rowsData, i); }, 50 );		
 	} else {			
 		//alert('3 - m(^_^)m ... done loading, thank you for waiting.');
@@ -6109,13 +6138,14 @@ function processdotMarker(rowsData, i) {
 
 	i++;
 	
-	$( "#mainload" ).progressbar({
-		value: Math.round((i/(rowsData.length-1))*100)
-	});
+
 	$( "#subload" ).progressbar({
 		value: 0
 	});	
 	if (i < rowsData.length) {		
+		$( "#mainload" ).progressbar({
+			value: Math.round((i/(rowsData.length-1))*100)
+		});
 		setTimeout(function() { processdotMarker(rowsData, i); }, 50 );		
 	} else {	
 		$( "#loadprocess" ).text($.lang.convert('Loading : rectangles ...'));	
@@ -6239,13 +6269,14 @@ function processrectangle(rowsData, i) {
 	
 	i++;
 	
-	$( "#mainload" ).progressbar({
-		value: Math.round((i/(rowsData.length-1))*100)
-	});
+
 	$( "#subload" ).progressbar({
 		value: 0
 	});
-	if (i < rowsData.length) {		
+	if (i < rowsData.length) {	
+		$( "#mainload" ).progressbar({
+			value: Math.round((i/(rowsData.length-1))*100)
+		});	
 		setTimeout(function() { processrectangle(rowsData, i); }, 50 );		
 	} else {			
 		$( "#loadprocess" ).text($.lang.convert('Loading : circles ...'));	
@@ -6346,13 +6377,14 @@ function processcircle(rowsData, i) {
 
 	i++;
 
-	$( "#mainload" ).progressbar({
-		value: Math.round((i/(rowsData.length-1))*100)
-	});
+
 	$( "#subload" ).progressbar({
 		value: 0
 	});
-	if (i < rowsData.length) {		
+	if (i < rowsData.length) {	
+		$( "#mainload" ).progressbar({
+			value: Math.round((i/(rowsData.length-1))*100)
+		});	
 		setTimeout(function() { processcircle(rowsData, i); }, 50 );		
 	} else {
 		$( "#loadprocess" ).text($.lang.convert('Loading : polygons ...'));	
@@ -6445,6 +6477,7 @@ function sline_upd(polyL,i,sline,linekey,k) {
 			var formArr = polyL.markers.getAt(i).kdata.form.split('¤');
 			if (formArr.length >2) {
 				var formSideArr = formArr[6].split('/');
+				addStation (formArr[1],formArr[2],polyL.markers.getAt(i).getPosition()); //fix 14/11/2014 6:15pm
 				
 				for (fs = 0; fs < formSideArr.length; fs++) {
 					var formSide = formSideArr[fs].split(':');
