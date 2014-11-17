@@ -15,7 +15,7 @@ Personal blog for GB Maps ギビマップ (design algorithm) : http://blogkaryai
 File : gbm-base-v1.js
 purpose : google maps drawing logic
 type : development release
-version : 1.1.0
+version : 1.1.5
 build : 
 last update : 5 November 2014 8:54pm (GMT 8+)
 
@@ -210,14 +210,14 @@ addPoint : function(e, poly, index) {
 				gdata: {lastpitch:'',lastheight:'',lastheightratio:''},
 				pid: poly.id
 		});
-	marker.index = index;    
+		marker.index = index;    
 		path.insertAt(index, e);
 		markers.insertAt(index, marker)
 		if(arguments[2]){
 			MapToolbar.reindex(markers);	
 		}
 	} else if (ptype == 'ruler' || ptype == 'protractor') {
-	var e = (typeof e.latLng != 'undefined') ? e.latLng : e,
+		var e = (typeof e.latLng != 'undefined') ? e.latLng : e,
 		image = new google.maps.MarkerImage('images/ruler-marker.png',
 				new google.maps.Size(7, 7),
 				new google.maps.Point(0, 0),
@@ -471,14 +471,14 @@ addPoint : function(e, poly, index) {
 		var ppid = marker.pid;
 		var ptype = marker.pid.split('_')[0];
 		if (!(ptype == 'ruler' || ptype == 'protractor')) {
-			if (ptype == 'line') {
+			//if (ptype == 'line') {
 				if (marker.kdata.form != '') {
 					var formArr = marker.kdata.form.split('¤');
-					if (formArr.length == 7) {
+					if (formArr.length >2) {
 						removeStation(formArr[2]);
-					}
+					}					
 				}
-			}
+			//}
 			marker.setMap(null);
 			markers.removeAt(marker.index);
 			path.removeAt(marker.index);
@@ -1114,6 +1114,13 @@ addPoint : function(e, poly, index) {
 		    	}
 		    			    	
 				feature.markers.forEach(function(marker, index){
+			    	if (marker.kdata.form != '') {
+						var formArr = kdata.form.split('¤');
+		
+						if (formArr.length >2) {							
+							removeStation(formArr[2]);
+						}
+			    	}				
 				    marker.setMap(null);
 			    });		     
 			    feature.setMap(null);
@@ -1135,6 +1142,13 @@ addPoint : function(e, poly, index) {
 		    	}				
 			
 				feature.markers.forEach(function(marker, index){
+			    	if (marker.kdata.form != '') {
+						var formArr = kdata.form.split('¤');
+		
+						if (formArr.length >2) {							
+							removeStation(formArr[2]);
+						}
+			    	}				
 				    marker.setMap(null);
 			    });		     
 			    feature.setMap(null);
@@ -1176,13 +1190,20 @@ addPoint : function(e, poly, index) {
 		    		}
 			    	
 			    	if (marker.bdata.curve != '') {
-					var cuvid = marker.bdata.curve;
-					if (typeof MapToolbar.features["curveTab"][cuvid] != 'undefined') { MapToolbar.removeFeature(cuvid); }
+						var cuvid = marker.bdata.curve;
+						if (typeof MapToolbar.features["curveTab"][cuvid] != 'undefined') { MapToolbar.removeFeature(cuvid); }
 			    	}
 			    	if (marker.bdata.tcurve != '') {
- 					var tcuvid = marker.bdata.tcurve;								
-					if (typeof MapToolbar.features["tcurveTab"][tcuvid] != 'undefined') { MapToolbar.removeFeature(tcuvid); }
+						var tcuvid = marker.bdata.tcurve;								
+						if (typeof MapToolbar.features["tcurveTab"][tcuvid] != 'undefined') { MapToolbar.removeFeature(tcuvid); }
 			    	}
+			    	if (marker.kdata.form != '') {
+						var formArr = kdata.form.split('¤');
+		
+						if (formArr.length >2) {							
+							removeStation(formArr[2]);
+						}
+			    	}					
 				}
 				marker.setMap(null);
 			});
