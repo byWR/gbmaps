@@ -16,9 +16,9 @@ Personal blog for GB Maps ギビマップ (design algorithm) : http://blogkaryai
 File : gbm-jq-v1.js
 purpose : gb maps functions based on jquery
 type : development release
-version : 1.1.0
+version : 1.1.5
 build : 
-last update : 5 November 2014 9:05pm (GMT 8+)
+last update : 14 November 2014 3:00pm (GMT 8+)
 
 */
 	
@@ -1069,7 +1069,7 @@ last update : 5 November 2014 9:05pm (GMT 8+)
 				for (var i = 0; i < allPoints.length; i++)  { 
 					if (polyL.markers.getAt(i).kdata.form != '')  {
 						var formData = polyL.markers.getAt(i).kdata.form.split(':');
-						if (formData.length == 7) {
+						if (formData.length >2) {
 							if ($('#dbr_stationStart').val() == formArr[2]) {
 								stIdx = i;
 								break;
@@ -1080,7 +1080,7 @@ last update : 5 November 2014 9:05pm (GMT 8+)
 				for (var i = 0; i < allPoints.length; i++)  { 
 					if (polyL.markers.getAt(i).kdata.form != '')  {
 						var formData = polyL.markers.getAt(i).kdata.form.split(':');
-						if (formData.length == 7) {
+						if (formData.length >2) {
 							if ($('#dbr_stationEnd').val() == formArr[2]) {
 								edIdx = i;
 								break;
@@ -3189,8 +3189,14 @@ last update : 5 November 2014 9:05pm (GMT 8+)
 				alert($.lang.convert('Station ID already exists.'));
 				return false;
 			}
-
-			var formSide = ($('#form0_pos').val() == 'L')?  pid + ':L' : pid + ':R';			
+			var ptype = pid.split('_')[0];
+			var formSide;			
+			if (ptype == 'line') {
+				formSide = ($('#form0_pos').val() == 'L')?  pid + ':L' : pid + ':R';
+			} else {
+				var lid = MapToolbar.features[ptype+"Tab"][pid].pid;
+				formSide = ($('#form0_pos').val() == 'L')?  lid + ':L' : lid + ':R';
+			}
 			
 			formMaker(pid,idx,platform_length,howtoForm,'form0',formSide);
 								
@@ -3215,14 +3221,26 @@ last update : 5 November 2014 9:05pm (GMT 8+)
 					alert($.lang.convert('invalid 2nd line! please choose a valid parallel line.'));
 					return;
 				}
+
+				var ptype = pid.split('_')[0];
 				
-				if (MapToolbar.features["lineTab"][pid2].lineX != pid) {
-					alert($.lang.convert('invalid 2nd line! the 2nd line is not parallel with main line.'));
-					return;
-				}				
 				
-				var formSide  =  pid + ':L' + '/' + pid2 + ':R';
-								
+				var formSide;			
+				if (ptype == 'line') {
+					if (MapToolbar.features["lineTab"][pid2].lineX != pid) {
+						alert($.lang.convert('invalid 2nd line! the 2nd line is not parallel with main line.'));
+						return;
+					}
+					formSide = pid + ':L' + '/' + pid2 + ':R';
+				} else {
+					var lid = MapToolbar.features[ptype+"Tab"][pid].pid;
+					if (MapToolbar.features["lineTab"][pid2].lineX != lid) {
+						alert($.lang.convert('invalid 2nd line! the 2nd line is not parallel with main line.'));
+						return;
+					}					
+					formSide = lid + ':L' + '/' + pid2 + ':R';
+				}
+												
 				formMaker(pid,idx,platform_length,howtoForm,'form1',formSide);
 				
 				$('#dialogInsertPlatform').dialog('close');
