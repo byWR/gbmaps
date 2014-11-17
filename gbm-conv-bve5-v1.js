@@ -16,7 +16,7 @@ Personal blog for GB Maps ギビマップ (design algorithm) : http://blogkaryai
 File : gbm-conv-bve5-v1.js
 purpose : open bve route builder, data conversion function
 type : development release
-version : 1.1.0
+version : 1.1.5
 build : 
 last update : 5 November 2014 8:46pm (GMT 8+)
 
@@ -2020,7 +2020,7 @@ function generateBVE5(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,max
 
 function ProcessbData5(bdata,currX) {
 //bdata: {height:'',railindex:'',pitch:'',curve:''},	
-	if (bdata.height != '') {
+	if ($.isNumeric(bdata.height)) {
 		var iGx,iGkey;
 		lastheight = (-1*bdata.height);
 		for (i = 0; i < bvebveStrOjArr.length; i++) {
@@ -2046,7 +2046,7 @@ function ProcessbData5(bdata,currX) {
 		
 	}
 	
-	if (bdata.pitch != '') {
+	if ($.isNumeric(bdata.pitch)) {
 		var rpit = parseInt(bdata.pitch);
 		if (isNaN(rpit)) { alert(bdata.pitch);}
   
@@ -2094,7 +2094,7 @@ function ProcessbData5(bdata,currX) {
 	}
 
 	if (typeof bdata.railindex != 'undefined') {
-		if (bdata.railindex != '') {
+		if (bdata.railindex !== '') {
 			var railLx,railRx,railbaseX;
 			var railLkey,railRkey,railbasekey;
 			
