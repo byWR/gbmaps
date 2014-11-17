@@ -13,12 +13,12 @@ Development site (programming) : https://github.com/karyait/gbmaps & https://cod
 Personal blog for GB Maps ギビマップ (design algorithm) : http://blogkaryait.wordpress.com/tag/gbmaps/
 
 
-File : gbm-conv-openbve-v1.js
+File : conv-openbve-v1.js
 purpose : open bve route builder, data conversion function
 type : development release
-version : 1.1.0
+version : 1.1.5
 build : 
-last update : 5 November 2014 8:47pm (GMT 8+)
+last update : 14 November 2014 8:47pm (GMT 8+)
 
 */
 	//BVE object list
@@ -1529,11 +1529,11 @@ function generateOpenBVE(pid,stIdx,edIdx,routeId,routeName,gauge,railtype,train,
 
 function ProcessbData(bdata,currX) {
 //bdata: {height:'',railindex:'',pitch:'',curve:''},	
-	if (bdata.height != '') {
+	if ($.isNumeric(bdata.height)) {
 		subTrkArr.push([ currX, '.Height ' + bdata.height]);
 	}
 	
-	if (bdata.pitch != '') {
+	if ($.isNumeric(bdata.pitch)) {
 		var rpit = parseInt(bdata.pitch);
 		if (isNaN(rpit)) { alert(bdata.pitch);}
   
@@ -1571,7 +1571,7 @@ function ProcessbData(bdata,currX) {
 	}
 
 	if (typeof bdata.railindex != 'undefined') {
-		if (bdata.railindex != '') {
+		if (bdata.railindex !== '') {
 			var ri = 0;
 			for (g1 = 0; g1 < bverailobjArr.length; g1++) {			
 				if (bverailobjArr[g1][1] == bdata.railindex) {
